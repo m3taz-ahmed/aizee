@@ -44,6 +44,8 @@ rules so agents cannot bypass them.
 | `aizee abstract generate|show` | L0/L1/L2 tiered context (sidecar abstracts in `abstracts/`) |
 | `aizee hooks install|uninstall` | Session-start briefing + telemetry hooks for agent harnesses |
 | `aizee session from-curl|from-har` | Replayable governed API session from a captured request |
+| `aizee inventory [--report]` | Plain-fact install inventory (skills/memory/plugins counts) for prompt injection |
+| `aizee plugin enable|disable <name>` | Toggle plugins in plugins.yaml under a serialized transaction |
 
 ## MCP tools
 

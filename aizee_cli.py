@@ -1700,6 +1700,39 @@ def cmd_find(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_inventory(args: argparse.Namespace) -> int:
+    """Plain-fact inventory of the install (DeepTutor manifest pattern)."""
+    from runtime.inventory_note import (
+        collect_inventory,
+        render_inventory_note,
+        render_inventory_report,
+    )
+
+    result = collect_inventory(_root(args))
+    if args.json:
+        print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+    text = render_inventory_report(result) if args.report else render_inventory_note(result)
+    console.print(text)
+    return 0
+
+
+def cmd_plugin(args: argparse.Namespace) -> int:
+    """Enable/disable plugins in plugins.yaml under a serialized transaction."""
+    from runtime.plugin_transactions import PluginStateError, set_plugin_enabled
+
+    enabled = args.plugin_action == "enable"
+    try:
+        prior = set_plugin_enabled(_root(args), args.name, enabled)
+    except PluginStateError as exc:
+        console.print(f"[red]{exc.message}[/red]")
+        return 1
+    state = "enabled" if enabled else "disabled"
+    suffix = " (no change)" if prior == enabled else ""
+    console.print(f"[green]{args.name}:[/green] {state}{suffix}")
+    return 0
+
+
 def cmd_goal(args: argparse.Namespace) -> int:
     """Map a free-text objective to the best workflow + its steps."""
     from runtime.find import goal
@@ -2132,6 +2165,14 @@ def main(argv: list[str] | None = None) -> int:
     p_goal.add_argument("objective", help="Goal text, e.g. 'add oauth login'")
     p_goal.add_argument("--json", action="store_true", help="Machine-readable output")
 
+    p_inventory = sub.add_parser("inventory", help="Plain-fact inventory: skills, workflows, memory banks, plugins")
+    p_inventory.add_argument("--report", action="store_true", help="Full report (bank names included)")
+    p_inventory.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    p_plugin = sub.add_parser("plugin", help="Enable/disable plugins in plugins.yaml (serialized transaction)")
+    p_plugin.add_argument("plugin_action", choices=["enable", "disable"])
+    p_plugin.add_argument("name", help="Plugin name as declared in plugins.yaml")
+
     # --- config ---
     p_config = sub.add_parser("config", help="Settings: show (masked) + apply (--check dry-run)")
     p_config.add_argument("config_action", choices=["show", "apply"])
@@ -2367,6 +2408,8 @@ def main(argv: list[str] | None = None) -> int:
         "daemon": cmd_daemon,
         "find": cmd_find,
         "goal": cmd_goal,
+        "inventory": cmd_inventory,
+        "plugin": cmd_plugin,
         "config": cmd_config,
         "models": cmd_models,
         "gateway": cmd_gateway,

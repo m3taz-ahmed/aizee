@@ -1,0 +1,3 @@
+# Vector/embedding extras — mirror of [project.optional-dependencies].vector
+-r base.txt
+sentence-transformers>=6.0,<7.0

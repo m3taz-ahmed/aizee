@@ -12,7 +12,7 @@
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-141-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="141 Skills">
+    <img src="https://img.shields.io/badge/Skills-145-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="145 Skills">
     <img src="https://img.shields.io/badge/Workflows-63-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="63 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-266-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="266 Tech-Stack refs">
   </p>
@@ -226,7 +226,7 @@ aizee status    # Current persona, skills, budget
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 124 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 127 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -236,7 +236,7 @@ aizee status    # Current persona, skills, budget
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
 ├── aizee_mcp/               # MCP server (39 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
-├── skills/                  # 141 persona + lord skills
+├── skills/                  # 145 persona + lord skills
 ├── workflows/               # 63 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # Version-locked stack references

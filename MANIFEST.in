@@ -1,0 +1,15 @@
+# sdist completeness — data dirs live outside Python packages, so declare
+# them explicitly (wheels carry code only; the OS data bootstraps via
+# `aizee update`/clone — see README install section).
+include LICENSE README.md CHANGELOG.md AGENTS.md spec.md llms.txt
+include manifest.json global-roles.md global-workflow.md
+include plugins.yaml .env.example
+recursive-include skills *.md
+recursive-include workflows *.md
+recursive-include rules *.md *.yaml
+recursive-include tech-stack *.md
+recursive-include docs *.md
+recursive-include scripts *.py
+recursive-include requirements *.txt
+recursive-exclude tests *
+global-exclude *.pyc __pycache__ *.orig *.bak

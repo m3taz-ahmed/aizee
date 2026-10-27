@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Added (DeepTutor adoption round 2)
+
+- **Context-composition telemetry** (`runtime/context_composition.py`):
+  per-call readout of what fills the model's context window — named
+  segments (system/messages/tools/prompt), shares of total + window,
+  over-budget flag, dominant segment, degraded-counter safety. Wired into
+  the gateway's `_gate` so every governed `LLMRequest` audits
+  `context_total`/`context_utilization`/`context_dominant`; providers gain
+  an optional `context_window` field in `gateway.yaml`.
+- **Inventory facts** (`runtime/inventory_note.py`): plain-fact install
+  counts (skills/workflows/tech-stack/memory banks/plugins) rendered for
+  prompt injection — inventory questions answerable without a tool call
+  (DeepTutor manifest pattern). `aizee inventory [--report|--json]`.
+- **Plugin state transactions** (`runtime/plugin_transactions.py`):
+  nonblocking lockfile-serialized mutations of `plugins.yaml` (msvcrt on
+  Windows, fcntl on POSIX) + atomic write-back; contention raises
+  `PluginStateError` instead of silently serializing.
+  `aizee plugin enable|disable <name>`.
+- **Document skills**: `docx`, `pdf`, `pptx`, `xlsx` — conditional
+  (trigger-routed) format skills covering extract/create/edit with the
+  python toolchain (python-docx, pypdf/pdfplumber/PyMuPDF/reportlab,
+  python-pptx, openpyxl/pandas).
+- **Distribution**: `requirements/{base,dev,graphify,vector}.txt` mirrors
+  of pyproject extras, `MANIFEST.in` for sdist completeness (skills/,
+  workflows/, tech-stack/, docs/), `[project.urls]` metadata. Wheel
+  verified building (`aizee-6.5.0-py3-none-any.whl`).
+
 ## [6.5.0] - 2026-10-26 (Star-Repos Adoption Pass — artemis / agent-reach / OpenSpec / DeepTutor / free-claude-code / paperless)
 
 Features adopted from a structured study of 16 open-source agent repos

@@ -23,6 +23,9 @@
 - `runtime/api_session.py`: governed API sessions replayed from curl/HAR captures (kernel-gated, same-host)
 - `runtime/secret_scrub.py` + `runtime/sensitive.py`: capture-time secret scrubbing + placeholder injection
 - `runtime/skill_lint.py` + `runtime/skill_scan.py`: skill-library lint/collision + prompt-injection scanner
+- `runtime/context_composition.py`: per-call context-window composition telemetry (segment shares, utilization)
+- `runtime/inventory_note.py`: plain-fact install inventory rendered for prompt injection (`aizee inventory`)
+- `runtime/plugin_transactions.py`: lockfile-serialized plugins.yaml mutations (`aizee plugin enable|disable`)
 - `aizee_mcp/tools/`: MCP tool modules (auto-discovered `*_tools.py`)
 
 ## Conventions

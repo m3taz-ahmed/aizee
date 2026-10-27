@@ -288,3 +288,12 @@
 - **Fix:** self-healing re-exec in `scripts/graphify_mcp_wrapper.py` + `aizee_mcp_wrapper.py` (env-guarded, `AIZEE_MCP_PYTHON`/`py -3.10`); `mcp_global_sync.py` gains `AIZEE_MCP_PYTHON` override, `env` passthrough, and local REA detection (`REA_HOME`/sibling `../rea` → pinned node from `.nvmrc` + `GHIDRA_INSTALL_DIR`/`JAVA_HOME`/`REA_JADX_MCP_JAR`).
 - **Verified:** real `initialize` handshakes pass for aizee/graphify/rea using the exact generated commands; Devin config at `%APPDATA%\devin\mcp_config.json` now absolute Python310 + local node 24.22.1. Committed `7bc5202`, mirror synced. IDE restart required to pick up new config.
 - **Note:** `graphify-out/` is gitignored → mirror graph (`D:\server\aizee`) stays stale (Oct 6) until rebuilt there; `.ai` graph is fresh (21,280 nodes). MCP lock re-baselined after 6.5.0 tool drift.
+
+### DeepTutor round-2 adoptions (context telemetry, inventory, plugin transactions, doc skills, distribution)
+- Studied HKUDS/DeepTutor (temp/deeptutor): 5 adoptable patterns implemented.
+- `runtime/context_composition.py`: per-call context-window composition readout (segment shares/utilization/dominant, degraded-counter safe). Wired into gateway `_gate` → kernel.act audits `context_total`/`context_utilization`/`context_dominant`; `Provider.context_window` optional in gateway.yaml.
+- `runtime/inventory_note.py`: manifest-pattern plain-fact counts (skills/workflows/tech-stack/memory banks/plugins) → `aizee inventory [--report|--json]` for prompt injection.
+- `runtime/plugin_transactions.py`: nonblocking lockfile (msvcrt/fcntl) around plugins.yaml mutations + atomic write; `aizee plugin enable|disable` surfaces it.
+- 4 conditional doc skills added (docx/pdf/pptx/xlsx) — triggers route them, no `always` flag (format work shouldn't preload every context). Library now 145 skills, 0 lint issues.
+- Distribution: requirements/{base,dev,graphify,vector}.txt mirrors + MANIFEST.in (sdist carries data dirs; wheels = code) + [project.urls]. `pip wheel`/`build_sdist` verified.
+- Gates: 100% coverage maintained (context_composition/inventory_note/plugin_transactions/gateway all 100%), mypy 207 files clean, sync_docs canonical = 127 modules/145 skills/7405 tests.

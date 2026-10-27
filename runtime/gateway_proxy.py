@@ -25,6 +25,9 @@ from typing import Any
 
 import yaml
 
+from runtime.context_composition import CompositionReport
+from runtime.context_composition import measure as cc_measure
+
 DEFAULT_PORT = 8787
 DEFAULT_TIMEOUT = 30.0
 _RETRYABLE_STATUS = {408, 409, 425, 429, 500, 502, 503, 504}
@@ -52,6 +55,7 @@ class Provider:
     timeout: float = DEFAULT_TIMEOUT
     headers: dict[str, str] = field(default_factory=dict)
     tiers: tuple[str, ...] = ()
+    context_window: int = 0  # model window in tokens; 0 = unknown
 
 
 @dataclass(frozen=True)
@@ -80,6 +84,7 @@ class GatewayConfig:
                 timeout=float(p.get("timeout", DEFAULT_TIMEOUT)),
                 headers={str(k): str(v) for k, v in (p.get("headers") or {}).items()},
                 tiers=tuple(str(t) for t in (p.get("tiers") or ())),
+                context_window=int(p.get("context_window", 0) or 0),
             )
             for p in data.get("providers", [])
         )
@@ -125,6 +130,48 @@ def extract_prompt_text(payload: dict[str, Any]) -> str:
     if isinstance(prompt, str):
         parts.append(prompt)
     return "\n".join(parts)
+
+
+def payload_segments(payload: dict[str, Any]) -> list[tuple[str, str]]:
+    """Decompose a provider request into named context segments.
+
+    System prompt, each message (role-tagged), tools manifest, and a bare
+    ``prompt`` field each become one segment — the inputs a composition
+    readout reports on.
+    """
+    segments: list[tuple[str, str]] = []
+    system = payload.get("system")
+    if isinstance(system, str) and system:
+        segments.append(("system", system))
+    elif isinstance(system, list):
+        system_text = "\n".join(
+            str(b.get("text", "")) for b in system if isinstance(b, dict)
+        )
+        if system_text:
+            segments.append(("system", system_text))
+    for i, msg in enumerate(payload.get("messages", []) or []):
+        role = str(msg.get("role", "user"))
+        content = msg.get("content", "")
+        if isinstance(content, str) and content:
+            segments.append((f"messages[{i}]:{role}", content))
+        elif isinstance(content, list):
+            msg_text = "\n".join(
+                str(b.get("text", "")) for b in content if isinstance(b, dict)
+            )
+            if msg_text:
+                segments.append((f"messages[{i}]:{role}", msg_text))
+    tools = payload.get("tools")
+    if tools:
+        segments.append(("tools", json.dumps(tools)))
+    prompt = payload.get("prompt", "")
+    if isinstance(prompt, str) and prompt:
+        segments.append(("prompt", prompt))
+    return segments
+
+
+def measure_request(payload: dict[str, Any], *, window_tokens: int) -> CompositionReport:
+    """Context-composition readout for one outbound request (telemetry, never raises)."""
+    return cc_measure(payload_segments(payload), window_tokens=window_tokens)
 
 
 def forward(
@@ -225,11 +272,23 @@ def make_handler(config: GatewayConfig, kernel: Any) -> type[BaseHTTPRequestHand
                 return None
             tokens = estimate_tokens(payload)
             prompt_text = extract_prompt_text(payload)
+            # Context-composition telemetry: measure what fills the window
+            # against the serving providers' declared context_window (first
+            # provider in the tier's failover order that declares one).
+            tier = str(payload.get("tier") or payload.get("metadata", {}).get("tier") or "default")
+            window = next(
+                (p.context_window for p in config.providers_for(tier) if p.context_window > 0),
+                0,
+            )
+            comp = measure_request(payload, window_tokens=window)
             result = kernel.act(
                 "LLMRequest",
                 prompt=prompt_text[:_PROMPT_GATE_CHARS],
                 tokens=tokens,
                 verify=config.verify,
+                context_total=comp.total_tokens,
+                context_utilization=round(comp.utilization, 4),
+                context_dominant=comp.dominant,
             )
             if result.get("ok"):
                 return None

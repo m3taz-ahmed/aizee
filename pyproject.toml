@@ -59,6 +59,12 @@ vector = [
     "sentence-transformers>=6.0,<7.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/m3taz-ahmed/aizee"
+Repository = "https://github.com/m3taz-ahmed/aizee"
+Issues = "https://github.com/m3taz-ahmed/aizee/issues"
+Changelog = "https://github.com/m3taz-ahmed/aizee/blob/main/CHANGELOG.md"
+
 [project.scripts]
 aizee = "aizee_cli:main"
 

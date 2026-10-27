@@ -444,6 +444,11 @@ _LAZY_TABLE: tuple[tuple[str, str, str], ...] = (
     ("hooks_status", "runtime.hooks", "status"),
     ("scan_skills", "runtime.skill_scan", "scan_tree"),
     ("GovernedApiSession", "runtime.api_session", "GovernedApiSession"),
+    ("measure_context", "runtime.context_composition", "measure"),
+    ("CompositionReport", "runtime.context_composition", "CompositionReport"),
+    ("collect_inventory", "runtime.inventory_note", "collect_inventory"),
+    ("set_plugin_enabled", "runtime.plugin_transactions", "set_plugin_enabled"),
+    ("plugin_state_lock", "runtime.plugin_transactions", "plugin_state_lock"),
 )
 
 _LAZY_EXPORTS: dict[str, tuple[str, str]] = {e: (m, a) for e, m, a in _LAZY_TABLE}
