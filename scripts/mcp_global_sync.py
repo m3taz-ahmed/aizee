@@ -38,13 +38,58 @@ def global_config_dir() -> Path:
     return Path.home() / ".config" / "devin"
 
 
+def _resolve_local_rea(root: Path) -> dict[str, Any] | None:
+    """Local REA checkout beats the npx template when present.
+
+    Detects ``REA_HOME`` or the sibling ``<root>/../rea`` checkout, resolves
+    the pinned node from ``.nvmrc`` (``REA_NODE`` override, else NVM_HOME /
+    herd-nvm paths), and injects the engine env the MCP server needs.
+    """
+    rea_home = os.environ.get("REA_HOME")
+    rea = Path(rea_home) if rea_home and Path(rea_home).is_dir() else root.parent / "rea"
+    rea_mjs = rea / "scripts" / "rea.mjs"
+    if not rea_mjs.is_file():
+        return None
+    node = os.environ.get("REA_NODE")
+    if not node or not Path(node).is_file():
+        node = ""
+        nvmrc = rea / ".nvmrc"
+        want = nvmrc.read_text(encoding="utf-8").strip().lstrip("v") if nvmrc.is_file() else ""
+        if want:
+            for base in (
+                Path(os.environ.get("NVM_HOME", "")) if os.environ.get("NVM_HOME") else None,
+                Path.home() / ".config" / "herd" / "bin" / "nvm",
+            ):
+                if base is None:
+                    continue
+                for cand in base.glob(f"v{want}/node.exe"):
+                    node = str(cand)
+                    break
+                if node:
+                    break
+        if not node:
+            return None
+    env: dict[str, str] = {}
+    for var in ("GHIDRA_INSTALL_DIR", "JAVA_HOME", "REA_JADX_MCP_JAR", "REA_IDA_MCP_CONFIG", "REA_KUNA_COMMAND"):
+        val = os.environ.get(var)
+        if val:
+            env[var] = val
+    env["REA_HOME"] = str(rea)
+    entry: dict[str, Any] = {"command": node, "args": [str(rea_mjs), "mcp"]}
+    if env:
+        entry["env"] = env
+    return entry
+
+
 def build_global_config(root: Path) -> dict[str, Any]:
     """Build MCP config with absolute paths rooted at the OS root.
 
     Reads from ``aizee_mcp/config.json`` (single source of truth) and
-    resolves all relative script paths to absolute paths.
+    resolves all relative script paths to absolute paths. ``AIZEE_MCP_PYTHON``
+    overrides the interpreter used for python-based servers — the machine's
+    bare ``python`` may not carry the project deps.
     """
-    py = sys.executable or "python"
+    py = os.environ.get("AIZEE_MCP_PYTHON") or sys.executable or "python"
     config_path = root / "aizee_mcp" / "config.json"
 
     if not config_path.exists():
@@ -61,6 +106,13 @@ def build_global_config(root: Path) -> dict[str, Any]:
     resolved: dict[str, Any] = {"mcpServers": {}}
 
     for name, entry in servers.items():
+        # A local REA checkout (REA_HOME / sibling ../rea) outranks the npx
+        # template — npx resolves the system node, which REA's .nvmrc pin rejects.
+        if name == "rea":
+            local = _resolve_local_rea(root)
+            if local is not None:
+                resolved["mcpServers"][name] = local
+                continue
         command = entry.get("command", "")
         args: list[str] = list(entry.get("args", []))
 
@@ -80,10 +132,13 @@ def build_global_config(root: Path) -> dict[str, Any]:
                     continue
             resolved_args.append(arg)
 
-        resolved["mcpServers"][name] = {
+        out: dict[str, Any] = {
             "command": command,
             "args": resolved_args,
         }
+        if isinstance(entry.get("env"), dict):
+            out["env"] = entry["env"]
+        resolved["mcpServers"][name] = out
 
     return resolved
 

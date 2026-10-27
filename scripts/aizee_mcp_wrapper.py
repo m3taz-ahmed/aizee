@@ -21,7 +21,28 @@ def discover_root() -> str:
     return str(cwd)
 
 
+def _reexec_if_missing_deps() -> None:
+    """Re-exec under a dep-capable python when the launch interpreter lacks them.
+
+    MCP configs invoke bare ``python`` — on this machine that is 3.15, which
+    has no project deps installed, so the server dies before the initialize
+    handshake. ``AIZEE_MCP_PYTHON`` overrides the fallback interpreter.
+    """
+    import importlib.util
+    if (
+        importlib.util.find_spec("mcp") is None
+        and not os.environ.get("AIZEE_MCP_WRAPPER_REEXEC")
+        and sys.platform == "win32"
+    ):
+        os.environ["AIZEE_MCP_WRAPPER_REEXEC"] = "1"
+        override = os.environ.get("AIZEE_MCP_PYTHON")
+        if override:
+            os.execv(override, [override, str(pathlib.Path(__file__).resolve())])
+        os.execvp("py", ["py", "-3.10", str(pathlib.Path(__file__).resolve())])
+
+
 def main() -> None:
+    _reexec_if_missing_deps()
     root = discover_root()
     os.environ["AIZEE_ROOT"] = root
     os.environ.setdefault("PYTHONIOENCODING", "utf-8")

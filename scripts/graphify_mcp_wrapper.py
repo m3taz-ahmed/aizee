@@ -192,6 +192,23 @@ def _install_intercept_pipe() -> None:
 
 
 if __name__ == "__main__":
+    # Self-heal interpreter: MCP configs invoke bare `python`, which may be a
+    # runtime without the deps (e.g. 3.15 while deps live under 3.10). Re-exec
+    # once under the py launcher when the target module is not importable.
+    import importlib.util
+    if (
+        importlib.util.find_spec("graphify") is None
+        and not os.environ.get("GRAPHIFY_WRAPPER_REEXEC")
+        and sys.platform == "win32"
+    ):
+        override = os.environ.get("AIZEE_MCP_PYTHON")
+        if override:
+            os.environ["GRAPHIFY_WRAPPER_REEXEC"] = "1"
+            os.execv(override, [override, str(Path(__file__).resolve())])
+        else:
+            os.environ["GRAPHIFY_WRAPPER_REEXEC"] = "1"
+            os.execvp("py", ["py", "-3.10", str(Path(__file__).resolve())])
+
     # Load centralized .env secrets before launching graphify
     _root = os.environ.get("AIZEE_ROOT", str(Path(__file__).resolve().parent.parent))
     sys.path.insert(0, os.path.join(_root, "scripts"))
