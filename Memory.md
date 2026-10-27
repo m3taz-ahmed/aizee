@@ -282,3 +282,9 @@
 ### فخ اكتُشف (batch 2c)
 - urllib `HTTPRedirectHandler` بيعيد إرسال **كل** الـ headers على redirect — بما فيها Authorization — لأي host. أي code بيلفّه لازم redirect-policy خاصة.
 - Tests بتـpatch `urllib.request.urlopen` بتتكسر بصمت لما الـ code ينتقل لـ `build_opener().open()` — patch لازم يبقى على الـ seam (`_opener`) مش الـ stdlib.
+
+### MCP launch repair (graphify + REA red → green)
+- **Root cause:** generated Devin `mcp_config.json` resolved `python` to 3.15 (no deps) and spawned REA via `npx` (wrong system node, no engine env).
+- **Fix:** self-healing re-exec in `scripts/graphify_mcp_wrapper.py` + `aizee_mcp_wrapper.py` (env-guarded, `AIZEE_MCP_PYTHON`/`py -3.10`); `mcp_global_sync.py` gains `AIZEE_MCP_PYTHON` override, `env` passthrough, and local REA detection (`REA_HOME`/sibling `../rea` → pinned node from `.nvmrc` + `GHIDRA_INSTALL_DIR`/`JAVA_HOME`/`REA_JADX_MCP_JAR`).
+- **Verified:** real `initialize` handshakes pass for aizee/graphify/rea using the exact generated commands; Devin config at `%APPDATA%\devin\mcp_config.json` now absolute Python310 + local node 24.22.1. Committed `7bc5202`, mirror synced. IDE restart required to pick up new config.
+- **Note:** `graphify-out/` is gitignored → mirror graph (`D:\server\aizee`) stays stale (Oct 6) until rebuilt there; `.ai` graph is fresh (21,280 nodes). MCP lock re-baselined after 6.5.0 tool drift.
