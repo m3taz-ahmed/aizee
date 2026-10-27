@@ -44,6 +44,7 @@ graphify-out/
 .agents/
 temp/
 .ai/
+docs/repos/
 
 tmp/
 scratch/
@@ -70,3 +71,8 @@ DEEP_AUDIT_PROMPT.md
 docs/AUDIT_REPORT.md
 docs/CAPABILITIES.md
 docs/WORLD_CLASS_GAP.md
+
+# Generated L0 tiered-context abstracts (`aizee abstract` regenerates)
+abstracts/
+# Generated skill index (`aizee skill lint --write` regenerates)
+skills/index.json

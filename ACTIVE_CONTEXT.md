@@ -1,6 +1,6 @@
 # aiZee — Active Context / Handoff
 
-**Repo:** `ai-globals` (branch `main`) — version 6.4.0
+**Repo:** `aizee` (branch `main`) — version 6.5.0
 **Last checkpoint:** 2026-10-15 — Second maintenance cycle DONE + external-research integration pass (ECC/agent-reach/auth-for-laravel).
 **Next:** commit (pending user approval), then `update_aizee.bat` sync to deployment mirror.
 **Gates (maintenance cycle):** all green — ruff ✓, mypy 599 files ✓, `aizee test --full` 7060 passed / 3 env-skips / 100% cov ✓, `eval/harness.py` all_pass=true ✓, `validate-globals` 0 errors ✓.
@@ -49,9 +49,17 @@ mirror routes handoff/store writes into it. Mirror artifact was cleaned.
 - **Deps refreshed within pins** — mcp 2.3.0, pydantic 2.14.1, cryptography 50.0.2, turbovec 1.1.2, graphifyy 0.9.91, ruff 0.17.1, mypy 2.4.0.
 - Counts: runtime 107 / skills 140 / numbered wf 63 / stack 265 / tests ~7.0k.
 
+- **v6.5.0 star-repo adoption pass complete** — verify dial (off/final/checkpoints/strict) on `kernel.act`, structured `doctor` engine (CLI --json + MCP `aizee_doctor`), uniform tool envelope, `find`/`goal` NL discovery, governed `gateway_proxy` (failover + enforcement on the LLM path), opt-in `output_filter` token compression, OpenSpec-style `specs/changes/` folders, `rules/ingest.yaml` memory routing, `config show --masked`/`apply --check`, root `SKILL.md` + `llms.txt` + `skill link`. Repo renamed to `m3taz-ahmed/aizee`; description/topics/discussions set; `v6.4.0` release published at 970fd78. PyPI publish + GIF + registries remain maintainer-side.
+- Pytest coverage footgun: use path targets (`--cov=runtime/`), never module names — pytest-cov imports module targets early and `cryptography` PyO3 double-inits.
+- **v6.5.0 star-repos batch-2 complete** — `aizee skill lint|scan` (authoring toolchain + security scan), `aizee hooks install|status|fire` (agentmemory harness hooks), `aizee abstract` (OpenViking L0/L1/L2 tiered loading), `SensitiveVault` + `kernel.act(sensitive_data=)` masking (browser-use), `GovernedApiSession` from curl/HAR (mimic), gateway `tiers` (flash/extraction), capture-time `secret_scrub` in ingest, `plugin.json` + README mcp-name marker.
+
 ### Gate status
-- ruff ✅ mypy (599 files, strict) ✅ targeted pytest ✅ security scan PASS (0 blockers, 6 honest mediums) ✅
-- Pending: FULL suite + `python eval/harness.py` before declaring done.
+- ruff ✅ mypy (205 files, strict) ✅ `aizee test --full` **7412 passed + 100.00% cov** ✅ `eval/harness.py` **all_pass** ✅ validate-globals (0 errors) ✅ `aizee skill scan` on self **ok (0 high)** ✅
+- Pending: user approval to commit; PyPI publish + GIF + registries are maintainer-side.
+- Generated `abstracts/` is gitignored (mirror tree, regenerates via `aizee abstract`); `skills/index.json` is gitignored too (regenerates via `aizee skill lint --write`).
+- **Skill-library repair done** — `aizee skill lint` reports **141 skills / 0 issues / 0 collisions** (was 74+37). 73 skills got `triggers:` + `always: true` (triggers gate loading in `matches_context`; `always` preserves unconditional semantics). 43 negative triggers on colliding pairs; 5 files had unrecoverable Arabic mojibake (`O?U?`) replaced with valid triggers; `secret_scrub` prose-filter added (`Authorization: Distinguish…` FP).
+- **Security review pass done** — `api_session` fail-closed: cross-host absolute URLs + cross-host 302 redirects refused (auth bundle can't leak); `extra_headers` masked into kernel gate. `gateway_proxy`: 10MB body cap + 64k prompt-gate window. `sensitive.mask_obj` preserves tuples. 7417 tests / 100% cov.
+- graphify update refused overwrite (smaller graph — missing chunks); existing graph retained.
 
 ---
 

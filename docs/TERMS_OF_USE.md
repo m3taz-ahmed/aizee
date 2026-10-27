@@ -60,4 +60,4 @@ after changes constitutes acceptance of the new terms.
 ## Contact
 
 For questions about these Terms, open an issue at:
-https://github.com/m3taz-ahmed/ai-globals/issues
+https://github.com/m3taz-ahmed/aizee/issues

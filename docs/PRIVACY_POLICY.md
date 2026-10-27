@@ -59,4 +59,4 @@ not responsible for how third-party services handle your data.
 ## Contact
 
 For privacy questions, open an issue at:
-https://github.com/m3taz-ahmed/ai-globals/issues
+https://github.com/m3taz-ahmed/aizee/issues

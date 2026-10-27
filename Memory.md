@@ -5,8 +5,10 @@
 2. [REQ] Update at session end via `workflows/17-memory-sync.md`.
 3. [REQ] Keep under 500 lines.
 4. [PROHIBIT] PUBLIC REPO — this file is committed to GitHub. Never write private project names (client work, other repos in the dev folder), absolute local paths (`D:\`, `C:\Users\<name>`), usernames, machine names, hostnames, IPs, or profile URLs. Refer to external projects generically ("a private Laravel project") and external dirs as "outside repo". `.env`, `state/`, `backups/`, `.ai/` are gitignored — real details belong there, not here.
-[UPDATED] 2026-10-23
+[UPDATED] 2026-10-26
 [NOTES]
+- **2026-10-26 — Viral-repos study: 16 repos + growth diagnosis**: User-supplied screenshots -> cloned depth-1 to `temp/star-repos/` (FCC, Pixelle-Video, hackingtool, ds2api, DeepTutor, ml-intern, cua, FinceptTerminal, LiteRT-LM, OpenSpec, paperless-ngx, openscreen, CADAM, artemis, beamer, Agent-Reach); report `.ai/star-repos-report.md`. Top adoptions queued: doctor-as-MCP-tool w/ verdict+next_steps (artemis), uniform MCP envelope + meta.cost/meta.update (Agent-Reach), `aizee find|goal` NL discovery (hackingtool), OpenSpec change-folder artifact flow for spec_engine, root SKILL.md + `skill link` for external agents, provider failover chain + token-compression middleware (FCC), `verify` dial per action. Growth diagnosis (stars=5, forks=0, topics=[], 0 releases, discussions off): repo named `ai-globals` != product `aizee`; **`pip install aizee` in README is 404 on PyPI** (never published); no demo GIF; abstract positioning; zero distribution surface (no topics/site/registries/awesome-lists). Fix order in report.
+- **2026-10-24 — Design-intelligence pass: 12-repo study + design-db + tiered slop verifier**: Studied 12 viral "AI UI" repos (cloned to `temp/ui-repos/`, report in `.ai/ui-repos-report.md`). Adopted: (1) `design-db/` — vendored MIT CSV corpus from nextlevelbuilder/ui-ux-pro-max-skill (88 styles, ~50 product palettes, font pairings, icons, UX guidelines, charts, landing patterns, GSAP motion, stacks/*.csv) + new `runtime/design_db.py` BM25-ish engine (synonym normalization, naive stemming, honest-empty fallback, variance/motion/density dials 1-10). (2) `DesignSlopVerifier` rewritten as tiered catalog — 44 rules ported from impeccable (Apache-2.0)/hallmark/taste-skill: FLOOR (non-waivable: lorem, fake data, icon-only buttons, missing focus, layout-prop animation, 100vw, reduced-motion missing, low contrast, tiny/skipped text), REFLEX (waivable via `waive:<rule-id>` comments), FINISH advisories. (3) `DesignLibrary.installed_brands`/`catalog_brands` split (CATALOG advertised 56 vs 3 on disk — now honest) + `validate()` lint (frontmatter, hex tokens, WCAG AA contrast pairs) per google-labs-code/design.md spec. (4) New `aizee design` CLI group: search/system/slop/lint/brands/domains/stacks — design_library + design_slop_verifier got real callers, removed from CONSTRUCTED_ONLY_SERVICES. Reference-only (Commons Clause): react-bits, canvas-ui. Roadmap: judge_fn browser loop, MCP design tool (needs manifest re-lock), seed frontmatter migration. Gotcha: CLI resolves AIZEE_ROOT (deployment mirror) — test with `aizee --root .` in dev. Tests: pytest via `py -3.10` (3.15 lacks deps).
 - **2026-10-23 — REA engines installed + rea-cli wrapper (Node fixed)**: Ghidra `12.1.4` (verified release line) + Temurin JDK `21.0.12.1` extracted under a local `installed software/` dir on the data drive (nothing on C:). System `node` is a write-protected manual dir at a sibling `nodejs/` (24.22.0, not the nvm symlink — `nvm use` retargets `%ProgramFiles%\nodejs` which isn't on PATH) → `rea-cli.mjs` wrapper next to the aizee root resolves `$NVM_HOME/v<.nvmrc>/node.exe` (24.22.1) and injects `GHIDRA_INSTALL_DIR` + `JAVA_HOME` per invocation (local jdk-21 overrides env when env major<21; global JAVA_HOME stays at scoop jdk17 for other tools). `setx GHIDRA_INSTALL_DIR` done for global discovery. Verified: `node ../rea-cli.mjs doctor` → node/ghidra/java/native-authority all healthy; `analyze whoami.exe` routed through real Ghidra 12.1.4 headless → PE segments/procedures/strings with Evidence tiers. reverse-engineering-lord rule 7 + useful-repos entry now name `rea-cli.mjs` as the canonical invocation.
 - **2026-10-23 — REA local install (sibling checkout, resident tool)**: User wanted REA usable on the machine without folding it into the runtime. Full clone lives OUTSIDE the repo at sibling `../rea` next to the aizee root (env override `REA_HOME`, documented in `.env.example` incl. BYO-engine vars GHIDRA_INSTALL_DIR/HOPPER_LAUNCHER_PATH/REA_IDA_MCP_CONFIG/REA_JADX_MCP_JAR). Built runnable: repo pins Node 24.22.1 (system 24.22.0 fails engines) → nvm-installed 24.22.1 used ONLY for this checkout (no `nvm use`; invoke `node "$REA_HOME/scripts/rea.mjs"`); `native/windows/build/{manifest.json,rea-windows-x64.node}` restored from the official `rea-agents@6.7.0` tarball (git checkout lacks it; `npm run build:windows-native` needs MSVC). Verified: `rea.mjs --version` 6.7.0, doctor runs (engines/registrations absent = expected), `analyze-javascript-application` on 414 files → full Evidence/unknowns output. Registry entry in `tech-stack/useful-repos.md`; reverse-engineering-lord rule 7 now prefers the local checkout over npx. temp/rea scratch clone removed.
 - **2026-10-23 — REA re-verification (temp/rea re-cloned, HEAD = rea-agents@6.7.0 = latest npm)**: Integration state verified: canonical registration OK (`aizee_mcp/config.json` + `plugins.yaml` enabled + reverse-engineering-lord skill live). Gap: `rea` NOT in the Devin IDE client config — doctor reports `config_drift` on the global client mcp_config (skill/MCP registered for aizee end-users, not for this agent session). Zero analysis engines installed (Hopper/Ghidra/IDA/JADX/Kuna absent) → only built-in static analyzers usable (JS/Electron, .NET, APK signature, IL2CPP metadata, Go/Rust build-info, Godot PCK, PyInstaller, PE certs, ELF notes, model files). Node 24.22.0 runs CLI fine. Adoptable-remaining: obligation-ledger closure model (candidate for spec_engine verify), lifecycle-ownership doctrine for process supervision, tool-shape taxonomy (inspect/search/trace/compare/workflow/observe) for MCP naming.
@@ -187,3 +189,96 @@
 
 ### فخ اكتُشف
 - كتابات scoped تحل vault المشروع من `--project`/`AGENT_PROJECT_ROOT` — لما `AIZEE_ROOT` يشير لمرآة النشر، الكتابات تروح لها. اختبار يدوي كتب handoff + سجل ذاكرة في `aizee\brain\` — نُظّف فورًا (ملف + صف memories + vector_id_map). دائمًا مرّر `--root`/`--project` للريبو العامل في الاختبارات.
+
+## v6.5.0 — Star-Repo Adoption Pass: Governed Path + Discovery (ARCH + GROWTH)
+
+### الملخص
+- دراسة 16 ريبو ناجح (temp/star-repos/) ثم اعتماد انتقائي: طبقة الحوكمة اتعمقت جوّه مسار LLM نفسه، والاكتشاف والتشخيص اتعرضوا للـ agent كأدوات. التفاصيل: `.ai/star-repos-report.md`.
+
+### التغييرات
+- **`runtime/verification.py`** — `verify` (off/final/checkpoints/strict) على `kernel.act`؛ strict يشغّل plan-diff + supply-chain على الـ diff — فوق البوابات الإلزامية، مش بدلها.
+- **`runtime/doctor.py` + `aizee doctor --json` + MCP `aizee_doctor`** — verdict (ready/degraded/blocked) + `next_steps` مرتبة بأوامر run.
+- **`runtime/tool_envelope.py`** — envelope موحد `{ok, result|error:{code}, meta}` و3 أدوات جديدة (doctor/find/goal) بتستخدمه؛ 46 أداة مسجلة.
+- **`runtime/find.py`** — `aizee find|goal "<نص>"` اكتشاف NL على catalog (skills/workflows/tech-stack).
+- **`runtime/gateway_proxy.py`** — proxy محلي (anthropic/openai surfaces) بـ failover chain؛ كل request يعدّي `kernel.act("LLMRequest", verify=...)` — enforcement جوّه المسار.
+- **`runtime/output_filter.py`** — ضغط حتمي لمخرجات الأدوات الكبيرة (opt-in `AIZEE_OUTPUT_FILTER=1`) سلكيًا في `_gateway_post_check`.
+- **`runtime/spec/changes.py`** — فولدرز OpenSpec `specs/changes/<name>/{proposal,design,tasks}.md` + propose/archive على SpecEngine.
+- **`runtime/ingest_rules.py`** — `rules/ingest.yaml` glob→bank/kind/tags جوّه `Ingestor._collect_rules`.
+- **`runtime/config_ops.py`** — `config show` بـ secrets masked + `config apply --check` dry-run بـ deep-merge diff.
+- **أسطح المنتج**: `SKILL.md` جذري + `aizee skill link` (ينسخ لكل harnesses) + `llms.txt` + قسم agent-contract في AGENTS.md.
+- **`runtime/__init__.py`** lazy exports للوحدات الجديدة.
+
+### Growth
+- الريبو اتسمّى `m3taz-ahmed/ai-globals` → **`m3taz-ahmed/aizee`**؛ remote اتظبط.
+- Description جديدة + 15 topic + discussions مفتوحة؛ release `v6.4.0` اتعمل على commit 970fd78.
+- README: hook outcome-focused + جدول الأوامر الجديد + `pip install aizee` المكسور اتصلح بـ `pip install git+...` (PyPI لسه مش منشور — تحتاج credentials).
+- متبقّي خارجيًا: PyPI publish، GIF demo، docs site، MCP registries، Show HN/مجتمعات — تحتاج صلاحيات مالك/حسابات.
+
+### البوابات
+- ruff OK، mypy 198 files OK، `aizee test --full` **7330 passed + 100% cov**، `eval/harness.py` all_pass، validate-globals 6.5.0 consistent (545 scanned، 0 errors).
+
+### فخ اكتُشف
+- `pytest --cov=<pkg.module>` (اسم موديول مش مسار) يخلّي pytest-cov يستورده مبكرًا → `mcp`→`cryptography` PyO3 double-init error. دايمًا استخدم مسارات (`--cov=runtime/`) زي `aizee_cli.py`.
+- `PlanDiffValidator` يحتاج `+++ b/<file>` في الـ diff علشان يحدد الـ suffix؛ diff بلا header كان بيعدي بصمت.
+- YAML 1.1: `verify: off` يتقري كـ `False` — GatewayConfig.load بيطبيعه للمستوى الصح.
+
+## [2026-10-27] v6.5.0 — Star-Repos Batch-2 Adoption
+
+### الملخص
+- دراسة 7 ريبو إضافية (mimic، browser-use، agentmemory، scientific-agent-skills، diagram-design، anthropic-cybersecurity-skills، OpenViking — التفاصيل: `.ai/star-repos-report-batch2.md`) ثم تنفيذ كل التبنّيات المرشّحة.
+
+### التغييرات
+- **`runtime/skill_lint.py` + `aizee skill lint [--write-index]`** — description lint (طول+صياغة trigger+reachable) + collision detection بفلترة family-tokens (lord/architect مش تنافس) + negative-trigger exemption + توليد `skills/index.json`. كشف 74 issue + 37 collision حقيقي في مكتبتنا.
+- **`runtime/skill_scan.py` + `aizee skill scan`** — فحص prompt-injection/exfil/remote-pipe/credential-request (high يفشل الفحص) — نمط Cisco skill-scanner محلي.
+- **`runtime/abstracts.py` + `aizee abstract`** — L0 sidecars مولّدة + L1 overview + L2 full؛ `read_context(path, level)` (نمط OpenViking).
+- **`runtime/hooks.py` + `aizee hooks install|status|fire`** — session_start (briefing L0 لـ stdout) + post_tool_failure/pre_compact/session_end (telemetry fire-and-forget لـ memory). يكتب `.claude/settings.json` + `.aizee/hooks/*.sh` (نمط agentmemory).
+- **`runtime/sensitive.py` SensitiveVault** — placeholders `{NAME}`؛ inject وقت النداء، mask قبل الـ gates/audit؛ `kernel.act(sensitive_data={...})` يعمل mask تلقائيًا (نمط browser-use).
+- **`runtime/api_session.py` GovernedApiSession + `aizee session from-curl|from-har`** — mimic: auth-bundle من curl/HAR/headers (KEEP/DROP rules)، كل request يعدّي `kernel.act("ApiCall")` والـ audit يشوف headers masked.
+- **Gateway tiers** — `Provider.tiers` (flash/extraction) + `payload.tier`؛ dedicated providers أولاً ثم untiered fallback (نمط browser-use small-model-split).
+- **`runtime/secret_scrub.py`** — scrubbing وقت الـ capture في `Ingestor._memory` (keyed secrets + prefixes + auth headers)؛ meta تحفظ `scrubbed: n` وتحذير.
+- **`plugin.json`** agentskills.io manifest + `<!-- mcp-name: ... -->` في README.
+
+### فخ اكتُشف (batch 2)
+- `mypy` بيوحّد types المتغيرات جوّه scope واحد: إعادة استخدام اسم `report` بين branches (SkillReport vs dict) عمل 7 أخطاء — استخدم أسماء مميزة.
+- Regex `{1,40}` بعد `[A-Z]` بيرفض placeholders قصيرة (`{T}`) — لازم `{0,40}`.
+- `\b` بعد مجموعة في regex بيكسر الأنماط اللي بتنتهي بحرف غير-word (`rm -rf /`).
+- `_as_tuple`/frontmatter: سكيلز `.md` المسطحة عندها name+description بس (بلا triggers) — الـ lint بيعتبرها unreachable-by-trigger وهي فعلاً كده بالنسبة لـ catalog routing.
+
+### مراجعة ثانية كاملة (نفس اليوم)
+- أمنيّة: `api_session` كان بيسمح absolute-URL cross-host + urllib بيبعت الـ auth-bundle مع 302 → رفض cross-host + `_SameHostRedirect`؛ `gateway_proxy` body-cap 10MB + prompt-gate 4k→64k؛ `sensitive.mask_obj` بيحوّل tuple→list (اتصلح).
+- وثائق: `sync_docs.py` هو الـ canonical counter (runtime=124 top-level, skills=141, workflows=63/77, stack=266 — بيعد README.md في الـ glob؛ tests=7380 AST). لازم نشغّله بدل التعديل اليدوي — هو اللي بيعرف الأنماط المُدارة، وفيه unmanaged spots (badges عربي، prose، plugin.json، `.windsurfrules`) بتتظبط يدويًا بعده. SKILL.md table كان ناقصه 5 أوامر جديدة.
+- `triggers:` في frontmatter = gating مش discovery — أي skill unconditional لازم `always: true` قبل إضافة triggers وإلا بيتعطّل عن الـ persona routing (test_persona_reset مسكها).
+
+## [2026-10-27] v6.5.0 — Skill-Library Repair (lint 0/0)
+
+### الملخص
+- إصلاح كامل لمكتبة السكيلز بعد تقرير الـ lint: **141 skills — 0 issues, 0 collisions** (كانوا 74 issue + 37 collision).
+
+### التغييرات
+- **73 skill** اتحصلوا على `triggers:` في الـ frontmatter + **`always: true`** — بدون `always` كانت هتتحول لـ context-gated ويتعطّلوا في `matches_context` (اكتشفه `test_persona_reset` — qa-automation اختفى من الـ lords).
+- **43 negative trigger** ("Do not use for X — use `other`") على الطرف الأقل تخصصًا في كل زوج متصادم.
+- **`skill_lint.py`**: `_FAMILY_TOKENS` اتوسّعت بـ role-nouns (architect/engineer/…) + `_GENERIC_TOKENS` جديدة للـ single-word triggers العامة + قاعدة "shared trigger مش collision لو name-token أو generic" + استبعاد `README.md`/`index.json` من الـ glob.
+- **`secret_scrub.py`**: prose-filter — قيمة pure-alpha <16 حرف بعد `key:` مش سر (`Authorization: Distinguish…` كان بيتحذف من ingest).
+- **5 ملفات** فيها mojibake عربي pre-existing (`O?U?` bytes — unrecoverable من HEAD) اتستبدلت بـ triggers عربية سليمة.
+- **`skills/index.json`** مولّد + متجاهل في gitignore زي `abstracts/`.
+
+### فخ اكتُشف (batch 2b)
+- `triggers:` في frontmatter aiZee = **gating condition** مش مجرد discovery hint — إضافته لسكيل unconditional بيعطّله لما `context` يخلو من task text. `always: true` يحافظ على الدلالات.
+- `(?ms)` DOTALL في regex بيخلي `.*` ياكل أسطر — كلّفنا `personas:`/`tech_stack:` في 50 ملف؛ اتصلحوا بإرجاع الـ blocks verbatim من HEAD. التحقق بمقارنة keys قبل/بعد إلزامي بعد bulk edits.
+- `git show HEAD:path` على Windows محتاج forward-slashes وإلا بيرجع فاضي بصمت — فحص إصلاحي كان no-op من غير ما أعرف.
+- Coverage racing: `test --full` + `eval/harness` متزامنين بيكسروا `.coverage` shards — sequential بس.
+
+## [2026-10-27] v6.5.0 — Security Review Pass (full code review)
+
+### الملخص
+- مراجعة كاملة بالـ SEC/DEV personas بعد الـ skill-repair: لقيت وصلّحت 4 مشاكل حقيقية في الموديولات الجديدة.
+
+### الإصلاحات
+- **`api_session.py` exfiltration guard** — absolute `path` لأي host كان هيبعت الـ auth bundle لدومين مهاجم؛ دلوقتي cross-host URL مرفوض + `_SameHostRedirect` handler بيمنع urllib من إعادة إرسال Authorization/Cookie في 302 لدومين تاني + `extra_headers` بقت داخلة في الـ kernel gate masked.
+- **`gateway_proxy.py` DoS + gate-evasion** — `_read_body` بقى محدود بـ 10MB (`_MAX_BODY_BYTES` → 400) + prompt-gate window اتوسعت من 4k لـ 64k حرف (`_PROMPT_GATE_CHARS`) — injection مبقاش يقدر يتخبى ورا الحد القديم.
+- **`sensitive.py`** — `mask_obj` بيحافظ على tuple type (كان بيحولها list).
+- **Tests**: `_opener` real-build + cross-host deny + redirect block + OSError path + oversized-body raw-socket — 7417 pass + 100% cov.
+
+### فخ اكتُشف (batch 2c)
+- urllib `HTTPRedirectHandler` بيعيد إرسال **كل** الـ headers على redirect — بما فيها Authorization — لأي host. أي code بيلفّه لازم redirect-policy خاصة.
+- Tests بتـpatch `urllib.request.urlopen` بتتكسر بصمت لما الـ code ينتقل لـ `build_opener().open()` — patch لازم يبقى على الـ seam (`_opener`) مش الـ stdlib.

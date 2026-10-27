@@ -1,27 +1,46 @@
+<!-- mcp-name: com.m3taz-ahmed/aizee -->
 <div align="center">
   <img src="logo.png" width="160" alt="aiZee Logo">
   <h1>aiZee</h1>
-  <p><strong>The policy layer for AI coding.</strong></p>
+  <p><strong>Your AI agent ships hallucinated APIs and secrets.<br>aiZee blocks them — enforced, not advised.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/Version-6.4.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.4.0">
-    <img src="https://img.shields.io/badge/Tests-7061%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7061 passed">
+    <img src="https://img.shields.io/badge/Version-6.5.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.5.0">
+    <img src="https://img.shields.io/badge/Tests-7000%2B%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7000+ passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-140-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="140 Skills">
+    <img src="https://img.shields.io/badge/Skills-141-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="141 Skills">
     <img src="https://img.shields.io/badge/Workflows-63-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="63 Workflows">
-    <img src="https://img.shields.io/badge/Tech--Stack-265-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="265 Tech-Stack refs">
+    <img src="https://img.shields.io/badge/Tech--Stack-266-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="266 Tech-Stack refs">
   </p>
 </div>
 
 ---
 
-[Read this in Arabic](README-AR.md) · [Changelog](CHANGELOG.md) · [Installer Guide](#installation)
+[Read this in Arabic](README-AR.md) · [Changelog](CHANGELOG.md) · [Installer Guide](#installation) · [llms.txt](llms.txt)
 
 ---
+
+## See it block something
+
+```console
+$ aizee check 'Bash' --args '{"command":"git add .env && git commit -m keys"}'
+{
+  "ok": false,
+  "decision": "deny",
+  "reason": "guardian: commits secrets file .env"
+}
+
+$ aizee doctor --json | jq .verdict
+"ready"
+```
+
+Every tool call, LLM request, memory write, and file change flows through
+`Kernel.act()` — **Probity → Guardian → Policy → LoopDetector → Budget →
+Audit** — so a denial is a wall, not a suggestion.
 
 ## What is aiZee?
 
@@ -38,6 +57,43 @@ A **zero-compromise, version-controlled operating system** that sits between you
 | Guardrails that exist but aren't on the path | **v6: enforcement wired into `Kernel.act()` + every MCP call** |
 
 ---
+
+## What's New in v6.5.0 — Agent-Facing Surface
+
+Adopted from a structured study of 16 top open-source agent repos
+(google/artemis, Agent-Reach, OpenSpec, DeepTutor, free-claude-code,
+paperless-ngx — full matrix in `.ai/star-repos-report.md`):
+
+- **`aizee_doctor` MCP tool** — agents can self-diagnose: structured
+  `verdict` (`ready`/`degraded`/`blocked`) + ordered `next_steps` with
+  `Run:` commands for automatable fixes and `Guidance:` for user-only
+  actions. CLI: `aizee doctor --json`.
+- **Uniform MCP envelope + stable error codes** — new tools return
+  `{schema_version, ok, result, error:{code}, meta}` so agents branch on
+  `NEED_SETUP`/`POLICY_DENIED`/`UPSTREAM_BROKEN` instead of parsing text.
+- **`aizee find` / `aizee goal`** — natural-language discovery over 141
+  skills + 63 workflows + 266 tech-stack refs; `goal` maps an objective to
+  a workflow's step list. MCP: `aizee_find`, `aizee_goal`.
+- **Governed LLM gateway** — `aizee gateway init|serve` runs a localhost
+  Anthropic/OpenAI-compatible proxy with a provider **failover chain** and
+  `Kernel.act` enforcement on every request: prompt guardrails + policy +
+  budget fire *on the traffic path*.
+- **Verification dial** — `Kernel.act(..., verify="checkpoints"|"strict")`
+  layers plan-diff and supply-chain import checks on top of the mandatory
+  gates.
+- **OpenSpec-style change folders** — `aizee spec propose <name>` scaffolds
+  `proposal.md`/`design.md`/`tasks.md`; `aizee spec archive` lands it under
+  `changes/archive/YYYY-MM-DD-*`.
+- **Memory consume-rules** — `rules/ingest.yaml` glob→bank/kind/tags
+  routing, so `aizee memory ingest` channels folders into named banks.
+- **`aizee config show` (masked) + `config apply --check`** — secrets are
+  redacted in output; `--check` validates a config file and previews the
+  exact diff without writing.
+- **Root `SKILL.md` + `aizee skill link`** — aiZee installs itself as a
+  skill into Cursor, Claude Code, Codex, and OpenCode harnesses, so any
+  agent picks up the governed workflow automatically.
+- **`aizee models` / `aizee work poll`** — model routing catalog and a
+  gh-powered open-work pull list.
 
 ## What's New in v6.1.0 — Lean Surface
 
@@ -111,7 +167,7 @@ Full detail: [CHANGELOG.md](CHANGELOG.md)
 ### Installation
 
 ```bash
-git clone https://github.com/m3taz-ahmed/ai-globals.git .ai
+git clone https://github.com/m3taz-ahmed/aizee.git .ai
 cd .ai
 ```
 
@@ -130,12 +186,16 @@ cd .ai
 bash install.sh
 ```
 
-**PyPI:**
+**pip (from GitHub):**
 ```bash
-pip install aizee
+pip install "git+https://github.com/m3taz-ahmed/aizee.git"
 aizee bootstrap --target ~/.aizee --yes   # materialize a minimal OS root
 export AIZEE_ROOT=~/.aizee
 ```
+
+> PyPI publication is planned; until `pip install aizee` lands, install
+> from the repo directly as above (the `pyproject.toml` is real — it
+> installs cleanly as an editable or git package).
 
 **Installer map** — the `.bat` files are thin launchers, not separate installers:
 
@@ -166,7 +226,7 @@ aizee status    # Current persona, skills, budget
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 107 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 124 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -176,7 +236,7 @@ aizee status    # Current persona, skills, budget
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
 ├── aizee_mcp/               # MCP server (39 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
-├── skills/                  # 140 persona + lord skills
+├── skills/                  # 141 persona + lord skills
 ├── workflows/               # 63 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # Version-locked stack references
@@ -272,9 +332,23 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 
 | Command | Purpose |
 | :--- | :--- |
-| `aizee doctor` | Environment health (46 checks) |
+| `aizee doctor [--json]` | Health verdict + ordered Run:/Guidance: fix steps |
 | `aizee heal [--apply] [-y]` | Diagnose + safe auto-fixes (dry-run default) |
 | `aizee check <action>` | Policy verdict for an action |
+| `aizee find "<need>"` | NL search over skills/workflows/tech-stack |
+| `aizee goal "<objective>"` | Map a goal to the best workflow + steps |
+| `aizee config show` | Masked settings snapshot |
+| `aizee config apply <file> --check` | Validate a settings file (no write) |
+| `aizee spec propose\|changes\|archive` | OpenSpec-style change folders |
+| `aizee gateway init\|serve` | Governed LLM proxy (failover + enforcement) |
+| `aizee models` | Model routing catalog (tiers + cost) |
+| `aizee work poll` | Open GitHub issues via `gh` (pull model) |
+| `aizee skill link` | Install SKILL.md into agent harnesses |
+| `aizee skill lint [--write-index]` | Description lint + trigger-collision detection |
+| `aizee skill scan` | Prompt-injection / exfiltration scan of skills |
+| `aizee hooks install\|status` | Wire aiZee hooks into agent harnesses |
+| `aizee abstract [--force]` | Generate L0 `.abstract.md` tiered summaries |
+| `aizee session from-curl\|from-har` | Inspect a captured API auth bundle |
 | `aizee memory compact [--apply]` | Compact Memory.md to its line budget |
 | `aizee codemode --code/--file` | Sandboxed snippet calling MCP tools |
 | `aizee task overcheck` | Over-engineering audit of the active plan |
@@ -319,6 +393,27 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 4. All gates must pass — no PR without green
 5. Conventional commits: `type(scope): subject`
 6. PR ≤ 400 lines, targeted tests only
+
+---
+
+## Ecosystem & Distribution
+
+aiZee ships its own MCP server and agent-facing skill. The surfaces below make
+it discoverable to agents and humans — some require maintainer accounts:
+
+| Surface | What it unlocks | Status |
+|---|---|---|
+| **PyPI** (`aizee`) | `pip install aizee` — the README's install path | ⏳ pending publication |
+| **Official MCP servers list** | Listed in `modelcontextprotocol/servers` — where Claude/Cursor users discover MCP tools | ⏳ PR needed |
+| **mcpservers.org / Smithery / Glama** | MCP directories with one-click install | ⏳ submission needed |
+| **awesome-claude-code / awesome-mcp** | Curated lists that drive most early stars | ⏳ PR needed |
+| **GitHub social preview** | The image shown when the repo is shared on X/LinkedIn/Discord | ⏳ needs a banner image (1280×640) |
+| **Demo GIF** | The money shot: agent blocked mid-commit | ⏳ record with ScreenToGif/asciinema+agg |
+| **Show HN · r/ClaudeAI · r/cursor** | Launch traffic | ⏳ after the above land |
+| **Dev.to / Hashnode post** | Searchable launch write-up | ⏳ optional |
+
+Everything else (topics, description, release, `llms.txt`, root `SKILL.md`,
+`aizee skill link` into agent harnesses) is already shipped.
 
 ---
 

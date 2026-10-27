@@ -74,9 +74,9 @@ Before declaring done, run from the OS root:
 
 - `ruff check .`
 
-- `mypy` (strict, 201 files)
+- `mypy` (strict, 205 files)
 
-- `aizee test --full` (full suite with coverage, parallel by default — ~127s, 7637 tests, 100% cov)
+- `aizee test --full` (full suite with coverage, parallel by default — ~127s, 7419 tests, 100% cov)
 
 - `python eval/harness.py` (read-only: ruff + mypy + pytest + validate-globals)
 
@@ -144,7 +144,7 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 107 governance modules in `runtime/`.
+- **Runtime Modules** — 124 governance modules in `runtime/`.
 
 - **MCP Server** — `aizee_mcp/` exposes 39 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
@@ -195,16 +195,16 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 107 governance modules
+├── runtime/                   # Kernel + 124 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 107 governance modules
+│   └── ...                    # 124 governance modules
 ├── aizee_mcp/                 # MCP server (39 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
-├── skills/                    # 140 persona + lord skills
+├── skills/                    # 141 persona + lord skills
 ├── workflows/                 # 63 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
 ├── tech-stack/                # 266 version-locked stack references
@@ -412,3 +412,19 @@ If behavior is unclear:
 - Stage only files YOU modified (`git add <file>`, never `git add .`)
 
 - No `git commit` / `git push` without explicit user approval
+
+## Worker-Agent Contract
+
+Adopted from cua's AGENTS.md — durable work lives in GitHub, not in local queues.
+
+- The issue/RFC carries the problem; the pull request carries the execution.
+  A reviewer must not need local scheduler/worktree state to understand the work.
+- When the account has write access, push the work branch to the canonical repo —
+  not a personal fork.
+- Keep progress in the linked PR description, not periodic status comments.
+- Route suspected vulnerabilities through SECURITY.md privately — never a public
+  issue, log, or screenshot.
+- `aizee work poll` lists open issues via the gh CLI; unassigned + `help wanted`
+  rank first (pull model).
+- Releases are per-version tags (`vX.Y.Z`) with GitHub release notes — there are
+  no component release streams.

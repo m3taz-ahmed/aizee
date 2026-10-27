@@ -48,4 +48,4 @@ for approval, or allow based on configured rules.
 ## Reporting Issues
 
 If you encounter harmful or incorrect AI outputs, please report them at:
-https://github.com/m3taz-ahmed/ai-globals/issues
+https://github.com/m3taz-ahmed/aizee/issues

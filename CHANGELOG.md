@@ -2,7 +2,110 @@
 
 ## [Unreleased]
 
-REA (morluto/rea, MIT) integration + Arabic persona-detection fix.
+## [6.5.0] - 2026-10-26 (Star-Repos Adoption Pass — artemis / agent-reach / OpenSpec / DeepTutor / free-claude-code / paperless)
+
+Features adopted from a structured study of 16 open-source agent repos
+(full matrix: `.ai/star-repos-report.md`), plus REA (morluto/rea, MIT)
+integration and Arabic persona-detection fixes.
+
+### Added (star-repos adoption)
+
+- **Structured doctor engine** (`runtime/doctor.py`): machine-readable
+  `verdict` (`ready`/`degraded`/`blocked`) + ordered `next_steps` where
+  automatable fixes carry `run` commands and manual steps carry `guidance`.
+  `aizee doctor --json` emits the report; the new **`aizee_doctor` MCP
+  tool** exposes the same truth to agents (artemis pattern).
+- **Uniform MCP response envelope** (`runtime/tool_envelope.py`):
+  `{schema_version:"aizee.tool.v1", ok, tool, result, error:{code}, meta}`
+  with stable error codes (`NEED_SETUP`, `POLICY_DENIED`,
+  `UPSTREAM_BROKEN`, `BAD_INPUT`, ...) + `meta.update` when
+  `state/update_available.json` exists (Agent-Reach pattern).
+- **NL discovery** (`runtime/find.py`): `aizee find "<need>"` ranks
+  skills/workflows/tech-stack by token relevance; `aizee goal
+  "<objective>"` maps a goal to the best workflow + its step list.
+  Both exposed as MCP tools `aizee_find`/`aizee_goal` (hackingtool pattern).
+- **Verification-depth dial** (`runtime/verification.py`):
+  `Kernel.act(..., verify="off|final|checkpoints|strict")` layers plan-diff
+  and supply-chain checks on top of the mandatory six gates — the gates
+  are never removed (artemis pattern, fail-closed).
+- **Governed LLM gateway** (`runtime/gateway_proxy.py`): localhost
+  Anthropic/OpenAI-surface proxy with an ordered provider failover chain
+  and `kernel.act` enforcement on every request — governance inside the
+  traffic path, not around it (free-claude-code + ds2api pattern).
+  `aizee gateway init|serve`.
+- **OpenSpec-style change folders** (`runtime/spec/changes.py`):
+  `aizee spec propose <name>` scaffolds
+  `specs/changes/<name>/{proposal,design,tasks}.md`; `aizee spec changes`
+  lists progress; `aizee spec archive <name>` lands it under
+  `changes/archive/YYYY-MM-DD-<name>`.
+- **Memory consume-rules** (`runtime/ingest_rules.py`): `rules/ingest.yaml`
+  maps root-relative globs to `bank`/`kind`/`tags`; `memory ingest` routes
+  matched files into banks (paperless-ngx consume pipeline).
+- **Config ops** (`runtime/config_ops.py`): `aizee config show` masks
+  secret-looking values; `aizee config apply <file> --check` validates +
+  previews the exact diff without writing (DeepTutor pattern).
+- **`aizee models`**: prints the model routing catalog (tier, provider,
+  cost, context).
+- **`aizee work poll`**: lists open GitHub issues via `gh`, ranking
+  unassigned + help-wanted first (cua pull-model).
+- **Root `SKILL.md` + `aizee skill link`**: aiZee now ships as an
+  installable skill for other agent harnesses (cursor/claude/codex/
+  opencode).
+- **`llms.txt`**: LLM-facing repo index at root.
+- **Token-efficiency output filter** (`runtime/output_filter.py`):
+  opt-in via `AIZEE_OUTPUT_FILTER=1`; collapses boilerplate in large MCP
+  tool results before they reach the model, audited to the log.
+
+### Added (star-repos batch 2 — agentmemory / browser-use / OpenViking / anthropic-cybersecurity-skills / scientific-agent-skills / mimic)
+
+- **Skill authoring toolchain** (`runtime/skill_lint.py`): `aizee skill
+  lint` checks every skill description (length, trigger phrasing,
+  reachability), detects trigger/name collisions with family-token
+  awareness (lord/architect families don't compete), respects negative
+  triggers, and regenerates `skills/index.json` (`--write-index`).
+- **Skill security scanner** (`runtime/skill_scan.py`): `aizee skill
+  scan` flags prompt-injection phrasing, exfil channels, remote
+  pipe-to-shell, credential requests, eval/destructive patterns — high
+  findings fail the scan (Cisco skill-scanner pattern, offline).
+- **Tiered context loading** (`runtime/abstracts.py`): L0 abstract
+  sidecars generated per skill/tech-stack/workflow file
+  (`aizee abstract`), L1 overview read, L2 full — agents check relevance
+  before paying for content (OpenViking L0/L1/L2).
+- **Agent-harness hooks** (`runtime/hooks.py`): `aizee hooks install`
+  wires session_start/post_tool_failure/pre_compact/session_end into
+  Claude Code `.claude/settings.json` + portable `.aizee/hooks/*.sh`;
+  `aizee hooks fire <event>` runs context-injecting (stdout) or
+  fire-and-forget telemetry handlers (agentmemory pattern).
+- **Sensitive-data vault** (`runtime/sensitive.py`): secrets reference
+  `{NAME}` placeholders; `SensitiveVault.inject` resolves at call time,
+  `mask`/`mask_dict` redact before gates/audit.
+  `Kernel.act(..., sensitive_data={...})` masks action args
+  automatically (browser-use pattern).
+- **Governed API session** (`runtime/api_session.py`): replay a
+  captured auth bundle — `from_curl`, `from_har`, `from_headers` —
+  filtered through keep/drop header rules; every request passes
+  `kernel.act` before dispatch with masked headers (mimic adoption).
+  `aizee session from-curl|from-har` inspects bundles.
+- **Gateway provider tiers**: providers may declare `tiers: [flash,
+  extraction]`; requests carrying `tier` route to dedicated cheap/fast
+  providers first, untiered fallbacks after (browser-use
+  small-model-split).
+- **Capture-time secret scrubbing** (`runtime/secret_scrub.py`):
+  memory ingest scrubs assigned secrets, known token prefixes, and
+  Authorization headers before persistence (agentmemory pattern).
+- **`plugin.json`**: agentskills.io Agent Plugins manifest — aiZee
+  skills are installable by any spec-compliant host.
+- **README `mcp-name` marker** for MCP-registry indexing
+  (browser-use pattern).
+
+### Changed
+
+- **`aizee doctor`** now prints a verdict banner + "Next steps" (Run:/
+  Guidance:) and exits non-zero on degraded/blocked; removed three stale
+  module checks (trajectory/reasoning_graph/context_manager were deleted
+  in 6.4.0).
+- **AGENTS.md**: added a Worker-Agent Contract section (GitHub is the
+  durable record; pull-model work via `aizee work poll`).
 
 ### Fixed
 
@@ -19,6 +122,23 @@ REA (morluto/rea, MIT) integration + Arabic persona-detection fix.
   advertises only resolvable names.
 - **`detect_persona()` hardcoded default:** now uses
   `PersonaDetector.DEFAULT` (personas.yaml) instead of literal `"ARCH"`.
+- **Skill-library repair (141 skills, 0 lint issues, 0 collisions):**
+  73 unreachable skills gained `triggers:` + `always: true` (frontmatter
+  `triggers:` are load-gates in `matches_context` — `always` keeps them
+  unconditional); 43 negative triggers disambiguate colliding pairs;
+  `skill_lint` gained role-noun family tokens, generic single-word trigger
+  filtering, name-token exemption, and `README.md`/`index.json` glob
+  exclusion; `secret_scrub` prose-filter stops redacting English words
+  after `key:` (`Authorization: Distinguish…`); 5 files with
+  unrecoverable Arabic mojibake (`O?U?`) got valid Arabic triggers.
+- **`api_session` auth-bundle exfiltration paths:** absolute-URL
+  `request()` targets are refused when the host differs from the
+  captured `base_url`, and a `_SameHostRedirect` opener blocks urllib's
+  default credential-replay on cross-host 302s; `extra_headers` are now
+  masked into the `kernel.act` gate call.
+- **`gateway_proxy` hardening:** request bodies over 10 MB are rejected
+  (400), and the prompt-guardrail scan window grew 4k → 64k chars so
+  injected instructions can't hide past the gate.
 
 ### Added
 
