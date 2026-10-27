@@ -275,6 +275,20 @@ def _post_install_hooks(root: Path) -> list[str]:
     removed = _remove_stale_files(root)
     actions.append(f"stale cleanup: {removed} path(s) removed")
 
+    # 0b. Refresh the install stamp — the verify step reads .aizee-version,
+    # so it must reflect the version just pulled, not the install-time one.
+    try:
+        if str(root) not in sys.path:
+            sys.path.insert(0, str(root))
+        import config as _cfg
+
+        ver = getattr(_cfg, "VERSION", "") or ""
+        if ver:
+            (root / ".aizee-version").write_text(ver + "\n", encoding="utf-8")
+            actions.append(f"version stamp: {ver}")
+    except Exception as exc:  # stamp is advisory — never fail the update on it
+        actions.append(f"version stamp: skipped ({exc})")
+
     # 1. pip install -e . (refresh package + CLI shim)
     rc, _out, _ = _run(
         [sys.executable, "-m", "pip", "install", "-e", ".", "--quiet"],
