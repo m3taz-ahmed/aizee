@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import contextlib
 import os
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -84,6 +85,28 @@ class FusionResult:
     rationale: str
 
 
+@dataclass
+class DesignLint:
+    """Result of linting one brand's DESIGN.md (google-labs-code/design.md spec)."""
+
+    brand: str
+    ok: bool
+    has_frontmatter: bool
+    token_count: int
+    issues: list[str] = field(default_factory=list)  # each prefixed "error:"/"warning:"
+
+
+def _contrast_ratio(hex_a: str, hex_b: str) -> float:
+    """WCAG contrast ratio between two #rrggbb colors (1-21)."""
+    def lum(h: str) -> float:
+        r, g, b = (int(h[i : i + 2], 16) / 255 for i in (1, 3, 5))
+        lin = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in (r, g, b)]
+        return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+    l1, l2 = sorted((lum(hex_a), lum(hex_b)), reverse=True)
+    return (l1 + 0.05) / (l2 + 0.05)
+
+
 class DesignLibrary:
     """Catalog of brand design systems with loading and mixing capabilities.
 
@@ -134,13 +157,83 @@ class DesignLibrary:
 
     @property
     def available_brands(self) -> list[str]:
-        """List all available brand names (catalog + filesystem)."""
-        brands: set[str] = set(self.CATALOG)
-        if self._dir and self._dir.exists():
-            for d in self._dir.iterdir():
-                if d.is_dir() and (d / self.DESIGN_FILE).exists():
-                    brands.add(d.name.lower())
-        return sorted(brands)
+        """List all available brand names (catalog + filesystem).
+
+        WARNING: this is the union of the advertised CATALOG and on-disk
+        brands. Use :attr:`installed_brands` when you need what can actually
+        be loaded; :attr:`catalog_brands` for importable-but-absent names.
+        """
+        return sorted(set(self.CATALOG) | set(self.installed_brands))
+
+    @property
+    def installed_brands(self) -> list[str]:
+        """Brands with a real DESIGN.md on disk (loadable)."""
+        if not self._dir or not self._dir.exists():
+            return []
+        return sorted(
+            d.name.lower()
+            for d in self._dir.iterdir()
+            if d.is_dir() and (d / self.DESIGN_FILE).exists()
+        )
+
+    @property
+    def catalog_brands(self) -> list[str]:
+        """Advertised catalog names not yet installed on disk."""
+        return sorted(set(self.CATALOG) - set(self.installed_brands))
+
+    def validate(self, brand: str) -> DesignLint:
+        """Lint one brand's DESIGN.md against the structured-spec checklist.
+
+        Checks: file exists, YAML frontmatter present (machine-readable
+        tokens), hex color tokens present, text/background contrast pairs
+        meeting WCAG AA (4.5:1), and a typography section.
+        """
+        issues: list[str] = []
+        system = self.load(brand)
+        if system is None:
+            return DesignLint(brand=brand.lower(), ok=False, has_frontmatter=False,
+                              token_count=0, issues=["error: no DESIGN.md on disk"])
+
+        content = system.content
+        fm = re.search(r"\A---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
+        has_fm = fm is not None
+        if not has_fm:
+            issues.append("warning: no YAML frontmatter - tokens not machine-readable "
+                          "(see google-labs-code/design.md spec)")
+        fm_text = fm.group(1) if fm else ""
+
+        tokens = re.findall(r"#[0-9a-fA-F]{6}\b", fm_text or content)
+        if not tokens:
+            issues.append("warning: no hex color tokens found")
+        if not re.search(r"(?i)(font|typograph)", content):
+            issues.append("warning: no typography guidance found")
+
+        if has_fm:
+            issues.extend(self._check_contrast_pairs(fm_text))
+        if not re.search(r"^#\s", content, re.MULTILINE):
+            issues.append("warning: no top-level heading")
+        ok = not any(i.startswith("error:") for i in issues)
+        return DesignLint(brand=brand.lower(), ok=ok, has_frontmatter=has_fm,
+                          token_count=len(tokens), issues=issues)
+
+    def _check_contrast_pairs(self, fm_text: str) -> list[str]:
+        """Find background/foreground-style hex pairs in frontmatter and check WCAG AA."""
+        issues: list[str] = []
+        pairs = re.findall(
+            r"(?i)(background|surface|bg|base)\w*\s*[:=]\s*['\"]?(#[0-9a-fA-F]{6})"
+            r"|(foreground|text|fg|ink|on[_-]?\w+)\w*\s*[:=]\s*['\"]?(#[0-9a-fA-F]{6})",
+            fm_text,
+        )
+        bg_hexes = [g[1] for g in pairs if g[1]]
+        fg_hexes = [g[3] for g in pairs if g[3]]
+        for bg in bg_hexes:
+            for fg in fg_hexes:
+                ratio = _contrast_ratio(bg, fg)
+                if ratio < 4.5:
+                    issues.append(
+                        f"warning: contrast {ratio:.2f}:1 between {fg} and {bg} "
+                        "fails WCAG AA (4.5:1)")
+        return issues
 
     def load(self, brand: str) -> BrandDesignSystem | None:
         """Load a single brand's design system.

@@ -217,3 +217,75 @@ def test_import_brand_invalidates_cache(tmp_path: Path) -> None:
     second = lib.load("cached")
     assert second is not None and "v2" in second.content
 
+
+
+# --- Installed vs catalog split + validate() ---
+
+def test_installed_vs_catalog_split(tmp_path: Path) -> None:
+    _write_brand(tmp_path, "acme", "# Acme\n")
+    lib = DesignLibrary(library_dir=tmp_path)
+    assert "acme" in lib.installed_brands
+    assert "stripe" not in lib.installed_brands
+    assert "stripe" in lib.catalog_brands
+    assert "acme" not in lib.catalog_brands
+    assert set(lib.available_brands) == set(lib.installed_brands) | set(lib.catalog_brands)
+
+
+def test_validate_missing_brand(tmp_path: Path) -> None:
+    lib = DesignLibrary(library_dir=tmp_path)
+    lint = lib.validate("ghost")
+    assert not lint.ok
+    assert any(i.startswith("error:") for i in lint.issues)
+
+
+def test_validate_prose_only_warns_frontmatter(tmp_path: Path) -> None:
+    _write_brand(tmp_path, "proseco", "# ProseCo\n\n## Colors\n\nPrimary #112233.\n\nTypography: serif.\n")
+    lib = DesignLibrary(library_dir=tmp_path)
+    lint = lib.validate("proseco")
+    assert lint.ok  # warnings only
+    assert not lint.has_frontmatter
+    assert any("frontmatter" in i for i in lint.issues)
+
+
+def test_validate_frontmatter_contrast(tmp_path: Path) -> None:
+    content = (
+        "---\nname: GoodCo\n"
+        "colors:\n  background: \"#FFFFFF\"\n  foreground: \"#111111\"\n---\n"
+        "# GoodCo\n\nTypography: sans.\n"
+    )
+    _write_brand(tmp_path, "goodco", content)
+    lib = DesignLibrary(library_dir=tmp_path)
+    lint = lib.validate("goodco")
+    assert lint.has_frontmatter
+    assert lint.token_count >= 2
+    assert not any("contrast" in i for i in lint.issues)
+
+
+def test_validate_low_contrast_flagged(tmp_path: Path) -> None:
+    content = (
+        "---\nname: BadCo\n"
+        "colors:\n  background: \"#FFFFFF\"\n  foreground: \"#EEEEEE\"\n---\n"
+        "# BadCo\n\nTypography: sans.\n"
+    )
+    _write_brand(tmp_path, "badco", content)
+    lib = DesignLibrary(library_dir=tmp_path)
+    lint = lib.validate("badco")
+    assert any("contrast" in i and "4.5" in i for i in lint.issues)
+
+
+def test_validate_frontmatter_no_contrast_pairs(tmp_path: Path) -> None:
+    content = "---\nname: SoloCo\ncolors:\n  primary: \"#112233\"\n---\n# SoloCo\n\nTypography: sans.\n"
+    _write_brand(tmp_path, "soloco", content)
+    lib = DesignLibrary(library_dir=tmp_path)
+    lint = lib.validate("soloco")
+    assert lint.ok
+    assert not any("contrast" in i for i in lint.issues)
+
+
+def test_validate_no_tokens_no_heading(tmp_path: Path) -> None:
+    _write_brand(tmp_path, "bareco", "plain text without heading or tokens\n")
+    lib = DesignLibrary(library_dir=tmp_path)
+    lint = lib.validate("bareco")
+    assert any("hex color" in i for i in lint.issues)
+    assert any("typography" in i for i in lint.issues)
+    assert any("top-level heading" in i for i in lint.issues)

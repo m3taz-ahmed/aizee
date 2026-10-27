@@ -1,7 +1,8 @@
 ---
 name: design-md-lord
-description: Lord skill for DESIGN.md-driven UI work — pick, import, and apply real-world brand design references (Refero catalog, 2000+ DESIGN.md files) through aiZee's DesignLibrary. Use when a UI task needs a concrete visual direction instead of generic AI styling.
+description: Lord skill for DESIGN.md-driven UI work — pick, import, and apply real-world brand design references (Refero catalog, 2000+ DESIGN.md files) through aiZee's DesignLibrary. Use when a UI task needs a concrete visual direction instead of generic AI styling. Do not use for brand kit tasks — use `brand-kit` instead. Do not use for design research tasks — use `design-research` instead.
 triggers:
+  - design md lord
   - design.md
   - design system
   - brand design
@@ -20,6 +21,7 @@ personas:
 tech_stack:
   - tailwind-4-3
 lord: true
+
 ---
 
 # Design MD Lord
@@ -45,3 +47,9 @@ lord: true
 1. New page design: detect project type → `suggest()` or search Refero → pick 1-2 references → `import_brand()` → `load()`/`mix()` → extract tokens → map to `@theme`/components → build → `DesignSlopVerifier` → a11y pass.
 2. Import a Refero style: find style on styles.refero.design (or MCP search) → copy `DESIGN.md` content → `DesignLibrary.import_brand("<name>", <content>)` → use like any catalog brand.
 3. Refresh a stale UI: `detect_project_type()` → suggest modern references → diff current tokens vs reference → update `@theme` → verify components pick up tokens.
+4. Product-first direction (design-db): `aizee design system "<product>" --variance 1-10 --motion 1-10 --density 1-10 [--out MASTER.md]` aggregates style + palette + typography + landing pattern + motion preset from the vendored corpus (ui-ux-pro-max-skill, MIT). `aizee design search "<q>" [--domain style|product|color|typography|google-fonts|icons|ux|landing|chart|gsap|react|app|reasoning] [--stack <name>]` for point queries; `aizee design domains|stacks` to list capabilities. Empty result = honest "no verified match" — never fabricate.
+
+[VERIFY]
+1. `DesignSlopVerifier` runs a tiered catalog (~44 deterministic rules ported from impeccable/hallmark/taste-skill): FLOOR (never ship — lorem/fake data, icon-only buttons, missing focus, layout-prop animation, 100vw, no reduced-motion guard, low contrast, tiny/skipped text — NOT waivable), REFLEX (unguided-model defaults — gradient washes/text, AI violet palette, eyebrow chips, marquees, icon tiles, hard-offset shadows, glow halos, oversized H1 — waivable on the record via `<!-- waive:<rule-id> -->` or `data-slop-waive`), FINISH (craft advisories — em-dash overuse, meta dots, glued arrows, decorative status dots). CLI: `aizee design slop <file.html|- >` exits 1 on slop.
+2. `aizee design lint <brand|--all>` validates DESIGN.md files against the structured spec (YAML frontmatter, hex tokens, WCAG AA contrast pairs, typography, heading). Prose-only seeds warn, don't fail.
+3. Rendered-DOM checks the regex layer can't see (viewport overflow, text truncation, computed contrast, spacing rhythm) go through `judge_fn` / browser evidence — taste-skill-style screenshot loop at 3 widths.
