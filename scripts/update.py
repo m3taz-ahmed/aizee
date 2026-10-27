@@ -210,6 +210,8 @@ def _planned_post_steps(root: Path) -> list[str]:
         steps.append("memory ingest")
     if (root / "state" / "settings.json").exists():
         steps.append("settings migration")
+    if (root / "graphify-out" / "graph.json").exists():
+        steps.append("graphify refresh")
     steps.append("post-update verification")
     return steps
 
@@ -372,6 +374,26 @@ def _post_install_hooks(root: Path) -> list[str]:
             actions.append(f"settings migration: skipped ({err.strip()[:80]})")
     else:
         actions.append("settings migration: no settings.json (fresh install)")
+
+    # 6. Graphify graph refresh — graphify-out/ is gitignored generated
+    #    state, so a git pull never refreshes it. Rebuild to match the code
+    #    just pulled (graphify auto-backs-up the old graph; --force bypasses
+    #    the shrink guard which would otherwise leave the install stale).
+    if (root / "graphify-out" / "graph.json").exists():
+        try:
+            rc, out, _ = _run(
+                ["graphify", "update", ".", "--force"],
+                cwd=root, check=False,
+            )
+            detail = ""
+            for line in out.strip().splitlines():
+                if "nodes" in line.lower() or "edges" in line.lower():
+                    detail = line.strip()
+            actions.append(
+                f"graphify refresh: {'OK' + (f' ({detail})' if detail else '') if rc == 0 else 'skipped'}"
+            )
+        except FileNotFoundError:
+            actions.append("graphify refresh: skipped (graphify not on PATH)")
 
     return actions
 
