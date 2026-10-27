@@ -51,6 +51,7 @@ scratch/
 state/
 backups/
 .coverage
+.aizee-version
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
