@@ -2,6 +2,7 @@
 name: ai-code-review-lord
 description: Lord skill for AI-powered code review and security scanning — automated pre-PR review, diff-aware analysis, hallucination detection in AI-generated code, severity gating, and human escalation.
 triggers:
+  - ai code review lord
   - ai code review
   - automated review
   - bugbot
@@ -17,6 +18,7 @@ personas:
   - DEV
 tech_stack: []
 lord: true
+
 ---
 
 # AI Code Review Lord

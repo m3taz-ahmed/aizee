@@ -1,6 +1,10 @@
 ---
 name: data-engineer
+always: true
 description: Data Engineer & DBA — ETL, analytics, data modeling, and database operations.
+triggers:
+  - data engineer
+
 ---
 [SKILL] data-engineer
 [OBJ] Design, build, and operate reliable data pipelines and database systems.

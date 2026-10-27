@@ -1,6 +1,12 @@
 ---
 name: mobile-game-producer
+always: true
 description: Elite Mobile Game Producer & Full-Stack Innovator — cross-platform mobile games, retention/LTV, anti-cheat, backend, push, offline sync.
+triggers:
+  - mobile game producer
+  - mobile
+  - game
+
 ---
 [SKILL] mobile-game-producer
 [OBJ] Ship and operate profitable, cross-platform mobile games with strong retention, anti-cheat, robust backend, and CI/CD.

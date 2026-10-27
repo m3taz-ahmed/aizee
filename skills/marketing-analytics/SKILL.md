@@ -4,11 +4,8 @@ description: Marketing analytics and attribution architect — GA4, Mixpanel, Pl
 personas:
   - MARKETING
 triggers:
-  - ga4
   - mixpanel
   - attribution
-  - CAC
-  - LTV
   - marketing analytics
   - تحليلات تسويق
   - قياس العائد
@@ -17,6 +14,7 @@ tech_stack:
   - umami-software/umami
   - matomo-org/matomo
   - google/ga4
+
 ---
 [SKILL] marketing-analytics
 [OBJ] Measure what marketing actually does — unify channel data, build attribution models, and report the metrics that matter (CAC, LTV, ROAS, payback). Turns raw events into decisions.

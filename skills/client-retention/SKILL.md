@@ -1,6 +1,6 @@
 ---
 name: client-retention
-description: Client retention strategist — upsell, cross-sell, recurring check-ins, and referral programs. Grow lifetime value.
+description: Client retention strategist — upsell, cross-sell, recurring check-ins, and referral programs. Grow lifetime value. Do not use for growth loops tasks — use `growth-loops` instead.
 personas:
   - FREELANCE
   - SALES

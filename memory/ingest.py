@@ -81,20 +81,32 @@ class Ingestor:
             return False
         return True
 
-    def _memory(self, source: str, kind: str, content: str) -> Memory:
+    def _memory(self, source: str, kind: str, content: str, bank: str = "global", tags: tuple[str, ...] = ()) -> Memory:
+        # Capture-time secret scrubbing (agentmemory pattern): credentials must
+        # be stripped before persistence, not only masked at display time.
+        from runtime.secret_scrub import scrub_text
+
+        scrubbed = scrub_text(content)
+        if scrubbed.findings:
+            warnings.warn(
+                f"Scrubbed {scrubbed.findings} secret(s) from {source} before ingest",
+                stacklevel=2,
+            )
+            content = scrubbed.text
         now = datetime.now(timezone.utc).isoformat()
         # Deterministic id (not uuid4): if the manifest is lost, re-ingest
         # maps to the same rows and INSERT OR IGNORE dedups instead of
         # duplicating every file.
         return Memory(
-            id=_deterministic_id(content, kind, source),
+            id=_deterministic_id(content, kind, source, bank=bank),
             kind=kind,
             content=content,
             source=source,
-            meta=json.dumps({}),
+            meta=json.dumps({"tags": list(tags), "scrubbed": scrubbed.findings}),
             created_at=now,
             valid_from=now,
             valid_to=None,
+            bank=bank,
         )
 
     def _read_tracked(self, p: Path) -> str | None:
@@ -164,6 +176,39 @@ class Ingestor:
             return [], new_sigs, current_sources
         return [self._memory(source, "episodic", content)], new_sigs, current_sources
 
+    def _collect_rules(self, manifest: dict[str, str]) -> tuple[list[Memory], dict[str, str], set[str]]:
+        """Consume-rules pass (paperless-style): ``rules/ingest.yaml`` maps
+        root-relative glob patterns to bank/kind/tags so arbitrary folders
+        route into memory banks without touching ``_TRACKED``.
+
+        Rule files already covered by ``_TRACKED`` still register as current
+        sources so stale-deletion treats them consistently.
+        """
+        from runtime.ingest_rules import load_rules
+
+        rules = load_rules(self.root)
+        if not rules:
+            return [], {}, set()
+        to_add: list[Memory] = []
+        new_sigs: dict[str, str] = {}
+        current_sources: set[str] = set()
+        for rule in rules:
+            for p in sorted(self.root.glob(rule.match)):
+                if not p.is_file():
+                    continue
+                source = p.relative_to(self.root).as_posix()
+                content = self._read_tracked(p)
+                if content is None or not self._validate(content, source):
+                    continue
+                sig = self._sig(content)
+                current_sources.add(source)
+                new_sigs[source] = sig
+                if manifest.get(source) == sig:
+                    continue
+                bank = rule.bank if rule.bank != "default" else "global"
+                to_add.append(self._memory(source, rule.kind, content, bank=bank, tags=rule.tags))
+        return to_add, new_sigs, current_sources
+
     def ingest_all(self) -> list[str]:
         """Ingest all tracked directories and AGENTS.md, remove stale sources, and update manifest."""
         manifest = self._load_manifest()
@@ -181,6 +226,11 @@ class Ingestor:
         to_add.extend(agents_to_add)
         new_sigs.update(agents_sigs)
         current_sources |= agents_sources
+
+        rules_to_add, rules_sigs, rules_sources = self._collect_rules(manifest)
+        to_add.extend(rules_to_add)
+        new_sigs.update(rules_sigs)
+        current_sources |= rules_sources
 
         to_delete = [
             source

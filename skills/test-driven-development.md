@@ -1,6 +1,12 @@
 ---
 name: test-driven-development
-description: Test-driven development methodology.
+always: true
+description: Test-driven development methodology. Do not use for test guard tasks — use `test-guard` instead.
+triggers:
+  - test driven development
+  - test
+  - driven
+
 ---
 [SKILL] test-driven-development
 [OBJ] Red-Green-Refactor enforcement.

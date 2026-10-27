@@ -2,6 +2,7 @@
 name: supply-chain-lord
 description: Lord skill for software supply-chain security in AI-generated code — dependency guarding, SBOM, Cosign signing, and lockfile integrity.
 triggers:
+  - supply chain lord
   - supply chain
   - sbom
   - cosign
@@ -16,6 +17,7 @@ personas:
   - ARCH
 tech_stack: []
 lord: true
+
 ---
 
 # Supply Chain Lord

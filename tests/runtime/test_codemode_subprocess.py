@@ -20,6 +20,8 @@ import pytest
 from runtime.codemode import _child
 from runtime.codemode.executor import CodeModeExecutor
 
+TimeoutExpired_ = object()  # sentinel: first wait() raises, second returns
+
 
 def _fake_child(tmp_path: Path, body: str) -> Path:
     script = tmp_path / "fake_child.py"
@@ -278,6 +280,41 @@ class TestPlumbingHelpers:
         p = _FakeProc(poll_code=0)
         assert CodeModeExecutor._terminate(p) is True
         assert not p.killed
+
+    def test_terminate_retry_wait_succeeds(self) -> None:
+        """First wait times out; the post-kill retry wait succeeds -> True."""
+        p = _FakeProc()
+        calls = iter([TimeoutExpired_, 0])
+
+        def flaky_wait(timeout=None):
+            nxt = next(calls)
+            if nxt is TimeoutExpired_:
+                raise subprocess.TimeoutExpired("cmd", 1)
+            return nxt
+
+        p.wait = flaky_wait  # type: ignore[method-assign]
+        assert CodeModeExecutor._terminate(p) is True
+        assert p.killed
+
+    def test_terminate_oserror_returns_false(self) -> None:
+        """OSError during cleanup -> False (ownership retained)."""
+        p = _FakeProc()
+        p.wait = lambda timeout=None: (_ for _ in ()).throw(OSError("gone"))  # type: ignore[method-assign]
+        assert CodeModeExecutor._terminate(p) is False
+
+    def test_execute_pump_exception_terminates_and_reraises(self, tmp_path: Path) -> None:
+        """A pump crash still terminates the child before propagating."""
+        ex = CodeModeExecutor(tmp_path)
+        fake = _FakeProc()
+        terminated: list[bool] = []
+        with (
+            patch("runtime.codemode.executor.subprocess.Popen", return_value=fake),
+            patch.object(CodeModeExecutor, "_pump", side_effect=RuntimeError("pump boom")),
+            patch.object(CodeModeExecutor, "_terminate", lambda self, p: terminated.append(True) or True),
+            pytest.raises(RuntimeError, match="pump boom"),
+        ):
+            ex.execute("print(1)")
+        assert terminated == [True]
 
     def test_execute_reports_cleanup_pending_on_reap_failure(self, tmp_path: Path) -> None:
         ex = CodeModeExecutor(tmp_path)

@@ -1,6 +1,12 @@
 ---
 name: prompt-master-patterns
-description: Prompt engineering patterns and best practices.
+always: true
+description: Prompt engineering patterns and best practices. Do not use for prompt master templates tasks — use `prompt-master-templates` instead.
+triggers:
+  - prompt master patterns
+  - prompt
+  - patterns
+
 ---
 [SKILL] prompt-master-patterns
 [OBJ] Fix 37 token-wasting AI prompting patterns.

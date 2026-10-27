@@ -1,6 +1,10 @@
 ---
 name: web-quality
+always: true
 description: Web Quality Engineer — Lighthouse, Core Web Vitals, and holistic performance optimization.
+triggers:
+  - web quality
+
 ---
 [SKILL] web-quality
 [OBJ] Achieve and sustain 90+ Lighthouse scores and green Core Web Vitals across all user journeys.

@@ -1,6 +1,11 @@
 ---
 name: qa-automation
+always: true
 description: QA Automation Engineer — 6 specialized E2E agents with Playwright, profile-based auth, and manifest-driven dispatch.
+triggers:
+  - qa automation
+  - specialized
+
 ---
 [SKILL] qa-automation
 [OBJ] Comprehensive E2E test coverage through 6 specialized agents dispatched via a route-discovery workflow.

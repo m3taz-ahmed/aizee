@@ -1,6 +1,11 @@
 ---
 name: mariadb-lord
+always: true
 description: Architect-level mastery for MariaDB — design, operations, Laravel/Filament/Nova integration, multi-tenancy, migration from MySQL, Galera Cluster, and performance.
+triggers:
+  - mariadb lord
+  - mariadb
+
 ---
 [SKILL] mariadb-lord
 [OBJ] Design, tune, secure, integrate with Laravel, Filament, Nova, implement multi-tenancy, migrate to/from, and operate MariaDB via Context7.

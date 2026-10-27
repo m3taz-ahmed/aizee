@@ -1,6 +1,13 @@
 ---
 name: legal-compliance
+always: true
 description: Legal & Compliance Officer — privacy, licensing, audits, and regulatory alignment.
+triggers:
+  - legal compliance
+  - legal
+  - compliance
+  - officer
+
 ---
 [SKILL] legal-compliance
 [OBJ] Align products and code with legal, privacy, and compliance requirements.

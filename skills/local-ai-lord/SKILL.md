@@ -1,7 +1,8 @@
 ---
 name: local-ai-lord
-description: Lord skill for local AI and edge deployment — runtime selection (Ollama, LM Studio, vLLM, llama.cpp, MLX), quantization, GPU acceleration, OpenAI-compatible APIs, and hybrid local+cloud patterns.
+description: Lord skill for local AI and edge deployment — runtime selection (Ollama, LM Studio, vLLM, llama.cpp, MLX), quantization, GPU acceleration, OpenAI-compatible APIs, and hybrid local+cloud patterns. Do not use for local seo tasks — use `local-seo` instead.
 triggers:
+  - local ai lord
   - local ai
   - ollama
   - lm studio
@@ -9,7 +10,6 @@ triggers:
   - vllm
   - localai
   - edge ai
-  - mlx
   - ذكاء اصطناعي محلي
   - تشغيل محلي
 personas:
@@ -21,6 +21,7 @@ personas:
   - MLOPS
 tech_stack: []
 lord: true
+
 ---
 
 # Local AI Lord

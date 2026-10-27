@@ -1,6 +1,6 @@
 ---
 name: b2b-cold-outreach
-description: B2B cold outreach closer — enrich, sequence, and convert cold prospects via compliant email/LinkedIn. CAN-SPAM aligned.
+description: B2B cold outreach closer — enrich, sequence, and convert cold prospects via compliant email/LinkedIn. CAN-SPAM aligned. Do not use for lead generation crm tasks — use `lead-generation-crm` instead.
 personas:
   - SALES
 triggers:

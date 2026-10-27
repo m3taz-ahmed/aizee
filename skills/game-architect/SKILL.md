@@ -1,6 +1,11 @@
 ---
 name: game-architect
-description: Principal Game Architect & JavaScript Engine Master — Babylon.js, Three.js, Capacitor, WebGL/WebGPU, 60 FPS game loops.
+always: true
+description: Principal Game Architect & JavaScript Engine Master — Babylon.js, Three.js, Capacitor, WebGL/WebGPU, 60 FPS game loops. Do not use for mobile game producer tasks — use `mobile-game-producer` instead.
+triggers:
+  - game architect
+  - game
+
 ---
 [SKILL] game-architect
 [OBJ] Build, profile, and deploy high-performance browser/mobile game experiences with deterministic 60 FPS, efficient rendering, and cross-platform runtimes.

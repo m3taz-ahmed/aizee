@@ -594,6 +594,44 @@ def cmd_spec(args: argparse.Namespace) -> int:
         console.print(
             f"[green]Advanced spec '{args.spec_id}' to phase:[/green] {spec.phase.value}"
         )
+    elif args.subcommand == "propose":
+        if not args.spec_id:
+            console.print("[red]change name required for propose[/red]")
+            return 1
+        try:
+            change_dir = engine.propose(args.spec_id, args.title)
+        except (ValueError, FileExistsError) as exc:
+            console.print(f"[red]{exc}[/red]")
+            return 1
+        console.print(f"[green]Proposed change:[/green] {change_dir}")
+        console.print("[dim]Edit proposal.md, design.md, tasks.md, then implement.[/dim]")
+    elif args.subcommand == "changes":
+        infos = engine.list_changes()
+        if not infos:
+            console.print("[yellow]No active changes.[/yellow]")
+            return 0
+        table = Table(title="Active Changes")
+        table.add_column("Name", style="cyan")
+        table.add_column("Artifacts", style="green")
+        table.add_column("Tasks", style="magenta")
+        for info in infos:
+            artifacts = "".join([
+                "P" if info.has_proposal else "-",
+                "D" if info.has_design else "-",
+                "T" if info.has_tasks else "-",
+            ])
+            table.add_row(info.name, artifacts, f"{info.tasks_done}/{info.tasks_total}")
+        console.print(table)
+    elif args.subcommand == "archive":
+        if not args.spec_id:
+            console.print("[red]change name required for archive[/red]")
+            return 1
+        try:
+            target = engine.archive(args.spec_id)
+        except FileNotFoundError as exc:
+            console.print(f"[red]{exc}[/red]")
+            return 1
+        console.print(f"[green]Archived change:[/green] {target}")
     return 0
 
 
@@ -744,6 +782,99 @@ def cmd_stack(args: argparse.Namespace) -> int:
             console.print(content[:500])
             console.print("")
     return 0
+
+
+def cmd_design(args: argparse.Namespace) -> int:
+    """Design intelligence: corpus search, system generation, slop/DESIGN.md lint."""
+    k = _kernel(args)
+    sub = args.design_subcommand
+
+    if sub == "search":
+        res = k.design_db.search(
+            args.query,
+            domain=args.domain or None,
+            stack=args.stack or None,
+            max_results=args.limit,
+        )
+        if res.fallback:
+            console.print("[yellow]No verified match - generalize the query or pick a domain.[/yellow]")
+        for hit in res.hits:
+            console.print(f"[cyan]{hit.score:6.2f}[/cyan] {hit.title}")
+            print(json.dumps(hit.row, indent=2, ensure_ascii=False))
+        return 0
+
+    if sub == "system":
+        res = k.design_db.design_system(
+            args.query, project=args.project or "",
+            variance=args.variance, motion=args.motion, density=args.density,
+        )
+        if args.json:
+            print(json.dumps({"query": res.query, "dials": res.dials,
+                              "sections": res.sections}, indent=2, ensure_ascii=False))
+        else:
+            console.print(res.markdown)
+        if args.out:
+            Path(args.out).write_text(res.markdown, encoding="utf-8")
+            console.print(f"[green]wrote {args.out}[/green]")
+        return 0
+
+    if sub == "slop":
+        html = sys.stdin.read() if args.file == "-" else Path(args.file).read_text(encoding="utf-8")
+        verdict = k.design_slop_verifier.verify(html)
+        if args.json:
+            print(json.dumps({
+                "passed": verdict.passed, "score": verdict.score,
+                "findings": [f.__dict__ for f in verdict.findings],
+                "waived": [f.__dict__ for f in verdict.waived],
+            }, indent=2, default=str))
+        else:
+            console.print(verdict.summary())
+        return 0 if verdict.passed else 1
+
+    if sub == "lint":
+        if not args.all and not args.brand:
+            console.print("[red]Give a brand name or --all.[/red]")
+            return 1
+        brands = k.design_library.installed_brands if args.all else [args.brand]
+        exit_code = 0
+        for b in brands:
+            lint = k.design_library.validate(b)
+            status = "[green]OK[/green]" if lint.ok and not lint.issues else (
+                "[yellow]OK[/yellow]" if lint.ok else "[red]FAIL[/red]")
+            console.print(f"{status} {lint.brand} "
+                          f"(frontmatter={'yes' if lint.has_frontmatter else 'no'}, "
+                          f"tokens={lint.token_count})")
+            for issue in lint.issues:
+                console.print(f"      {issue}")
+            if not lint.ok:
+                exit_code = 1
+        return exit_code
+
+    if sub == "brands":
+        installed = set(k.design_library.installed_brands)
+        catalog = set(k.design_library.catalog_brands)
+        if args.installed:
+            print("\n".join(sorted(installed)))
+            return 0
+        if args.catalog:
+            print("\n".join(sorted(catalog)))
+            return 0
+        console.print(f"[cyan]installed ({len(installed)}):[/cyan] "
+                      + ", ".join(sorted(installed)))
+        console.print(f"[dim]catalog ({len(catalog)}):[/dim] "
+                      + ", ".join(sorted(catalog)))
+        return 0
+
+    if sub == "domains":
+        print("\n".join(k.design_db.domains()))
+        return 0
+
+    if sub == "stacks":
+        print("\n".join(k.design_db.stacks()))
+        return 0
+
+    console.print(f"[red]Unknown design subcommand: {sub}[/red]")
+    return 1
 
 
 def cmd_linkedin(args: argparse.Namespace) -> int:
@@ -934,6 +1065,65 @@ def cmd_skill(args: argparse.Namespace) -> int:
         else:
             console.print(f"[red]Failed[/red] {r.skill}: {r.error}")
         return 0 if r.ok else 1
+    elif args.skill_subcommand == "link":
+        from runtime.harness_exporter import harnesses, resolve_harness_dir
+
+        skill_src = _root(args) / "SKILL.md"
+        if not skill_src.exists():
+            console.print("[red]Root SKILL.md not found — cannot link.[/red]")
+            return 1
+        targets = [args.harness] if args.harness else sorted(harnesses())
+        link_results: list[dict[str, Any]] = []
+        for harness in targets:
+            try:
+                dest_dir = resolve_harness_dir(harness) / "aizee"
+                dest_dir.mkdir(parents=True, exist_ok=True)
+                (dest_dir / "SKILL.md").write_text(skill_src.read_text(encoding="utf-8"), encoding="utf-8")
+                link_results.append({"harness": harness, "ok": True, "dest": str(dest_dir)})
+            except (ValueError, OSError) as exc:
+                link_results.append({"harness": harness, "ok": False, "error": str(exc)})
+        if args.json:
+            print(json.dumps(link_results, indent=2, ensure_ascii=False))
+        else:
+            for lr in link_results:
+                mark = "[green]linked[/green]" if lr["ok"] else "[red]failed[/red]"
+                detail = lr.get("dest") or lr.get("error", "")
+                console.print(f"{mark} {lr['harness']}: {detail}")
+        return 0 if all(lr["ok"] for lr in link_results) else 1
+    elif args.skill_subcommand == "lint":
+        from runtime.skill_lint import run_lint
+
+        lint_report = run_lint(_root(args), write=args.write_index)
+        if args.json:
+            print(json.dumps(lint_report, indent=2, ensure_ascii=False))
+            return 0 if lint_report["ok"] else 1
+        console.print(
+            f"{lint_report['skills']} skills — "
+            f"{len(lint_report['issues'])} with issues, "
+            f"{len(lint_report['collisions'])} collisions"
+        )
+        for name, issues in lint_report["issues"].items():
+            console.print(f"  [yellow]{name}[/yellow]: {'; '.join(issues)}")
+        for col in lint_report["collisions"]:
+            console.print(f"  [red]collision[/red] {col['a']} ↔ {col['b']} ({col['reason']})")
+        if lint_report["index"]:
+            console.print(f"[green]index written:[/green] {lint_report['index']}")
+        return 0 if lint_report["ok"] else 1
+    elif args.skill_subcommand == "scan":
+        from runtime.skill_scan import scan_tree
+
+        scan_report = scan_tree(_root(args))
+        if args.json:
+            print(json.dumps(scan_report, indent=2, ensure_ascii=False))
+            return 0 if scan_report["ok"] else 1
+        console.print(
+            f"{scan_report['files_scanned']} files scanned — "
+            f"[{'red' if scan_report['high'] else 'green'}]{scan_report['high']} high findings[/]"
+        )
+        for path, findings in scan_report["findings"].items():
+            for f in findings:
+                console.print(f"  [{f['severity']}] {path}:{f['line']} {f['rule']} — {f['excerpt'][:80]}")
+        return 0 if scan_report["ok"] else 1
     elif args.skill_subcommand == "lifecycle":
         return _cmd_skill_lifecycle(k, args)
     return 0
@@ -1186,155 +1376,37 @@ def cmd_agents(args: argparse.Namespace) -> int:
 def cmd_doctor(args: argparse.Namespace) -> int:
     os_root = _root(args)
     project_root = _project_root(args)
-    checks = {
-        "os root": os_root.exists(),
-        "project root": project_root.exists(),
-        "pyproject.toml": (os_root / "pyproject.toml").exists(),
-        "os policies": (os_root / "runtime" / "policies" / "default.yaml").exists(),
-        "project policies": (project_root / "runtime" / "policies" / "default.yaml").exists(),
-        "rules directory": (os_root / "rules").exists(),
-        "workflows directory": (os_root / "workflows").exists(),
-        "tech-stack directory": (os_root / "tech-stack").exists(),
-        "state directory": (project_root / "state").exists(),
-        "brain directory": (project_root / "brain").exists(),
-        "managers module": (os_root / "runtime" / "managers").is_dir(),
-        "mcp tools module": (os_root / "aizee_mcp" / "tools").is_dir(),
-        "crypto module": (os_root / "runtime" / "crypto.py").exists(),
-        "migrations module": (os_root / "runtime" / "migrations.py").exists(),
-        "telemetry module": (os_root / "runtime" / "telemetry.py").exists(),
-        "LICENSE": (os_root / "LICENSE").exists(),
-        "CODEOWNERS": (os_root / ".github" / "CODEOWNERS").exists(),
-        "API.md": (os_root / "aizee_mcp" / "API.md").exists(),
-        # New governance modules (P1-P3)
-        "mcp firewall": (os_root / "runtime" / "mcp_firewall.py").exists(),
-        "mcp firewall policy": (os_root / "runtime" / "policies" / "mcp_firewall.yaml").exists(),
-        "loop detector": (os_root / "runtime" / "loop_detector.py").exists(),
-        "prompt gate": (os_root / "runtime" / "prompt_gate.py").exists(),
-        "trajectory tracker": (os_root / "runtime" / "trajectory.py").exists(),
-        "approval service": (os_root / "runtime" / "approval_service.py").exists(),
-        "reasoning graph": (os_root / "runtime" / "reasoning_graph.py").exists(),
-        "context manager": (os_root / "runtime" / "context_manager.py").exists(),
-        "agent discovery": (os_root / "runtime" / "agent_discovery.py").exists(),
-        "guard invariants": (os_root / "scripts" / "guard_invariants.py").exists(),
-        "vibe scenarios": (os_root / "eval" / "scenarios").is_dir(),
-    }
 
-    # Version check
-    version_file = os_root / ".aizee-version"
-    if version_file.exists():
-        installed_ver = version_file.read_text(encoding="utf-8").strip()
-        checks[f"installed version ({installed_ver})"] = True
-    else:
-        checks["installed version"] = False
+    from runtime.doctor import run_doctor
 
-    # Encryption check
-    try:
-        import os as _os
+    report = run_doctor(os_root, project_root)
+    if getattr(args, "json", False):
+        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        return 0 if report.verdict != "blocked" else 1
 
-        if _os.environ.get("AIOS_ENCRYPTION_KEY"):
-            checks["encryption key set"] = True
-            from runtime.crypto import _get_fernet
+    table = Table(title=f"aiZee Doctor [{report.verdict.upper()}]")
+    table.add_column("Check", style="cyan")
+    table.add_column("Status", style="green")
+    for c in report.checks:
+        status = "ok" if c.ok else ("missing" if c.severity == "required" else c.severity)
+        table.add_row(c.name, status)
+    console.print(table)
 
-            checks["encryption fernet valid"] = _get_fernet() is not None
-        else:
-            checks["encryption key set"] = False
-    except Exception:
-        checks["encryption key set"] = False
+    if report.next_steps:
+        console.print("[cyan]Next steps:[/cyan]")
+        for step in report.next_steps:
+            if step["kind"] == "run":
+                console.print(f"  Run: {step['command']}  [dim]# {step['reason']}[/dim]")
+            else:
+                console.print(f"  Guidance: {step['text']}  [dim]# {step['reason']}[/dim]")
 
-    # Python deps check
-    for pkg in ("yaml", "mcp", "pydantic", "rich", "cryptography"):
-        try:
-            __import__(pkg)
-            checks[f"pip: {pkg}"] = True
-        except ImportError:
-            checks[f"pip: {pkg}"] = False
-
-    try:
-        from memory.vector import VectorMemory
-
-        vector = VectorMemory(project_root)
-        checks["vector index"] = vector.is_available()
-    except Exception:
-        checks["vector index"] = False
-
-    # Global MCP config check (must be synced so MCPs work in any workspace)
-    try:
-        if os.name == "nt":
-            g_dir = Path(os.environ.get("APPDATA", str(Path.home() / "AppData" / "Roaming"))) / "devin"
-        else:
-            g_dir = Path.home() / ".config" / "devin"
-        g_cfg = g_dir / "mcp_config.json"
-        if g_cfg.exists():
-            g_data = json.loads(g_cfg.read_text(encoding="utf-8"))
-            g_count = len(g_data.get("mcpServers", {}))
-            checks[f"global mcp config ({g_count} servers)"] = g_count > 0
-        else:
-            checks["global mcp config"] = False
-    except Exception:
-        checks["global mcp config"] = False
-
-    # --- Guardian policy check ---
-    guardian_path = os_root / "runtime" / "policies" / "guardian.yaml"
-    if guardian_path.exists():
-        try:
-            from runtime.guardian import Guardian
-            g = Guardian.from_yaml(guardian_path)
-            checks[f"guardian.yaml ({len(g.rules)} rules)"] = len(g.rules) > 0
-        except Exception:
-            checks["guardian.yaml (load error)"] = False
-    else:
-        checks["guardian.yaml"] = False
-
-    # --- Probity guardrails check ---
-    probity_path = os_root / "runtime" / "policies" / "probity.yaml"
-    if probity_path.exists():
-        try:
-            import yaml as _yaml
-
-            from runtime.probity import Guardrails
-            data = _yaml.safe_load(probity_path.read_text(encoding="utf-8")) or {}
-            gr = Guardrails(data)
-            checks[f"probity.yaml ({len(gr.rules)} rules)"] = len(gr.rules) > 0
-        except Exception:
-            checks["probity.yaml (load error)"] = False
-    else:
-        checks["probity.yaml"] = False
-
-    # --- Capabilities check ---
-    try:
-        from runtime.sovereign import AgentCapabilities
-        caps = AgentCapabilities()
-        checks[f"capabilities ({len(caps.list())})"] = len(caps.list()) > 0
-    except Exception:
-        checks["capabilities"] = False
-
-    # --- Tech stack detection check ---
+    # Kernel needed below for degraded-defense + quarantined-state signals.
     k = None
     try:
         from runtime.kernel import Kernel
         k = Kernel(os_root, project_root)
-        ts = k.detect_tech_stack()
-        checks[f"tech_stack detection ({len(ts)} entries)"] = len(ts) > 0
     except Exception:
-        checks["tech_stack detection"] = False
-
-    # --- cryptography version match check ---
-    try:
-        from importlib.metadata import version
-        installed = version("cryptography")
-        checks[f"cryptography=={installed} (pyproject <52.0)"] = True
-    except Exception:
-        checks["cryptography version"] = False
-
-    # --- .env.example check ---
-    checks[".env.example template"] = (os_root / ".env.example").exists()
-
-    table = Table(title="aiZee Doctor")
-    table.add_column("Check", style="cyan")
-    table.add_column("Status", style="green")
-    for name, ok in checks.items():
-        table.add_row(name, "ok" if ok else "missing")
-    console.print(table)
+        pass
 
     # --- Wiring truth table (H5): file existence is not a health signal.
     # Reports which governance modules actually have production callers
@@ -1379,7 +1451,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
             f"root ({code_root}) — dev/deploy boundary, see docs/AUDIT_REPORT.md C2[/yellow]"
         )
 
-    return 0 if all(checks.values()) else 1
+    return 0 if report.verdict == "ready" else 1
 
 
 def cmd_heal(args: argparse.Namespace) -> int:
@@ -1606,6 +1678,253 @@ def cmd_test(args: argparse.Namespace) -> int:
     return result.returncode
 
 
+def cmd_find(args: argparse.Namespace) -> int:
+    """Natural-language discovery over skills/workflows/tech-stack."""
+    from runtime.find import find
+
+    results = find(args.query, _root(args), limit=args.limit)
+    if args.json:
+        print(json.dumps([r.to_dict() for r in results], indent=2, ensure_ascii=False))
+        return 0
+    if not results:
+        console.print(f"[yellow]No matches for:[/yellow] {args.query}")
+        return 1
+    table = Table(title=f"Find: {args.query}")
+    table.add_column("Name", style="cyan")
+    table.add_column("Kind", style="magenta")
+    table.add_column("Score", style="green")
+    table.add_column("Matched", style="dim")
+    for r in results:
+        table.add_row(r.name, r.kind, f"{r.score:.2f}", ", ".join(r.matched_tokens))
+    console.print(table)
+    return 0
+
+
+def cmd_goal(args: argparse.Namespace) -> int:
+    """Map a free-text objective to the best workflow + its steps."""
+    from runtime.find import goal
+
+    result = goal(args.objective, _root(args), _project_root(args))
+    if args.json:
+        print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False))
+        return 0 if result.workflow else 1
+    if not result.workflow:
+        console.print(f"[yellow]No workflow matches:[/yellow] {result.objective}")
+        return 1
+    console.print(f"[green]Workflow:[/green] {result.workflow} (score {result.match_score:.2f})")
+    if result.steps:
+        console.print("[cyan]Steps:[/cyan]")
+        for i, step in enumerate(result.steps, 1):
+            console.print(f"  {i}. {step}")
+    else:
+        console.print("[dim]No step list in workflow file.[/dim]")
+    return 0
+
+
+def cmd_config(args: argparse.Namespace) -> int:
+    """Settings: masked show + apply with --check dry-run."""
+    from runtime.config_ops import apply_config, show_config
+    from runtime.settings import get_settings_manager
+
+    mgr = get_settings_manager(_root(args))
+    if args.config_action == "show":
+        data = show_config(mgr, args.section or None)
+        print(json.dumps(data, indent=2, ensure_ascii=False, default=str))
+        return 0
+    if args.config_action == "apply":
+        if not args.file:
+            console.print("[red]config apply requires a file path[/red]")
+            return 1
+        result = apply_config(mgr, Path(args.file), check=args.check)
+        print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
+        if not result["ok"]:
+            return 1
+        if args.check:
+            console.print("[cyan]Dry-run: no changes written.[/cyan]")
+        else:
+            console.print(f"[green]Applied sections:[/green] {', '.join(result.get('applied', []))}")
+        return 0
+    return 1
+
+
+def cmd_models(args: argparse.Namespace) -> int:
+    """List the model routing catalog with tiers and costs."""
+    from runtime.model_router import _MODELS
+
+    if args.json:
+        print(json.dumps([m.to_dict() for m in _MODELS], indent=2, ensure_ascii=False))
+        return 0
+    table = Table(title="Model Catalog")
+    table.add_column("Model", style="cyan")
+    table.add_column("Provider", style="green")
+    table.add_column("Tier", style="magenta")
+    table.add_column("$/1M in", justify="right")
+    table.add_column("$/1M out", justify="right")
+    table.add_column("Ctx", justify="right")
+    for m in _MODELS:
+        table.add_row(
+            m.name, m.provider, m.tier.value,
+            f"{m.cost_per_1m_input:.3f}", f"{m.cost_per_1m_output:.3f}",
+            str(m.max_context),
+        )
+    console.print(table)
+    return 0
+
+
+def cmd_gateway(args: argparse.Namespace) -> int:
+    """Governed LLM proxy: failover chain + kernel enforcement on the path."""
+    if args.gateway_action == "init":
+        target = Path(args.file) if args.file else _root(args) / "gateway.yaml"
+        if target.exists() and not args.force:
+            console.print(f"[yellow]{target} exists — use --force to overwrite[/yellow]")
+            return 1
+        target.write_text(
+            "# aiZee governed gateway — provider failover chain\n"
+            "verify: final  # off | final | checkpoints | strict\n"
+            "providers:\n"
+            "  - name: anthropic\n"
+            "    kind: anthropic\n"
+            "    base_url: https://api.anthropic.com\n"
+            "    api_key_env: ANTHROPIC_API_KEY\n"
+            "  - name: openai\n"
+            "    kind: openai\n"
+            "    base_url: https://api.openai.com\n"
+            "    api_key_env: OPENAI_API_KEY\n"
+            "  # - name: cheap-flash  # tier routing: flash/extraction requests land here first\n"
+            "  #   kind: openai\n"
+            "  #   base_url: https://api.groq.com/openai\n"
+            "  #   api_key_env: GROQ_API_KEY\n"
+            "  #   tiers: [flash, extraction]\n",
+            encoding="utf-8",
+        )
+        console.print(f"[green]Wrote gateway config:[/green] {target}")
+        return 0
+    if args.gateway_action == "serve":
+        from runtime.gateway_proxy import serve
+
+        config_path = Path(args.file) if args.file else _root(args) / "gateway.yaml"
+        if not config_path.exists():
+            console.print(f"[red]No gateway config at {config_path} — run 'aizee gateway init'[/red]")
+            return 1
+        return serve(config_path, args.port, _kernel(args))
+    return 1
+
+
+def cmd_work(args: argparse.Namespace) -> int:
+    """Poll GitHub for assigned/labelled work via the gh CLI (read-only)."""
+    import shutil as _shutil
+    import subprocess as _sp
+
+    if not _shutil.which("gh"):
+        console.print("[red]gh CLI not found — install https://cli.github.com[/red]")
+        return 1
+    repo = args.repo or ""
+    base = ["gh", "issue", "list", "--state", "open", "--json",
+            "number,title,labels,assignees,createdAt", "--limit", str(args.limit)]
+    if repo:
+        base += ["--repo", repo]
+    proc = _sp.run(base, capture_output=True, text=True)
+    if proc.returncode != 0:
+        console.print(f"[red]gh failed:[/red] {proc.stderr.strip()}")
+        return 1
+    issues = json.loads(proc.stdout or "[]")
+    unassigned = [i for i in issues if not i.get("assignees")]
+    help_wanted = [i for i in unassigned
+                   if any(lb.get("name", "").lower() in ("help wanted", "good first issue")
+                          for lb in i.get("labels", []))]
+    ranked = help_wanted or unassigned or issues
+    if args.json:
+        print(json.dumps(ranked, indent=2, ensure_ascii=False))
+        return 0
+    if not ranked:
+        console.print("[yellow]No open issues found.[/yellow]")
+        return 0
+    table = Table(title="Work poll (GitHub issues)")
+    table.add_column("#", style="cyan", justify="right")
+    table.add_column("Title", style="green")
+    table.add_column("Labels", style="magenta")
+    for i in ranked:
+        labels = ", ".join(lb.get("name", "") for lb in i.get("labels", []))
+        table.add_row(str(i.get("number", "?")), str(i.get("title", "")), labels)
+    console.print(table)
+    return 0
+
+
+def cmd_hooks(args: argparse.Namespace) -> int:
+    """Agent-harness hooks: install/status/fire."""
+    from runtime import hooks as hook_mod
+
+    root = _root(args)
+    if args.hooks_action == "install":
+        result = hook_mod.install(root, harness=args.harness)
+        if args.json:
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+            return 0 if result["ok"] else 1
+        if not result["ok"]:
+            console.print(f"[red]{result['error']}[/red]")
+            return 1
+        for path in result["written"]:
+            console.print(f"[green]wrote[/green] {path}")
+        return 0
+    if args.hooks_action == "status":
+        result = hook_mod.status(root)
+        if args.json:
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+        else:
+            wired = ", ".join(result["wired"]) or "none"
+            console.print(f"Wired: {wired}  (supported: {', '.join(result['supported'])})")
+        return 0
+    if args.hooks_action == "fire":
+        stdin_text = sys.stdin.read() if not sys.stdin.isatty() else ""
+        return hook_mod.fire(args.event, root, stdin_text=stdin_text)
+    return 1
+
+
+def cmd_abstract(args: argparse.Namespace) -> int:
+    """Generate L0 .abstract.md files (tiered context loading)."""
+    from runtime.abstracts import generate_all
+
+    result = generate_all(_root(args), force=args.force)
+    if args.json:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+    console.print(
+        f"[green]{result['written']}[/green] abstracts written "
+        f"({result['scanned']} files scanned)"
+    )
+    return 0
+
+
+def cmd_session(args: argparse.Namespace) -> int:
+    """Governed API session from a captured request (mimic adoption)."""
+    from runtime.api_session import GovernedApiSession
+
+    kernel = _kernel(args) if args.gated else None
+    try:
+        if args.session_action == "from-curl":
+            # Positional arg is a file path OR inline curl text (detected by
+            # the "curl" prefix) — passing a command directly is common.
+            if args.file and args.file.strip().lower().startswith("curl"):
+                text = args.file
+            elif args.file:
+                text = Path(args.file).read_text(encoding="utf-8")
+            else:
+                text = sys.stdin.read()
+            session = GovernedApiSession.from_curl(text, kernel=kernel)
+        else:
+            session = GovernedApiSession.from_har(Path(args.file), host=args.host or None, kernel=kernel)
+    except (ValueError, OSError, json.JSONDecodeError) as exc:
+        console.print(f"[red]{exc}[/red]")
+        return 1
+    info = {
+        "base_url": session.base_url,
+        "bundle_headers": sorted(session.headers),
+        "dropped_noise": "headers not in auth-bundle rules are discarded",
+    }
+    print(json.dumps(info, indent=2, ensure_ascii=False))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="aizee", description="aiZee CLI")
     parser.add_argument("--root", type=Path, default=None, help="aiZee root (default: AIZEE_ROOT or install dir)")
@@ -1616,7 +1935,8 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("sync", help="Sync agent configs")
     sub.add_parser("graphify", help="Update graphify graph")
     sub.add_parser("version", help="Show version")
-    sub.add_parser("doctor", help="Check environment health")
+    p_doctor = sub.add_parser("doctor", help="Check environment health")
+    p_doctor.add_argument("--json", action="store_true", help="Machine-readable report (verdict + next_steps)")
 
     p_check = sub.add_parser("check", help="Check policy for action")
     p_check.add_argument("action")
@@ -1686,6 +2006,34 @@ def main(argv: list[str] | None = None) -> int:
     p_stack = sub.add_parser("stack", help="Tech-stack detection")
     p_stack.add_argument("subcommand", choices=["detect", "show"])
 
+    # --- design ---
+    p_design = sub.add_parser("design", help="Design intelligence (corpus search, system gen, slop/DESIGN.md lint)")
+    sp_design = p_design.add_subparsers(dest="design_subcommand", required=True)
+    p_d_search = sp_design.add_parser("search", help="Search the design corpus")
+    p_d_search.add_argument("query")
+    p_d_search.add_argument("--domain", default="", help="Domain (style|product|color|typography|google-fonts|icons|ux|landing|chart|gsap|react|app|reasoning); empty=auto")
+    p_d_search.add_argument("--stack", default="", help="Stack guideline file (react|nextjs|flutter|laravel|...)")
+    p_d_search.add_argument("--limit", type=int, default=3)
+    p_d_system = sp_design.add_parser("system", help="Generate a design system for a product query")
+    p_d_system.add_argument("query")
+    p_d_system.add_argument("--project", default="", help="Project name for the MASTER.md heading")
+    p_d_system.add_argument("--variance", type=int, default=5, help="Uniqueness dial 1-10")
+    p_d_system.add_argument("--motion", type=int, default=5, help="Motion intensity dial 1-10")
+    p_d_system.add_argument("--density", type=int, default=5, help="Spacing density dial 1-10")
+    p_d_system.add_argument("--out", default="", help="Write markdown to this path")
+    p_d_system.add_argument("--json", action="store_true")
+    p_d_slop = sp_design.add_parser("slop", help="Lint an HTML file for AI slop (use - for stdin)")
+    p_d_slop.add_argument("file")
+    p_d_slop.add_argument("--json", action="store_true")
+    p_d_lint = sp_design.add_parser("lint", help="Validate DESIGN.md files (structured spec)")
+    p_d_lint.add_argument("brand", nargs="?", default="")
+    p_d_lint.add_argument("--all", action="store_true", help="Lint all installed brands")
+    p_d_brands = sp_design.add_parser("brands", help="List design-library brands")
+    p_d_brands.add_argument("--installed", action="store_true", help="Only on-disk brands")
+    p_d_brands.add_argument("--catalog", action="store_true", help="Only advertised-not-installed")
+    sp_design.add_parser("domains", help="List searchable design domains")
+    sp_design.add_parser("stacks", help="List available stack guideline files")
+
     p_task = sub.add_parser("task", help="Task contract: decompose/verify/review enforced work plans")
     sp_task = p_task.add_subparsers(dest="task_action", required=True)
 
@@ -1742,7 +2090,7 @@ def main(argv: list[str] | None = None) -> int:
     sp_task.add_parser("context", help="Print the hook-injected contract block")
 
     p_spec = sub.add_parser("spec", help="Spec-driven development commands")
-    p_spec.add_argument("subcommand", choices=["list", "analyze", "converge", "scaffold", "advance"])
+    p_spec.add_argument("subcommand", choices=["list", "analyze", "converge", "scaffold", "advance", "propose", "changes", "archive"])
     p_spec.add_argument("spec_id", nargs="?", default="", help="Spec ID")
     p_spec.add_argument("--codebase", default="", help="Codebase dir for converge")
     p_spec.add_argument("--template", default="", help="Template type for scaffold (spec/plan/tasks)")
@@ -1773,6 +2121,41 @@ def main(argv: list[str] | None = None) -> int:
     p_codemode.add_argument("--code", default="", help="Inline Python snippet")
     p_codemode.add_argument("--file", default="", help="Path to a snippet file")
     p_codemode.add_argument("--timeout", type=float, default=15.0, help="Wall-clock timeout (seconds)")
+
+    # --- find / goal (natural-language discovery) ---
+    p_find = sub.add_parser("find", help="Find skills/workflows/tech-stack by natural language")
+    p_find.add_argument("query", help="What you need, e.g. 'review a react component'")
+    p_find.add_argument("--limit", type=int, default=10)
+    p_find.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    p_goal = sub.add_parser("goal", help="Map an objective to the best workflow + steps")
+    p_goal.add_argument("objective", help="Goal text, e.g. 'add oauth login'")
+    p_goal.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- config ---
+    p_config = sub.add_parser("config", help="Settings: show (masked) + apply (--check dry-run)")
+    p_config.add_argument("config_action", choices=["show", "apply"])
+    p_config.add_argument("file", nargs="?", default="", help="Settings file for apply")
+    p_config.add_argument("--section", default="", help="Limit show to one section")
+    p_config.add_argument("--check", action="store_true", help="apply: validate only, no write")
+
+    # --- models ---
+    p_models = sub.add_parser("models", help="List the model routing catalog")
+    p_models.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- gateway ---
+    p_gateway = sub.add_parser("gateway", help="Governed LLM proxy (failover + enforcement on path)")
+    p_gateway.add_argument("gateway_action", choices=["init", "serve"])
+    p_gateway.add_argument("--file", default="", help="Config path (default: <root>/gateway.yaml)")
+    p_gateway.add_argument("--port", type=int, default=8787)
+    p_gateway.add_argument("--force", action="store_true", help="init: overwrite existing config")
+
+    # --- work ---
+    p_work = sub.add_parser("work", help="Poll GitHub for open work via gh CLI")
+    p_work.add_argument("work_action", choices=["poll"])
+    p_work.add_argument("--repo", default="", help="owner/name (default: current repo)")
+    p_work.add_argument("--limit", type=int, default=20)
+    p_work.add_argument("--json", action="store_true", help="Machine-readable output")
 
     p_bootstrap = sub.add_parser("bootstrap", help="Materialize a minimal aiZee OS root (dry-run default)")
     p_bootstrap.add_argument("--target", default="", help="Target dir (default: current AIZEE_ROOT)")
@@ -1846,6 +2229,33 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_install.add_argument("--dest", default="", help="Target dir when --harness=path")
     p_skill_install.add_argument("--force", action="store_true", help="Overwrite existing install")
     p_skill_install.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_link = sp_skill.add_parser("link", help="Install the root SKILL.md into agent harnesses (all or one)")
+    p_skill_link.add_argument("--harness", default="", help="cursor|claude|codex|opencode (default: all)")
+    p_skill_link.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_lint = sp_skill.add_parser("lint", help="Description lint + trigger-collision detection over all skills")
+    p_skill_lint.add_argument("--write-index", action="store_true", help="Regenerate skills/index.json")
+    p_skill_lint.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_scan = sp_skill.add_parser("scan", help="Security-scan skills for prompt-injection/exfil patterns")
+    p_skill_scan.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- hooks ---
+    p_hooks = sub.add_parser("hooks", help="Agent-harness hooks: install | status | fire")
+    p_hooks.add_argument("hooks_action", choices=["install", "status", "fire"])
+    p_hooks.add_argument("--harness", default="claude-code", help="claude-code | generic")
+    p_hooks.add_argument("--event", default="", help="Event name for fire")
+    p_hooks.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- abstract ---
+    p_abstract = sub.add_parser("abstract", help="Generate L0 .abstract.md files (tiered context loading)")
+    p_abstract.add_argument("--force", action="store_true", help="Regenerate existing abstracts")
+    p_abstract.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- session ---
+    p_session = sub.add_parser("session", help="Governed API session from a captured request")
+    p_session.add_argument("session_action", choices=["from-curl", "from-har"])
+    p_session.add_argument("file", nargs="?", default="", help="curl command file or HAR path (default: stdin for curl)")
+    p_session.add_argument("--host", default="", help="HAR: pick a specific host (default: most-requested)")
+    p_session.add_argument("--gated", action="store_true", help="Build with kernel gate attached (requests go through kernel.act)")
 
     # --- docs ---
     p_docs = sub.add_parser("docs", help="Documentation generation")
@@ -1927,6 +2337,7 @@ def main(argv: list[str] | None = None) -> int:
         "saga": cmd_saga,
         "telemetry": cmd_telemetry,
         "stack": cmd_stack,
+        "design": cmd_design,
         "spec": cmd_spec,
         "audit": cmd_audit,
         "mcp": cmd_mcp,
@@ -1948,9 +2359,18 @@ def main(argv: list[str] | None = None) -> int:
         "doctor": cmd_doctor,
         "heal": cmd_heal,
         "codemode": cmd_codemode,
+        "hooks": cmd_hooks,
+        "abstract": cmd_abstract,
+        "session": cmd_session,
         "bootstrap": cmd_bootstrap,
         "uninstall": cmd_uninstall,
         "daemon": cmd_daemon,
+        "find": cmd_find,
+        "goal": cmd_goal,
+        "config": cmd_config,
+        "models": cmd_models,
+        "gateway": cmd_gateway,
+        "work": cmd_work,
     }
     try:
         return commands[args.command](args)

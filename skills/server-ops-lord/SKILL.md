@@ -2,16 +2,12 @@
 name: server-ops-lord
 description: Lord skill for server administration mastery — SSH hardening, firewalls, reverse proxies + TLS, monitoring, logs, backups/DR, container hosts, self-hosted panels (Coolify/Dokploy/Portainer), Proxmox, Tailscale/WireGuard, troubleshooting, Linux + Windows Server.
 triggers:
+  - server ops lord
   - server
-  - vps
-  - ssh
   - nginx
   - caddy
   - reverse proxy
-  - ssl
-  - tls
   - firewall
-  - ufw
   - fail2ban
   - hardening
   - server hardening
@@ -52,6 +48,7 @@ tech_stack:
   - tailscale
   - docker-29
 lord: true
+
 ---
 
 # Server Ops Lord

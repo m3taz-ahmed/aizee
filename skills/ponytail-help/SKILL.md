@@ -1,9 +1,17 @@
 ---
 name: ponytail-help
+always: true
 description: >
   Quick-reference card for all ponytail modes, skills, and commands.
   One-shot display, not a persistent mode. Trigger: /ponytail-help,
   "ponytail help", "what ponytail commands", "how do I use ponytail".
+triggers:
+  - ponytail help
+  - ponytail
+  - quick
+  - reference
+  - card
+
 ---
 
 # Ponytail Help

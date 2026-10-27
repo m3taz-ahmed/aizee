@@ -1,6 +1,13 @@
 ---
 name: cli-first-access
+always: true
 description: Prefer native CLI tools over MCP servers for external platform access; doctor-probe before use (agent-reach pattern)
+triggers:
+  - cli first access
+  - cli
+  - prefer
+  - native
+
 ---
 [SKILL] cli-first-access
 [OBJ] Reach external platforms (video, social, repos, email) through their native CLI tools instead of standing up dedicated MCP servers. One skill + one doctor check replaces a whole server — same access, near-zero idle cost.

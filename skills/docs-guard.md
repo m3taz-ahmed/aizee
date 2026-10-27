@@ -1,6 +1,11 @@
 ---
 name: docs-guard
+always: true
 description: Guard documentation quality and completeness.
+triggers:
+  - docs guard
+  - docs
+
 ---
 [SKILL] docs-guard
 [OBJ] Verify documentation accuracy against source code.

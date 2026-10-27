@@ -1,6 +1,12 @@
 ---
 name: security-lord
-description: "Security architect: OWASP, crypto, TLS, PKI, zero-trust, MCP security, agent SRE governance."
+always: true
+description: "Security architect: OWASP, crypto, TLS, PKI, zero-trust, MCP security, agent SRE governance. Do not use for quick web security checklists — use `web-security-checklist` instead. Do not use for designing or hardening an MCP server implementation — use `mcp-architect-lord` instead."
+triggers:
+  - security lord
+  - owasp
+  - zero trust
+  - mcp security
 ---
 [SKILL] security-lord
 [OBJ] Threat-model, choose crypto, configure TLS, design PKI, harden workloads, and secure AI agents and MCP infrastructure.

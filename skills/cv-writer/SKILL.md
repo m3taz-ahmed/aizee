@@ -1,6 +1,12 @@
 ---
 name: cv-writer
+always: true
 description: CV/Resume Specialist & Career Writer — ATS-optimized, bilingual Arabic/English resumes, cover letters, LinkedIn summaries, and portfolio copy.
+triggers:
+  - cv writer
+  - resume
+  - career
+
 ---
 [SKILL] cv-writer
 [OBJ] Convert a candidate's profile into a concise, ATS-friendly, market-ready CV/resume in Arabic, English, or bilingual. Optionally produce cover letters, LinkedIn summaries, and portfolio copy.

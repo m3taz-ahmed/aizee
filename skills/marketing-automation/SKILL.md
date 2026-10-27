@@ -4,7 +4,6 @@ description: Marketing automation architect — build trigger→condition→acti
 personas:
   - MARKETING
 triggers:
-  - automation
   - journey
   - zapier
   - marketing automation
@@ -15,6 +14,7 @@ tech_stack:
   - websites/automatisch_automatisch
   - websites/knadh_listmonk
   - websites/mautic_mautic
+
 ---
 [SKILL] marketing-automation
 [OBJ] Design and deploy automated customer journeys — trigger → condition → action — that nurture leads, onboard users, and recover churn without manual effort.

@@ -2,6 +2,7 @@
 name: vector-db-lord
 description: Lord skill for vector databases and RAG — DB selection, hybrid search, quantization, reranking, knowledge graphs for agentic RAG, index selection, and evaluation metrics.
 triggers:
+  - vector db lord
   - vector database
   - vector db
   - pinecone
@@ -10,7 +11,6 @@ triggers:
   - milvus
   - pgvector
   - chroma
-  - rag
   - hybrid search
   - قاعدة بيانات متجهية
   - بحث متجهي
@@ -22,6 +22,7 @@ personas:
   - MLOPS
 tech_stack: []
 lord: true
+
 ---
 
 # Vector DB Lord

@@ -1,6 +1,6 @@
 ---
 name: brand-kit
-description: Brand kit generator — visual identity, color, voice, logo, and templates. Lord-style orchestrator for consistent branding.
+description: Brand kit generator — visual identity, color, voice, logo, and templates. Lord-style orchestrator for consistent branding. Do not use for project voice tasks — use `project-voice` instead.
 personas:
   - BRAND
   - MARKETING

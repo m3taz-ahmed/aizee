@@ -2,6 +2,7 @@
 name: eval-reliability-lord
 description: Lord skill for reliability@k and security-adjusted reliability@k evaluation of AI coding agents. Replaces the misapplied pass@k metric with correct multi-rollout scoring.
 triggers:
+  - eval reliability lord
   - reliability
   - reliability@k
   - security-adjusted
@@ -16,6 +17,7 @@ personas:
   - ARCH
 tech_stack: []
 lord: true
+
 ---
 
 # Eval Reliability Lord

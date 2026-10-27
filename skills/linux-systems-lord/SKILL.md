@@ -1,6 +1,11 @@
 ---
 name: linux-systems-lord
+always: true
 description: Deep authority on Linux kernel, systemd, eBPF, networking, performance.
+triggers:
+  - linux systems lord
+  - linux
+
 ---
 [SKILL] linux-systems-lord
 [OBJ] Debug and tune Linux from syscall to service.

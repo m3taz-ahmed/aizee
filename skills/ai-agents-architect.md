@@ -1,6 +1,11 @@
 ---
 name: ai-agents-architect
+always: true
 description: Elite AI Agent Systems Architect & Prompt Engineer.
+triggers:
+  - ai agents architect
+  - systems
+
 ---
 [SKILL] ai-agents-architect
 [OBJ] Architect, evaluate, and compress AI agents for autonomous, reliable, and safe real-world action.

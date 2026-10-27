@@ -8,13 +8,13 @@ triggers:
   - influencer
   - مؤثر
   - creator
-  - UGC
   - influencer outreach
   - حملة مؤثرين
 tech_stack:
   - gitroomhq/postiz-app
   - chatwoot/chatwoot
   - plausible/analytics
+
 ---
 [SKILL] influencer-outreach
 [OBJ] Find the right creators, run compliant campaigns, and produce UGC that converts — without paying for fake reach.

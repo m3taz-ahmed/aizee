@@ -1,6 +1,12 @@
 ---
 name: seo-lord
-description: Lord skill for comprehensive SEO — technical SEO, E-E-A-T content, Schema.org, GEO/AEO, Core Web Vitals, crawl budget, and 251-rule audit scoring.
+always: true
+description: Lord skill for comprehensive SEO — technical SEO, E-E-A-T content, Schema.org, GEO/AEO, Core Web Vitals, crawl budget, and 251-rule audit scoring. Do not use for local seo tasks — use `local-seo` instead.
+triggers:
+  - seo lord
+  - seo
+  - comprehensive
+
 ---
 [SKILL] seo-lord
 [OBJ] Comprehensive SEO analysis, optimization, and auditing grounded in Google Search Essentials + AI Optimization Guide primary sources.

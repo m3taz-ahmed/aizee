@@ -5,12 +5,14 @@ personas:
   - FREELANCE
   - FINOPS
 triggers:
+  - invoice manager
   - invoice
   - فاتورة
   - quotation
   - payment tracking
 tech_stack:
   - invoiceninja/invoiceninja
+
 ---
 [SKILL] invoice-manager
 [OBJ] Generate client-ready quotations and invoices, track payment status, and reconcile multi-currency earnings. Model the lifecycle as Client → Invoice → Payment, mirroring invoiceninja's entity graph, so every invoice traces to a client and every payment to an invoice.

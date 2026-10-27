@@ -1,6 +1,11 @@
 ---
 name: mobile-architect
-description: Principal Mobile Architect — cross-platform mobile app architecture, Flutter + React Native/Expo, state management, offline-first, CI/CD, testing, security, observability. Synthesizes patterns from 8 production repos (2026).
+always: true
+description: Principal Mobile Architect — cross-platform mobile app architecture, Flutter + React Native/Expo, state management, offline-first, CI/CD, testing, security, observability. Synthesizes patterns from 8 production repos (2026). Do not use for mobile game producer tasks — use `mobile-game-producer` instead.
+triggers:
+  - mobile architect
+  - mobile
+
 ---
 [SKILL] mobile-architect
 [OBJ] Architect, bootstrap, and govern production-grade cross-platform mobile apps — Flutter and React Native/Expo — owning architecture, state, persistence, networking, testing, CI/CD, security, and observability across both ecosystems.

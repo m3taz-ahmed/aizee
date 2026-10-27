@@ -1,6 +1,11 @@
 ---
 name: proposal-writer
+always: true
 description: Proposal Specialist & Bid Strategist — bilingual Arabic/English website and digital service proposals, scope, pricing, timeline, terms.
+triggers:
+  - proposal writer
+  - proposal
+
 ---
 [SKILL] proposal-writer
 [OBJ] Convert any client brief into a persuasive, structured, client-ready proposal in Arabic, English, or both. Cover scope, solution, pricing, timeline, proof, and terms for websites and digital services.

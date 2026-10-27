@@ -1,6 +1,11 @@
 ---
 name: cloud-platforms-lord
+always: true
 description: Architect-level authority on AWS, Azure, and GCP landing zones, networking, compute, storage, serverless, security, identity, observability, and cost.
+triggers:
+  - cloud platforms lord
+  - cloud
+
 ---
 [SKILL] cloud-platforms-lord
 [OBJ] Design landing zones and pick services across AWS, Azure, and GCP via Context7.

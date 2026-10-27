@@ -4,6 +4,7 @@ description: Freelance niche selector — pick a profitable specialization, buil
 personas:
   - FREELANCE
 triggers:
+  - freelance niche
   - niche
   - تخصص
   - profitable niche
@@ -13,6 +14,7 @@ triggers:
 tech_stack:
   - plausible/analytics
   - google/ga4
+
 ---
 [SKILL] freelance-niche
 [OBJ] Help a freelancer choose a profitable, defensible niche and the ideal client profile (ICP), then build a plan to become a recognized authority in it.

@@ -6,10 +6,9 @@ personas:
   - SALES
   - BRAND
 triggers:
+  - copy frameworks
   - copywriting
   - AIDA
-  - PAS
-  - BAB
   - صياغة إعلان
   - نص اقناعي
   - copy
@@ -17,6 +16,7 @@ triggers:
 tech_stack:
   - brevo
   - ga4
+
 ---
 [SKILL] copy-frameworks
 [OBJ] Generate persuasive marketing and sales copy on demand using proven frameworks (AIDA, PAS, BAB, 4Ps, StoryBrand), with Arabic RTL parity. Produce ready-to-use drafts for emails, ads, landing pages, and proposals.

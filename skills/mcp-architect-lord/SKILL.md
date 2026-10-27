@@ -2,6 +2,7 @@
 name: mcp-architect-lord
 description: Lord skill for designing and securing MCP servers per the 2026-07-28 spec — stateless core, OAuth 2.1 Resource Server, tool-poisoning defense, and dual-era migration.
 triggers:
+  - mcp architect lord
   - mcp server
   - mcp design
   - mcp protocol
@@ -19,6 +20,7 @@ personas:
   - UX
 tech_stack: []
 lord: true
+
 ---
 
 # MCP Architect Lord

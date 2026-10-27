@@ -1,0 +1,14 @@
+[
+  {
+    "file": "skills/skill-finder/SKILL.md",
+    "rule": "remote-pipe-shell",
+    "match": "scan for prompt-injection",
+    "note": "Defensive documentation — the skill teaches agents to DETECT this pattern, not run it."
+  },
+  {
+    "file": "skills/web-quality.md",
+    "rule": "exfil-channel",
+    "match": "webpagetest.org",
+    "note": "WebPageTest API example; <API_KEY> is a placeholder, not an embedded credential."
+  }
+]

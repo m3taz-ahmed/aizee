@@ -1,6 +1,11 @@
 ---
 name: backend-frameworks-lord
+always: true
 description: Architect-level command of Laravel, Filament, Nova, Django, Spring Boot, Express, NestJS, Rails, ASP.NET Core.
+triggers:
+  - backend frameworks lord
+  - command
+
 ---
 [SKILL] backend-frameworks-lord
 [OBJ] Design server-side apps and admin panels across Laravel, Filament, Nova, Django, Spring Boot, Express, NestJS, Rails, ASP.NET Core.

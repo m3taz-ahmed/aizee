@@ -5,15 +5,13 @@ personas:
   - FREELANCE
   - LEGAL
 triggers:
+  - contract studio
   - contract
-  - NDA
-  - SOW
-  - MSA
   - IP transfer
-  - عقد
   - اتفاقية
 tech_stack:
   - documenso/documenso
+
 ---
 [SKILL] contract-studio
 [OBJ] Produce sign-ready NDA / SOW / MSA / IP-transfer contracts from reusable, bilingual (Arabic/English) clause libraries, then hand off to the `documenso` plugin (template → fields → sign → audit) for legally binding e-signature. Always flag clauses for human legal review before signature.

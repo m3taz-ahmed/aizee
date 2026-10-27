@@ -1,6 +1,13 @@
 ---
 name: incident-commander
+always: true
 description: Incident response commander coordinating severity classification, war room, rollback, and blameless postmortems
+triggers:
+  - incident commander
+  - incident
+  - response
+  - commander
+
 ---
 [SKILL] incident-commander
 [OBJ] Lead incident response from detection through resolution and postmortem, minimizing customer impact while preserving evidence for root-cause analysis.

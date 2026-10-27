@@ -9,12 +9,14 @@ personas:
   - DEV
   - DEVOPS
 triggers:
+  - linkedin platform
   - linkedin
   - linkedin post
   - لينكدإن
   - بوست لينكدإن
   - b2b outreach
   - profile optimization
+
 ---
 
 # LinkedIn Platform Skill

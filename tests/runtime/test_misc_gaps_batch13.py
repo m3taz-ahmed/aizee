@@ -131,9 +131,8 @@ class TestDesignSlop:
         from runtime.design_slop_verifier import DesignSlopVerifier
 
         v = DesignSlopVerifier()
-        findings = v._check_svg_illustrations('<svg><rect class="illustration"/></svg>')
-        # depends on pattern list; at minimum exercises the loop
-        assert isinstance(findings, list)
+        verdict = v.verify('<svg><rect class="illustration"/></svg>')
+        assert isinstance(verdict.findings, list)
 
     def test_unlisted_font_skipped(self) -> None:
         from runtime.design_slop_verifier import DesignSlopVerifier

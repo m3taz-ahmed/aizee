@@ -2,6 +2,7 @@
 name: arabic-dialect-lord
 description: Lord skill for Arabic dialect-aware AI coding governance. Bridges Modern Standard Arabic (MSA) with Gulf, Egyptian, and Levantine dialects to deliver contextually-appropriate Arabic output for MENA developers.
 triggers:
+  - arabic dialect lord
   - arabic dialect
   - لهجة
   - خليجي
@@ -22,6 +23,7 @@ personas:
   - FREELANCE
 tech_stack: []
 lord: true
+
 ---
 
 # Arabic Dialect Lord

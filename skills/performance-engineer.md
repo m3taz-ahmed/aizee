@@ -1,6 +1,12 @@
 ---
 name: performance-engineer
-description: Performance Engineer — latency, throughput, profiling, and optimization.
+always: true
+description: Performance Engineer — latency, throughput, profiling, and optimization. Do not use for filament performance lord tasks — use `filament-performance-lord` instead.
+triggers:
+  - performance engineer
+  - performance
+  - latency
+
 ---
 [SKILL] performance-engineer
 [OBJ] Find and fix performance bottlenecks across the stack with measurable results.

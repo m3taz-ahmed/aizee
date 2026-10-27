@@ -1,6 +1,13 @@
 ---
 name: page-sections-lord
+always: true
 description: Design and build section-based landing and content pages with Filament Builder in Laravel.
+triggers:
+  - page sections lord
+  - page
+  - build
+  - section
+
 ---
 [SKILL] page-sections-lord
 [OBJ] Design, scaffold, and operate reusable page sections and landing pages via Filament/Laravel.

@@ -1,6 +1,11 @@
 ---
 name: flutter-developer
+always: true
 description: Master Flutter Engineer — Dart 3.13, architecture (clean/feature-first), state (Riverpod/BLoC), networking, persistence, testing, CI/CD, performance, security, offline sync, platform channels.
+triggers:
+  - flutter developer
+  - flutter
+
 ---
 [SKILL] flutter-developer
 [OBJ] Engineer the non-visual layer of production Flutter apps — architecture, state management, networking, persistence, testing, CI/CD, performance profiling, security, and native platform integration.

@@ -223,8 +223,8 @@ class TestDesignSlopSvg:
 
         v = DesignSlopVerifier()
         html = '<div><svg class="undraw-hero"></svg></div>'
-        findings = v._check_svg_illustrations(html)
-        assert findings and findings[0].category.value == "svg_illustrations"
+        verdict = v.verify(html)
+        assert any(f.category.value == "svg_illustrations" for f in verdict.findings)
 
 class TestCrossToolTaintVisited:
     def test_visited_state_skip(self) -> None:

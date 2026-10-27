@@ -1,6 +1,10 @@
 ---
 name: frontend-ui-expert
+always: true
 description: Frontend UI Expert. Master of DOM manipulation, styling, animation, and component-driven development.
+triggers:
+  - frontend ui expert
+
 ---
 [SKILL] frontend-ui-expert
 [OBJ] Engineer beautiful, functional, responsive web interfaces.

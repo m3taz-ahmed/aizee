@@ -87,7 +87,6 @@ CONSTRUCTED_ONLY_SERVICES: tuple[str, ...] = (
     "model_router", "fairness_detector", "laravel_policy_linter",
     "filament_access_auditor", "db_migration_safety",
     "ui_a11y_checker", "blade_template_linter",
-    "design_library", "design_slop_verifier",
 )
 
 # Orphan runtime modules: exported and tested, but never invoked from any
@@ -204,12 +203,16 @@ def _init_core_services(kernel: Kernel) -> None:
     # - DesignLibrary: brand design systems (seeds + imported DESIGN.md files)
     try:
 
+        from runtime.design_db import DesignDB
         from runtime.design_library import DesignLibrary
         from runtime.design_slop_verifier import DesignSlopVerifier
 
         kernel.design_slop_verifier = DesignSlopVerifier()  # type: ignore[attr-defined]
         kernel.design_library = DesignLibrary(  # type: ignore[attr-defined]
             library_dir=kernel.root / "design-library",
+        )
+        kernel.design_db = DesignDB(  # type: ignore[attr-defined]
+            data_dir=kernel.root / "design-db",
         )
     except Exception as exc:
         kernel.disabled_defenses.append("design_stack")
@@ -420,6 +423,43 @@ def _run_loop_detection(
     return None
 
 
+def _run_verification(
+    kernel: Kernel,
+    verify: str | None,
+    action_type: str,
+    action_data: dict[str, Any],
+    dry_run: bool,
+) -> dict[str, Any] | None:
+    """Optional verification-depth gate (off/final/checkpoints/strict).
+
+    Layers plan-diff and supply-chain checks on top of the mandatory gates;
+    never removes them. Returns a denial dict on violation, None otherwise.
+    """
+    if verify is None:
+        return None
+    from runtime.verification import resolve_verify, run_verification
+
+    level = resolve_verify(verify)
+    if level.value in ("off", "final") or dry_run:
+        return None
+    violation = run_verification(level, action_type, action_data, kernel.project_root)
+    if violation is None:
+        return None
+    kernel._actions_total.labels(action=action_type, decision=Decision.DENY.value).inc()
+    kernel.audit.log(
+        "verify.deny",
+        {"action": action_type, "verify": level.value, "violation": violation["violation"]},
+    )
+    return {
+        "ok": False,
+        "decision": Decision.DENY.value,
+        "reason": violation["error"]["message"],
+        "verify": level.value,
+        "violation": violation["violation"],
+        "violations": violation["violations"],
+    }
+
+
 def _finalize_action(
     kernel: Kernel,
     action_type: str,
@@ -455,6 +495,7 @@ def _act_via_middleware(
     kwargs: dict[str, Any],
     session_id: str | None,
     fresh_context: bool = False,
+    verify: str | None = None,
 ) -> dict[str, Any]:
     """Execute action through the flat middleware array (Pattern 4).
 
@@ -471,6 +512,7 @@ def _act_via_middleware(
     def handler(ctx: ActionContext) -> MiddlewareResult[dict[str, Any]]:
         result = kernel._act_direct(
             ctx.action_type, ctx.dry_run, ctx.data, ctx.session_id, fresh_context=fresh_context,
+            verify=verify,
         )
         return MiddlewareResult(ok=bool(result.get("ok", False)), data=result, error=result.get("error"))
 
@@ -879,13 +921,22 @@ class Kernel:
         """
         fresh_context = kwargs.pop("fresh_context", False)
         session_id = kwargs.pop("session_id", None)
+        verify = kwargs.pop("verify", None)
+        sensitive_data = kwargs.pop("sensitive_data", None)
+        if sensitive_data:
+            # browser-use pattern: secrets are injected at call time and
+            # masked before gates/audit — placeholders {NAME} and real
+            # values both render as [SENSITIVE:NAME] downstream.
+            from runtime.sensitive import SensitiveVault
+
+            kwargs = SensitiveVault.from_mapping(sensitive_data).mask_dict(kwargs)
         with with_span(self.tracer.get_tracer("kernel"), f"act.{action_type}"):
             _auto_persona(self, kwargs)
             if fresh_context and session_id is None:
                 session_id = uuid.uuid4().hex
             if self._middleware_pipeline.has_middlewares():
-                return _act_via_middleware(self, action_type, dry_run, kwargs, session_id, fresh_context)
-            return self._act_direct(action_type, dry_run, kwargs, session_id, fresh_context)
+                return _act_via_middleware(self, action_type, dry_run, kwargs, session_id, fresh_context, verify)
+            return self._act_direct(action_type, dry_run, kwargs, session_id, fresh_context, verify)
 
     def _act_direct(
         self,
@@ -894,6 +945,7 @@ class Kernel:
         kwargs: dict[str, Any],
         session_id: str | None,
         fresh_context: bool,
+        verify: str | None = None,
     ) -> dict[str, Any]:
         """Existing direct action evaluation path (guardian -> policy -> budget)."""
         try:
@@ -939,6 +991,9 @@ class Kernel:
         loop_result = _run_loop_detection(self, action_type, action_data, dry_run)
         if loop_result is not None:
             return loop_result
+        verify_result = _run_verification(self, verify, action_type, action_data, dry_run)
+        if verify_result is not None:
+            return verify_result
         return _finalize_action(self, action_type, action_data, kwargs, decision, dry_run, session_id)
 
     # --- Middleware & Pipeline Registration ---

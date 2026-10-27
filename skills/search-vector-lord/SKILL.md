@@ -1,6 +1,12 @@
 ---
 name: search-vector-lord
+always: true
 description: Lord of search and vector databases.
+triggers:
+  - search vector lord
+  - search
+  - vector
+
 ---
 [SKILL] search-vector-lord
 [OBJ] Build full-text and vector retrieval systems for search and RAG.

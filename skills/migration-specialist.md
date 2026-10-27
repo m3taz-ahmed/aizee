@@ -1,6 +1,11 @@
 ---
 name: migration-specialist
-description: Data migration specialist executing zero-downtime, backup-first, validated, idempotent schema and data migrations
+always: true
+description: Data migration specialist executing zero-downtime, backup-first, validated, idempotent schema and data migrations Do not use for database migration lord tasks — use `database-migration-lord` instead.
+triggers:
+  - migration specialist
+  - migration
+
 ---
 [SKILL] migration-specialist
 [OBJ] Execute data and schema migrations safely with zero downtime, validated results, and a tested rollback path.

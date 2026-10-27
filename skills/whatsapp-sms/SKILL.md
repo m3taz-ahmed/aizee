@@ -5,6 +5,7 @@ personas:
   - MARKETING
   - SALES
 triggers:
+  - whatsapp sms
   - whatsapp
   - sms
   - broadcast
@@ -15,6 +16,7 @@ tech_stack:
   - chatwoot/chatwoot
   - twentyhq/twenty
   - plausible/analytics
+
 ---
 [SKILL] whatsapp-sms
 [OBJ] Run high-intent WhatsApp and SMS programs — broadcasts, templates, and 1:1 flows — that respect opt-in and deliver strong ROI in MENA and emerging markets.

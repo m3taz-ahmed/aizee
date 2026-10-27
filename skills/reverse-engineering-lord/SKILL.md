@@ -2,6 +2,7 @@
 name: reverse-engineering-lord
 description: Lord skill for reverse engineering shipped artifacts — native binaries, Electron/JavaScript apps, .NET assemblies, APKs, firmware, packages — via REA (rea-agents) CLI/MCP. Evidence-tiered analysis (observation/derivation/inference/unknown), provider-bring-your-own (Ghidra/IDA/Hopper/JADX), read-only by default.
 triggers:
+  - reverse engineering lord
   - reverse engineering
   - reverse engineer
   - decompile
@@ -12,7 +13,6 @@ triggers:
   - hopper
   - binary analysis
   - firmware
-  - apk
   - frida
   - il2cpp
   - jadx
@@ -22,7 +22,6 @@ triggers:
   - pyinstaller
   - obfuscated
   - binary diff
-  - rea
   - هندسة عكسية
   - عكس هندسي
   - فك تجميع
@@ -33,6 +32,7 @@ personas:
   - SEC
   - ARCH
 lord: true
+
 ---
 
 # Reverse Engineering Lord

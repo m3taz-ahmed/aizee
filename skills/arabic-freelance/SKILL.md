@@ -4,6 +4,7 @@ description: Arabic freelance marketplaces specialist — Mostaql, Khamsat, Nabb
 personas:
   - FREELANCE
 triggers:
+  - arabic freelance
   - mostaql
   - خمسات
   - nabbesh
@@ -15,6 +16,7 @@ tech_stack:
   - documenso/documenso
   - invoiceninja/invoiceninja
   - chatwoot/chatwoot
+
 ---
 [SKILL] arabic-freelance
 [OBJ] Master Arabic freelance platforms — Mostaql, Khamsat, Nabbesh, Bawaba, Bayt — with RTL-ready proposals, local-currency pricing (SAR/AED/EGP), and culturally fluent client communication.

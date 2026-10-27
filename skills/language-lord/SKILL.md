@@ -1,6 +1,11 @@
 ---
 name: language-lord
+always: true
 description: Language-designer-level authority for Python, JavaScript, TypeScript, Java, C#, C++, Go, Rust, PHP, Ruby.
+triggers:
+  - language lord
+  - language
+
 ---
 [SKILL] language-lord
 [OBJ] Explain design, performance, optimization, runtime, concurrency, memory model, and tooling for major languages.

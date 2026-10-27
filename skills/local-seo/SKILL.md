@@ -9,11 +9,11 @@ triggers:
   - citation
   - تحسين محلي
   - خرائط جوجل
-  - GBP
 tech_stack:
   - matomo-org/matomo
   - plausible/analytics
   - google/ga4
+
 ---
 [SKILL] local-seo
 [OBJ] Win local search and the map pack for location-based businesses — optimize Google Business Profile, build citations, earn reviews, and rank for "near me" intent. Extends `seo-lord` locally.

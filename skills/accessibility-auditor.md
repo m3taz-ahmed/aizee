@@ -1,6 +1,11 @@
 ---
 name: accessibility-auditor
+always: true
 description: WCAG 2.2 AA Accessibility Auditor. 11 specialist agents covering every accessibility domain.
+triggers:
+  - accessibility auditor
+  - wcag
+
 ---
 [SKILL] accessibility-auditor
 [OBJ] Audit and remediate web interfaces for full WCAG 2.2 AA conformance across 11 domains.

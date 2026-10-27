@@ -2,6 +2,7 @@
 name: ai-redteam-lord
 description: Lord skill for CI-integrated AI red-teaming — adversarial testing across prompt injection, jailbreak, data leakage, bias, and tool abuse with measurable coverage and false-positive tracking.
 triggers:
+  - ai redteam lord
   - red team
   - redteam
   - adversarial
@@ -19,6 +20,7 @@ personas:
   - ARCH
 tech_stack: []
 lord: true
+
 ---
 
 # AI Redteam Lord

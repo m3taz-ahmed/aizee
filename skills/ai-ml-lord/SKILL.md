@@ -1,6 +1,10 @@
 ---
 name: ai-ml-lord
-description: Lord of AI/ML engineering.
+always: true
+description: Lord skill for applied ML/LLM engineering — model selection, RAG pipelines, fine-tuning, evals, and production inference patterns.
+triggers:
+  - ai ml lord
+
 ---
 [SKILL] ai-ml-lord
 [OBJ] Take models from research to production endpoints and LLM integrations.

@@ -1,6 +1,11 @@
 ---
 name: frontend-frameworks-lord
+always: true
 description: Deep mastery of React, Vue.js, Angular, and Svelte.
+triggers:
+  - frontend frameworks lord
+  - react
+
 ---
 [SKILL] frontend-frameworks-lord
 [OBJ] Architect and optimize frontend stacks across React, Vue, Angular, Svelte.

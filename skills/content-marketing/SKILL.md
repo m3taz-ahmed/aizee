@@ -1,6 +1,6 @@
 ---
 name: content-marketing
-description: Content marketing strategist — pillar content, editorial calendar, repurposing, distribution. Feeds social, SEO, and email engines.
+description: Content marketing strategist — pillar content, editorial calendar, repurposing, distribution. Feeds social, SEO, and email engines. Do not use for social media marketing tasks — use `social-media-marketing` instead.
 personas:
   - MARKETING
   - SOCIAL

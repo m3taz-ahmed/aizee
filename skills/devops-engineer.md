@@ -1,6 +1,12 @@
 ---
 name: devops-engineer
-description: DevOps & CI/CD Engineer — pipelines, containers, GitOps, and release automation.
+always: true
+description: DevOps & CI/CD Engineer — pipelines, containers, GitOps, and release automation. Do not use for devops lord tasks — use `devops-lord` instead.
+triggers:
+  - devops engineer
+  - devops
+  - pipelines
+
 ---
 [SKILL] devops-engineer
 [OBJ] Automate the path from commit to production safely and quickly.

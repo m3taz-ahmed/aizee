@@ -1,6 +1,13 @@
 ---
 name: image-to-code
+always: true
 description: Image-first website design-to-code workflow — generate design images first, analyze deeply, then implement pixel-faithful frontend
+triggers:
+  - image to code
+  - image
+  - first
+  - website
+
 ---
 [SKILL] image-to-code
 [OBJ] Convert design intent into production frontend by generating design images first, analyzing them deeply, then implementing to match — never skip the image generation phase.

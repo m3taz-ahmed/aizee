@@ -2,6 +2,7 @@
 name: ai-observability-lord
 description: Lord skill for AI observability and tracing — OpenTelemetry + OpenInference standards, span attributes, eval integration, cost/latency/error tracking, drift detection, and PII redaction.
 triggers:
+  - ai observability lord
   - observability
   - tracing
   - langsmith
@@ -20,6 +21,7 @@ personas:
   - ARCH
 tech_stack: []
 lord: true
+
 ---
 
 # AI Observability Lord

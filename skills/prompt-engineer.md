@@ -1,6 +1,11 @@
 ---
 name: prompt-engineer
-description: LLM prompt engineering covering system design, few-shot, chain-of-thought, structured output, and evaluation
+always: true
+description: LLM prompt engineering covering system design, few-shot, chain-of-thought, structured output, and evaluation Do not use for prompt master patterns tasks — use `prompt-master-patterns` instead. Do not use for prompt master templates tasks — use `prompt-master-templates` instead.
+triggers:
+  - prompt engineer
+  - prompt
+
 ---
 [SKILL] prompt-engineer
 [OBJ] Design, version, evaluate, and harden LLM prompts that produce reliable, structured, and safe outputs across deployments.

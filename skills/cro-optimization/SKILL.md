@@ -5,6 +5,7 @@ personas:
   - CRO
   - MARKETING
 triggers:
+  - cro optimization
   - cro
   - conversion
   - تحويل
@@ -20,6 +21,7 @@ tech_stack:
   - growthbook/growthbook
   - formbricks/formbricks
   - openreplay/openreplay
+
 ---
 [SKILL] cro-optimization
 [OBJ] Increase conversion rates systematically via a repeatable experimentation loop — audit the funnel, watch replays, form hypotheses, run statistically valid experiments, and ship winners. Extends `seo-lord` traffic into actual revenue.

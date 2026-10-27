@@ -1,6 +1,13 @@
 ---
 name: gsap-animated-frontend
+always: true
 description: Persistent, recoverable GSAP workflow for coding agents. Use when the user wants to animate a new page or section, or improve an existing page/component with GSAP. Route new/greenfield work to gsap-new and existing-code improvement work to gsap-refactor. Always use .gsap artifacts as the source of truth so any fresh agent session can resume without chat history.
+triggers:
+  - gsap animated frontend
+  - gsap
+  - persistent
+  - recoverable
+
 ---
 
 # GSAP Animated Frontend

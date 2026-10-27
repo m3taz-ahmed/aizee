@@ -5,7 +5,7 @@ personas:
   - FREELANCE
   - FINOPS
 triggers:
-  - tax
+  - freelance financials
   - ضريبة
   - cash flow
   - تدفق نقدي
@@ -16,6 +16,7 @@ tech_stack:
   - frappe/erpnext
   - invoiceninja/invoiceninja
   - lago/getlago
+
 ---
 [SKILL] freelance-financials
 [OBJ] Turn irregular freelance income into a stable financial plan — estimate tax/VAT, project cash flow, build an emergency fund, and plan retirement.

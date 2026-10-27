@@ -272,6 +272,21 @@ def _gateway_post_check(tool_name: str, result: Any) -> Any:
         return result
     if not ok:
         return json.dumps({"ok": False, "error": f"result blocked by agent_gateway: {out}", "gate": "agent_gateway"})
+    # Opt-in token compression (RTK/Headroom pattern): collapse repetitive
+    # boilerplate in large tool outputs before they reach the model.
+    # Enabled via AIZEE_OUTPUT_FILTER=1; off by default.
+    if os.environ.get("AIZEE_OUTPUT_FILTER") and isinstance(out, str) and len(out) > 8000:
+        try:
+            from runtime.output_filter import filter_output
+
+            filtered, stats = filter_output(out)
+            if stats.saved_chars > 0:
+                k.audit.log("output_filter.compress", {"tool": tool_name, "stats": stats.__dict__})
+                if isinstance(result, str):
+                    return filtered
+                out = filtered
+        except Exception as exc:
+            logger.warning("output filter error (degraded): %s", exc)
     if out != text and isinstance(result, str):
         return out
     return result

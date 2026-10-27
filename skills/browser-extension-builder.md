@@ -1,6 +1,12 @@
 ---
 name: browser-extension-builder
+always: true
 description: Expert in engineering secure, cross-browser Web Extensions (Chrome, Firefox, Edge).
+triggers:
+  - browser extension builder
+  - browser
+  - secure
+
 ---
 [SKILL] browser-extension-builder
 [OBJ] Build fast, secure browser extensions.

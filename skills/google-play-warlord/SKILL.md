@@ -1,6 +1,13 @@
 ---
 name: google-play-warlord
+always: true
 description: Google Play Ecosystem Warlord & Android Publishing Expert — AAB, target API, ASO, ANR/crash, IAP.
+triggers:
+  - google play warlord
+  - google
+  - play
+  - ecosystem
+
 ---
 [SKILL] google-play-warlord
 [OBJ] Publish and optimize Android apps/games on Google Play Console while staying compliant with store policies and minimizing ANR/crash rates.

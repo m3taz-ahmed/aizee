@@ -4,6 +4,7 @@ description: Client onboarding orchestrator — intake form, contract, first inv
 personas:
   - FREELANCE
 triggers:
+  - client onboarding
   - onboarding
   - استقبال عميل
   - kickoff
@@ -14,6 +15,7 @@ tech_stack:
   - documenso/documenso
   - invoiceninja/invoiceninja
   - chatwoot/chatwoot
+
 ---
 [SKILL] client-onboarding
 [OBJ] Turn a signed deal into a smooth, professional start. Run a repeatable intake→contract→invoice→kickoff flow that sets expectations and reduces early churn.

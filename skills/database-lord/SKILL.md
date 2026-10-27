@@ -1,6 +1,11 @@
 ---
 name: database-lord
-description: Architect-level database mastery for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, SQLite, SQL Server, Oracle, ClickHouse.
+always: true
+description: Architect-level database mastery for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, SQLite, SQL Server, Oracle, ClickHouse. Do not use for database migration lord tasks — use `database-migration-lord` instead.
+triggers:
+  - database lord
+  - database
+
 ---
 [SKILL] database-lord
 [OBJ] Design, performance-tune, optimize, and operate relational/document/key-value/analytical databases via Context7.

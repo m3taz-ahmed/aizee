@@ -12,7 +12,7 @@ triggers:
   - agent discipline
   - install aizee elsewhere
 tech_stack:
-  - m3taz-ahmed/ai-globals
+  - m3taz-ahmed/aizee
 ---
 
 [SKILL] aizee-lite

@@ -2,6 +2,7 @@
 name: laravel-filament-lord
 description: Lord skill for Laravel 13 + Filament v5 full-stack mastery — admin panels, resources, API, database, and UI in one cohesive workflow.
 triggers:
+  - laravel filament lord
   - laravel filament
   - filament laravel
   - admin panel
@@ -10,14 +11,11 @@ triggers:
   - filament v5
   - laravel 13
   - fullstack laravel
-  - O?U?O?U? laravel filament
-  - O?U?O?U?O? U?U?O?U? laravel
+  - لارافيل filament
+  - لوحة تحكم لارافيل
 personas:
-  - ARCH
   - DEV
-  - API
   - DB
-  - UI
   - SEC
 tech_stack:
   - laravel-13
@@ -27,6 +25,7 @@ tech_stack:
   - mysql-9-7
   - postgresql-19
 lord: true
+
 ---
 
 # Laravel + Filament Lord

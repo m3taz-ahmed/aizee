@@ -2,10 +2,10 @@
 name: web-security-checklist
 description: Practical web-application security checklist — SSRF bypass variants, file upload magic bytes, XXE, JWT pitfalls, mass assignment, GraphQL hardening, input validation, output encoding. Complements aiZee's agent-focused security-auditor with implementation-level web vulns.
 triggers:
+  - web security checklist
   - web security
   - ssrf
   - file upload
-  - xxe
   - jwt security
   - mass assignment
   - graphql security
@@ -31,6 +31,7 @@ tech_stack:
   - appsec-hardening
 license: Apache-2.0
 source: https://github.com/BehiSecc/VibeSec-Skill
+
 ---
 
 # Web Security Checklist

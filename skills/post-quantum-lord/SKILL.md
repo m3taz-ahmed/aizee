@@ -2,8 +2,8 @@
 name: post-quantum-lord
 description: Lord skill for post-quantum cryptography migration — ML-DSA (FIPS 204), ML-KEM (FIPS 203), SLH-DSA (FIPS 205), hybrid schemes, and PQC readiness.
 triggers:
+  - post quantum lord
   - post quantum
-  - pqc
   - ml-dsa
   - ml-kem
   - kyber
@@ -23,6 +23,7 @@ tech_stack:
   - rust-1-98
   - python-3-14
 lord: true
+
 ---
 
 # Post-Quantum Cryptography Lord

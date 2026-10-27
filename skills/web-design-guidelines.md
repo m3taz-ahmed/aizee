@@ -1,6 +1,12 @@
 ---
 name: web-design-guidelines
+always: true
 description: Vercel web interface guidelines — 100+ rules for accessibility, forms, dark mode, typography, animation, images, performance, navigation, touch, and i18n
+triggers:
+  - web design guidelines
+  - vercel
+  - interface
+
 ---
 [SKILL] web-design-guidelines
 [OBJ] Apply production-grade web interface guidelines covering accessibility, forms, dark mode, typography, animation, images, performance, navigation, touch targets, and internationalization.

@@ -2,6 +2,7 @@
 name: content-quality-lord
 description: Detect and remove AI slop patterns from generated content. Use when the user asks to deslop, de-AI, audit content quality, or when aiZee itself generates content that must pass a quality gate.
 triggers:
+  - content quality lord
   - deslop
   - de-ai
   - remove ai patterns
@@ -18,6 +19,7 @@ personas:
 tech_stack:
   - markdown
   - python
+
 ---
 
 # Content Quality Lord

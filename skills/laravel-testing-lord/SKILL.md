@@ -2,6 +2,7 @@
 name: laravel-testing-lord
 description: Lord skill for Laravel 13 + Filament v5 testing mastery — Pest 3+, feature tests, Filament resource tests, API tests, database tests, and CI/CD.
 triggers:
+  - laravel testing lord
   - laravel testing
   - filament testing
   - pest php
@@ -9,12 +10,11 @@ triggers:
   - php testing
   - api testing
   - database testing
-  - O?U?U?U? laravel
-  - O?U?U?U? filament
+  - اختبار laravel
+  - تست filament
 personas:
   - QA
   - DEV
-  - ARCH
   - SRE
 tech_stack:
   - laravel-13
@@ -23,6 +23,7 @@ tech_stack:
   - mysql-9-7
   - postgresql-19
 lord: true
+
 ---
 
 # Laravel Testing Lord

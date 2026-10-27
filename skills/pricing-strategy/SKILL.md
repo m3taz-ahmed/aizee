@@ -4,12 +4,14 @@ description: Choose the right freelance pricing model (hourly/project/retainer/p
 personas:
   - FREELANCE
 triggers:
+  - pricing strategy
   - pricing
   - تسعير
   - retainer
   - value-based
 tech_stack:
   - invoiceninja/invoiceninja
+
 ---
 [SKILL] pricing-strategy
 [OBJ] Help a freelancer select a pricing model and compute a defensible recommended rate, then draft a client-ready rate-increase or proposal-pricing email. Ground every number in `runtime/pricing_calculator.py` rather than guesswork.

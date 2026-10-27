@@ -1,0 +1,32 @@
+# aiZee
+
+> Sovereign AI engineering control plane — governance enforced on the action path, not advised around it.
+
+## Docs
+
+- [README.md](README.md): install, quickstart, command surface
+- [spec.md](spec.md): architecture + contract
+- [SKILL.md](SKILL.md): agent-facing usage guide
+- [AGENTS.md](AGENTS.md): contributor + worker-agent contract
+- [aizee_mcp/API.md](aizee_mcp/API.md): MCP tool reference
+
+## Key paths
+
+- `aizee_cli.py`: CLI entry point (~40 commands)
+- `runtime/kernel.py`: gate facade (Probity → Guardian → Policy → Loop → Budget → Audit)
+- `runtime/doctor.py`: structured health verdicts + next steps
+- `runtime/gateway_proxy.py`: governed LLM proxy with provider failover
+- `runtime/verification.py`: verification-depth dial (off/final/checkpoints/strict)
+- `runtime/find.py`: NL discovery over skills/workflows/tech-stack
+- `runtime/spec/changes.py`: OpenSpec-style change folders
+- `runtime/tool_envelope.py`: uniform MCP response envelope + error codes
+- `runtime/api_session.py`: governed API sessions replayed from curl/HAR captures (kernel-gated, same-host)
+- `runtime/secret_scrub.py` + `runtime/sensitive.py`: capture-time secret scrubbing + placeholder injection
+- `runtime/skill_lint.py` + `runtime/skill_scan.py`: skill-library lint/collision + prompt-injection scanner
+- `aizee_mcp/tools/`: MCP tool modules (auto-discovered `*_tools.py`)
+
+## Conventions
+
+- `AIZEE_ROOT` env var points at the OS root; `config.discover_root()` resolves it.
+- New runtime modules: `runtime/<name>.py`, wire through `kernel.py`, tests in `tests/`.
+- MCP tools return the envelope `{schema_version:"aizee.tool.v1", ok, result, error:{code}, meta}`.

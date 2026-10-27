@@ -6,6 +6,7 @@ personas:
   - MARKETING
   - BRAND
 triggers:
+  - social media marketing
   - social media
   - تواصل اجتماعي
   - تويتر
@@ -22,6 +23,7 @@ tech_stack:
   - bufferapp/buffer
   - plausible/analytics
   - umami-software/umami
+
 ---
 [SKILL] social-media-marketing
 [OBJ] Plan, produce, schedule, and measure content across every major social channel from one orchestration layer. Extend `linkedin-platform` into a full omnichannel system while keeping Arabic/RTL parity.

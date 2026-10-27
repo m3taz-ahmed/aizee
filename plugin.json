@@ -1,0 +1,19 @@
+{
+  "name": "aizee",
+  "version": "6.5.0",
+  "description": "Sovereign AI engineering control plane — policy, budget, guardrails, and audit enforced on every agent action. 141 governance skills, 63 workflows, 266 version-locked tech-stack references.",
+  "license": "MIT",
+  "homepage": "https://github.com/m3taz-ahmed/aizee",
+  "repository": "https://github.com/m3taz-ahmed/aizee",
+  "skills": "./skills/",
+  "agents": "./AGENTS.md",
+  "keywords": [
+    "ai-governance",
+    "llm-policy",
+    "agent-guardrails",
+    "mcp-server",
+    "claude-code",
+    "agent-skills"
+  ],
+  "compatibility": "agentskills.io; skill files carry name + description + triggers frontmatter"
+}

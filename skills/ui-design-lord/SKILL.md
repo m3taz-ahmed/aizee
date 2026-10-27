@@ -1,7 +1,8 @@
 ---
 name: ui-design-lord
-description: Lord skill for UI/UX design mastery — HTML, CSS, Tailwind v4.3, Filament v5 UI components, responsive design, RTL/Arabic, accessibility, and design systems.
+description: Lord skill for UI/UX design mastery — HTML, CSS, Tailwind v4.3, Filament v5 UI components, responsive design, RTL/Arabic, accessibility, and design systems. Do not use for frontend ui expert tasks — use `frontend-ui-expert` instead. Do not use for python ui lord tasks — use `python-ui-lord` instead.
 triggers:
+  - ui design lord
   - ui design
   - css design
   - html design
@@ -10,21 +11,18 @@ triggers:
   - responsive design
   - rtl design
   - arabic ui
-  - accessibility
-  - O?U?U?U? UI
-  - O?U?U?U? O?U?U?O?U?
-  - O?U?U?U? O?U?U?U?U?U?
+  - تصميم UI
+  - واجهة مستخدم
+  - تصميم واجهات
 personas:
-  - UI
-  - UX
   - DEV
-  - ARCH
 tech_stack:
   - tailwind-4-3
   - filament-5
   - laravel-13
   - php-8-5
 lord: true
+
 ---
 
 # UI Design Lord

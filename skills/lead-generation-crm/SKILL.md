@@ -5,6 +5,7 @@ personas:
   - SALES
   - MARKETING
 triggers:
+  - lead generation crm
   - lead
   - CRM
   - عميل محتمل
@@ -16,6 +17,7 @@ tech_stack:
   - twentyhq/twenty
   - hubspot/hubspot-crm
   - chatwoot/chatwoot
+
 ---
 [SKILL] lead-generation-crm
 [OBJ] Turn anonymous interest into qualified, tracked opportunities inside a CRM. Capture from every channel, enrich, score (fit/intent/behavior), and hand off to `b2b-cold-outreach` or `client-onboarding`.

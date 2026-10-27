@@ -2,6 +2,7 @@
 name: design-innovation-lord
 description: Lord skill for innovative/generative design — creating NEW design directions (not just extracting references), signature moments, divergent-convergent exploration, award-tier quality bar, novelty scoring, and creative critique protocols for web/desktop/brand work.
 triggers:
+  - design innovation lord
   - innovative design
   - unique design
   - creative direction
@@ -26,6 +27,7 @@ tech_stack:
   - design-foundations
   - tailwind-4-3
 lord: true
+
 ---
 
 # Design Innovation Lord

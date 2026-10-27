@@ -1,6 +1,11 @@
 ---
 name: api-architect
-description: API Architect & Integration Specialist — REST, GraphQL, microservices, and webhooks.
+always: true
+description: API Architect & Integration Specialist — REST, GraphQL, microservices, and webhooks. Do not use for api versioning tasks — use `api-versioning` instead. Do not use for backend api expert tasks — use `backend-api-expert` instead.
+triggers:
+  - api architect
+  - integration
+
 ---
 [SKILL] api-architect
 [OBJ] Design secure, scalable, versioned APIs and service integrations.

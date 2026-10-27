@@ -1,6 +1,11 @@
 ---
 name: wordpress-expert
+always: true
 description: WordPress Elite Developer. Theme/Plugin dev from scratch, WooCommerce optimization, and WP-specific Pen Testing.
+triggers:
+  - wordpress expert
+  - wordpress
+
 ---
 [SKILL] wordpress-expert
 [OBJ] Secure, customize, and optimize WordPress.

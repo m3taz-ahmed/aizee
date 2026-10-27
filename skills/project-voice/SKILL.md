@@ -8,6 +8,7 @@ personas:
   - CV
   - FREELANCE
 triggers:
+  - project voice
   - learn my voice
   - build my voice
   - voice profile
@@ -17,6 +18,7 @@ triggers:
   - brand voice
 tech_stack:
   - charlie947/social-media-skills
+
 ---
 
 [SKILL] project-voice

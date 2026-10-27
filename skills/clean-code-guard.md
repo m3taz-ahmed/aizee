@@ -1,6 +1,12 @@
 ---
 name: clean-code-guard
+always: true
 description: Enforce clean code, SOLID, and DRY principles.
+triggers:
+  - clean code guard
+  - clean
+  - enforce
+
 ---
 [SKILL] clean-code-guard
 [OBJ] Code review enforcing SOLID, DRY, KISS, and YAGNI.

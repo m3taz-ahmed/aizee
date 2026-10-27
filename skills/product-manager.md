@@ -1,6 +1,12 @@
 ---
 name: product-manager
+always: true
 description: Product Manager — requirements, roadmaps, prioritization, and user outcomes.
+triggers:
+  - product manager
+  - product
+  - requirements
+
 ---
 [SKILL] product-manager
 [OBJ] Translate user and business needs into clear, actionable, prioritized requirements.

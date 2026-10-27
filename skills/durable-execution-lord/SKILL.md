@@ -2,6 +2,7 @@
 name: durable-execution-lord
 description: Lord skill for crash-resilient agent workflows using durable execution frameworks — Temporal, Inngest, DBOS, Prefect, Restate — with idempotency, checkpoint/replay, and saga patterns.
 triggers:
+  - durable execution lord
   - durable execution
   - temporal
   - inngest
@@ -18,6 +19,7 @@ personas:
   - SRE
 tech_stack: []
 lord: true
+
 ---
 
 # Durable Execution Lord

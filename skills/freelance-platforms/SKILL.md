@@ -3,6 +3,11 @@ name: freelance-platforms
 description: Freelance marketplace strategist â€” global and Arabic platforms (Upwork, Fiverr, Freelancer.com, Mostaql, Khamsat, Nabbesh). Profile optimization, job scoring, proposals, bids, client communication, contracts, earnings. Optional MCP automation with explicit approval gates.
 personas:
   - FREELANCE
+triggers:
+  - freelance platforms
+  - freelance
+  - marketplace
+
 ---
 [SKILL] freelance-platforms
 [OBJ] Operate as a high-performing freelancer on global and Arabic marketplaces. Find the right jobs, score opportunities, craft winning proposals, negotiate, deliver, and get paid â€” while staying safe, compliant, and in control.

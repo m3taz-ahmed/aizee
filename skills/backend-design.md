@@ -1,6 +1,10 @@
 ---
 name: backend-design
-description: Senior backend engineer reflexes — 13 disciplines covering think-before-coding, data modeling, migrations, queries, idempotency, errors, observability, security, auth, performance, debugging, testing, and boring-by-default
+always: true
+description: Senior backend engineer reflexes — 13 disciplines covering think-before-coding, data modeling, migrations, queries, idempotency, errors, observability, security, auth, performance, debugging, testing, and boring-by-default Do not use for backend api expert tasks — use `backend-api-expert` instead. Do not use for backend frameworks lord tasks — use `backend-frameworks-lord` instead.
+triggers:
+  - backend design
+
 ---
 [SKILL] backend-design
 [OBJ] Apply 13 senior backend engineering reflexes to every backend task — think before coding, model data with discipline, and ship boring, observable, secure systems.

@@ -1,7 +1,8 @@
 ---
 name: compliance-lord
-description: Lord skill for regulatory compliance mapping — EU AI Act, NIST AI RMF, ISO 42001. Translates regulatory requirements into enforceable aiZee policy rules.
+description: Lord skill for regulatory compliance mapping — EU AI Act, NIST AI RMF, ISO 42001. Translates regulatory requirements into enforceable aiZee policy rules. Do not use for legal compliance tasks — use `legal-compliance` instead. Do not use for marketing compliance tasks — use `marketing-compliance` instead.
 triggers:
+  - compliance lord
   - compliance
   - eu ai act
   - nist ai rmf
@@ -17,6 +18,7 @@ personas:
   - DOC
 tech_stack: []
 lord: true
+
 ---
 
 # Compliance Lord

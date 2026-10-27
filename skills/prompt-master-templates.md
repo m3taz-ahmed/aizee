@@ -1,6 +1,12 @@
 ---
 name: prompt-master-templates
+always: true
 description: Prompt engineering templates for common tasks.
+triggers:
+  - prompt master templates
+  - prompt
+  - templates
+
 ---
 
 [SKILL] prompt-master-templates

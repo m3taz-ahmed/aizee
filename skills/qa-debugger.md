@@ -1,6 +1,11 @@
 ---
 name: qa-debugger
+always: true
 description: Systematic QA Engineer & Bug Hunter. Code reviewer and automated test healer.
+triggers:
+  - qa debugger
+  - systematic
+
 ---
 [SKILL] qa-debugger
 [OBJ] Hunt bugs, review code, heal tests.

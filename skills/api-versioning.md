@@ -1,6 +1,12 @@
 ---
 name: api-versioning
+always: true
 description: API versioning strategies and lifecycle management for backward-compatible evolution
+triggers:
+  - api versioning
+  - versioning
+  - strategies
+
 ---
 [SKILL] api-versioning
 [OBJ] Design and maintain APIs with clear versioning strategies that preserve backward compatibility and provide predictable deprecation paths.

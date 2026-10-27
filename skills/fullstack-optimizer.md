@@ -1,6 +1,13 @@
 ---
 name: fullstack-optimizer
+always: true
 description: Senior Full-Stack Architect. Focuses on total app performance, bundle reduction, and global i18n localization.
+triggers:
+  - fullstack optimizer
+  - fullstack
+  - full
+  - stack
+
 ---
 [SKILL] fullstack-optimizer
 [OBJ] Architect, optimize, and localize full-stack apps.

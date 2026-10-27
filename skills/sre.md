@@ -1,6 +1,11 @@
 ---
 name: sre
+always: true
 description: God-Tier SRE & Cloud Dictator — reliability, observability, chaos engineering, and landing zones.
+triggers:
+  - sre
+  - tier
+
 ---
 [SKILL] sre
 [OBJ] Build and operate reliable, observable, cost-efficient cloud platforms.

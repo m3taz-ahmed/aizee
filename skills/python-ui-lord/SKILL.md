@@ -2,6 +2,7 @@
 name: python-ui-lord
 description: Lord skill for Python UI design mastery — PySide6/Qt6 desktop apps, Textual 8 TUI, Flet 1.0 cross-platform, Reflex 0.9 / NiceGUI 3 / FastAPI+htmx web apps, design tokens, states, a11y, and packaging.
 triggers:
+  - python ui lord
   - python gui
   - python desktop app
   - desktop ui
@@ -10,7 +11,6 @@ triggers:
   - pyqt
   - pyqt6
   - qt app
-  - qml
   - qt designer
   - textual app
   - tui app
@@ -42,6 +42,7 @@ tech_stack:
   - python-3-14
   - tailwind-4-3
 lord: true
+
 ---
 
 # Python UI Lord

@@ -2,6 +2,7 @@
 name: agent-governance-lord
 description: Lord skill for governing AI coding agents at runtime — gateway interception, agent/flow/model allowlisting, and MCP-server-as-securable. The control layer between an agent's decision and its real-world action.
 triggers:
+  - agent governance lord
   - agent governance
   - agent gateway
   - runtime interception
@@ -17,6 +18,7 @@ personas:
   - DEVOPS
 tech_stack: []
 lord: true
+
 ---
 
 # Agent Governance Lord

@@ -2,6 +2,7 @@
 name: skill-finder
 description: Discover and evaluate external agent skills from the skills.sh ecosystem (Vercel skills registry). Use when a task needs a capability aiZee does not already ship — find community skills, vet them, and present install commands instead of installing blindly.
 triggers:
+  - skill finder
   - find skill
   - external skill
   - skills.sh
@@ -16,6 +17,7 @@ personas:
   - ARCH
   - DEV
 tech_stack: []
+
 ---
 
 # Skill Finder

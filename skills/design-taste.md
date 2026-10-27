@@ -1,6 +1,11 @@
 ---
 name: design-taste
+always: true
 description: Design DNA extractor — reverse-engineer any website's design taste into structured tokens and Taste DNA trade-offs via Playwright
+triggers:
+  - design taste
+  - extractor
+
 ---
 [SKILL] design-taste
 [OBJ] Reverse-engineer any website's design taste into a structured, reusable design system with evidence-backed trade-off reasoning.

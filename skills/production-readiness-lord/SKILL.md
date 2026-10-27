@@ -2,6 +2,7 @@
 name: production-readiness-lord
 description: Lord skill for evidence-based production-readiness audits — full-spectrum project review (architecture, security, data, testing, performance, observability, config, deployment, supply chain, docs, UX/a11y, legal), severity-ranked findings, mid-session decision escalation, and a human-only launch checklist.
 triggers:
+  - production readiness lord
   - production readiness
   - production audit
   - pre-launch review
@@ -38,6 +39,7 @@ tech_stack:
   - design-foundations
   - appsec-hardening
 lord: true
+
 ---
 
 # Production Readiness Lord

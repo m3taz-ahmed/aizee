@@ -2,6 +2,7 @@
 name: gitops-lord
 description: Lord skill for GitOps continuous delivery — ArgoCD 3.5, Helm 4, Flux, Argo Rollouts, progressive delivery, and multi-cluster management.
 triggers:
+  - gitops lord
   - gitops
   - argocd
   - helm
@@ -21,6 +22,7 @@ tech_stack:
   - helm-4
   - argocd-3
 lord: true
+
 ---
 
 # GitOps Lord

@@ -1,6 +1,11 @@
 ---
 name: motion-design
+always: true
 description: Motion Design Auditor — animation quality from 3 designer perspectives with severity-ranked findings.
+triggers:
+  - motion design
+  - motion
+
 ---
 [SKILL] motion-design
 [OBJ] Audit and elevate UI motion design for purpose, choreography, and accessibility across 3 expert perspectives.

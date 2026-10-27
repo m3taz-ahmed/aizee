@@ -1,6 +1,12 @@
 ---
 name: graphify
+always: true
 description: "Graphify knowledge graph integration for Windows."
+triggers:
+  - graphify
+  - knowledge
+  - graph
+
 ---
 [SKILL] graphify-windows
 [OBJ] Extract and query codebase knowledge graph.

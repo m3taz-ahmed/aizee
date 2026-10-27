@@ -1,6 +1,11 @@
 ---
 name: test-guard
+always: true
 description: Guard test quality and coverage.
+triggers:
+  - test guard
+  - test
+
 ---
 [SKILL] test-guard
 [OBJ] Prevent AI test bloat and invalid mocking.

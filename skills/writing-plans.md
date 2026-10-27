@@ -1,6 +1,14 @@
 ---
 name: writing-plans
+always: true
 description: Write structured plans for complex tasks.
+triggers:
+  - writing plans
+  - writing
+  - write
+  - structured
+  - plans
+
 ---
 [SKILL] writing-plans
 [OBJ] Create step-by-step implementation plan before coding.

@@ -41,6 +41,8 @@ if TYPE_CHECKING:
     import runtime.pipeline_analytics as pipeline_analytics
     import runtime.post_queue as post_queue
     import runtime.pricing_calculator as pricing_calculator
+    from runtime.abstracts import generate_all as generate_abstracts
+    from runtime.abstracts import read_context as read_context
     from runtime.agent_baseline import AgentAction as AgentAction
     from runtime.agent_baseline import AgentBaseline as AgentBaseline
     from runtime.agent_baseline import AnomalyAlert as AnomalyAlert
@@ -59,6 +61,7 @@ if TYPE_CHECKING:
     from runtime.agent_sli import SliResult as SliResult
     from runtime.agent_sli import SliStatus as SliStatus
     from runtime.agent_sli import TaskRecord as TaskRecord
+    from runtime.api_session import GovernedApiSession as GovernedApiSession
     from runtime.approval_service import ApprovalService as ApprovalService
     from runtime.approval_sla import ApprovalSlaManager as ApprovalSlaManager
     from runtime.approval_sla import DecisionDelta as DecisionDelta
@@ -87,6 +90,8 @@ if TYPE_CHECKING:
     from runtime.budget_advanced import ThrottleConfig as ThrottleConfig
     from runtime.budget_advanced import ThrottleTier as ThrottleTier
     from runtime.c4_docs import C4Generator as C4Generator
+    from runtime.config_ops import apply_config as apply_config
+    from runtime.config_ops import show_config as show_config
     from runtime.cross_tool_taint import CrossToolTaintTracker as CrossToolTaintTracker
     from runtime.cross_tool_taint import DataClassification as DataClassification
     from runtime.cross_tool_taint import ToolCall as ToolCall
@@ -110,6 +115,8 @@ if TYPE_CHECKING:
     from runtime.design_slop_verifier import SlopFinding as SlopFinding
     from runtime.design_slop_verifier import SlopSeverity as SlopSeverity
     from runtime.design_slop_verifier import SlopVerdict as SlopVerdict
+    from runtime.doctor import DoctorReport as DoctorReport
+    from runtime.doctor import run_doctor as run_doctor
     from runtime.durable import DurableExecutor as DurableExecutor
     from runtime.durable import DurableStep as DurableStep
     from runtime.durable import DurableWorkflow as DurableWorkflow
@@ -125,6 +132,9 @@ if TYPE_CHECKING:
     from runtime.filament_access_auditor import AccessFinding as AccessFinding
     from runtime.filament_access_auditor import AccessSeverity as AccessSeverity
     from runtime.filament_access_auditor import FilamentAccessAuditor as FilamentAccessAuditor
+    from runtime.find import find as nl_find
+    from runtime.find import goal as nl_goal
+    from runtime.gateway_proxy import GatewayConfig as GatewayConfig
     from runtime.hallucination_detector import HallucinationDetector as HallucinationDetector
     from runtime.hallucination_detector import HallucinationFinding as HallucinationFinding
     from runtime.hallucination_detector import HallucinationSeverity as HallucinationSeverity
@@ -134,6 +144,11 @@ if TYPE_CHECKING:
     from runtime.hook_lifecycle import HookContext as HookContext
     from runtime.hook_lifecycle import HookPhase as HookPhase
     from runtime.hook_lifecycle import HookRegistry as HookRegistry
+    from runtime.hooks import fire as fire_hook
+    from runtime.hooks import install as install_hooks
+    from runtime.hooks import status as hooks_status
+    from runtime.ingest_rules import load_rules as load_ingest_rules
+    from runtime.ingest_rules import match_file as match_ingest_file
     from runtime.injection_detector import InjectionDetector as InjectionDetector
     from runtime.injection_detector import InjectionSeverity as InjectionSeverity
     from runtime.injection_detector import InjectionSignal as InjectionSignal
@@ -164,6 +179,7 @@ if TYPE_CHECKING:
     from runtime.model_router import ModelRouter as ModelRouter
     from runtime.model_router import RouteDecision as RouteDecision
     from runtime.model_router import RouteTier as RouteTier
+    from runtime.output_filter import filter_output as filter_output
     from runtime.plan_diff_validator import Finding as Finding
     from runtime.plan_diff_validator import PlanDiffValidator as PlanDiffValidator
     from runtime.plan_diff_validator import ValidationLevel as ValidationLevel
@@ -181,15 +197,19 @@ if TYPE_CHECKING:
     from runtime.rules_materializer import RulesMaterializer as RulesMaterializer
     from runtime.rules_materializer import ScopeLevel as ScopeLevel
     from runtime.rules_materializer import ToolTarget as ToolTarget
+    from runtime.secret_scrub import scrub_text as scrub_text
     from runtime.security_scanner import ScanFinding as ScanFinding
     from runtime.security_scanner import ScanReport as ScanReport
     from runtime.security_scanner import ScanSeverity as ScanSeverity
     from runtime.security_scanner import SecurityScanner as SecurityScanner
     from runtime.security_scanner import scan_project as scan_project
+    from runtime.sensitive import SensitiveVault as SensitiveVault
     from runtime.skill_lifecycle import LedgerEvent as LedgerEvent
     from runtime.skill_lifecycle import SkillLifecycleManager as SkillLifecycleManager
     from runtime.skill_lifecycle import SkillMember as SkillMember
     from runtime.skill_lifecycle import evaluate as evaluate_skill_lifecycle
+    from runtime.skill_lint import run_lint as run_skill_lint
+    from runtime.skill_scan import scan_tree as scan_skills
     from runtime.skill_validator import SkillReport as SkillReport
     from runtime.skill_validator import validate_skills as validate_skills
     from runtime.stale_api_detector import StaleApiDetector as StaleApiDetector
@@ -212,11 +232,15 @@ if TYPE_CHECKING:
     from runtime.task_contract import TaskContractManager as TaskContractManager
     from runtime.task_contract import TaskPlan as TaskPlan
     from runtime.task_contract import classify_prompt as classify_prompt
+    from runtime.tool_envelope import err_response as err_response
+    from runtime.tool_envelope import ok_response as ok_response
     from runtime.tool_output_sanitizer import ToolOutputSanitizer as ToolOutputSanitizer
     from runtime.tool_output_sanitizer import ToolSanitizeResult as ToolSanitizeResult
     from runtime.ui_a11y_checker import A11yChecker as A11yChecker
     from runtime.ui_a11y_checker import A11yFinding as A11yFinding
     from runtime.ui_a11y_checker import A11ySeverity as A11ySeverity
+    from runtime.verification import VerificationLevel as VerificationLevel
+    from runtime.verification import resolve_verify as resolve_verify
 
 # (export name, submodule, real attribute) - mirrors the TYPE_CHECKING block.
 _LAZY_TABLE: tuple[tuple[str, str, str], ...] = (
@@ -395,7 +419,31 @@ _LAZY_TABLE: tuple[tuple[str, str, str], ...] = (
     ("ToolSanitizeResult", "runtime.tool_output_sanitizer", "ToolSanitizeResult"),
     ("A11yChecker", "runtime.ui_a11y_checker", "A11yChecker"),
     ("A11yFinding", "runtime.ui_a11y_checker", "A11yFinding"),
-    ("A11ySeverity", "runtime.ui_a11y_checker", "A11ySeverity")
+    ("A11ySeverity", "runtime.ui_a11y_checker", "A11ySeverity"),
+    ("VerificationLevel", "runtime.verification", "VerificationLevel"),
+    ("resolve_verify", "runtime.verification", "resolve_verify"),
+    ("run_doctor", "runtime.doctor", "run_doctor"),
+    ("DoctorReport", "runtime.doctor", "DoctorReport"),
+    ("nl_find", "runtime.find", "find"),
+    ("nl_goal", "runtime.find", "goal"),
+    ("filter_output", "runtime.output_filter", "filter_output"),
+    ("GatewayConfig", "runtime.gateway_proxy", "GatewayConfig"),
+    ("load_ingest_rules", "runtime.ingest_rules", "load_rules"),
+    ("match_ingest_file", "runtime.ingest_rules", "match_file"),
+    ("show_config", "runtime.config_ops", "show_config"),
+    ("apply_config", "runtime.config_ops", "apply_config"),
+    ("ok_response", "runtime.tool_envelope", "ok_response"),
+    ("err_response", "runtime.tool_envelope", "err_response"),
+    ("SensitiveVault", "runtime.sensitive", "SensitiveVault"),
+    ("scrub_text", "runtime.secret_scrub", "scrub_text"),
+    ("run_skill_lint", "runtime.skill_lint", "run_lint"),
+    ("generate_abstracts", "runtime.abstracts", "generate_all"),
+    ("read_context", "runtime.abstracts", "read_context"),
+    ("install_hooks", "runtime.hooks", "install"),
+    ("fire_hook", "runtime.hooks", "fire"),
+    ("hooks_status", "runtime.hooks", "status"),
+    ("scan_skills", "runtime.skill_scan", "scan_tree"),
+    ("GovernedApiSession", "runtime.api_session", "GovernedApiSession"),
 )
 
 _LAZY_EXPORTS: dict[str, tuple[str, str]] = {e: (m, a) for e, m, a in _LAZY_TABLE}
@@ -470,6 +518,7 @@ __all__ = [
     "DesignSlopError",
     "DesignSlopVerifier",
     "DetectionLevel",
+    "DoctorReport",
     "DurableExecutor",
     "DurableStep",
     "DurableWorkflow",
@@ -484,6 +533,8 @@ __all__ = [
     "Finding",
     "FindingSeverity",
     "FusionResult",
+    "GatewayConfig",
+    "GovernedApiSession",
     "GuardrailContext",
     "GuardrailPhase",
     "GuardrailResult",
@@ -548,6 +599,7 @@ __all__ = [
     "SecurityScanner",
     "SemanticCircuitBreaker",
     "SemanticDetectionResult",
+    "SensitiveVault",
     "ShadowModeTracker",
     "SignatureResult",
     "SignatureScheme",
@@ -590,13 +642,33 @@ __all__ = [
     "ValidationLevel",
     "ValidationResult",
     "Verdict",
+    "VerificationLevel",
     "VulnerabilityAdvisory",
+    "apply_config",
     "classify_prompt",
     "classify_taint_source",
+    "err_response",
     "evaluate_skill_lifecycle",
+    "filter_output",
+    "fire_hook",
+    "generate_abstracts",
     "harnesses",
+    "hooks_status",
+    "install_hooks",
     "install_skill",
+    "load_ingest_rules",
+    "match_ingest_file",
+    "nl_find",
+    "nl_goal",
+    "ok_response",
+    "read_context",
+    "resolve_verify",
+    "run_doctor",
+    "run_skill_lint",
     "scan_project",
+    "scan_skills",
+    "scrub_text",
+    "show_config",
     "validate_skills",
 ]
 

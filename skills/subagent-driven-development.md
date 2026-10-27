@@ -1,6 +1,12 @@
 ---
 name: subagent-driven-development
+always: true
 description: Subagent-driven development workflow.
+triggers:
+  - subagent driven development
+  - subagent
+  - driven
+
 ---
 
 [SKILL] subagent-driven-development

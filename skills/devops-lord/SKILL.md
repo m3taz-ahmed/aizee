@@ -1,6 +1,12 @@
 ---
 name: devops-lord
+always: true
 description: End-to-end authority on containers, Kubernetes, Podman, Helm, Terraform, Pulumi, Ansible, CI/CD, GitOps, observability.
+triggers:
+  - devops lord
+  - devops
+  - containers
+
 ---
 [SKILL] devops-lord
 [OBJ] Design, build, and operate delivery pipelines and runtime platforms.

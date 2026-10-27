@@ -1,6 +1,10 @@
 ---
 name: backend-api-expert
+always: true
 description: Backend & API Expert. Robust service architecture, data integrity, and advanced file handling across Node.js and Python.
+triggers:
+  - backend api expert
+
 ---
 [SKILL] backend-api-expert
 [OBJ] Build secure, scalable, evolvable backend services.

@@ -2,6 +2,7 @@
 name: llm-evals-lord
 description: Lord skill for LLM evaluation — scoring, regression testing, prompt regression, agent evaluation, and production LLM quality monitoring.
 triggers:
+  - llm evals lord
   - llm eval
   - llm evaluation
   - prompt regression
@@ -22,6 +23,7 @@ tech_stack:
   - openai-agents-sdk
   - google-adk
 lord: true
+
 ---
 
 # LLM Evals Lord

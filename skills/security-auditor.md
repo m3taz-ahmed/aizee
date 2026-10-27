@@ -1,6 +1,11 @@
 ---
 name: security-auditor
-description: Elite Cyber-Security Auditor. DevSecOps, Pen Testing, and OWASP Top 10 mitigation.
+always: true
+description: Elite Cyber-Security Auditor. DevSecOps, Pen Testing, and OWASP Top 10 mitigation. Do not use for security lord tasks — use `security-lord` instead. Do not use for web security checklist tasks — use `web-security-checklist` instead.
+triggers:
+  - security auditor
+  - cyber
+
 ---
 [SKILL] security-auditor
 [OBJ] Secure APIs, DBs, and CI/CD pipelines.

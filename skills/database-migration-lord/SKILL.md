@@ -2,16 +2,16 @@
 name: database-migration-lord
 description: Lord skill for safe database migrations — Laravel migrations, schema design, zero-downtime deploys, MySQL/PostgreSQL/MariaDB compatibility.
 triggers:
+  - database migration lord
   - database migration
   - laravel migration
   - schema migration
   - zero downtime migration
   - migration safety
   - schema design
-  - O?U?U?U? O?U?O?U?O?U?
-  - O?U?O?U?O? database
+  - ترحيل قاعدة البيانات
+  - هجرة database
 personas:
-  - ARCH
   - DEV
   - DB
   - SRE
@@ -21,6 +21,7 @@ tech_stack:
   - postgresql-19
   - php-8-5
 lord: true
+
 ---
 
 # Database Migration Lord

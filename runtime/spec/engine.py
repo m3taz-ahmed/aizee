@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from runtime.spec.analysis import AnalysisMixin
+from runtime.spec.changes import ChangesMixin
 from runtime.spec.models import (
     PHASE_ORDER,
     DeltaType,
@@ -364,10 +365,11 @@ class _SpecContentHelper:
         return False
 
 
-class SpecEngine(ScaffoldingMixin, AnalysisMixin):
+class SpecEngine(ChangesMixin, ScaffoldingMixin, AnalysisMixin):
     """Engine for managing spec-driven development.
 
     Composed of:
+    - :class:`~runtime.spec.changes.ChangesMixin` - OpenSpec change folders
     - :class:`~runtime.spec.scaffold.ScaffoldingMixin` - template artifacts
     - :class:`~runtime.spec.analysis.AnalysisMixin` - analyze/converge
     """

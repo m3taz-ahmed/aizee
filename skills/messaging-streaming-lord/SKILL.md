@@ -1,6 +1,13 @@
 ---
 name: messaging-streaming-lord
+always: true
 description: Authority on Kafka, RabbitMQ, NATS, and Redis Streams.
+triggers:
+  - messaging streaming lord
+  - messaging
+  - kafka
+  - rabbitmq
+
 ---
 [SKILL] messaging-streaming-lord
 [OBJ] Design event-driven systems from pub/sub to stream processing.

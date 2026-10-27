@@ -1,6 +1,12 @@
 ---
 name: ml-engineer
-description: Machine Learning Engineer — training, inference, MLOps, and LLM integrations.
+always: true
+description: Machine Learning Engineer — training, inference, MLOps, and LLM integrations. Do not use for ai ml lord tasks — use `ai-ml-lord` instead.
+triggers:
+  - ml engineer
+  - machine
+  - learning
+
 ---
 [SKILL] ml-engineer
 [OBJ] Take ML models from experiments to production endpoints safely.

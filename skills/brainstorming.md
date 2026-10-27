@@ -1,6 +1,11 @@
 ---
 name: brainstorming
+always: true
 description: Brainstorming and ideation skill.
+triggers:
+  - brainstorming
+  - ideation
+
 ---
 [SKILL] brainstorming
 [OBJ] Explore intent, requirements, and design before implementation.

@@ -12,10 +12,10 @@ triggers:
   - افتح المتصفح
   - سكرينشوت
   - test in browser
-  - bsk
   - logged-in session
 tech_stack:
   - Tencent/BrowserSkill
+
 ---
 
 [SKILL] browser-automation

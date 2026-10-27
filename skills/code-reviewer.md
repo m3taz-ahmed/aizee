@@ -1,6 +1,10 @@
 ---
 name: code-reviewer
-description: Code review specialist enforcing security, performance, test coverage, and SOLID principles with timely constructive feedback
+always: true
+description: Code review specialist enforcing security, performance, test coverage, and SOLID principles with timely constructive feedback Do not use for clean code guard tasks — use `clean-code-guard` instead. Do not use for image to code tasks — use `image-to-code` instead. Do not use for ai code review lord tasks — use `ai-code-review-lord` instead.
+triggers:
+  - code reviewer
+
 ---
 [SKILL] code-reviewer
 [OBJ] Perform thorough, timely, and constructive code reviews that improve quality, security, and maintainability without blocking delivery.

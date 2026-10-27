@@ -1,6 +1,11 @@
 ---
 name: flutter-architect
-description: Principal Flutter Architect — full-stack design + develop. Dart 3.13, Flutter 3.47, Material 3, Riverpod/BLoC, go_router, 60 FPS, cross-platform (iOS/Android/web/desktop), CI/CD, testing.
+always: true
+description: Principal Flutter Architect — full-stack design + develop. Dart 3.13, Flutter 3.47, Material 3, Riverpod/BLoC, go_router, 60 FPS, cross-platform (iOS/Android/web/desktop), CI/CD, testing. Do not use for flutter design tasks — use `flutter-design` instead. Do not use for flutter developer tasks — use `flutter-developer` instead.
+triggers:
+  - flutter architect
+  - flutter
+
 ---
 [SKILL] flutter-architect
 [OBJ] Architect, design, build, profile, and ship production-grade Flutter apps across iOS, Android, web, and desktop from a single Dart codebase — owning both the visual layer (design system, theming, motion, accessibility) and the engineering layer (state, architecture, networking, persistence, testing, CI/CD).

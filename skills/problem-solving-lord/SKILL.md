@@ -2,6 +2,7 @@
 name: problem-solving-lord
 description: Lord skill for smart problem solving — first-principles decomposition, root cause, inversion, lateral/out-of-the-box solution generation, workaround ladders, hypothesis matrices, and solution scoring across ALL domains.
 triggers:
+  - problem solving lord
   - stuck
   - workaround
   - alternative approach
@@ -27,6 +28,7 @@ personas:
   - QA
   - UX
 lord: true
+
 ---
 
 # Problem Solving Lord

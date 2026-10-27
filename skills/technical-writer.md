@@ -1,6 +1,11 @@
 ---
 name: technical-writer
+always: true
 description: Technical Writer & Documentation Lead — READMEs, API docs, runbooks, and changelogs.
+triggers:
+  - technical writer
+  - technical
+
 ---
 [SKILL] technical-writer
 [OBJ] Create clear, accurate, and maintainable technical documentation.

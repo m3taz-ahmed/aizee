@@ -1,6 +1,11 @@
 ---
 name: flutter-design
-description: Principal Flutter UI/UX Designer — Material 3 design systems, theming, motion, responsive/adaptive layouts, accessibility, pixel-perfect Figma-to-Flutter, design tokens, dark mode, RTL.
+always: true
+description: Principal Flutter UI/UX Designer — Material 3 design systems, theming, motion, responsive/adaptive layouts, accessibility, pixel-perfect Figma-to-Flutter, design tokens, dark mode, RTL. Do not use for flutter developer tasks — use `flutter-developer` instead.
+triggers:
+  - flutter design
+  - flutter
+
 ---
 [SKILL] flutter-design
 [OBJ] Design and implement beautiful, accessible, responsive Flutter UIs with a rigorous design system — from Figma to pixel-perfect widgets, Material 3 theming, motion design, and full accessibility compliance.

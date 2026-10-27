@@ -1,7 +1,8 @@
 ---
 name: laravel-ai-lord
-description: Lord skill for Laravel AI SDK, Laravel MCP server, Laravel Boost, and AI agent integration in Laravel 12/13 apps.
+description: Lord skill for Laravel AI SDK, Laravel MCP server, Laravel Boost, and AI agent integration in Laravel 12/13 apps. Do not use for laravel filament lord tasks — use `laravel-filament-lord` instead. Do not use for laravel testing lord tasks — use `laravel-testing-lord` instead.
 triggers:
+  - laravel ai lord
   - laravel ai
   - laravel mcp
   - laravel boost
@@ -23,6 +24,7 @@ tech_stack:
   - laravel-13
   - php-8-5
 lord: true
+
 ---
 
 # Laravel AI Lord

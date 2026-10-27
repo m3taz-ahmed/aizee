@@ -2,6 +2,7 @@
 name: agent-orchestration-lord
 description: Lord skill for multi-agent orchestration — pattern selection (orchestrator-worker, supervisor-router, hierarchical, peer-to-peer), A2A communication, task decomposition, and failure handling.
 triggers:
+  - agent orchestration lord
   - multi-agent
   - orchestration
   - orchestrator worker
@@ -16,6 +17,7 @@ personas:
   - API
 tech_stack: []
 lord: true
+
 ---
 
 # Agent Orchestration Lord

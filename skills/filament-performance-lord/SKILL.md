@@ -2,6 +2,7 @@
 name: filament-performance-lord
 description: Lord skill for Filament v5 performance optimization — deferred loading, query optimization, caching, Octane, and real-time patterns.
 triggers:
+  - filament performance lord
   - filament performance
   - filament slow
   - filament optimize
@@ -9,10 +10,9 @@ triggers:
   - filament octane
   - filament cache
   - filament defer
-  - O?U?U?O?U? filament
-  - O?U?O?U?O? U?U?O?U? filament
+  - أداء filament
+  - تسريع filament
 personas:
-  - ARCH
   - DEV
   - DB
   - SRE
@@ -23,6 +23,7 @@ tech_stack:
   - mysql-9-7
   - postgresql-19
 lord: true
+
 ---
 
 # Filament Performance Lord

@@ -1,6 +1,13 @@
 ---
 name: context-compressor
+always: true
 description: Compress and manage context for LLM sessions.
+triggers:
+  - context compressor
+  - context
+  - compress
+  - manage
+
 ---
 [SKILL] context-compressor
 [OBJ] Convert human-readable markdown to Telegraphic Pseudo-Code.

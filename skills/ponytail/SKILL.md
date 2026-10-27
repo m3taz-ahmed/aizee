@@ -1,5 +1,6 @@
 ---
 name: ponytail
+always: true
 description: >
   Forces the laziest solution that actually works, simplest, shortest, most
   minimal. Channels a senior dev who has seen everything: question whether the
@@ -9,9 +10,17 @@ description: >
   the user says "ponytail", "be lazy", "lazy mode", "simplest solution",
   "minimal solution", "yagni", "do less", or "shortest path", and whenever
   they complain about over-engineering, bloat, boilerplate, or unnecessary
-  dependencies.
+  dependencies. Do not use for audit, debt, gain, help or review workflows —
+  use `ponytail-audit`, `ponytail-debt`, `ponytail-gain`, `ponytail-help` or
+  `ponytail-review` instead.
 argument-hint: "[lite|full|ultra]"
 license: MIT
+triggers:
+  - ponytail
+  - lazy mode
+  - simplest solution
+  - minimal solution
+  - yagni
 ---
 
 # Ponytail
