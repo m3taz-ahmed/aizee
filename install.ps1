@@ -1,4 +1,4 @@
-# aiZee installer for Windows
+﻿# aiZee installer for Windows
 # Idempotent: safe to run on first install, reinstall, or after a git pull update.
 # Preserves runtime state, runs migrations, verifies dependencies, and self-heals
 # broken symlinks / stale paths.
@@ -30,7 +30,14 @@ param(
 if ($Gui) {
     $guiScript = Join-Path $PSScriptRoot "installer\gui_installer.ps1"
     if (Test-Path $guiScript) {
-        & powershell -ExecutionPolicy Bypass -File $guiScript @PSBoundParameters
+        # gui_installer.ps1 only accepts Silent/InstallDir/SkipPip/SkipGraphify/
+        # SkipMCP — forwarding $Gui/$WhatIf/$PlanJson/$Update would crash the
+        # nested powershell with "parameter not found".
+        $guiParams = @{}
+        foreach ($k in @("Silent", "InstallDir", "SkipPip", "SkipGraphify", "SkipMCP")) {
+            if ($PSBoundParameters.ContainsKey($k)) { $guiParams[$k] = $PSBoundParameters[$k] }
+        }
+        & powershell -ExecutionPolicy Bypass -File $guiScript @guiParams
         exit $LASTEXITCODE
     } else {
         Write-Err "GUI installer not found at $guiScript"
@@ -370,16 +377,29 @@ if ($WhatIf) {
 
 Write-Step "Pre-flight checks"
 
-# Python
+# Python â€” resolve the interpreter once: python -> py -3 -> python3.
+# $PyExe + $PyOpt are used for every later invocation so machines that ship
+# only the `py` launcher (or only `python3`) still install cleanly.
+$script:PyExe = $null
+$script:PyOpt = @()
 $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-$pythonVersion = & python --version 2>&1
-$pyExit = $LASTEXITCODE
+foreach ($candidate in @(@("python"), @("py", "-3"), @("python3"))) {
+    $probeExe = $candidate[0]
+    $probeOpt = @($candidate | Select-Object -Skip 1)
+    $probe = & $probeExe @probeOpt --version 2>&1
+    if ($LASTEXITCODE -eq 0 -and "$probe" -match "^Python 3\.") {
+        $script:PyExe = $probeExe
+        $script:PyOpt = $probeOpt
+        $pythonVersion = "$probe"
+        break
+    }
+}
 $ErrorActionPreference = $prevEAP
-if ($pyExit -ne 0) { throw "python is required but not found on PATH" }
+if (-not $script:PyExe) { throw "python/py/python3 is required but not found on PATH" }
 if ($pythonVersion -notmatch "Python 3\.(1[0-9]|[2-9])") {
     throw "Python 3.10+ is required (found $pythonVersion)"
 }
-Write-Ok "Python: $pythonVersion"
+Write-Ok "Python: $pythonVersion ($PyExe)"
 
 # npm/npx (optional, needed for context7/upwork/freelancer MCPs)
 $hasNpx = Test-Command "npx"
@@ -549,7 +569,7 @@ if ($CopyMode) {
 # ---------------------------------------------------------------------------
 # 4b. Remove files/dirs retired from the repo (stale-path cleanup)
 # ---------------------------------------------------------------------------
-# File copies only add/overwrite — retired modules would linger forever.
+# File copies only add/overwrite â€” retired modules would linger forever.
 
 $StaleList = Join-Path $Repo "scripts\stale_files.txt"
 if (Test-Path $StaleList) {
@@ -573,7 +593,7 @@ if (Test-Path $StaleList) {
 Write-Step "Checking migrations"
 if (-not $WhatIf) {
     $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-    & python (Join-Path $Repo "scripts\migrate.py") --root $Root 2>&1 | ForEach-Object { Write-Host $_ }
+    & $PyExe @PyOpt (Join-Path $Repo "scripts\migrate.py") --root $Root 2>&1 | ForEach-Object { Write-Host $_ }
     $migExit = $LASTEXITCODE
     $ErrorActionPreference = $prevEAP
     if ($migExit -eq 2) {
@@ -585,7 +605,7 @@ if (-not $WhatIf) {
         Write-Ok "No migrations needed"
     }
 } else {
-    Write-Host "WhatIf: python scripts\migrate.py --root $Root"
+    Write-Host "WhatIf: $PyExe $($PyOpt -join ' ') scripts\migrate.py --root $Root"
 }
 
 # ---------------------------------------------------------------------------
@@ -597,14 +617,14 @@ if (-not $SkipPip) {
 
     # Uninstall old 'aios' package if it exists (legacy rename cleanup)
     $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-    $null = & python -m pip show aios 2>&1
+    $null = & $PyExe @PyOpt -m pip show aios 2>&1
     $oldExit = $LASTEXITCODE
     $ErrorActionPreference = $prevEAP
     if ($oldExit -eq 0) {
         Write-Step "Removing legacy 'aios' package (renamed to 'aizee')"
         if (-not $WhatIf) {
             $prevEAP2 = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-            & python -m pip uninstall aios -y 2>&1 | ForEach-Object { Write-Host $_ }
+            & $PyExe @PyOpt -m pip uninstall aios -y 2>&1 | ForEach-Object { Write-Host $_ }
             $ErrorActionPreference = $prevEAP2
         }
     }
@@ -659,7 +679,7 @@ if (-not $SkipPip) {
 
     $PipSpec = "$Root[dev,graphify]"
     if ($WhatIf) {
-        Write-Host "WhatIf: python -m pip install -e `"$PipSpec`""
+        Write-Host "WhatIf: $PyExe $($PyOpt -join ' ') -m pip install -e `"$PipSpec`""
     } else {
         # Use --no-deps only on first install to avoid clobbering; on update,
         # install normally to pull in new transitive deps.
@@ -667,7 +687,7 @@ if (-not $SkipPip) {
         $pipOk = Invoke-WithRetry -Description "pip install aizee" -Script {
             $prevEAP = $ErrorActionPreference
             $ErrorActionPreference = "Continue"
-            & python -m pip install @pipArgs 2>&1 | ForEach-Object { Write-Host $_ }
+            & $PyExe @PyOpt -m pip install @pipArgs 2>&1 | ForEach-Object { Write-Host $_ }
             $ec = $LASTEXITCODE
             $ErrorActionPreference = $prevEAP
             if ($ec -ne 0) { throw "pip exit $ec" }
@@ -684,7 +704,7 @@ if (-not $SkipPip) {
     $RequiredPackages = @("yaml", "mcp", "pydantic", "rich", "numpy", "cryptography")
     foreach ($pkg in $RequiredPackages) {
         $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-        $null = & python -c "import $pkg; print('ok')" 2>&1
+        $null = & $PyExe @PyOpt -c "import $pkg; print('ok')" 2>&1
         $pkgExit = $LASTEXITCODE
         $ErrorActionPreference = $prevEAP
         if ($pkgExit -ne 0) {
@@ -692,7 +712,7 @@ if (-not $SkipPip) {
             if (-not $WhatIf) {
                 $pkgOk = Invoke-WithRetry -Description "pip install $pkg" -Script {
                     $prevEAP2 = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-                    & python -m pip install $pkg 2>&1 | Out-Null
+                    & $PyExe @PyOpt -m pip install $pkg 2>&1 | Out-Null
                     $ec = $LASTEXITCODE
                     $ErrorActionPreference = $prevEAP2
                     if ($ec -ne 0) { throw "pip exit $ec" }
@@ -726,24 +746,24 @@ try {
     Write-Step "Validating globals"
     if (-not $WhatIf) {
         $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-        & python scripts\validate-globals.py --fix 2>&1 | ForEach-Object { Write-Host $_ }
+        & $PyExe @PyOpt scripts\validate-globals.py --fix 2>&1 | ForEach-Object { Write-Host $_ }
         $vgExit = $LASTEXITCODE
         $ErrorActionPreference = $prevEAP
         if ($vgExit -ne 0) { throw "validate-globals failed" }
     } else {
-        Write-Host "WhatIf: python scripts\validate-globals.py --fix"
+        Write-Host "WhatIf: $PyExe $($PyOpt -join ' ') scripts\validate-globals.py --fix"
     }
 
     if (-not $SkipGraphify) {
         Write-Step "Building knowledge graph"
         if (-not $WhatIf) {
             $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-            & python -m graphify update . 2>&1 | ForEach-Object { Write-Host $_ }
+            & $PyExe @PyOpt -m graphify update . 2>&1 | ForEach-Object { Write-Host $_ }
             $gfExit = $LASTEXITCODE
             $ErrorActionPreference = $prevEAP
             if ($gfExit -ne 0) { throw "graphify update failed" }
         } else {
-            Write-Host "WhatIf: python -m graphify update ."
+            Write-Host "WhatIf: $PyExe $($PyOpt -join ' ') -m graphify update ."
         }
     } else {
         Write-Step "Skipping graphify (-SkipGraphify)"
@@ -853,6 +873,12 @@ if (-not $SkipMCP) {
     $AizeeWrapper = (Join-Path $Root 'scripts\aizee_mcp_wrapper.py').Replace('\', '\\')
     $GraphifyWrapper = (Join-Path $Root 'scripts\graphify_mcp_wrapper.py').Replace('\', '\\')
     $EnvWrapper = (Join-Path $Root 'scripts\mcp_env_wrapper.py').Replace('\', '\\')
+    # Absolute interpreter path + any prefix args (e.g. py -> py.exe -3) so MCP
+    # servers spawn even when plain `python` is not on PATH.
+    $PyExeAbs = (Get-Command $PyExe -ErrorAction SilentlyContinue).Source
+    if (-not $PyExeAbs) { $PyExeAbs = $PyExe }
+    $PyExeAbs = $PyExeAbs.Replace('\', '\\')
+    $PyOptJson = if ($PyOpt.Count -gt 0) { '"' + ($PyOpt -join '","') + '",' } else { '' }
     $ClaudeSettings = @"
 {
   "permissions": {
@@ -861,9 +887,9 @@ if (-not $SkipMCP) {
     "deny": ["bash:rm -rf","bash:git reset --hard","bash:git checkout .","bash:git clean -fd","bash:git add -A","bash:git add .","bash:git push -f","bash:git stash","bash:curl -X POST","bash:curl -X DELETE","bash:Invoke-WebRequest -Method Post","bash:Invoke-WebRequest -Method Delete","bash:node -e","bash:python -c"]
   },
   "mcpServers": {
-    "aizee": { "command": "python", "args": ["$AizeeWrapper"] },
+    "aizee": { "command": "$PyExeAbs", "args": [$PyOptJson"$AizeeWrapper"] },
     "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp@3.1.0"] },
-    "graphify": { "command": "python", "args": ["$GraphifyWrapper"] }
+    "graphify": { "command": "$PyExeAbs", "args": [$PyOptJson"$GraphifyWrapper"] }
   },
   "alwaysAllow": { "tools": ["Read","read","grep","Glob","view","search","query"], "mcpTools": ["context7-resolve-library-id","context7-get-library-docs","graphify-query","query_rules","check_policy","search_memory","search_memory_vector","search_skills","get_changelog","get_active_context"] }
 }
@@ -880,7 +906,8 @@ if (-not $SkipMCP) {
 
 $ShimDir = Join-Path $env:LOCALAPPDATA "Microsoft\WindowsApps"
 $Shim = Join-Path $ShimDir "aizee.cmd"
-$ShimContent = "@echo off`nset AIZEE_ROOT=$Root`nset PYTHONIOENCODING=utf-8`npython `"$Root\aizee_cli.py`" %*"
+$PyShim = (@($PyExe) + @($PyOpt)) -join ' '  # "python" or "py -3" etc.
+$ShimContent = "@echo off`nset AIZEE_ROOT=$Root`nset PYTHONIOENCODING=utf-8`n$PyShim `"$Root\aizee_cli.py`" %*"
 if (-not $WhatIf) {
     New-Directory $ShimDir
     Set-Content -Path $Shim -Value $ShimContent -Force
@@ -894,7 +921,7 @@ Write-Ok "CLI shim: $Shim"
 Write-Step "Global MCP config sync"
 if (-not $WhatIf) {
     $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-    $syncOutput = & python (Join-Path $Root "scripts\mcp_global_sync.py") 2>&1
+    $syncOutput = & $PyExe @PyOpt (Join-Path $Root "scripts\mcp_global_sync.py") 2>&1
     $syncExit = $LASTEXITCODE
     $ErrorActionPreference = $prevEAP
     if ($syncExit -eq 0) {
@@ -911,9 +938,9 @@ if (-not $WhatIf) {
             $cfgData = Get-Content $globalCfg -Raw | ConvertFrom-Json
             $serverCount = @($cfgData.mcpServers.PSObject.Properties).Count
             if ($serverCount -eq 0) {
-                Write-Warn "Global MCP config is empty after sync — re-writing (Devin may have reset it)"
+                Write-Warn "Global MCP config is empty after sync â€” re-writing (Devin may have reset it)"
                 $prevEAP2 = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-                & python (Join-Path $Root "scripts\mcp_global_sync.py") 2>&1 | ForEach-Object { Write-Host $_ }
+                & $PyExe @PyOpt (Join-Path $Root "scripts\mcp_global_sync.py") 2>&1 | ForEach-Object { Write-Host $_ }
                 $ErrorActionPreference = $prevEAP2
                 $cfgData = Get-Content $globalCfg -Raw | ConvertFrom-Json
                 $serverCount = @($cfgData.mcpServers.PSObject.Properties).Count
@@ -921,7 +948,7 @@ if (-not $WhatIf) {
             if ($serverCount -gt 0) {
                 Write-Ok "Global MCP config verified: $serverCount servers (works from any workspace)"
             } else {
-                Write-Warn "Global MCP config still empty after re-sync — run 'aizee mcp sync' manually"
+                Write-Warn "Global MCP config still empty after re-sync â€” run 'aizee mcp sync' manually"
             }
         } catch {
             Write-Warn "Could not verify global MCP config: $_"
@@ -950,7 +977,7 @@ Write-Step "Post-install verification"
 if (-not $WhatIf) {
     # CLI test
     $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-    $testOutput = & python (Join-Path $Root "aizee_cli.py") status 2>&1
+    $testOutput = & $PyExe @PyOpt (Join-Path $Root "aizee_cli.py") status 2>&1
     $cliExit = $LASTEXITCODE
     $ErrorActionPreference = $prevEAP
     if ($cliExit -ne 0) {

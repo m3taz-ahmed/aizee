@@ -602,10 +602,20 @@ function Invoke-PreFlightChecks {
         "CheckRepo" = $false
     }
 
-    # Python
+    # Python — accept python, py -3, or python3 (Windows Python launcher or
+    # minimal installs may not provide plain `python` on PATH)
     try {
-        $pv = & python --version 2>&1
-        if ($LASTEXITCODE -eq 0 -and $pv -match "Python 3\.(1[0-9]|[2-9])") {
+        $pv = $null
+        foreach ($candidate in @(@("python"), @("py", "-3"), @("python3"))) {
+            $probeExe = $candidate[0]
+            $probeOpt = @($candidate | Select-Object -Skip 1)
+            $probe = & $probeExe @probeOpt --version 2>&1
+            if ($LASTEXITCODE -eq 0 -and "$probe" -match "^Python 3\.") {
+                $pv = "$probe ($probeExe)"
+                break
+            }
+        }
+        if ($pv -and $pv -match "Python 3\.(1[0-9]|[2-9])") {
             $Window.FindName("CheckPython").Text = "[OK] Python: $pv"
             $Window.FindName("CheckPython").Foreground = "#1A7F37"
             $checks["CheckPython"] = $true

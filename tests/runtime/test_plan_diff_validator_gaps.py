@@ -1,4 +1,4 @@
-﻿"""Gap coverage: runtime/plan_diff_validator.py."""
+"""Gap coverage: runtime/plan_diff_validator.py."""
 
 from __future__ import annotations
 

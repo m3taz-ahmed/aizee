@@ -14,7 +14,7 @@ triggers:
 [RULES]
 1. [REQ] Load ONLY the specific template matching the task.
 
-## Template A â€” RTF
+## Template A — RTF
 [REQ] Simple one-shot tasks.
 ```
 Role: [One sentence defining who the AI is]
@@ -22,18 +22,18 @@ Task: [Precise verb + what to produce]
 Format: [Exact output format and length]
 ```
 
-## Template B â€” CO-STAR
+## Template B — CO-STAR
 [REQ] Professional documents, business writing.
 ```
 Context: [Background the AI needs to understand the situation]
-Objective: [Exact goal â€” what success looks like]
+Objective: [Exact goal — what success looks like]
 Style: [Writing style: formal / conversational / technical / narrative]
 Tone: [Emotional register: authoritative / empathetic / urgent / neutral]
-Audience: [Who reads this â€” their knowledge level and expectations]
+Audience: [Who reads this — their knowledge level and expectations]
 Response: [Format, length, and structure of the output]
 ```
 
-## Template C â€” RISEN
+## Template C — RISEN
 [REQ] Complex projects, multi-step tasks.
 ```
 Role: [Expert identity the AI should adopt]
@@ -46,18 +46,18 @@ End Goal: [What the final output must achieve]
 Narrowing: [Constraints, scope limits, what to exclude]
 ```
 
-## Template D â€” CRISPE
+## Template D — CRISPE
 [REQ] Creative work, brand voice writing.
 ```
 Capacity: [What capability or expertise the AI should have]
 Role: [Specific persona to adopt]
 Insight: [Key background insight that shapes the response]
 Statement: [The core task or question]
-Personality: [Tone and style â€” witty / authoritative / casual / sharp]
+Personality: [Tone and style — witty / authoritative / casual / sharp]
 Experiment: [Request variants or alternatives to explore]
 ```
 
-## Template E â€” Chain of Thought
+## Template E — Chain of Thought
 [REQ] Logic, math, debugging.
 [PROHIBIT] NEVER use for o1/o3/Claude extended reasoning models.
 ```
@@ -74,7 +74,7 @@ Before answering, think through this carefully:
 Give your final answer in <answer> tags only.
 ```
 
-## Template F â€” Few-Shot
+## Template F — Few-Shot
 [REQ] Format replication. Use 2-5 edge-case examples. Wrap in XML.
 ```
 [Task instruction]
@@ -91,17 +91,17 @@ Here are examples of the exact format needed:
 Now apply this exact pattern to: [actual input]
 ```
 
-## Template G â€” File-Scope
+## Template G — File-Scope
 [REQ] Cursor/IDE code editing. Prevents editing wrong file.
 ```
 File: [exact/path/to/file.ext]
 Function/Component: [exact name]
 
 Current Behavior:
-[What this code does right now â€” be specific]
+[What this code does right now — be specific]
 
 Desired Change:
-[What it should do after the edit â€” be specific]
+[What it should do after the edit — be specific]
 
 Scope:
 Only modify [function / component / section].
@@ -116,7 +116,7 @@ Done When:
 [Exact condition that confirms the change worked correctly]
 ```
 
-## Template H â€” ReAct + Stop Conditions
+## Template H — ReAct + Stop Conditions
 [REQ] Autonomous agents (Claude Code, Devin). Prevents runaway loops.
 ```
 Objective:
@@ -148,14 +148,14 @@ Pause and ask for human review when:
 - The task requires changes outside the stated scope
 
 Checkpoints:
-After each major step, output: âœ… [what was completed]
+After each major step, output: ✅ [what was completed]
 At the end, output a full summary of every file changed.
 ```
 
-## Template I â€” Visual Descriptor
+## Template I — Visual Descriptor
 [REQ] Image/Video generation (Midjourney, DALL-E, Sora).
 ```
-Subject: [Main subject â€” specific, not vague]
+Subject: [Main subject — specific, not vague]
 Action/Pose: [What the subject is doing]
 Setting: [Where the scene takes place]
 Style: [photorealistic / cinematic / anime / oil painting / vector / etc.]
@@ -168,18 +168,18 @@ Negative Prompts: [blurry, watermark, extra fingers, distortion, low quality]
 Style Reference: [artist / film / aesthetic reference if applicable]
 ```
 
-## Template J â€” Reference Image Editing
+## Template J — Reference Image Editing
 [REQ] Modify existing image. Ask user to attach image first.
 ```
 Reference image: [attached / URL]
 What to keep exactly the same: [list everything that must not change]
-What to change: [specific edit only â€” be precise]
+What to change: [specific edit only — be precise]
 How much to change: [subtle / moderate / significant]
 Style consistency: maintain the exact style, lighting, and mood of the reference
 Negative prompt: [what to avoid introducing]
 ```
 
-## Template K â€” ComfyUI
+## Template K — ComfyUI
 [REQ] ComfyUI node workflows.
 ```
 POSITIVE PROMPT:
@@ -192,10 +192,10 @@ CHECKPOINT: [model name]
 SAMPLER: Euler a (recommended starting point)
 CFG SCALE: 7 (increase for stricter prompt adherence)
 STEPS: 20-30
-RESOLUTION: [width x height â€” must be divisible by 64]
+RESOLUTION: [width x height — must be divisible by 64]
 ```
 
-## Template L â€” Prompt Decompiler
+## Template L — Prompt Decompiler
 [REQ] Break down, adapt, or split existing prompts.
 ```
 Original prompt: [paste]
@@ -210,21 +210,21 @@ Structure analysis:
 Recommended fix: [rewritten version with gaps filled]
 ```
 
-## Template M â€” Opus 4.7 Task Brief
+## Template M — Opus 4.7 Task Brief
 [REQ] Complex, agentic tasks for Opus 4.7.
 ```
 ## Objective
-[What needs to be built, fixed, or produced â€” one clear sentence. Add WHY if it affects approach.]
+[What needs to be built, fixed, or produced — one clear sentence. Add WHY if it affects approach.]
 
 ## Context
-[What exists now â€” relevant files, current behavior, stack already in place, what was tried and failed]
+[What exists now — relevant files, current behavior, stack already in place, what was tried and failed]
 
 ## Target State
-[What done looks like â€” specific files changed, behavior produced, tests passing. Binary where possible.]
+[What done looks like — specific files changed, behavior produced, tests passing. Binary where possible.]
 
 ## Scope
 - Work only in: [specific files and directories]
-- Do NOT touch: [forbidden files â€” .env, package-lock.json, configs, anything outside scope]
+- Do NOT touch: [forbidden files — .env, package-lock.json, configs, anything outside scope]
 
 ## Constraints
 - [Stack version, naming conventions, no new dependencies without asking]
@@ -243,10 +243,10 @@ Stop and ask before:
 - Touching anything outside Scope
 
 ## Progress
-After each completed step: âœ… [what was done] â€” [file(s) affected]
+After each completed step: ✅ [what was done] — [file(s) affected]
 ```
 
-## Template N â€” Phased Execution
+## Template N — Phased Execution
 [REQ] Very large/complex tasks requiring human checkpoints.
 ```
 Objective: [Describe the overarching goal of the large project]

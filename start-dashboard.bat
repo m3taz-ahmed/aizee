@@ -6,6 +6,7 @@ REM  Double-click this file — no terminal setup needed.
 REM ============================================================
 
 setlocal enabledelayedexpansion
+chcp 65001 >nul
 title aiZee Dashboard
 cd /d "%~dp0"
 

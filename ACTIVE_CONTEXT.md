@@ -66,7 +66,7 @@ mirror routes handoff/store writes into it. Mirror artifact was cleaned.
 ## ⚠️ Gotchas
 - `aizee` PATH shim hardcodes `AIZEE_ROOT` to the deployment mirror — for working-repo runs use `python aizee_cli.py` or set `AIZEE_ROOT` explicitly.
 - Scoped writes (`memory handoff`, `instinct-*`, `add`) resolve the *project* vault from `--project`/`AGENT_PROJECT_ROOT` — when `AIZEE_ROOT` points at the mirror, dev writes land there. Always pass `--root`/`--project` at the working repo for tests.
-- Mirror `D:\server\aizee` is read-only; sync via `update_aizee.bat` only.
+- Mirror `E:\server\aizee` is read-only; sync via `update_aizee.bat` only.
 - validate-globals requires `[RULES]` marker in SKILL bodies; generated-artifact refs go in `IGNORED_FILE_REFS`.
 - Never text-rewrite UTF-8 files via PowerShell (BOM/mojibake risk) — use Python.
 

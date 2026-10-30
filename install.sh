@@ -127,7 +127,7 @@ health_check_mcp() {
     [[ ! -f "$config" ]] && config="$root/aizee_mcp/config.json"
     [[ ! -f "$config" ]] && { warn "No MCP config found"; return; }
     # Parse with python for portability
-    python3 -c "
+    "$PY" -c "
 import json, sys, shutil
 with open('$config') as f:
     cfg = json.load(f)
@@ -189,7 +189,7 @@ else
 fi
 
 # Auto-detect moved repo
-if [[ -z "$INSTALL_DIR" && -n "$AIZEE_ROOT" && "$AIZEE_ROOT" != "$REPO" ]]; then
+if [[ -z "$INSTALL_DIR" && -n "${AIZEE_ROOT:-}" && "${AIZEE_ROOT:-}" != "$REPO" ]]; then
     ROOT=$(resolve_stale_root "$REPO" "$ROOT")
 fi
 
@@ -212,12 +212,18 @@ fi
 
 step "Pre-flight checks"
 
-# Python
-if ! has_cmd python; then
-    err "python is required but not found on PATH"
+# Python — prefer python3, fall back to python (Debian/Ubuntu ship only python3)
+PY=""
+if has_cmd python3; then
+    PY="$(command -v python3)"
+elif has_cmd python; then
+    PY="$(command -v python)"
+fi
+if [[ -z "$PY" ]]; then
+    err "python3/python is required but not found on PATH"
     exit 1
 fi
-python_version=$(python --version 2>&1 | awk '{print $2}')
+python_version=$("$PY" --version 2>&1 | awk '{print $2}')
 python_major=$(echo "$python_version" | cut -d. -f1)
 python_minor=$(echo "$python_version" | cut -d. -f2)
 if [[ "$python_major" -lt 3 ]] || { [[ "$python_major" -eq 3 ]] && [[ "$python_minor" -lt 10 ]]; }; then
@@ -358,7 +364,7 @@ fi
 
 step "Checking migrations"
 if ! $WHATIF; then
-    python "$REPO/scripts/migrate.py" --root "$ROOT" || {
+    "$PY" "$REPO/scripts/migrate.py" --root "$ROOT" || {
         local_exit=$?
         if [[ $local_exit -eq 2 ]]; then
             err "Migration failed — see output above"
@@ -366,7 +372,7 @@ if ! $WHATIF; then
         fi
     }
 else
-    echo "WhatIf: python $REPO/scripts/migrate.py --root $ROOT"
+    echo "WhatIf: $PY $REPO/scripts/migrate.py --root $ROOT"
 fi
 
 # ---------------------------------------------------------------------------
@@ -378,9 +384,9 @@ if ! $SKIP_PIP; then
     cd "$ROOT"
 
     # Uninstall old 'aios' package if it exists (legacy rename cleanup)
-    if python -m pip show aios >/dev/null 2>&1; then
+    if "$PY" -m pip show aios >/dev/null 2>&1; then
         step "Removing legacy 'aios' package (renamed to 'aizee')"
-        python -m pip uninstall aios -y 2>&1 || true
+        "$PY" -m pip uninstall aios -y 2>&1 || true
     fi
 
     # --- Legacy cleanup: remove old ai-global-os / aios artifacts ---
@@ -420,15 +426,15 @@ if ! $SKIP_PIP; then
 
     ok "Legacy cleanup complete"
     if $WHATIF; then
-        echo "WhatIf: python -m pip install -e '.[dev,graphify]'"
+        echo "WhatIf: $PY -m pip install -e '.[dev,graphify]'"
     else
         if [[ -n "$INSTALLED_VERSION" && ! $UPDATE ]]; then
-            retry "pip install aizee" python -m pip install -e '.[dev,graphify]' --no-deps || {
+            retry "pip install aizee" "$PY" -m pip install -e '.[dev,graphify]' --no-deps || {
                 err "Failed to install aizee dependencies after retries"
                 exit 1
             }
         else
-            retry "pip install aizee" python -m pip install -e '.[dev,graphify]' || {
+            retry "pip install aizee" "$PY" -m pip install -e '.[dev,graphify]' || {
                 err "Failed to install aizee dependencies after retries"
                 exit 1
             }
@@ -438,10 +444,10 @@ if ! $SKIP_PIP; then
     # Verify required packages
     step "Verifying required packages"
     for pkg in yaml mcp pydantic rich numpy cryptography; do
-        if ! python -c "import $pkg" 2>/dev/null; then
+        if ! "$PY" -c "import $pkg" 2>/dev/null; then
             warn "Missing package: $pkg - attempting install"
             if ! $WHATIF; then
-                retry "pip install $pkg" python -m pip install "$pkg" || warn "Could not install $pkg"
+                retry "pip install $pkg" "$PY" -m pip install "$pkg" || warn "Could not install $pkg"
             fi
         fi
     done
@@ -482,17 +488,17 @@ fi
 cd "$ROOT"
 step "Validating globals"
 if ! $WHATIF; then
-    python scripts/validate-globals.py --fix
+    "$PY" scripts/validate-globals.py --fix
 else
-    echo "WhatIf: python scripts/validate-globals.py --fix"
+    echo "WhatIf: $PY scripts/validate-globals.py --fix"
 fi
 
 if ! $SKIP_GRAPHIFY; then
     step "Building knowledge graph"
     if ! $WHATIF; then
-        python -m graphify update .
+        "$PY" -m graphify update .
     else
-        echo "WhatIf: python -m graphify update ."
+        echo "WhatIf: $PY -m graphify update ."
     fi
 else
     step "Skipping graphify (--skip-graphify)"
@@ -503,7 +509,7 @@ fi
 # ---------------------------------------------------------------------------
 
 if ! $SKIP_MCP; then
-    mkdir -p "$HOME/.claude"
+    if ! $WHATIF; then mkdir -p "$HOME/.claude"; fi
 
     link_or_copy() {
         local src="$1" dst="$2"
@@ -514,7 +520,7 @@ if ! $SKIP_MCP; then
         # Remove broken symlink
         if [[ -L "$dst" && ! -e "$dst" ]]; then
             warn "Removing broken link: $dst"
-            rm -f "$dst"
+            if ! $WHATIF; then rm -f "$dst"; fi
         fi
         # Backup existing non-link
         if [[ -e "$dst" && ! -L "$dst" ]]; then
@@ -524,7 +530,7 @@ if ! $SKIP_MCP; then
         fi
         # Remove existing valid link
         if [[ -L "$dst" ]]; then
-            rm -f "$dst"
+            if ! $WHATIF; then rm -f "$dst"; fi
         fi
         if ! $WHATIF; then
             ln -sf "$src" "$dst" 2>/dev/null || cp -R "$src" "$dst"
@@ -543,6 +549,7 @@ if ! $SKIP_MCP; then
     # 10. Generate .claude/settings.json with absolute installed paths
     # ---------------------------------------------------------------------------
 
+    if ! $WHATIF; then
     mkdir -p "$ROOT/.claude"
     cat > "$ROOT/.claude/settings.json" <<EOF
 {
@@ -552,14 +559,17 @@ if ! $SKIP_MCP; then
     "deny": ["bash:rm -rf","bash:git reset --hard","bash:git checkout .","bash:git clean -fd","bash:git add -A","bash:git add .","bash:git push -f","bash:git stash","bash:curl -X POST","bash:curl -X DELETE","bash:node -e","bash:python -c"]
   },
   "mcpServers": {
-    "aizee": { "command": "python", "args": ["scripts/aizee_mcp_wrapper.py"] },
+    "aizee": { "command": "$PY", "args": ["$ROOT/scripts/aizee_mcp_wrapper.py"] },
     "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp@3.1.0"] },
-    "graphify": { "command": "python", "args": ["scripts/graphify_mcp_wrapper.py"] }
+    "graphify": { "command": "$PY", "args": ["$ROOT/scripts/graphify_mcp_wrapper.py"] }
   },
   "alwaysAllow": { "tools": ["Read","read","grep","Glob","view","search","query"], "mcpTools": ["context7-resolve-library-id","context7-get-library-docs","graphify-query","query_rules","check_policy","search_memory","search_memory_vector","search_skills","get_changelog","get_active_context"] }
 }
 EOF
     ok "settings.json generated with root=$ROOT"
+    else
+        echo "WhatIf: would generate $ROOT/.claude/settings.json (root=$ROOT)"
+    fi
 fi
 
 # ---------------------------------------------------------------------------
@@ -567,15 +577,19 @@ fi
 # ---------------------------------------------------------------------------
 
 BIN_DIR="$HOME/.local/bin"
-mkdir -p "$BIN_DIR"
-cat > "$BIN_DIR/aizee" <<EOF
+if ! $WHATIF; then
+    mkdir -p "$BIN_DIR"
+    cat > "$BIN_DIR/aizee" <<EOF
 #!/usr/bin/env bash
 export AIZEE_ROOT="$ROOT"
 export PYTHONIOENCODING=utf-8
-python "$ROOT/aizee_cli.py" "\$@"
+"$PY" "$ROOT/aizee_cli.py" "\$@"
 EOF
-chmod +x "$BIN_DIR/aizee"
-ok "CLI shim: $BIN_DIR/aizee"
+    chmod +x "$BIN_DIR/aizee"
+    ok "CLI shim: $BIN_DIR/aizee"
+else
+    echo "WhatIf: would write CLI shim $BIN_DIR/aizee -> $PY $ROOT/aizee_cli.py"
+fi
 
 # ---------------------------------------------------------------------------
 # 11b. Global MCP config sync + Devin AGENTS.md update
@@ -583,7 +597,7 @@ ok "CLI shim: $BIN_DIR/aizee"
 
 step "Global MCP config sync"
 if ! $WHATIF; then
-    python "$ROOT/scripts/mcp_global_sync.py" 2>&1 || warn "MCP global sync failed"
+    "$PY" "$ROOT/scripts/mcp_global_sync.py" 2>&1 || warn "MCP global sync failed"
     # Update global Devin AGENTS.md
     devin_dir="$HOME/.config/devin"
     [[ "$(uname)" == "Darwin" ]] && devin_dir="$HOME/Library/Application Support/devin"
@@ -599,7 +613,7 @@ fi
 
 step "Post-install verification"
 if ! $WHATIF; then
-    if python "$ROOT/aizee_cli.py" status >/dev/null 2>&1; then
+    if "$PY" "$ROOT/aizee_cli.py" status >/dev/null 2>&1; then
         ok "CLI: aizee status works"
     else
         warn "CLI status check failed"

@@ -308,7 +308,7 @@ IGNORED_FILE_REFS = {
     # Laravel Boost context files (live in client project's .ai/ dir, not aiZee)
     'laravel.md', 'filament.md', 'project.md',
     # project-voice GENERATED artifacts (produced into the client project's
-    # .ai/ dir by the skill at runtime â€” not tracked aiZee inputs)
+    # .ai/ dir by the skill at runtime — not tracked aiZee inputs)
     'about-me.md', 'voice.md', 'newsletter-voice.md',
     # rules_materializer OUTPUT targets (descriptive refs to what the tool emits,
     # not tracked input files): Aider reads CONVENTIONS.md, Devin reads .devin/rules/aizee.md
@@ -323,7 +323,7 @@ IGNORED_FILE_REFS = {
     # illustrative cross-reference example in workflow 59 (react-19.md is used
     # as a hypothetical pairing with nextjs-16.md, not an actual tracked file)
     'react-19.md',
-    # working-root-only artifacts referenced from Memory.md audit entries â€”
+    # working-root-only artifacts referenced from Memory.md audit entries —
     # temp/ and nested .ai/ dirs are not synced to the deployment mirror
     'temp\\competitor-study-v3\\analysis.md', '.ai\\repos-report.md',
     # external-repo / generated-artifact names referenced descriptively:

@@ -29,6 +29,7 @@ linkedin_token.json
 
 # Local State (per-project, not global)
 # MEMORY.md is tracked — it contains cross-session audit history valuable for all users
+aizee.local.yaml
 
 
 # Python
@@ -77,3 +78,5 @@ docs/WORLD_CLASS_GAP.md
 abstracts/
 # Generated skill index (`aizee skill lint --write` regenerates)
 skills/index.json
+
+notes-*.md

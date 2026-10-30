@@ -1,4 +1,4 @@
-﻿# `skills/` — Persona & Lord Skills
+# `skills/` — Persona & Lord Skills
 
 This directory contains **142 skills** (100 directory-based `SKILL.md` + 42 flat `.md` = 142 logical skills; `glob skills/**/*.md` returns ~300 files because directory skills have `references/` and `templates/`). Each skill is a compact rule set loaded lazily — only matching skills enter the AI's context window.
 

@@ -1,4 +1,4 @@
-﻿# Contributing to aiZee
+# Contributing to aiZee
 
 Thank you for contributing! aiZee follows its own governance rules — this
 document is the fast path for humans and AI agents alike.

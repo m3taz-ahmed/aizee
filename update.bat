@@ -3,9 +3,22 @@ REM aiZee — Update Launcher (Windows)
 REM Pulls latest from GitHub and re-runs post-install hooks.
 REM Learned data (memory/state/brain/.env) is preserved.
 
+chcp 65001 >nul
 cd /d "%~dp0"
 
-python scripts\update.py %*
+REM --- Find Python (python -> py -> python3) ---
+set "PYCMD="
+for %%c in (python py python3) do (
+    where %%c >nul 2>nul && (
+        if not defined PYCMD set "PYCMD=%%c"
+    )
+)
+if not defined PYCMD (
+    echo [aizee] ERROR: Python not found on PATH.
+    exit /b 1
+)
+
+%PYCMD% scripts\update.py %*
 set EXITCODE=%ERRORLEVEL%
 
 echo.

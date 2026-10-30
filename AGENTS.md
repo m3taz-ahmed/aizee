@@ -24,9 +24,9 @@ license: MIT
 
 ## Working Directory [DIR-01]
 
-- **Working directory: D:\server\.ai ONLY.** All edits, new files, and modifications go here.
+- **Working directory: E:\server\.ai ONLY.** All edits, new files, and modifications go here.
 
-- **D:\server\aizee is READ-ONLY.** Never edit files in aizee directly. It is the deployment/usage folder, updated only via the batch update script. If you need to sync changes from .ai to aizee, use the batch script.
+- **E:\server\aizee is READ-ONLY.** Never edit files in aizee directly. It is the deployment/usage folder, updated only via the batch update script. If you need to sync changes from .ai to aizee, use the batch script.
 
 - When the IDE opens files from aizee, copy them to .ai first, edit in .ai, then sync back via the batch script.
 
@@ -144,7 +144,7 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 127 governance modules in `runtime/`.
+- **Runtime Modules** — 129 governance modules in `runtime/`.
 
 - **MCP Server** — `aizee_mcp/` exposes 39 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
@@ -195,19 +195,19 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 127 governance modules
+├── runtime/                   # Kernel + 129 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 127 governance modules
+│   └── ...                    # 129 governance modules
 ├── aizee_mcp/                 # MCP server (39 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
-├── skills/                    # 145 persona + lord skills
-├── workflows/                 # 63 trigger-based execution protocols
+├── skills/                    # 151 persona + lord skills
+├── workflows/                 # 65 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
-├── tech-stack/                # 266 version-locked stack references
+├── tech-stack/                # 269 version-locked stack references
 │   └── spec-driven-templates/ # SDD templates (spec/plan/tasks/constitution/checklist)
 └── eval/                      # Agent benchmark harness
 

@@ -1,9 +1,13 @@
 @echo off
 REM === aiZee Sync Script: .ai -> aizee ===
-REM Copies all files from the working directory (.ai) to the deployment folder (aizee).
+REM Mirrors the working directory (.ai) into the deployment folder (aizee).
 REM Usage: scripts\update_aizee.bat
 REM
 REM [DIR-01] .ai is the ONLY working directory. aizee is READ-ONLY except via this script.
+REM
+REM robocopy /MIR = exact mirror: new files copied, changed files updated,
+REM files retired from .ai are DELETED from aizee (stale-path cleanup).
+REM Exclusion lists below keep runtime state, secrets, and regenerable output out.
 
 setlocal enabledelayedexpansion
 
@@ -20,125 +24,46 @@ if not exist "%TARGET%" (
     exit /b 1
 )
 
-REM Sync runtime/ (core modules)
-echo Syncing runtime/...
-xcopy "%SOURCE%\runtime\*" "%TARGET%\runtime\" /E /I /Y /Q >nul
-
-REM Sync scripts/ (validators + generators)
-echo Syncing scripts/...
-xcopy "%SOURCE%\scripts\*" "%TARGET%\scripts\" /E /I /Y /Q >nul
-
-REM Sync tests/ (new test files)
-echo Syncing tests/...
-xcopy "%SOURCE%\tests\*" "%TARGET%\tests\" /E /I /Y /Q >nul
-
-REM Sync tech-stack/ (updated + new references)
-echo Syncing tech-stack/...
-xcopy "%SOURCE%\tech-stack\*" "%TARGET%\tech-stack\" /E /I /Y /Q >nul
-
-REM Sync skills/ (updated SKILL.md files)
-echo Syncing skills/...
-xcopy "%SOURCE%\skills\*" "%TARGET%\skills\" /E /I /Y /Q >nul
-
-REM Sync workflows/ (new + updated workflows)
-echo Syncing workflows/...
-xcopy "%SOURCE%\workflows\*" "%TARGET%\workflows\" /E /I /Y /Q >nul
-
-REM Sync root files
-echo Syncing root files...
-copy /Y "%SOURCE%\pyproject.toml" "%TARGET%\pyproject.toml" >nul
-copy /Y "%SOURCE%\manifest.json" "%TARGET%\manifest.json" >nul
-copy /Y "%SOURCE%\Memory.md" "%TARGET%\Memory.md" >nul
-copy /Y "%SOURCE%\README.md" "%TARGET%\README.md" >nul
-copy /Y "%SOURCE%\README-AR.md" "%TARGET%\README-AR.md" >nul
-copy /Y "%SOURCE%\CHANGELOG.md" "%TARGET%\CHANGELOG.md" >nul
-copy /Y "%SOURCE%\AGENTS.md" "%TARGET%\AGENTS.md" >nul
-if exist "%SOURCE%\spec.md" copy /Y "%SOURCE%\spec.md" "%TARGET%\spec.md" >nul
-if exist "%SOURCE%\integrity.manifest" copy /Y "%SOURCE%\integrity.manifest" "%TARGET%\integrity.manifest" >nul
-copy /Y "%SOURCE%\.aizee-version" "%TARGET%\.aizee-version" >nul
-copy /Y "%SOURCE%\.windsurfrules" "%TARGET%\.windsurfrules" >nul
-copy /Y "%SOURCE%\config.py" "%TARGET%\config.py" >nul
-copy /Y "%SOURCE%\aizee_cli.py" "%TARGET%\aizee_cli.py" >nul
-if exist "%SOURCE%\conftest.py" copy /Y "%SOURCE%\conftest.py" "%TARGET%\conftest.py" >nul
-
-REM Sync .cursor/rules/ (updated rule files)
-echo Syncing .cursor/rules/...
-if exist "%SOURCE%\.cursor\rules" (
-    xcopy "%SOURCE%\.cursor\rules\*" "%TARGET%\.cursor\rules\" /E /I /Y /Q >nul
+REM Safety: /MIR deletes extra files in TARGET. Refuse to run unless TARGET
+REM looks like an aiZee deployment (has the package markers).
+if not exist "%TARGET%\pyproject.toml" (
+    echo ERROR: %TARGET% has no pyproject.toml - refusing to mirror into a non-aiZee dir.
+    exit /b 1
+)
+if not exist "%TARGET%\config.py" (
+    echo ERROR: %TARGET% has no config.py - refusing to mirror into a non-aiZee dir.
+    exit /b 1
 )
 
-REM Sync .cursor/hooks.json (IDE lifecycle hooks)
-if exist "%SOURCE%\.cursor\hooks.json" (
-    copy /Y "%SOURCE%\.cursor\hooks.json" "%TARGET%\.cursor\hooks.json" >nul
-)
+REM --- Mirror pass: everything except the excluded dirs/files below. ---
+REM Excluded dirs: VCS internals, runtime/learned state, regenerable output.
+REM Excluded files: secrets, generated configs, local overrides, scratch notes.
 
-REM Sync .claude/ (MCP server config + permissions)
-echo Syncing .claude/...
-if exist "%SOURCE%\.claude" (
-    xcopy "%SOURCE%\.claude\*" "%TARGET%\.claude\" /E /I /Y /Q >nul
-)
+robocopy "%SOURCE%" "%TARGET%" /MIR /R:2 /W:2 /NFL /NDL /NP /NJH ^
+    /XD .git .ai temp state brain backups graphify-out htmlcov .mypy_cache .pytest_cache .ruff_cache __pycache__ node_modules .venv venv abstracts .idea .claude .devin ^
+    /XF .env .coverage *.pyc *.pyo *.log .aizee-version settings.json settings.local.json mcp_config.local.json config.local.json notes-*.md implementation_plan.md DEEP_AUDIT_PROMPT.md GRAPH_REPORT.md
+set "RC1=%ERRORLEVEL%"
 
-REM Sync aizee_mcp/ (MCP server + tools)
-echo Syncing aizee_mcp/...
-xcopy "%SOURCE%\aizee_mcp\*" "%TARGET%\aizee_mcp\" /E /I /Y /Q >nul
+REM --- .claude pass: configs/skills, minus machine-generated settings.json ---
+robocopy "%SOURCE%\.claude" "%TARGET%\.claude" /MIR /R:2 /W:2 /NFL /NDL /NP /NJH ^
+    /XD __pycache__ ^
+    /XF settings.json settings.local.json *.pyc *.pyo
+set "RC2=%ERRORLEVEL%"
 
-REM Sync memory/ (memory subsystem)
-echo Syncing memory/...
-xcopy "%SOURCE%\memory\*" "%TARGET%\memory\" /E /I /Y /Q >nul
+REM --- .devin pass: skills/config, minus local override files ---
+robocopy "%SOURCE%\.devin" "%TARGET%\.devin" /MIR /R:2 /W:2 /NFL /NDL /NP /NJH ^
+    /XD __pycache__ ^
+    /XF mcp_config.local.json config.local.json *.pyc *.pyo
+set "RC3=%ERRORLEVEL%"
 
-REM Sync eval/ (evaluation harness)
-echo Syncing eval/...
-xcopy "%SOURCE%\eval\*" "%TARGET%\eval\" /E /I /Y /Q >nul
-
-REM Sync dashboard/ (web UI server) — previously missing from sync (SYNC fix)
-echo Syncing dashboard/...
-xcopy "%SOURCE%\dashboard\*" "%TARGET%\dashboard\" /E /I /Y /Q >nul
-
-REM Sync plugins/ (plugin subsystem) — previously missing from sync (SYNC fix)
-echo Syncing plugins/...
-xcopy "%SOURCE%\plugins\*" "%TARGET%\plugins\" /E /I /Y /Q >nul
-
-REM Sync rules/ (compressed behavioral rules)
-echo Syncing rules/...
-if exist "%SOURCE%\rules" (
-    xcopy "%SOURCE%\rules\*" "%TARGET%\rules\" /E /I /Y /Q >nul
-)
-
-REM Sync .devin/ (Devin CLI config + skills)
-echo Syncing .devin/...
-if exist "%SOURCE%\.devin" (
-    xcopy "%SOURCE%\.devin\*" "%TARGET%\.devin\" /E /I /Y /Q >nul
-)
-
-REM Sync .github/ (CI/CD workflows)
-echo Syncing .github/...
-if exist "%SOURCE%\.github" (
-    xcopy "%SOURCE%\.github\*" "%TARGET%\.github\" /E /I /Y /Q >nul
-)
-
-REM Sync installer/ (GUI installer)
-echo Syncing installer/...
-if exist "%SOURCE%\installer" (
-    xcopy "%SOURCE%\installer\*" "%TARGET%\installer\" /E /I /Y /Q >nul
-)
-
-REM Sync additional root files
-echo Syncing additional root files...
-if exist "%SOURCE%\global-roles.md" copy /Y "%SOURCE%\global-roles.md" "%TARGET%\global-roles.md" >nul
-if exist "%SOURCE%\global-workflow.md" copy /Y "%SOURCE%\global-workflow.md" "%TARGET%\global-workflow.md" >nul
-if exist "%SOURCE%\.env.example" copy /Y "%SOURCE%\.env.example" "%TARGET%\.env.example" >nul
-if exist "%SOURCE%\.gitignore" copy /Y "%SOURCE%\.gitignore" "%TARGET%\.gitignore" >nul
-if exist "%SOURCE%\.editorconfig" copy /Y "%SOURCE%\.editorconfig" "%TARGET%\.editorconfig" >nul
-if exist "%SOURCE%\.bandit" copy /Y "%SOURCE%\.bandit" "%TARGET%\.bandit" >nul
-if exist "%SOURCE%\LICENSE" copy /Y "%SOURCE%\LICENSE" "%TARGET%\LICENSE" >nul
-if exist "%SOURCE%\NOTICE" copy /Y "%SOURCE%\NOTICE" "%TARGET%\NOTICE" >nul
-if exist "%SOURCE%\CONTRIBUTING.md" copy /Y "%SOURCE%\CONTRIBUTING.md" "%TARGET%\CONTRIBUTING.md" >nul
-if exist "%SOURCE%\DESIGN.md" copy /Y "%SOURCE%\DESIGN.md" "%TARGET%\DESIGN.md" >nul
-if exist "%SOURCE%\pyrightconfig.json" copy /Y "%SOURCE%\pyrightconfig.json" "%TARGET%\pyrightconfig.json" >nul
-if exist "%SOURCE%\AGENT_INSTALL.md" copy /Y "%SOURCE%\AGENT_INSTALL.md" "%TARGET%\AGENT_INSTALL.md" >nul
+REM robocopy success = exit code < 8 (0 nothing, 1 copied, 2+ extras/mismatches).
+if %RC1% GEQ 8 ( echo ERROR: main mirror failed ^(robocopy %RC1%^) & exit /b %RC1% )
+if %RC2% GEQ 8 ( echo ERROR: .claude mirror failed ^(robocopy %RC2%^) & exit /b %RC2% )
+if %RC3% GEQ 8 ( echo ERROR: .devin mirror failed ^(robocopy %RC3%^) & exit /b %RC3% )
 
 echo.
 echo === Sync Complete ===
 echo Verify with: cd %TARGET% ^&^& python eval\harness.py
 echo.
 endlocal
+exit /b 0
