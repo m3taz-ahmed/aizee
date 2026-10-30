@@ -793,11 +793,19 @@ try {
     if (-not $SkipGraphify) {
         Write-Step "Building knowledge graph"
         if (-not $WhatIf) {
+            # --no-deps re-installs leave graphifyy missing on a fresh interpreter
+            & $PyExe @PyOpt -c "import graphify" 2>$null
+            if ($LASTEXITCODE -ne 0) {
+                Write-Step "Installing graphifyy (missing on selected interpreter)"
+                & $PyExe @PyOpt -m pip install "graphifyy>=0.8.20,<0.10.0" 2>&1 | ForEach-Object { Write-Host $_ }
+            }
             $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
             & $PyExe @PyOpt -m graphify update . 2>&1 | ForEach-Object { Write-Host $_ }
             $gfExit = $LASTEXITCODE
             $ErrorActionPreference = $prevEAP
-            if ($gfExit -ne 0) { throw "graphify update failed" }
+            # Graph rebuild is a refresh step, not a gate: the committed graphify-out
+            # stays usable and `aizee graphify` can rebuild any time. Warn, don't kill.
+            if ($gfExit -ne 0) { Write-Warn "graphify update failed (non-fatal) - rerun later: $PyExe -m graphify update ." }
         } else {
             Write-Host "WhatIf: $PyExe $($PyOpt -join ' ') -m graphify update ."
         }

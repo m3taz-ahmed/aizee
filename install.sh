@@ -522,7 +522,16 @@ fi
 if ! $SKIP_GRAPHIFY; then
     step "Building knowledge graph"
     if ! $WHATIF; then
-        "$PY" -m graphify update .
+        # --no-deps re-installs leave graphifyy missing on a fresh interpreter
+        if ! "$PY" -c "import graphify" 2>/dev/null; then
+            step "Installing graphifyy (missing on selected interpreter)"
+            "$PY" -m pip install "graphifyy>=0.8.20,<0.10.0" || warn "graphifyy install failed"
+        fi
+        # Graph rebuild is a refresh step, not a gate: committed graphify-out stays
+        # usable and `aizee graphify` can rebuild any time. Warn, don't kill.
+        if ! "$PY" -m graphify update .; then
+            warn "graphify update failed (non-fatal) - rerun later: $PY -m graphify update ."
+        fi
     else
         echo "WhatIf: $PY -m graphify update ."
     fi
