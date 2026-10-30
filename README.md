@@ -26,6 +26,10 @@
 
 ## See it block something
 
+<div align="center">
+  <img src="docs/media/demo.gif" width="780" alt="aiZee denies a secret-committing action, then reports doctor verdict ready">
+</div>
+
 ```console
 $ aizee check 'Bash' --args '{"command":"git add .env && git commit -m keys"}'
 {
