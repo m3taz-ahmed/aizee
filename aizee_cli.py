@@ -1997,6 +1997,7 @@ def cmd_session(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="aizee", description="aiZee CLI")
+    parser.add_argument("--version", action="version", version=f"aiZee v{config.VERSION}")
     parser.add_argument("--root", type=Path, default=None, help="aiZee root (default: AIZEE_ROOT or install dir)")
     parser.add_argument("--project", type=Path, default=None, help="Active project root (default: AGENT_PROJECT_ROOT, CWD/.ai, or OS root)")
     sub = parser.add_subparsers(dest="command")

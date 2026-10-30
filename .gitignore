@@ -80,3 +80,9 @@ abstracts/
 skills/index.json
 
 notes-*.md
+
+GRAPH_REPORT.md
+implementation_plan.md
+create-shortcuts.ps1
+
+build/
