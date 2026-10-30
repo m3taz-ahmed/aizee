@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from runtime.heal import Healer, HealStatus, Severity
@@ -92,10 +93,16 @@ def test_memory_schema_drift_fix(tmp_path: Path) -> None:
 
 
 def _patch_appdata(monkeypatch, tmp_path: Path) -> Path:
-    appdata = tmp_path / "appdata"
-    appdata.mkdir(parents=True)
-    monkeypatch.setenv("APPDATA", str(appdata))
-    return appdata
+    # Mirrors runtime.heal: %APPDATA% on Windows, ~/.config on POSIX.
+    if os.name == "nt":
+        appdata = tmp_path / "appdata"
+        appdata.mkdir(parents=True)
+        monkeypatch.setenv("APPDATA", str(appdata))
+        return appdata
+    home = tmp_path / "home"
+    home.mkdir(parents=True)
+    monkeypatch.setenv("HOME", str(home))
+    return home / ".config"
 
 
 def test_global_mcp_config_missing_finding_and_fix(tmp_path: Path, monkeypatch) -> None:

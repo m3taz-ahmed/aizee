@@ -137,7 +137,7 @@ class TestEmbedder:
         mock_st_cls = MagicMock(return_value=st_instance)
         with patch.object(vector_module, "SentenceTransformer", mock_st_cls):
             emb = Embedder()
-        assert emb.is_available() is True
+            assert emb.is_available() is True
 
     def test_is_available_false_when_no_model(self):
         with patch.object(vector_module, "SentenceTransformer", None):
@@ -514,12 +514,17 @@ class TestCoverageRestore:
     """Re-cover lines lost when dead-module tests were removed."""
 
     def test_resolve_sentence_transformer_success(self):
+        fake_cls = MagicMock(name="FakeSentenceTransformer")
+        fake_mod = MagicMock(SentenceTransformer=fake_cls)
+        with (
+            patch.object(vector_module, "SentenceTransformer", vector_module._ST_UNSET),
+            patch("importlib.import_module", return_value=fake_mod),
+        ):
+            vector_module._resolve_sentence_transformer()
+            assert vector_module.SentenceTransformer is fake_cls
         with patch.object(vector_module, "SentenceTransformer", vector_module._ST_UNSET):
             vector_module._resolve_sentence_transformer()
             assert vector_module.SentenceTransformer is not vector_module._ST_UNSET
-        with patch.object(vector_module, "SentenceTransformer", vector_module._ST_UNSET):
-            vector_module._resolve_sentence_transformer()
-            assert vector_module.SentenceTransformer is not None
 
     def test_resolve_sentence_transformer_import_failure(self):
         with (

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import signal
 from unittest.mock import MagicMock, patch
 
@@ -124,9 +125,14 @@ class TestSyncCursor:
 
 class TestSyncGlobalDevin:
     def _patch_appdata(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("APPDATA", str(tmp_path))
-        gdir = tmp_path / "devin"
-        gdir.mkdir(exist_ok=True)
+        # Mirrors runtime.daemon: APPDATA on Windows, ~/.config on POSIX.
+        if os.name == "nt":
+            monkeypatch.setenv("APPDATA", str(tmp_path))
+            gdir = tmp_path / "devin"
+        else:
+            monkeypatch.setenv("HOME", str(tmp_path))
+            gdir = tmp_path / ".config" / "devin"
+        gdir.mkdir(parents=True, exist_ok=True)
         return gdir / "mcp_config.json"
 
     def test_bad_json(self, tmp_path, monkeypatch):
@@ -154,7 +160,10 @@ class TestSyncGlobalDevin:
         assert "disabled" not in cfg["mcpServers"]["on"]
 
     def test_missing_file(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("APPDATA", str(tmp_path / "empty"))
+        if os.name == "nt":
+            monkeypatch.setenv("APPDATA", str(tmp_path / "empty"))
+        else:
+            monkeypatch.setenv("HOME", str(tmp_path / "empty"))
         assert _daemon(tmp_path)._sync_global_devin({"s": {}}) == 0
 
 

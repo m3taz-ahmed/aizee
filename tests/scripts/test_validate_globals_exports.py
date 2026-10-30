@@ -74,7 +74,7 @@ class TestCheckRuntimeExports:
         root = _runtime_tree(
             tmp_path,
             _init(lazy=[], exports=["PersonaDetectorV2", "Evidence"]),
-            modules=["evidence"],
+            modules=["Evidence"],
         )
         ctx = _ctx(validator)
         validator.check_runtime_exports(str(root), ctx)

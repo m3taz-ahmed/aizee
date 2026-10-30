@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import zipfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -105,6 +106,7 @@ class TestRemoveCliShim:
     # NOTE: os.name cannot be patched (pathlib instantiates PosixPath on
     # Windows and raises). On this host os.name is "nt" — the nt branch is
     # exercised; the posix branch mirrors it structurally.
+    @pytest.mark.skipif(os.name != "nt", reason="APPDATA/Python/Scripts candidates are Windows-only")
     def test_removes_appdata_candidate(self, tmp_path, monkeypatch):
         shim = tmp_path / "Python" / "Scripts" / "aizee.exe"
         shim.parent.mkdir(parents=True)
@@ -117,7 +119,11 @@ class TestRemoveCliShim:
 
     def test_removes_user_base_candidate(self, tmp_path, monkeypatch):
         monkeypatch.setenv("APPDATA", str(tmp_path / "noappdata"))
-        shim = tmp_path / "Scripts" / "aizee.cmd"
+        shim = (
+            tmp_path / "Scripts" / "aizee.cmd"
+            if os.name == "nt"
+            else tmp_path / "bin" / "aizee"
+        )
         shim.parent.mkdir(parents=True)
         shim.write_text("x")
         with patch("subprocess.run",

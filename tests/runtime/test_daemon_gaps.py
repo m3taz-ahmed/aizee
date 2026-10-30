@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -156,33 +157,38 @@ class TestSyncCursor:
 
 
 class TestSyncGlobalDevin:
+    def _global_cfg(self, tmp_path, monkeypatch, base_name: str = "app") -> Path:
+        # Mirrors runtime.daemon: APPDATA on Windows, ~/.config on POSIX.
+        if os.name == "nt":
+            monkeypatch.setenv("APPDATA", str(tmp_path / base_name))
+            return tmp_path / base_name / "devin" / "mcp_config.json"
+        monkeypatch.setenv("HOME", str(tmp_path / base_name))
+        return tmp_path / base_name / ".config" / "devin" / "mcp_config.json"
+
     def test_missing_file(self, daemon, tmp_path, monkeypatch):
-        monkeypatch.setenv("APPDATA", str(tmp_path / "noexist"))
+        self._global_cfg(tmp_path, monkeypatch, "noexist")
         assert daemon._sync_global_devin({"s": {"enabled": False}}) == 0
 
     def test_disables_server(self, daemon, tmp_path, monkeypatch):
-        gp = tmp_path / "app" / "devin" / "mcp_config.json"
+        gp = self._global_cfg(tmp_path, monkeypatch)
         gp.parent.mkdir(parents=True)
         gp.write_text(json.dumps({"mcpServers": {"srv": {}}}))
-        monkeypatch.setenv("APPDATA", str(tmp_path / "app"))
         assert daemon._sync_global_devin({"srv": {"enabled": False}}) == 1
         data = json.loads(gp.read_text())
         assert data["mcpServers"]["srv"]["disabled"] is True
 
     def test_reenables_server(self, daemon, tmp_path, monkeypatch):
-        gp = tmp_path / "app" / "devin" / "mcp_config.json"
+        gp = self._global_cfg(tmp_path, monkeypatch)
         gp.parent.mkdir(parents=True)
         gp.write_text(json.dumps({"mcpServers": {"srv": {"disabled": True}}}))
-        monkeypatch.setenv("APPDATA", str(tmp_path / "app"))
         assert daemon._sync_global_devin({"srv": {"enabled": True}}) == 1
         data = json.loads(gp.read_text())
         assert "disabled" not in data["mcpServers"]["srv"]
 
     def test_corrupt_file(self, daemon, tmp_path, monkeypatch):
-        gp = tmp_path / "app" / "devin" / "mcp_config.json"
+        gp = self._global_cfg(tmp_path, monkeypatch)
         gp.parent.mkdir(parents=True)
         gp.write_text("{bad")
-        monkeypatch.setenv("APPDATA", str(tmp_path / "app"))
         assert daemon._sync_global_devin({"srv": {"enabled": False}}) == 0
 
     def test_bad_servers_type(self, daemon, tmp_path, monkeypatch):

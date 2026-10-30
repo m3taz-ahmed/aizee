@@ -168,9 +168,10 @@ def test_migrate_script_exists():
     assert (_REPO / "scripts" / "migrate.py").exists()
 
 
-def test_aizee_version_file_exists():
-    """Verify .aizee-version exists."""
-    assert (_REPO / ".aizee-version").exists()
+def test_aizee_version_stamp_written_by_installers():
+    """Verify installers write the .aizee-version stamp (it is not tracked in git)."""
+    assert ".aizee-version" in (_REPO / "install.ps1").read_text(encoding="utf-8")
+    assert ".aizee-version" in (_REPO / "install.sh").read_text(encoding="utf-8")
 
 
 def test_install_ps1_has_log_function():

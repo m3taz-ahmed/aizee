@@ -50,6 +50,9 @@ def _safe_regex_search(pattern: str, text: str) -> bool:
             "Guardian regex rejected: pattern exceeds %d chars", _MAX_REGEX_PATTERN_LEN
         )
         return False
+    if not isinstance(text, str):
+        _logger.warning("Guardian regex rejected: non-str input (%s)", type(text).__name__)
+        return False
     if len(text) > _MAX_REGEX_INPUT_LEN:
         _logger.warning(
             "Guardian regex rejected: input exceeds %d chars", _MAX_REGEX_INPUT_LEN
