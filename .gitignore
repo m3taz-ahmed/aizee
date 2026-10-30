@@ -86,3 +86,5 @@ implementation_plan.md
 create-shortcuts.ps1
 
 build/
+/docs/media
+scripts/gen_post_assets.py
