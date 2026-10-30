@@ -4,7 +4,7 @@ Each file here activates when the AI detects a specific task type. Counts and th
 
 ## Numbered Workflows (Trigger-Based)
 
-This directory contains **77** `.md` files: **63** numbered trigger-based workflows (`00`-`62`) plus standards protocols and reference files.
+This directory contains **79** `.md` files: **65** numbered trigger-based workflows (`00`-`64`) plus standards protocols and reference files.
 
 | Trigger / Task Type | Workflow File | When to Use |
 |---|---|---|
@@ -71,6 +71,8 @@ This directory contains **77** `.md` files: **63** numbered trigger-based workfl
 | atomic deploy | `60-atomic-release-deployment.md` | Atomic release deployment (releases/ + current symlink + shared/) — canonical reference f... |
 | task contract | `61-task-contract.md` | Forced task decomposition with per-task verification and a final review gate — the aiZee... |
 | localhost tunnel | `62-localhost-tunnel.md` | Expose a local dev server to the internet for webhooks, agent loops, screenshots, and hum... |
+| game pipeline / game project / build a game /... | `63-game-studio-pipeline.md` | Full-lifecycle game pipeline — concept to release — adapted from Claude-Code-Game-Studios... |
+| game feature team / team combat / team ui / t... | `64-game-feature-teams.md` | Cross-domain team recipes for one game feature — adapted from CCGS /team-* orchestration.... |
 
 ## Standards & Reference Files
 

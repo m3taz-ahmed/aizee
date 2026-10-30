@@ -118,6 +118,47 @@ class TestPersonaDetector:
         assert result["persona"] == "DATA"
         assert result["skill"] == "data-engineer"
 
+    def test_game_persona_lords_wired(self):
+        d = PersonaDetector()
+        lords = d.PERSONAS["GAME"]["lords"]
+        for expected in (
+            "game-design-lord", "game-level-design-lord", "game-economy-lord",
+            "game-narrative-lord", "game-qa-lord", "game-production-lord",
+        ):
+            assert expected in lords
+
+    def test_detect_teams_matches_keywords(self):
+        d = PersonaDetector()
+        assert "game-release" in d.detect_teams("prepare the game release certification checklist")
+        assert "game-combat" in d.detect_teams("design the combat system and boss fight")
+        assert d.detect_teams("refactor the billing endpoint") == []
+
+    def test_teams_in_detect_multiple_result(self):
+        d = PersonaDetector()
+        result = d.detect_multiple("build the game hud and menu flow")
+        assert "teams" in result
+        assert "game-ui" in result["teams"]
+
+    def test_team_personas_and_tier(self):
+        d = PersonaDetector()
+        assert "GAME" in d.team_personas("game-combat")
+        assert d.tier_for("ARCH") == "director"
+        assert d.tier_for("PRODUCT") == "lead"
+        assert d.tier_for("QA") == "specialist"
+
+    def test_list_teams(self):
+        d = PersonaDetector()
+        teams = d.list_teams()
+        assert "game-combat" in teams
+        assert "game-release" in teams
+
+    def test_teams_nondict_entry_skipped(self):
+        d = PersonaDetector()
+        d.TEAMS = {"bad-team": "not-a-dict", "ok": {"personas": ["GAME"], "keywords": ["zebra"]}}
+        assert d.detect_teams("zebra crossing") == ["ok"]
+        assert d.team_personas("bad-team") == []
+        assert d.team_personas("missing-team") == []
+
     def test_new_persona_ml(self):
         d = PersonaDetector()
         result = d.detect("train a pytorch model and deploy it as an onnx endpoint")

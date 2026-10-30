@@ -26,6 +26,20 @@ import yaml
 
 MIN_DESCRIPTION_LEN = 30
 _COLLISION_TOKEN_OVERLAP = 0.6
+# Category rubric minimums: a `category:` frontmatter field opts a skill into
+# structural expectations beyond description lint (CCGS studio-tests idea —
+# skills are tested, not just described). `lord` skills must carry real rules.
+KNOWN_CATEGORIES = frozenset({"lord", "domain", "reference", "checklist", "tool"})
+MIN_LORD_RULES = 3
+_RULE_LINE_RE = re.compile(r"^\s*\d+\.\s*\[(?:REQ|PROHIBIT|CMD)\]", re.MULTILINE)
+# CONTRACT.md (dir-skills only): adapted from CCGS handoff contracts — these
+# sections make a skill's handoffs explicit and lintable.
+CONTRACT_REQUIRED_SECTIONS = (
+    "Inputs Required",
+    "Outputs Produced",
+    "Immutability Rules",
+    "Hard Constraints",
+)
 _WORD_RE = re.compile(r"[a-z0-9]+")
 _USE_WHEN_RE = re.compile(r"(?i)\b(use when|use for|triggers?|عند|عندما)\b")
 _NEGATIVE_RE = re.compile(r"(?i)\b(do not use|don't use|not for|avoid when)\b")
@@ -36,6 +50,12 @@ _FAMILY_TOKENS = frozenset(
         "ai", "lord", "skill", "agent", "agents", "expert", "master",
         "patterns", "templates", "development", "design", "pro", "driven",
         "the", "and", "for",
+        # Domain family prefixes: game-* skills share the domain marker but
+        # target distinct subdomains (architect vs designer vs producer).
+        # Same for production-* (readiness vs game producer). Broader tokens
+        # like "qa"/"automation"/"marketing" stay OUT — stripping them shrinks
+        # token sets and unmasks latent collisions across the library.
+        "game", "production",
         # role nouns — same reasoning: api-architect vs flutter-architect
         # do not compete, they are different domains sharing a job title.
         "architect", "engineer", "developer", "auditor", "manager",
@@ -71,6 +91,9 @@ class SkillMeta:
     description: str
     triggers: tuple[str, ...] = ()
     personas: tuple[str, ...] = ()
+    category: str = ""
+    rule_count: int = 0
+    contract_issues: tuple[str, ...] = ()
     issues: tuple[str, ...] = field(default=())
 
 
@@ -93,14 +116,34 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def lint_contract_text(text: str) -> tuple[str, ...]:
+    """Check a CONTRACT.md body for the required handoff sections."""
+    issues: list[str] = []
+    for section in CONTRACT_REQUIRED_SECTIONS:
+        if not re.search(rf"^##\s+{re.escape(section)}\b", text, re.MULTILINE | re.IGNORECASE):
+            issues.append(f"contract missing '## {section}' section")
+    return tuple(issues)
+
+
 def load_skill(path: Path, root: Path) -> SkillMeta:
-    meta = parse_frontmatter(path.read_text(encoding="utf-8"))
+    text = path.read_text(encoding="utf-8")
+    meta = parse_frontmatter(text)
+    contract_issues: tuple[str, ...] = ()
+    if path.name == "SKILL.md":
+        contract_path = path.parent / "CONTRACT.md"
+        if contract_path.exists():
+            contract_issues = lint_contract_text(
+                contract_path.read_text(encoding="utf-8")
+            )
     return SkillMeta(
         name=str(meta.get("name") or path.stem),
         path=str(path.relative_to(root)).replace("\\", "/"),
         description=str(meta.get("description") or ""),
         triggers=_as_tuple(meta.get("triggers")),
         personas=_as_tuple(meta.get("personas")),
+        category=str(meta.get("category") or "").strip().lower(),
+        rule_count=len(_RULE_LINE_RE.findall(text)),
+        contract_issues=contract_issues,
     )
 
 
@@ -133,6 +176,24 @@ def lint_description(meta: SkillMeta) -> list[str]:
         issues.append("no triggers — skill is unreachable by routing")
     if desc and not (_USE_WHEN_RE.search(desc) or meta.triggers):
         issues.append("description lacks trigger phrasing ('Use when …')")
+    return issues
+
+
+def lint_rubric(meta: SkillMeta) -> list[str]:
+    """Category rubric + contract checks (CCGS studio-tests adoption)."""
+    issues: list[str] = []
+    if meta.category:
+        if meta.category not in KNOWN_CATEGORIES:
+            issues.append(
+                f"unknown category '{meta.category}' "
+                f"(known: {sorted(KNOWN_CATEGORIES)})"
+            )
+        elif meta.category == "lord" and meta.rule_count < MIN_LORD_RULES:
+            issues.append(
+                f"lord skill has {meta.rule_count} rule lines "
+                f"(min {MIN_LORD_RULES})"
+            )
+    issues.extend(meta.contract_issues)
     return issues
 
 
@@ -218,7 +279,9 @@ def write_index(root: Path, metas: list[SkillMeta]) -> Path:
 def run_lint(root: Path, write: bool = False) -> dict[str, Any]:
     """Full lint report: per-skill issues + collisions + optional index."""
     metas = load_skills(root)
-    issue_map = {m.name: lint_description(m) for m in metas}
+    issue_map = {
+        m.name: lint_description(m) + lint_rubric(m) for m in metas
+    }
     issue_map = {k: v for k, v in issue_map.items() if v}
     collisions = detect_collisions(metas)
     index_path = str(write_index(root, metas)) if write else ""

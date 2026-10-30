@@ -1700,6 +1700,43 @@ def cmd_find(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_pipeline(args: argparse.Namespace) -> int:
+    """Artifact-aware pipeline status over cataloged workflows."""
+    from runtime.pipeline_catalog import list_catalogs, pipeline_status
+
+    if args.pipeline_subcommand == "list":
+        for wf in list_catalogs(_root(args)):
+            console.print(f"[cyan]{wf}[/cyan]")
+        return 0
+    status = pipeline_status(
+        _root(args), _project_root(args), args.workflow, path=args.path or None
+    )
+    if status is None:
+        console.print(
+            f"[yellow]No pipeline catalog in workflow '{args.workflow}'.[/yellow]"
+        )
+        return 1
+    if args.json:
+        print(json.dumps(status.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+    console.print(
+        f"[green]{status.label}[/green] route={status.route} "
+        f"current={status.current_phase or '-'} next={status.next_step or '-'}"
+    )
+    for phase in status.phases:
+        mark = "[green]✓[/green]" if phase.done else (
+            "[cyan]▶[/cyan]" if phase.current else "[dim]·[/dim]"
+        )
+        console.print(f"{mark} {phase.id} — {phase.label}")
+        for step in phase.steps:
+            icon = {"done": "[green]✓[/green]", "missing": "[red]✗[/red]"}.get(
+                step.status, "[dim]?[/dim]"
+            )
+            req = "" if step.required else " (optional)"
+            console.print(f"    {icon} {step.name}{req} — {step.detail}")
+    return 0
+
+
 def cmd_inventory(args: argparse.Namespace) -> int:
     """Plain-fact inventory of the install (DeepTutor manifest pattern)."""
     from runtime.inventory_note import (
@@ -2165,6 +2202,14 @@ def main(argv: list[str] | None = None) -> int:
     p_goal.add_argument("objective", help="Goal text, e.g. 'add oauth login'")
     p_goal.add_argument("--json", action="store_true", help="Machine-readable output")
 
+    p_pipeline = sub.add_parser("pipeline", help="Artifact-aware pipeline status (cataloged workflows)")
+    sp_pipeline = p_pipeline.add_subparsers(dest="pipeline_subcommand", required=True)
+    p_pipe_status = sp_pipeline.add_parser("status", help="Detect pipeline position from files on disk")
+    p_pipe_status.add_argument("workflow", help="Workflow id, e.g. 63-game-studio-pipeline")
+    p_pipe_status.add_argument("--path", default="", help="Alternate route name (e.g. minimal)")
+    p_pipe_status.add_argument("--json", action="store_true", help="Machine-readable output")
+    sp_pipeline.add_parser("list", help="List workflows that embed a pipeline catalog")
+
     p_inventory = sub.add_parser("inventory", help="Plain-fact inventory: skills, workflows, memory banks, plugins")
     p_inventory.add_argument("--report", action="store_true", help="Full report (bank names included)")
     p_inventory.add_argument("--json", action="store_true", help="Machine-readable output")
@@ -2408,6 +2453,7 @@ def main(argv: list[str] | None = None) -> int:
         "daemon": cmd_daemon,
         "find": cmd_find,
         "goal": cmd_goal,
+        "pipeline": cmd_pipeline,
         "inventory": cmd_inventory,
         "plugin": cmd_plugin,
         "config": cmd_config,

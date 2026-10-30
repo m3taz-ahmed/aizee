@@ -25,4 +25,6 @@ triggers:
 13. [REQ] State & saves: game state serializable (versioned save schema + migration on load); checkpoint/auto-save cadence; corrupt-save recovery (backup slot); never save mid-frame transient state.
 14. [REQ] Feel engineering: game feel is designed not accidental — hit-stop, screen shake, squash/stretch, input forgiveness, animation cancel windows; juice budget is a quality lever, test at target framerate.
 15. [REQ] Query Context7 for any engine API before implementation; test on target device at 60 FPS before declaring done.
-16. [PROHIBIT] Per-frame allocations (GC spikes), physics tied to render rate, singleton soup for game state, blocking loads on the main thread, or shipping without on-device profiling at the worst-case scene.
+16. [REQ] Engine work loads the matching `tech-stack/` file first: `godot-4.md`, `unity-6.md`, `unreal-5.md` (read lockfile/project file for exact version `[VER-01]`). For full-lifecycle game projects route through `workflows/63-game-studio-pipeline.md`; domain depth lives in the `game-*-lord` skills (design, level, economy, narrative, qa, production).
+17. [REQ] Visual stories close on OBSERVED evidence only — launch, look, retain screenshot (`rules/run-and-observe.md`). A parse check is not a run.
+18. [PROHIBIT] Per-frame allocations (GC spikes), physics tied to render rate, singleton soup for game state, blocking loads on the main thread, or shipping without on-device profiling at the worst-case scene.

@@ -589,6 +589,7 @@ class Kernel:
         "model_router", "fairness_detector", "laravel_policy_linter",
         "filament_access_auditor", "db_migration_safety",
         "ui_a11y_checker", "blade_template_linter",
+        "project_config",
     })
     # Freelance/marketing helper modules exposed as kernel.<module> attrs —
     # imported on first access, not eagerly at init.
@@ -909,6 +910,12 @@ class Kernel:
 
         return BladeTemplateLinter()
 
+    def _build_project_config(self) -> Any:
+        """Build the per-project config reader (aizee.yaml + aizee.local.yaml)."""
+        from runtime.project_config import load_project_config
+
+        return load_project_config(self.project_root)
+
     def detect_persona(self, text: str) -> dict[str, Any]:
         """Detect the best persona for a user prompt."""
         return self.persona.detect(text)
@@ -922,6 +929,9 @@ class Kernel:
         fresh_context = kwargs.pop("fresh_context", False)
         session_id = kwargs.pop("session_id", None)
         verify = kwargs.pop("verify", None)
+        if verify is None:
+            # aizee.yaml/aizee.local.yaml floor — caller may still raise it.
+            verify = self.project_config.verify_default
         sensitive_data = kwargs.pop("sensitive_data", None)
         if sensitive_data:
             # browser-use pattern: secrets are injected at call time and

@@ -292,6 +292,9 @@ class PersonaDetector:
     PERSONA_LORD_BONUS: ClassVar[float] = _DATA.get("persona_lord_bonus", 0.0)
     PERSONAS: ClassVar[dict[str, dict[str, Any]]] = _DATA.get("personas", {})
     LORD_SKILLS: ClassVar[dict[str, list[str]]] = _DATA.get("lord_skills", {})
+    # Feature teams (CCGS /team-* adoption): declared persona sets per feature
+    # type, matched by keywords — composition metadata, not a fixed hierarchy.
+    TEAMS: ClassVar[dict[str, dict[str, Any]]] = _DATA.get("teams", {})
     # Pre-compiled regex cache for keyword matching (compiled once at class load)
     _COMPILED_KEYWORDS: ClassVar[dict[str, re.Pattern[str]]] = {
         _normalize_arabic(kw).lower(): _keyword_pattern(kw)
@@ -302,6 +305,11 @@ class PersonaDetector:
         _normalize_arabic(kw).lower(): _keyword_pattern(kw)
         for kws in _DATA.get("lord_skills", {}).values()
         for kw in kws
+    } | {
+        _normalize_arabic(kw).lower(): _keyword_pattern(kw)
+        for team in _DATA.get("teams", {}).values()
+        if isinstance(team, dict)
+        for kw in team.get("keywords", [])
     }
 
     def __init__(self, default: str = DEFAULT, skill_resolver: SkillResolver | None = None) -> None:
@@ -321,6 +329,30 @@ class PersonaDetector:
     def skill_for(self, persona: str) -> str:
         """Primary skill name for a persona code."""
         return cast(str, self.PERSONAS.get(persona, self.PERSONAS[self.default])["skill"])
+
+    def tier_for(self, persona: str) -> str:
+        """Seniority tier (director/lead/specialist) for escalation routing."""
+        info = self.PERSONAS.get(persona, {})
+        return str(info.get("tier", "specialist"))
+
+    def list_teams(self) -> list[str]:
+        """Return all declared feature-team names."""
+        return list(self.TEAMS.keys())
+
+    def team_personas(self, team: str) -> list[str]:
+        """Persona codes composing one feature team."""
+        info = self.TEAMS.get(team, {})
+        return [str(p) for p in info.get("personas", [])] if isinstance(info, dict) else []
+
+    def detect_teams(self, text: str) -> list[str]:
+        """Feature teams whose keywords appear in the prompt."""
+        matched: list[str] = []
+        for name, info in self.TEAMS.items():
+            if not isinstance(info, dict):
+                continue
+            if any(self._keyword_match(text, kw) for kw in info.get("keywords", [])):
+                matched.append(name)
+        return sorted(matched)
 
     def _is_active_skill(self, name: str, context: dict[str, Any]) -> bool:
         """Return True if the skill is active for the context or not on disk."""
@@ -430,6 +462,7 @@ class PersonaDetector:
             "skill": primary_skills[0] if primary_skills else self.skill_for(self.default),
             "skills": primary_skills,
             "lords": lords,
+            "teams": self.detect_teams(text),
             "scores": normalized,
             "default": self.default,
         }
