@@ -377,27 +377,63 @@ if ($WhatIf) {
 
 Write-Step "Pre-flight checks"
 
-# Python â€” resolve the interpreter once: python -> py -3 -> python3.
-# $PyExe + $PyOpt are used for every later invocation so machines that ship
-# only the `py` launcher (or only `python3`) still install cleanly.
+# Python — resolve a HEALTHY interpreter once: AIZEE_PYTHON override ->
+# python -> py -3 -> py -3.14..-3.10 -> python3. $PyExe + $PyOpt are used
+# for every later invocation. A candidate must report 3.10+ AND pass a
+# wheel-install health probe — a Python with a broken stdlib or a
+# half-upgraded pip (missing pyexpat kills pip's wheel installer) is
+# skipped rather than crashing three retries into the pip step.
 $script:PyExe = $null
 $script:PyOpt = @()
+$script:PyRejected = @()
 $prevEAP = $ErrorActionPreference; $ErrorActionPreference = "Continue"
-foreach ($candidate in @(@("python"), @("py", "-3"), @("python3"))) {
+$pyCandidates = @()
+if ($env:AIZEE_PYTHON) { $pyCandidates += ,@($env:AIZEE_PYTHON) }
+$pyCandidates += @(
+    @("python"), @("py", "-3"), @("py", "-3.14"), @("py", "-3.13"),
+    @("py", "-3.12"), @("py", "-3.11"), @("py", "-3.10"), @("python3")
+)
+foreach ($candidate in $pyCandidates) {
     $probeExe = $candidate[0]
     $probeOpt = @($candidate | Select-Object -Skip 1)
+    $label = (@($probeExe) + $probeOpt) -join ' '
     $probe = & $probeExe @probeOpt --version 2>&1
-    if ($LASTEXITCODE -eq 0 -and "$probe" -match "^Python 3\.") {
-        $script:PyExe = $probeExe
-        $script:PyOpt = $probeOpt
-        $pythonVersion = "$probe"
-        break
+    if ($LASTEXITCODE -ne 0 -or "$probe" -notmatch "^Python 3\.") { continue }
+    if ("$probe" -notmatch "Python 3\.(1[0-9]|[2-9])") {
+        $script:PyRejected += "$label ($probe, needs 3.10+)"
+        continue
     }
+    # Health probe: the exact import pip needs to install wheels.
+    $null = & $probeExe @probeOpt -c "import pip._internal.operations.install.wheel" *>$null
+    if ($LASTEXITCODE -ne 0) {
+        # Distinguish "pip absent" (fixable via ensurepip) from "broken
+        # stdlib" (unfixable — e.g. missing pyexpat kills distlib).
+        $null = & $probeExe @probeOpt -c "import pip" *>$null
+        $pipMissing = ($LASTEXITCODE -ne 0)
+        if ($pipMissing -and -not $WhatIf) {
+            $null = & $probeExe @probeOpt -m ensurepip --upgrade *>$null
+            $null = & $probeExe @probeOpt -c "import pip._internal.operations.install.wheel" *>$null
+            if ($LASTEXITCODE -eq 0) {
+                $script:PyExe = $probeExe
+                $script:PyOpt = $probeOpt
+                $pythonVersion = "$probe"
+                Write-Ok "Python: $pythonVersion ($label, pip bootstrapped via ensurepip)"
+                break
+            }
+        }
+        $script:PyRejected += "$label ($probe, broken or absent pip/stdlib)"
+        Write-Warn "Skipping $label ($probe): pip wheel-install probe failed (broken stdlib or pip)"
+        continue
+    }
+    $script:PyExe = $probeExe
+    $script:PyOpt = $probeOpt
+    $pythonVersion = "$probe"
+    break
 }
 $ErrorActionPreference = $prevEAP
-if (-not $script:PyExe) { throw "python/py/python3 is required but not found on PATH" }
-if ($pythonVersion -notmatch "Python 3\.(1[0-9]|[2-9])") {
-    throw "Python 3.10+ is required (found $pythonVersion)"
+if (-not $script:PyExe) {
+    $detail = if ($script:PyRejected.Count) { " Detected but unusable: $($script:PyRejected -join '; ')" } else { "" }
+    throw "A healthy Python 3.10+ interpreter is required but none was found.$detail Repair Python (re-run its installer -> Repair) or set AIZEE_PYTHON to a working interpreter."
 }
 Write-Ok "Python: $pythonVersion ($PyExe)"
 

@@ -212,22 +212,48 @@ fi
 
 step "Pre-flight checks"
 
-# Python — prefer python3, fall back to python (Debian/Ubuntu ship only python3)
+# Python — resolve a HEALTHY interpreter: AIZEE_PYTHON override -> python3 ->
+# python -> python3.14..python3.10. A candidate must report 3.10+ AND pass a
+# wheel-install health probe — a broken stdlib or half-upgraded pip is
+# skipped rather than crashing mid-install (pip 26 hard-fails inside the
+# build-isolation subprocess when e.g. pyexpat is missing).
 PY=""
-if has_cmd python3; then
-    PY="$(command -v python3)"
-elif has_cmd python; then
-    PY="$(command -v python)"
-fi
+py_rejected=()
+py_candidates=()
+if [[ -n "${AIZEE_PYTHON:-}" ]]; then py_candidates+=("$AIZEE_PYTHON"); fi
+py_candidates+=(python3 python python3.15 python3.14 python3.13 python3.12 python3.11 python3.10)
+for cand in "${py_candidates[@]}"; do
+    has_cmd "$cand" || continue
+    cand_path="$(command -v "$cand")"
+    v=$("$cand_path" --version 2>&1 | awk '{print $2}')
+    major=$(echo "$v" | cut -d. -f1); minor=$(echo "$v" | cut -d. -f2)
+    if [[ "$major" -lt 3 ]] || { [[ "$major" -eq 3 ]] && [[ "$minor" -lt 10 ]]; }; then
+        py_rejected+=("$cand ($v, needs 3.10+)")
+        continue
+    fi
+    # Health probe: the exact import pip needs to install wheels.
+    if ! "$cand_path" -c "import pip._internal.operations.install.wheel" >/dev/null 2>&1; then
+        # "pip absent" is fixable via ensurepip; a broken stdlib is not.
+        if ! "$cand_path" -c "import pip" >/dev/null 2>&1 && ! $WHATIF; then
+            "$cand_path" -m ensurepip --upgrade >/dev/null 2>&1
+            if "$cand_path" -c "import pip._internal.operations.install.wheel" >/dev/null 2>&1; then
+                PY="$cand_path"; python_version="$v"
+                ok "Python: $v ($cand, pip bootstrapped via ensurepip)"
+                break
+            fi
+        fi
+        py_rejected+=("$cand ($v, broken or absent pip/stdlib)")
+        warn "Skipping $cand ($v): pip wheel-install probe failed (broken stdlib or pip)"
+        continue
+    fi
+    PY="$cand_path"
+    python_version="$v"
+    break
+done
 if [[ -z "$PY" ]]; then
-    err "python3/python is required but not found on PATH"
-    exit 1
-fi
-python_version=$("$PY" --version 2>&1 | awk '{print $2}')
-python_major=$(echo "$python_version" | cut -d. -f1)
-python_minor=$(echo "$python_version" | cut -d. -f2)
-if [[ "$python_major" -lt 3 ]] || { [[ "$python_major" -eq 3 ]] && [[ "$python_minor" -lt 10 ]]; }; then
-    err "Python 3.10+ is required (found $python_version)"
+    detail=""
+    if ((${#py_rejected[@]})); then detail=" Detected but unusable: ${py_rejected[*]}"; fi
+    err "A healthy Python 3.10+ interpreter is required but none was found.$detail Repair Python or set AIZEE_PYTHON to a working interpreter."
     exit 1
 fi
 ok "Python: $python_version"

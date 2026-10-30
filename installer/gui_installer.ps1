@@ -606,14 +606,17 @@ function Invoke-PreFlightChecks {
     # minimal installs may not provide plain `python` on PATH)
     try {
         $pv = $null
-        foreach ($candidate in @(@("python"), @("py", "-3"), @("python3"))) {
+        foreach ($candidate in @(@("python"), @("py", "-3"), @("py", "-3.14"), @("py", "-3.12"), @("py", "-3.10"), @("python3"))) {
             $probeExe = $candidate[0]
             $probeOpt = @($candidate | Select-Object -Skip 1)
             $probe = & $probeExe @probeOpt --version 2>&1
-            if ($LASTEXITCODE -eq 0 -and "$probe" -match "^Python 3\.") {
-                $pv = "$probe ($probeExe)"
-                break
-            }
+            if ($LASTEXITCODE -ne 0 -or "$probe" -notmatch "^Python 3\.") { continue }
+            # Health probe: the exact import pip needs to install wheels —
+            # a broken stdlib (missing pyexpat) fails pip mid-install.
+            $null = & $probeExe @probeOpt -c "import pip._internal.operations.install.wheel" *>$null
+            if ($LASTEXITCODE -ne 0) { continue }
+            $pv = "$probe ($probeExe)"
+            break
         }
         if ($pv -and $pv -match "Python 3\.(1[0-9]|[2-9])") {
             $Window.FindName("CheckPython").Text = "[OK] Python: $pv"
