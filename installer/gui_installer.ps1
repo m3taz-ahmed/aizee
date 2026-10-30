@@ -1194,7 +1194,9 @@ function Start-Installation {
 
     $NextBtn.IsEnabled = $true
 
-    # Handle finish page actions
+    # Handle finish page actions (guard against duplicate registration on retries)
+    if ($script:finishHandlerRegistered) { return }
+    $script:finishHandlerRegistered = $true
     $NextBtn.Add_Click({
         if ($Window.FindName("FinishLaunchDashboard").IsChecked) {
             # Use start-dashboard.bat which launches the server + opens the browser
@@ -1208,11 +1210,25 @@ function Start-Installation {
         if ($Window.FindName("FinishOpenReadme").IsChecked) {
             Start-Process notepad -ArgumentList (Join-Path $script:installRoot "README.md")
         }
-        if ($Window.FindName("FinishOpenLog").IsChecked -and $script:latestLog) {
-            Start-Process notepad -ArgumentList $script:latestLog.FullName
+        if ($Window.FindName("FinishOpenLog").IsChecked) {
+            # Re-resolve at click time: the install log may appear after the
+            # finish page rendered (or on retry paths that skipped render).
+            if (-not $script:latestLog -or -not (Test-Path $script:latestLog.FullName)) {
+                $script:latestLog = Get-ChildItem (Join-Path $script:installRoot "state\install-*.log") -ErrorAction SilentlyContinue |
+                    Sort-Object LastWriteTime -Descending | Select-Object -First 1
+            }
+            if ($script:latestLog) {
+                Invoke-Item $script:latestLog.FullName
+            } else {
+                [System.Windows.MessageBox]::Show("No install log found under $($script:installRoot)\state.", "aiZee Installer")
+            }
         }
-        if ($Window.FindName("FinishOpenGuiLog").IsChecked -and $script:guiLogPath) {
-            Start-Process notepad -ArgumentList $script:guiLogPath
+        if ($Window.FindName("FinishOpenGuiLog").IsChecked) {
+            if ($script:guiLogPath -and (Test-Path $script:guiLogPath)) {
+                Invoke-Item $script:guiLogPath
+            } else {
+                [System.Windows.MessageBox]::Show("GUI log not found: $script:guiLogPath", "aiZee Installer")
+            }
         }
         if ($Window.FindName("FinishOpenEnv").IsChecked) {
             $envPath = Join-Path $script:installRoot ".env"

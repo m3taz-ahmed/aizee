@@ -326,6 +326,9 @@ IGNORED_FILE_REFS = {
     # working-root-only artifacts referenced from Memory.md audit entries —
     # temp/ and nested .ai/ dirs are not synced to the deployment mirror
     'temp\\competitor-study-v3\\analysis.md', '.ai\\repos-report.md',
+    # session review reports under the gitignored .ai/ working dir
+    'ccgs-report.md', 'star-repos-report.md', 'star-repos-report-batch2.md',
+    'ui-repos-report.md', 'repos-study.md', 'review-findings.md',
     # external-repo / generated-artifact names referenced descriptively:
     # impeccable's PRODUCT.md truth file; ui-ux-pro-max's generated MASTER.md output
     'product.md', 'master.md',
