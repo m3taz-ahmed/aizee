@@ -334,6 +334,8 @@ IGNORED_FILE_REFS = {
     'product.md', 'master.md',
 }
 
+_IGNORED_FILE_REFS_NORM = {x.replace("\\", "/").lower() for x in IGNORED_FILE_REFS}
+
 def check_file_references(content: str, rel_name: str, ctx: ValidationContext, global_path: str) -> bool:
     error = False
     for ref in re.finditer(r"(?<![\w/])(\.?[\w\-./]+\.md)\b", content):
@@ -353,7 +355,9 @@ def check_file_references(content: str, rel_name: str, ctx: ValidationContext, g
         if "server" + os.sep + ".ai" in target:
             target = target.split("server" + os.sep + ".ai" + os.sep)[-1]
         base = os.path.basename(target).lower()
-        if target.lower() in IGNORED_FILE_REFS or base in IGNORED_FILE_REFS:
+        # Normalize separators so IGNORED_FILE_REFS entries match on any OS
+        norm = target.replace("\\", "/").lower()
+        if norm in _IGNORED_FILE_REFS_NORM or base in IGNORED_FILE_REFS:
             continue
         if get_fuzzy_match(target, list(ctx.global_headers.keys())):
             continue
