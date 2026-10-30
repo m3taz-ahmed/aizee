@@ -21,6 +21,18 @@ echo === aiZee Sync: %SOURCE% -^> %TARGET% ===
 
 if not exist "%TARGET%" (
     echo ERROR: Target directory %TARGET% does not exist.
+    pause
+    exit /b 1
+)
+
+REM Self-mirror guard: if this copy lives inside the deployment folder,
+REM SOURCE resolves to the target itself and /MIR would be a no-op.
+for %%I in ("%SOURCE%") do set "SRCNORM=%%~fI"
+for %%I in ("%TARGET%") do set "TGTNORM=%%~fI"
+if /I "%SRCNORM%"=="%TGTNORM%" (
+    echo This script syncs the .ai working directory into the aizee deployment folder.
+    echo You are running the DEPLOYMENT copy - run it from .ai\scripts\ instead.
+    pause
     exit /b 1
 )
 
@@ -28,10 +40,12 @@ REM Safety: /MIR deletes extra files in TARGET. Refuse to run unless TARGET
 REM looks like an aiZee deployment (has the package markers).
 if not exist "%TARGET%\pyproject.toml" (
     echo ERROR: %TARGET% has no pyproject.toml - refusing to mirror into a non-aiZee dir.
+    pause
     exit /b 1
 )
 if not exist "%TARGET%\config.py" (
     echo ERROR: %TARGET% has no config.py - refusing to mirror into a non-aiZee dir.
+    pause
     exit /b 1
 )
 
@@ -57,13 +71,14 @@ robocopy "%SOURCE%\.devin" "%TARGET%\.devin" /MIR /R:2 /W:2 /NFL /NDL /NP /NJH ^
 set "RC3=%ERRORLEVEL%"
 
 REM robocopy success = exit code < 8 (0 nothing, 1 copied, 2+ extras/mismatches).
-if %RC1% GEQ 8 ( echo ERROR: main mirror failed ^(robocopy %RC1%^) & exit /b %RC1% )
-if %RC2% GEQ 8 ( echo ERROR: .claude mirror failed ^(robocopy %RC2%^) & exit /b %RC2% )
-if %RC3% GEQ 8 ( echo ERROR: .devin mirror failed ^(robocopy %RC3%^) & exit /b %RC3% )
+if %RC1% GEQ 8 ( echo ERROR: main mirror failed ^(robocopy %RC1%^) & pause & exit /b %RC1% )
+if %RC2% GEQ 8 ( echo ERROR: .claude mirror failed ^(robocopy %RC2%^) & pause & exit /b %RC2% )
+if %RC3% GEQ 8 ( echo ERROR: .devin mirror failed ^(robocopy %RC3%^) & pause & exit /b %RC3% )
 
 echo.
 echo === Sync Complete ===
 echo Verify with: cd %TARGET% ^&^& python eval\harness.py
 echo.
+pause
 endlocal
 exit /b 0
