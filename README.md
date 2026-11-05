@@ -5,15 +5,15 @@
   <p><strong>Your AI agent ships hallucinated APIs and secrets.<br>aiZee blocks them — enforced, not advised.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/Version-6.5.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.5.0">
-    <img src="https://img.shields.io/badge/Tests-7400%2B%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7400+ passed">
+    <img src="https://img.shields.io/badge/Version-6.6.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.6.0">
+    <img src="https://img.shields.io/badge/Tests-7559%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7559 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
     <img src="https://img.shields.io/badge/Skills-151-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="151 Skills">
-    <img src="https://img.shields.io/badge/Workflows-65-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="65 Workflows">
+    <img src="https://img.shields.io/badge/Workflows-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-269-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="269 Tech-Stack refs">
   </p>
 </div>
@@ -62,42 +62,33 @@ A **zero-compromise, version-controlled operating system** that sits between you
 
 ---
 
-## What's New in v6.5.0 — Agent-Facing Surface
+## What's New in v6.6.0 — Repo-Study Adoption Pass
 
-Adopted from a structured study of 16 top open-source agent repos
-(google/artemis, Agent-Reach, OpenSpec, DeepTutor, free-claude-code,
-paperless-ngx — full matrix in `.ai/star-repos-report.md`):
+Adopted from a structured study of google/elephant-goldfish-model,
+wotschofsky/domain-digger, and godotengine/godot
+(full report in `.ai/repo-study-2026-11.md`):
 
-- **`aizee_doctor` MCP tool** — agents can self-diagnose: structured
-  `verdict` (`ready`/`degraded`/`blocked`) + ordered `next_steps` with
-  `Run:` commands for automatable fixes and `Guidance:` for user-only
-  actions. CLI: `aizee doctor --json`.
-- **Uniform MCP envelope + stable error codes** — new tools return
-  `{schema_version, ok, result, error:{code}, meta}` so agents branch on
-  `NEED_SETUP`/`POLICY_DENIED`/`UPSTREAM_BROKEN` instead of parsing text.
-- **`aizee find` / `aizee goal`** — natural-language discovery over 141
-  skills + 63 workflows + 266 tech-stack refs; `goal` maps an objective to
-  a workflow's step list. MCP: `aizee_find`, `aizee_goal`.
-- **Governed LLM gateway** — `aizee gateway init|serve` runs a localhost
-  Anthropic/OpenAI-compatible proxy with a provider **failover chain** and
-  `Kernel.act` enforcement on every request: prompt guardrails + policy +
-  budget fire *on the traffic path*.
-- **Verification dial** — `Kernel.act(..., verify="checkpoints"|"strict")`
-  layers plan-diff and supply-chain import checks on top of the mandatory
-  gates.
-- **OpenSpec-style change folders** — `aizee spec propose <name>` scaffolds
-  `proposal.md`/`design.md`/`tasks.md`; `aizee spec archive` lands it under
-  `changes/archive/YYYY-MM-DD-*`.
-- **Memory consume-rules** — `rules/ingest.yaml` glob→bank/kind/tags
-  routing, so `aizee memory ingest` channels folders into named banks.
-- **`aizee config show` (masked) + `config apply --check`** — secrets are
-  redacted in output; `--check` validates a config file and previews the
-  exact diff without writing.
-- **Root `SKILL.md` + `aizee skill link`** — aiZee installs itself as a
-  skill into Cursor, Claude Code, Codex, and OpenCode harnesses, so any
-  agent picks up the governed workflow automatically.
-- **`aizee models` / `aizee work poll`** — model routing catalog and a
-  gh-powered open-work pull list.
+- **Goldfish spec review** — `aizee spec review <spec_id|--file> [--preset]`
+  plans a fresh-zero-context reviewer pipeline (EGM port): semantic
+  spec/plan split, 5-stage reviewer personas, severity triage +
+  traceability consolidation. Vendored Apache-2.0 rubrics + personas live
+  under `resources/`; workflow: `workflows/65-goldfish-review.md`.
+- **Multi-harness skill packaging** — `aizee skill link --pack <dir>`
+  emits an EGM-style portable bundle: canonical `plugin.json` plus
+  `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`, `.agents/`
+  manifests, vendored `skills/`, `agents/` personas, and `resources/`
+  rubrics. Replacement is fail-closed on non-bundle destinations.
+- **Domain intelligence toolkit** — `aizee intel <domain>` plus 7 MCP
+  tools (`runtime/dns_wire.py` + `runtime/domain_intel.py`, a Python
+  rewrite of domain-digger concepts): wire-format DNS codec, UDP→TCP
+  fallback, iterative authoritative walking, DoH, WHOIS, certificate
+  history, and subdomain enumeration — all bounded and fail-closed.
+- **Skill scenario evals** — `eval/skill_scenarios.py` runs static/live
+  behavioral checks (`eval/scenarios/goldfish-review.yaml`) and feeds the
+  eval harness as a `skill-scenarios` gate.
+- **Godot reference** — full engine source pinned under `refs/godot`
+  (local-only) + `tech-stack/godot-4.md` records the verified portable
+  install (`4.7.2.stable.official`) for the GAME vertical.
 
 ## What's New in v6.1.0 — Lean Surface
 
@@ -106,7 +97,7 @@ The headline change: **the default surface is small and honest**. The MCP fleet 
 ### Lean defaults
 
 - **3 MCP servers by default** — `aizee` (governance), `graphify`, `context7`. The marketing/social/freelance MCP servers are gone from every shipped config.
-- **39 MCP tools enabled** — 7 marketing-domain tool modules (ads, analytics, CRO, email, freelance, SEO, social) still ship but are disabled via `disabledToolModules` in `aizee_mcp/config.json`. Remove a name to re-enable it.
+- **46 MCP tools enabled** — 7 marketing-domain tool modules (ads, analytics, CRO, email, freelance, SEO, social) still ship but are disabled via `disabledToolModules` in `aizee_mcp/config.json`. Remove a name to re-enable it.
 - **31 plugins disabled** — `plugins.yaml` ships them `enabled: false`; the sandbox blocks the rest. `code2video`, `graphify`, `context7` stay on.
 - **Dead code removed** — unused runtime modules (`a2a_server`, `semantic_search`, `provider_registry`, `sql_injection_guard`, `plugin_system`, …) and their tests deleted.
 
@@ -230,7 +221,7 @@ aizee status    # Current persona, skills, budget
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 129 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 132 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -238,10 +229,10 @@ aizee status    # Current persona, skills, budget
 │   ├── codemode/            # Sandboxed code-mode tool execution
 │   └── policies/            # default/guardian/probity/mcp_firewall YAMLs
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
-├── aizee_mcp/               # MCP server (39 tools enabled, 3 resources)
+├── aizee_mcp/               # MCP server (46 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
 ├── skills/                  # 151 persona + lord skills
-├── workflows/               # 65 trigger-based execution protocols
+├── workflows/               # 66 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # Version-locked stack references
 ├── dashboard/               # Web dashboard (Python stdlib HTTP)
@@ -382,7 +373,7 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 
 - **Core:** Pure Python 3.10+ (no Node.js required for core OS)
 - **Memory:** SQLite + FTS5 + optional SentenceTransformers vectors
-- **MCP:** FastMCP server, 39 tools enabled by default (7 marketing tool modules ship gated via `disabledToolModules`)
+- **MCP:** FastMCP server, 46 tools enabled by default (7 marketing tool modules ship gated via `disabledToolModules`)
 - **Dashboard:** Python stdlib HTTP server + SQLite
 - **Knowledge graph:** graphify (optional)
 - **Dependencies:** pyyaml, pydantic, rich, cryptography, numpy, turbovec

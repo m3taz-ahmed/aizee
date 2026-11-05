@@ -31,6 +31,9 @@ linkedin_token.json
 # MEMORY.md is tracked — it contains cross-session audit history valuable for all users
 aizee.local.yaml
 
+# Local session-archive DB (large binary artifact, per-machine)
+memory/devin_sessions_archive.db
+
 
 # Python
 __pycache__/
@@ -88,3 +91,7 @@ create-shortcuts.ps1
 build/
 /docs/media
 scripts/gen_post_assets.py
+/linkedin/
+
+# Permanent reference clones (kept local-only, multi-GB)
+refs/

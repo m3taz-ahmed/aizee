@@ -4,16 +4,16 @@
   <p><strong>حول أي مساعد ذكاء اصطناعي إلى مهندسك الرئيسي — سيادة كاملة، جودة صفرية العيوب.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.5.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.5.0">
-    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7470%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7470 اختبار ناجح">
+    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.6.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.6.0">
+    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7559%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7559 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/%D8%B4%D8%AE%D8%B5%D9%8A%D8%A7%D8%AA-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 شخصية">
-    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-139-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="151 مهارة">
-    <img src="https://img.shields.io/badge/%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-65-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="65 سير عمل">
-    <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-266-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="266 مرجع تقنية">
+    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-151-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="151 مهارة">
+    <img src="https://img.shields.io/badge/%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 سير عمل">
+    <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-269-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="269 مرجع تقنية">
   </p>
 </div>
 
@@ -48,7 +48,7 @@
 ### افتراضيات أخف
 
 - **3 خوادم MCP افتراضيًا** — `aizee` (الحوكمة)، `graphify`، `context7`. خوادم التسويق/السوشيال/الفريلانس اختفت من كل الإعدادات المشحونة.
-- **43 أداة MCP مفعّلة** — 7 وحدات أدوات تسويقية (ads, analytics, CRO, email, freelance, SEO, social) لا تزال مشحونة لكنها معطّلة عبر `disabledToolModules` في `aizee_mcp/config.json`. أزل الاسم لإعادة تفعيلها.
+- **46 أداة MCP مفعّلة** — 7 وحدات أدوات تسويقية (ads, analytics, CRO, email, freelance, SEO, social) لا تزال مشحونة لكنها معطّلة عبر `disabledToolModules` في `aizee_mcp/config.json`. أزل الاسم لإعادة تفعيلها.
 - **31 إضافة معطّلة** — `plugins.yaml` يشحنها `enabled: false`؛ والصندوق الرملي يحجب الباقي. `code2video` و`graphify` و`context7` يبقون.
 - **كود ميت أُزيل** — وحدات runtime غير مستخدمة (`a2a_server`, `semantic_search`, `provider_registry`, `sql_injection_guard`, `plugin_system`, …) وتيستاتها حُذفت.
 
@@ -165,10 +165,10 @@ aizee status    # الشخصية، المهارات، الميزانية
 │   └── policies/            # YAMLs: default/guardian/probity/mcp_firewall
 ├── design-library/          # بذور DESIGN.md أصلية (editorial, midnight, minimal)
 ├── memory/                  # SQLite + FTS5 + vector، استعلامات ثنائية الزمن
-├── aizee_mcp/               # خادم MCP (43 أداة مفعّلة، 3 موارد)
+├── aizee_mcp/               # خادم MCP (46 أداة مفعّلة، 3 موارد)
 ├── eval/                    # معايير، فوضى، موثوقية، بوابة إصدار
-├── skills/                  # 140 مهارة شخصية + lord
-├── workflows/               # 63 بروتوكول تنفيذ بالمحفزات
+├── skills/                  # 151 مهارة شخصية + lord
+├── workflows/               # 66 بروتوكول تنفيذ بالمحفزات
 ├── rules/                   # قواعد سلوكية مضغوطة
 ├── tech-stack/              # مراجع مثبتة بالإصدار
 ├── dashboard/               # لوحة ويب (Python stdlib HTTP)
@@ -294,7 +294,7 @@ python dashboard/server.py 8080
 
 - **النواة:** Python خالص 3.10+ (لا حاجة لـ Node.js لنواة OS)
 - **الذاكرة:** SQLite + FTS5 + vectors اختيارية بـ SentenceTransformers
-- **MCP:** خادم FastMCP — 43 أداة مفعّلة افتراضيًا (7 وحدات تسويقية مشحونة لكن معطّلة عبر `disabledToolModules`)
+- **MCP:** خادم FastMCP — 46 أداة مفعّلة افتراضيًا (7 وحدات تسويقية مشحونة لكن معطّلة عبر `disabledToolModules`)
 - **لوحة القيادة:** خادم HTTP من stdlib + SQLite
 - **رسم المعرفة:** graphify (اختياري)
 - **التبعيات:** pyyaml، pydantic، rich، cryptography، numpy، turbovec

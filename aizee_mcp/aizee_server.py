@@ -26,6 +26,7 @@ from aizee_mcp.tools import (
     register_cro_tools,
     register_email_tools,
     register_freelance_tools,
+    register_intel_tools,
     register_memory_tools,
     register_policy_tools,
     register_seo_tools,
@@ -131,6 +132,7 @@ def _register_tools_fallback() -> None:
         register_email_tools,
         register_freelance_tools,
         register_social_tools,
+        register_intel_tools,
     ):
         if register_fn is None:
             continue
@@ -195,16 +197,16 @@ def _annotate_tools() -> None:
     for name, tool in tools.items():
         if name in _READ_ONLY_TOOLS:
             tool.annotations = ToolAnnotations(
-                read_only_hint=True, open_world_hint=False,
+                readOnlyHint=True, openWorldHint=False,
             )
         elif name in _DESTRUCTIVE_TOOLS:
             tool.annotations = ToolAnnotations(
-                read_only_hint=False, destructive_hint=True,
-                idempotent_hint=True, open_world_hint=False,
+                readOnlyHint=False, destructiveHint=True,
+                idempotentHint=True, openWorldHint=False,
             )
         elif name in _IDEMPOTENT_TOOLS:
             tool.annotations = ToolAnnotations(
-                read_only_hint=False, idempotent_hint=True,
+                readOnlyHint=False, idempotentHint=True,
             )
 
 

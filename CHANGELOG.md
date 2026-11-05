@@ -1,6 +1,41 @@
 # Changelog
 
-## [Unreleased]
+## [6.6.0] - 2026-11-06 (Repo-Study Adoption Pass - EGM goldfish review / domain-intel / multi-harness pack / Godot ref)
+
+### Added (repo-study 2026-11 adoption round)
+
+- **Goldfish spec review** (`runtime/spec/review.py`, `workflows/65-goldfish-review.md`,
+  `resources/`): fresh-zero-context reviewer pipeline ported from
+  google/elephant-goldfish-model (Apache-2.0, `resources/LICENSE-EGM`) -
+  semantic split discovery, 5-stage reviewer plan (zoom-out, comprehension,
+  design critique, intermediate zoom-out, implementation readiness),
+  presets (interactive/uninterrupted/feature_spec/implementation),
+  severity triage + traceability consolidation, `aizee spec review
+  <spec_id|--file> [--preset]`. Vendored rubrics (`resources/document_standards/`),
+  10 reviewer personas (`resources/goldfish_personas/`), and EGM execution
+  instructions (`resources/execution_instructions.md`).
+- **Multi-harness plugin packaging** (`runtime/plugin_packager.py`):
+  `aizee skill link --pack <dir>` emits an EGM-style portable bundle -
+  canonical `plugin.json` plus `.claude-plugin/`, `.codex-plugin/`,
+  `.cursor-plugin/`, `.agents/plugins/` manifests, `skills/`,
+  `resources/`, and `agents/` (promoted personas).
+- **Skill behavioral scenarios** (`eval/skill_scenarios.py`,
+  `eval/scenarios/goldfish-review.yaml`, `aizee eval`): EGM-schema
+  required/forbidden-pattern assertions; static mode lints the skill file,
+  live mode checks real agent responses via an OpenAI-compatible endpoint
+  (`AIZEE_EVAL_ENDPOINT`/`AIZEE_EVAL_MODEL`). Wired into `eval/harness.py`.
+- **Domain intelligence** (`runtime/dns_wire.py`, `runtime/domain_intel.py`,
+  `aizee intel`, `aizee_mcp/tools/intel_tools.py`): clean-room rewrite of
+  domain-digger's behavior (AGPL source not vendored) - minimal RFC 1035
+  wire codec with compression safety, DoH resolvers (google/cloudflare/
+  alibaba), iterative authoritative walker (root->TLD->authoritative,
+  bailiwick-checked, UDP->TCP fallback), WHOIS via IANA referral chain,
+  crt.sh cert history + passive subdomains, local IP classification.
+  7 new MCP tools (`domain_resolve`, `domain_walk`, `domain_whois`,
+  `domain_certs`, `domain_subdomains`, `domain_summary`, `ip_info`).
+- **Godot reference**: permanent clone at `refs/godot` (4.8.0-beta,
+  blobless) + lab install `E:\server\tools\godot\Godot_v4.7.2-stable_win64.exe`
+  (verified `4.7.2.stable.official`); pointers in `tech-stack/godot-4.md`.
 
 ### Added (DeepTutor adoption round 2)
 

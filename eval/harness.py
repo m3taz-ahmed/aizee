@@ -164,6 +164,7 @@ class EvalHarness:
                 "eval/rubric.py",
                 "eval/stages.py",
                 "eval/vibe.py",
+                "eval/skill_scenarios.py",
                 "scripts/guard_invariants.py",
                 "scripts/sync_docs.py",
             ],
@@ -193,6 +194,10 @@ class EvalHarness:
         if importlib.util.find_spec("xdist") is not None:
             pytest_cmd += ["-n", str(max(2, min(os.cpu_count() or 4, 12)))]
         results["pytest"] = self._run("pytest", pytest_cmd)
+        results["skill-scenarios"] = self._run(
+            "skill-scenarios",
+            [py, "eval/skill_scenarios.py", "eval/scenarios", "--timeout", "30"],
+        )
         # Supply-chain step: generate_sbom.py can be run beforehand to emit
         # state/sbom.json (CycloneDX) covering OWASP LLM03; check_sbom.py then
         # validates it against state/deny_list.txt. Logic below is unchanged.

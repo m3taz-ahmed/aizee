@@ -59,6 +59,7 @@ register_context_tools = _optional_register("context_tools", "register_context_t
 register_cro_tools = _optional_register("cro_tools", "register_cro_tools")
 register_email_tools = _optional_register("email_tools", "register_email_tools")
 register_freelance_tools = _optional_register("freelance_tools", "register_freelance_tools")
+register_intel_tools = _optional_register("intel_tools", "register_intel_tools")
 register_memory_tools = _optional_register("memory_tools", "register_memory_tools")
 register_policy_tools = _optional_register("policy_tools", "register_policy_tools")
 register_seo_tools = _optional_register("seo_tools", "register_seo_tools")
@@ -84,6 +85,7 @@ __all__ = [
     "register_cro_tools",
     "register_email_tools",
     "register_freelance_tools",
+    "register_intel_tools",
     "register_memory_tools",
     "register_policy_tools",
     "register_seo_tools",

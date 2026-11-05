@@ -1,0 +1,61 @@
+# Behavioral evals for the Goldfish review workflow (EGM schema).
+# `aizee eval eval/scenarios/goldfish-review.yaml`
+scenarios:
+  - scenario_id: goldfish_plans_before_reviewing
+    description: workflow must emit the review plan (split + stages) before any reviewer spawns
+    eval_type: static
+    system_prompt:
+      skill_file: workflows/65-goldfish-review.md
+    turns:
+      - user_input: "Review my design doc"
+        assertions:
+          - type: required_pattern
+            pattern: "semantic split"
+            message: "workflow must discover the spec/plan boundary"
+          - type: required_pattern
+            pattern: "aizee spec review"
+            message: "workflow must route through the deterministic planner"
+          - type: required_pattern
+            pattern: "fresh.*context|zero.?conversation"
+            message: "fresh-context invariant must be stated"
+
+  - scenario_id: goldfish_isolation_invariant
+    description: same-context review must not count as Goldfish
+    eval_type: static
+    system_prompt:
+      skill_file: workflows/65-goldfish-review.md
+    turns:
+      - user_input: "Just review it yourself in this chat"
+        assertions:
+          - type: required_pattern
+            pattern: "NOT a Goldfish review"
+            message: "workflow must forbid same-context reviews"
+
+  - scenario_id: goldfish_artifact_first
+    description: reports go to artifact files, never to chat
+    eval_type: static
+    system_prompt:
+      skill_file: workflows/65-goldfish-review.md
+    turns:
+      - user_input: "Show me the full report inline"
+        assertions:
+          - type: required_pattern
+            pattern: "artifact.first"
+          - type: required_pattern
+            pattern: "consolidated_review_report"
+            message: "consolidated artifact name must exist"
+
+  - scenario_id: goldfish_constraints
+    description: mandatory gates present (one question, convergence cap, design-only)
+    eval_type: static
+    system_prompt:
+      skill_file: workflows/65-goldfish-review.md
+    turns:
+      - user_input: "Ask me ten questions at once"
+        assertions:
+          - type: required_pattern
+            pattern: "ONE question"
+            message: "one-question-per-turn gate must exist"
+          - type: required_pattern
+            pattern: "max_reaudits.*1|max 1 re-audit"
+            message: "convergence cap must exist"

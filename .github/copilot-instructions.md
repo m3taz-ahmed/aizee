@@ -64,9 +64,9 @@ Before declaring done, run from the OS root:
 
 - `ruff check .`
 
-- `mypy` (strict, 205 files)
+- `mypy` (strict, 216 files)
 
-- `aizee test --full` (full suite with coverage, parallel by default — ~127s, 7419 tests, 100% cov)
+- `aizee test --full` (full suite with coverage, parallel by default — ~91s, 7590 tests, 100% cov)
 
 - `python eval/harness.py` (read-only: ruff + mypy + pytest + validate-globals)
 
@@ -134,9 +134,9 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 127 governance modules in `runtime/`.
+- **Runtime Modules** — 132 governance modules in `runtime/`.
 
-- **MCP Server** — `aizee_mcp/` exposes 39 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
+- **MCP Server** — `aizee_mcp/` exposes 46 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
 - **Memory** — `memory/` SQLite + FTS5 + vector store.
 
@@ -185,19 +185,19 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 127 governance modules
+├── runtime/                   # Kernel + 132 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 127 governance modules
-├── aizee_mcp/                 # MCP server (39 tools enabled)
+│   └── ...                    # 132 governance modules
+├── aizee_mcp/                 # MCP server (46 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
-├── skills/                    # 145 persona + lord skills
-├── workflows/                 # 63 trigger-based execution protocols
+├── skills/                    # 151 persona + lord skills
+├── workflows/                 # 66 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
-├── tech-stack/                # 266 version-locked stack references
+├── tech-stack/                # 269 version-locked stack references
 │   └── spec-driven-templates/ # SDD templates (spec/plan/tasks/constitution/checklist)
 └── eval/                      # Agent benchmark harness
 

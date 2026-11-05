@@ -51,6 +51,21 @@ class TestSafeRegex:
         # On Windows we exercise the else-branch implicitly.
         assert _safe_regex_search("abc", "xabc") is True
 
+    def test_windows_search_exception(self, monkeypatch):
+        # Force the no-SIGALRM path and make compiled.search raise -> warn + False.
+        import os
+
+        import runtime.guardian as g
+
+        class _Boom:
+            def search(self, _text):
+                raise RuntimeError("regex engine blew up")
+
+        monkeypatch.setattr(os, "name", "nt")
+        _COMPILED_REGEX_CACHE.clear()
+        _COMPILED_REGEX_CACHE["boom_pat"] = _Boom()
+        assert g._safe_regex_search("boom_pat", "x") is False
+
 
 class TestMissingSentinel:
     def test_falsy(self):

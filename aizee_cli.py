@@ -564,6 +564,27 @@ def cmd_spec(args: argparse.Namespace) -> int:
         codebase = Path(args.codebase) if args.codebase else _project_root(args)
         report = engine.converge_to_code(args.spec_id, codebase)
         print(json.dumps(report, indent=2, default=str))
+    elif args.subcommand == "review":
+        from runtime.spec.review import ReviewPreset, load_document, plan_review
+
+        if not args.file and not args.spec_id:
+            console.print("[red]spec_id or --file required for review[/red]")
+            return 1
+        doc_path = Path(args.file) if args.file else specs_dir / f"{args.spec_id}.plan.md"
+        if not args.file and not doc_path.exists():
+            doc_path = specs_dir / f"{args.spec_id}.md"
+        if not doc_path.exists():
+            console.print(f"[red]Design doc not found:[/red] {doc_path} (pass --file or spec_id)")
+            return 1
+        try:
+            text = load_document(doc_path)
+            preset = ReviewPreset(args.preset) if args.preset else ReviewPreset.INTERACTIVE
+            plan = plan_review(text, preset)
+        except (ValueError, OSError) as exc:
+            console.print(f"[red]Review plan failed:[/red] {exc}")
+            return 1
+        plan["document"] = str(doc_path)
+        print(json.dumps(plan, indent=2, default=str))
     elif args.subcommand == "scaffold":
         if not args.template or not args.title:
             console.print("[red]--template and --title required for scaffold[/red]")
@@ -632,6 +653,67 @@ def cmd_spec(args: argparse.Namespace) -> int:
             console.print(f"[red]{exc}[/red]")
             return 1
         console.print(f"[green]Archived change:[/green] {target}")
+    return 0
+
+
+def cmd_eval(args: argparse.Namespace) -> int:
+    """Run skill behavioral scenarios (static or live)."""
+    from eval.skill_scenarios import format_results, run_dir, run_file
+
+    root = _root(args)
+    target = Path(args.path) if args.path else root / "eval" / "scenarios"
+    if not target.is_absolute():
+        target = root / target
+    kwargs = {"live": args.live, "endpoint": args.endpoint, "model": args.model,
+              "timeout": args.timeout}
+    try:
+        results = run_file(target, root, **kwargs) if target.is_file() else run_dir(target, root, **kwargs)
+    except (ValueError, OSError) as exc:
+        console.print(f"[red]Scenario run failed:[/red] {exc}")
+        return 1
+    report = format_results(results)
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0 if report["failed"] == 0 else 1
+
+
+def cmd_intel(args: argparse.Namespace) -> int:
+    """Domain intelligence: DNS, WHOIS, certs, subdomains, IP info."""
+    from runtime import domain_intel
+
+    try:
+        if args.intel_action == "resolve":
+            resp = domain_intel.doh_query(args.domain, args.type, provider=args.provider,
+                                          timeout=args.timeout)
+            out: dict[str, Any] = {"domain": args.domain, "status": resp.rcode_name, "provider": resp.provider,
+                         "answers": [{"name": a.name, "type": a.rtype, "ttl": a.ttl, "data": a.data}
+                                     for a in resp.answers]}
+        elif args.intel_action == "walk":
+            res = domain_intel.AuthoritativeWalker().walk(args.domain, args.type,
+                                                          timeout=args.timeout)
+            out = {"domain": res.domain, "qtype": res.qtype, "final_code": res.final_code,
+                   "answers": [{"name": a.name, "type": a.rtype, "ttl": a.ttl, "data": a.data}
+                               for a in res.answers],
+                   "trace": [{"server": s.queried, "action": s.action, "detail": s.detail}
+                             for s in res.trace]}
+        elif args.intel_action == "whois":
+            out = domain_intel.whois_lookup(args.domain, timeout=args.timeout)
+        elif args.intel_action == "certs":
+            out = {"domain": args.domain,
+                   "certificates": domain_intel.cert_history(args.domain, timeout=args.timeout)}
+        elif args.intel_action == "subdomains":
+            out = {"domain": args.domain,
+                   "subdomains": domain_intel.enumerate_subdomains(args.domain, timeout=args.timeout)}
+        elif args.intel_action == "ip":
+            out = domain_intel.ip_info(args.domain)
+        elif args.intel_action == "summary":
+            out = domain_intel.domain_summary(args.domain, timeout=args.timeout)
+        else:
+            console.print(f"[red]Unknown intel action:[/red] {args.intel_action}")
+            return 1
+    except Exception as exc:  # ValidationError + transport errors surface uniformly
+        console.print(f"[red]Intel failed:[/red] {exc}")
+        return 1
+    print(json.dumps(out, indent=2, ensure_ascii=False, default=str))
     return 0
 
 
@@ -1068,6 +1150,17 @@ def cmd_skill(args: argparse.Namespace) -> int:
     elif args.skill_subcommand == "link":
         from runtime.harness_exporter import harnesses, resolve_harness_dir
 
+        if args.pack:
+            from runtime.plugin_packager import pack_plugin
+
+            pr = pack_plugin(_root(args), Path(args.pack))
+            if args.json:
+                print(json.dumps(pr.to_dict(), indent=2, ensure_ascii=False))
+            elif pr.ok:
+                console.print(f"[green]Packed[/green] {pr.dest} ({len(pr.files)} files)")
+            else:
+                console.print(f"[red]Pack failed[/red] {pr.error}")
+            return 0 if pr.ok else 1
         skill_src = _root(args) / "SKILL.md"
         if not skill_src.exists():
             console.print("[red]Root SKILL.md not found — cannot link.[/red]")
@@ -2161,11 +2254,27 @@ def main(argv: list[str] | None = None) -> int:
     sp_task.add_parser("context", help="Print the hook-injected contract block")
 
     p_spec = sub.add_parser("spec", help="Spec-driven development commands")
-    p_spec.add_argument("subcommand", choices=["list", "analyze", "converge", "scaffold", "advance", "propose", "changes", "archive"])
+    p_spec.add_argument("subcommand", choices=["list", "analyze", "converge", "scaffold", "advance", "propose", "changes", "archive", "review"])
     p_spec.add_argument("spec_id", nargs="?", default="", help="Spec ID")
     p_spec.add_argument("--codebase", default="", help="Codebase dir for converge")
     p_spec.add_argument("--template", default="", help="Template type for scaffold (spec/plan/tasks)")
     p_spec.add_argument("--title", default="", help="Title for scaffold")
+    p_spec.add_argument("--file", default="", help="Design doc path for review (default: <spec_id>.plan.md)")
+    p_spec.add_argument("--preset", default="", help="Review preset (interactive/uninterrupted/feature_spec/implementation)")
+
+    p_eval = sub.add_parser("eval", help="Run skill behavioral scenarios (EGM-style evals)")
+    p_eval.add_argument("path", nargs="?", default="", help="Scenario yaml file or dir (default: eval/scenarios)")
+    p_eval.add_argument("--live", action="store_true", help="Force live mode (LLM endpoint)")
+    p_eval.add_argument("--endpoint", default="", help="OpenAI-compatible endpoint (or AIZEE_EVAL_ENDPOINT)")
+    p_eval.add_argument("--model", default="", help="Model name (or AIZEE_EVAL_MODEL)")
+    p_eval.add_argument("--timeout", type=float, default=60.0, help="Live request timeout seconds")
+
+    p_intel = sub.add_parser("intel", help="Domain intelligence (DNS/WHOIS/certs/subdomains/IP)")
+    p_intel.add_argument("intel_action", choices=["resolve", "walk", "whois", "certs", "subdomains", "ip", "summary"])
+    p_intel.add_argument("domain", help="Domain name (or IP for the ip action)")
+    p_intel.add_argument("--type", default="A", help="Record type for resolve/walk")
+    p_intel.add_argument("--provider", default="google", help="DoH provider: google|cloudflare|alibaba")
+    p_intel.add_argument("--timeout", type=float, default=5.0, help="Network timeout seconds")
 
     p_audit = sub.add_parser("audit", help="Audit log commands")
     p_audit.add_argument("subcommand", choices=["show", "verify"])
@@ -2318,6 +2427,7 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_install.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_link = sp_skill.add_parser("link", help="Install the root SKILL.md into agent harnesses (all or one)")
     p_skill_link.add_argument("--harness", default="", help="cursor|claude|codex|opencode (default: all)")
+    p_skill_link.add_argument("--pack", default="", help="Write an EGM-style multi-harness plugin bundle to this dir instead of linking")
     p_skill_link.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_lint = sp_skill.add_parser("lint", help="Description lint + trigger-collision detection over all skills")
     p_skill_lint.add_argument("--write-index", action="store_true", help="Regenerate skills/index.json")
@@ -2426,6 +2536,8 @@ def main(argv: list[str] | None = None) -> int:
         "stack": cmd_stack,
         "design": cmd_design,
         "spec": cmd_spec,
+        "eval": cmd_eval,
+        "intel": cmd_intel,
         "audit": cmd_audit,
         "mcp": cmd_mcp,
         "chat": cmd_chat,

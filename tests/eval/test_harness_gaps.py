@@ -67,7 +67,7 @@ class TestHarnessRun:
         with patch.object(EvalHarness, "_run", side_effect=fake_run):
             out = h.run()
         assert out["all_pass"] is True
-        assert set(calls) == {"ruff", "mypy", "pytest", "validate-globals"}
+        assert set(calls) == {"ruff", "mypy", "pytest", "skill-scenarios", "validate-globals"}
 
     def test_full_run_failure(self, tmp_path):
         h = EvalHarness(tmp_path)
