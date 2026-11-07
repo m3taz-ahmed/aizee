@@ -64,6 +64,15 @@ _FAMILY_TOKENS = frozenset(
     }
 )
 _NON_SKILL_FILES = {"README.md", "index.json", "CONTRIBUTING.md", "CHANGELOG.md"}
+# Canonical agentskills.io conventions (vercel-labs/agent-skills adoption):
+# dir-skills use kebab-case names, the definition file is literally
+# `SKILL.md`, and stays under 500 lines — detailed material lives in
+# references/ and gets read on demand (progressive disclosure).
+SKILL_MAX_LINES = 500
+_KEBAB_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+_KEBAB_EXEMPT = {"README", "CONTRIBUTING"}
+# Support dirs that are not dir-skills (reference material, examples, libs).
+_STRUCT_EXEMPT = frozenset({"examples", "references", "templates", "lib", "libs", "scripts"})
 # Single-word triggers too generic to signal competition — "engineer" or
 # "design" shared by two skills does not make them ambiguous; a shared
 # multi-word phrase does.
@@ -197,6 +206,45 @@ def lint_rubric(meta: SkillMeta) -> list[str]:
     return issues
 
 
+def lint_structure(root: Path) -> dict[str, list[str]]:
+    """Canonical SKILL.md conventions (agent-skills spec).
+
+    - dir-skill names are kebab-case
+    - the skill file is the exact uppercase ``SKILL.md``
+    - SKILL.md stays under 500 lines (progressive disclosure: detail goes
+      in references/, not the always-loaded file)
+    """
+    issues: dict[str, list[str]] = {}
+    skills_dir = root / "skills"
+    if not skills_dir.is_dir():
+        return issues
+    for d in sorted(skills_dir.iterdir()):
+        if not d.is_dir() or d.name.startswith((".", "_")) or d.name in _STRUCT_EXEMPT:
+            continue
+        skill_files = [p for p in d.iterdir() if p.name.lower() == "skill.md"]
+        exact = d / "SKILL.md"
+        problems: list[str] = []
+        if not _KEBAB_RE.match(d.name):
+            problems.append(f"dir name '{d.name}' is not kebab-case")
+        if skill_files and not any(p.name == "SKILL.md" for p in skill_files):
+            problems.append("skill file must be named exactly 'SKILL.md' (uppercase)")
+        if not skill_files and any(p.suffix == ".md" for p in d.iterdir()):
+            problems.append("dir-skill missing SKILL.md")
+        if exact.exists():
+            try:
+                n_lines = len(exact.read_text(encoding="utf-8").splitlines())
+            except OSError:
+                n_lines = 0
+            if n_lines > SKILL_MAX_LINES:
+                problems.append(
+                    f"SKILL.md is {n_lines} lines (> {SKILL_MAX_LINES}) — "
+                    "move detail into references/ (progressive disclosure)"
+                )
+        if problems:
+            issues[d.name] = problems
+    return issues
+
+
 def _tokens(text: str) -> set[str]:
     return set(_WORD_RE.findall(text.lower()))
 
@@ -284,11 +332,13 @@ def run_lint(root: Path, write: bool = False) -> dict[str, Any]:
     }
     issue_map = {k: v for k, v in issue_map.items() if v}
     collisions = detect_collisions(metas)
+    structure = lint_structure(root)
     index_path = str(write_index(root, metas)) if write else ""
     return {
-        "ok": not issue_map and not collisions,
+        "ok": not issue_map and not collisions and not structure,
         "skills": len(metas),
         "issues": issue_map,
         "collisions": collisions,
+        "structure": structure,
         "index": index_path,
     }

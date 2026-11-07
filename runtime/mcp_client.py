@@ -578,6 +578,35 @@ class McpClient:
             return {"ok": False, "error": resp["error"]}
         return self._enforce_result(tool_name, {"ok": True, "result": resp.get("result")})
 
+    def list_tools(self) -> dict[str, Any]:
+        """tools/list — the server's live tool surface (freeze/drift checks)."""
+        if not self._is_enabled():
+            return _disabled_result(self.server_name)
+        if not self.config:
+            return {"ok": False, "error": f"MCP server '{self.server_name}' not configured"}
+        try:
+            proc = self._ensure_process()
+            send_lock = _SEND_LOCKS.setdefault(self._key, threading.Lock())
+            with send_lock:
+                resp = self._send(
+                    proc,
+                    {
+                        "jsonrpc": "2.0",
+                        "id": str(uuid.uuid4()),
+                        "method": "tools/list",
+                        "params": {},
+                    },
+                )
+        except Exception as exc:
+            _logger.debug("MCP tools/list failed: %s", exc, exc_info=True)
+            with _PROC_LOCK:
+                self._release_locked()
+            return {"ok": False, "error": str(exc)}
+        if "error" in resp:
+            return {"ok": False, "error": resp["error"]}
+        result = resp.get("result") or {}
+        return {"ok": True, "tools": result.get("tools", [])}
+
     def close(self) -> None:
         """Release the cached process for this server/root."""
         with _PROC_LOCK:

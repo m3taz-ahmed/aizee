@@ -4,14 +4,14 @@
   <p><strong>حول أي مساعد ذكاء اصطناعي إلى مهندسك الرئيسي — سيادة كاملة، جودة صفرية العيوب.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.6.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.6.0">
-    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7559%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7559 اختبار ناجح">
+    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.7.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.6.0">
+    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7624%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7624 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/%D8%B4%D8%AE%D8%B5%D9%8A%D8%A7%D8%AA-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 شخصية">
-    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-151-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="151 مهارة">
+    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-151-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="155 مهارة">
     <img src="https://img.shields.io/badge/%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 سير عمل">
     <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-269-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="269 مرجع تقنية">
   </p>
@@ -40,6 +40,19 @@
 | حواجز حماية موجودة لكن خارج المسار | **v6: الإنفاذ مربوط بـ `Kernel.act()` وكل استدعاء MCP** |
 
 ---
+
+## الجديد في v6.7.0 — تبنّي vercel-labs
+
+من مسح 396 مستودعًا في vercel-labs (28 بدراسة عميقة؛ التقرير في `.ai/vercel-labs-study-2026-11.md`):
+
+- **محرك خطط خاملة** — `aizee plan validate|run|resume`: خطط JSON بأسلوب callscript — بلا eval، تحقق شامل، حدود على fan-out والاستدعاءات، إيقاف/استئناف قابل للتسلسل دون إعادة تنفيذ الخطوات المنجزة، وبصمة `plan_hash` للتدقيق.
+- **قفل المهارات** — `skills-lock.json` يثبّت كل مهارة ببصمة مجلدها؛ `aizee skill lock-check` يكشف التعديل/الحذف/غير المقفل، و`lock-update` يعيد البناء.
+- **lint مواصفات SKILL.md** — أسماء kebab-case، ملف `SKILL.md` بالضبط، حد 500 سطر (progressive disclosure) داخل `aizee skill lint`.
+- **تجميد سطح أدوات MCP** — `aizee mcp freeze <server> [--check]` يقفل تعريفات الأدوات ويكشف أي أداة مضافة/محذوفة/متغيّرة.
+- **بوابة انحراف الدوكس** — `aizee check-docs` يتحقق من روابط `wiki path#symbol refs` (أسلوب lat.md).
+- **كتالوج models.dev أوفلاين** — `aizee models --catalog [--query]`: 886 نموذجًا/12 مزوّدًا من نسخة مثبّتة.
+- **عقد الأخطاء** — `AizeeError.scope`/`public` + `to_public_dict()` لتنقية أخطاء MCP/CLI.
+- **طبقة التفعيل** — كل قدرة موصولة للاستخدام التلقائي مش مجرد مثبّتة: قسم `Command Surface & Auto-Triggers` في `AGENTS.md` (ينتشر لكل محوّلات الوكلاء) + 4 مهارات trigger (`inert-plan-runner`، `mcp-surface-integrity`، `docs-drift-check`، `skill-lock-integrity`) عشان كشف الشخصيات يقترح الأمر الصح في الوقت الصح، وقواعد أحداث تشغّل البوابات (بعد التثبيت → lock-check، تغيير MCP → freeze --check، تعديل دوكس → check-docs) بدون ما تسأل.
 
 ## الجديد في v6.1.0 — سطح أخف وأصدق
 

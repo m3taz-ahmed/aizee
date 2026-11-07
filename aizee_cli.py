@@ -1002,9 +1002,13 @@ def cmd_mcp(args: argparse.Namespace) -> int:
             cmd.append("--check")
         return subprocess.call(cmd, cwd=str(root))
 
+    if args.server == "freeze":
+        return _cmd_mcp_freeze(args)
+
     if not args.server or not args.tool:
         console.print("[red]Usage: aizee mcp <server> <tool> [--args '...'][/red]")
         console.print("[cyan]       aizee mcp sync [--check][/cyan]")
+        console.print("[cyan]       aizee mcp freeze <server> [--check][/cyan]")
         return 1
 
     from runtime.mcp_client import McpClient
@@ -1020,6 +1024,117 @@ def cmd_mcp(args: argparse.Namespace) -> int:
     result = client.call_tool(args.tool, arguments)
     print(json.dumps(result, indent=2, default=str))
     return 0 if result.get("ok") else 1
+
+
+def _cmd_mcp_freeze(args: argparse.Namespace) -> int:
+    """Freeze or drift-check an MCP server's tool surface (mcp-to-ai-sdk)."""
+    from runtime.mcp_client import McpClient
+    from runtime.mcp_freeze import DEFAULT_LOCK, check_surface, write_lock
+
+    server = args.tool
+    if not server:
+        console.print("[red]Usage: aizee mcp freeze <server> [--check][/red]")
+        return 1
+    client = McpClient(server, _root(args))
+    if not client.is_configured():
+        console.print(f"[red]MCP server '{server}' not configured[/red]")
+        return 1
+    tools_result = client.list_tools()
+    tools = tools_result.get("tools") or []
+    lock = _root(args) / DEFAULT_LOCK
+    if args.check:
+        report = check_surface(server, tools, lock)
+        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        if not report.ok:
+            console.print(
+                f"[red]drift[/red] +{len(report.added)}/-{len(report.removed)} "
+                f"changed:{len(report.changed)}"
+            )
+        return 0 if report.ok else 1
+    path = write_lock(lock, server, tools)
+    console.print(f"[green]frozen[/green] {len(tools)} tools → {path}")
+    return 0
+
+
+def cmd_plan(args: argparse.Namespace) -> int:
+    """Validate/run/resume inert JSON plans (callscript-style)."""
+    from runtime.call_plan import PlanState, run_plan, validate_plan
+
+    plan_path = Path(args.plan_file or args.file)
+    try:
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        console.print(f"[red]cannot read plan: {exc}[/red]")
+        return 1
+    if args.plan_action == "validate":
+        report = validate_plan(plan)
+        if args.json:
+            print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+            return 0 if report.ok else 1
+        status = "[green]valid[/green]" if report.ok else "[red]invalid[/red]"
+        console.print(f"plan {report.plan_hash}: {status}, tools={report.tools_used}")
+        for issue in report.issues:
+            console.print(f"  [red]s{issue.step}[/red] {issue.code}: {issue.message}")
+        return 0 if report.ok else 1
+    # run / resume — mount a conservative builtin tool surface
+    tools = _plan_tools()
+    state = None
+    if args.plan_action == "resume":
+        try:
+            state = PlanState.from_dict(json.loads(Path(args.file).read_text(encoding="utf-8")))
+        except (OSError, json.JSONDecodeError) as exc:
+            console.print(f"[red]cannot read state: {exc}[/red]")
+            return 1
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    result = run_plan(plan, tools, state=state, max_calls=args.max_calls)
+    if args.json:
+        print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False, default=str))
+    else:
+        console.print(f"status: {result.status}  calls: {result.calls}  value: {result.value!r}")
+        if result.error:
+            console.print(f"  [red]{result.error.code}[/red] {result.error.message}")
+        if result.status == "suspended":
+            state_file = plan_path.with_suffix(".state.json")
+            state_file.write_text(json.dumps(result.state.to_dict(), indent=2))
+            console.print(f"[cyan]state → {state_file} (resume: aizee plan resume {state_file} --plan-file {plan_path})[/cyan]")
+    return 0 if result.status == "completed" else 1
+
+
+def _plan_tools() -> dict[str, Any]:
+    """Builtin plan tool surface — read-only helpers, no side effects."""
+    from runtime.models_catalog import load_catalog
+
+    return {
+        "echo": lambda **kw: kw,
+        "add": lambda a, b: a + b,
+        "mul": lambda a, b: a * b,
+        "upper": lambda s: str(s).upper(),
+        "skill_count": lambda: len(list((_root_ns() / "skills").glob("*.md"))),
+        "catalog_count": lambda: len(load_catalog(_root_ns())),
+    }
+
+
+def _root_ns() -> Path:
+    from config import discover_root
+
+    return discover_root()
+
+
+def cmd_check_docs(args: argparse.Namespace) -> int:
+    """Validate [[file#symbol]] links across markdown docs (lat.md-style)."""
+    from runtime.doc_links import check_links
+
+    report = check_links(_root(args))
+    if args.json:
+        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        return 0 if report.ok else 1
+    console.print(
+        f"{report.files} docs, {report.links} links — "
+        f"[{'green' if report.ok else 'red'}]{len(report.issues)} broken[/]"
+    )
+    for issue in report.issues[:50]:
+        console.print(f"  [red]{issue.source}[/red] → {issue.target}: {issue.reason}")
+    return 0 if report.ok else 1
 
 
 def cmd_chat(args: argparse.Namespace) -> int:
@@ -1219,6 +1334,31 @@ def cmd_skill(args: argparse.Namespace) -> int:
         return 0 if scan_report["ok"] else 1
     elif args.skill_subcommand == "lifecycle":
         return _cmd_skill_lifecycle(k, args)
+    elif args.skill_subcommand == "lock-check":
+        from runtime.skill_lock import SkillLock
+
+        lock_rep = SkillLock(_root(args)).check()
+        if args.json:
+            print(json.dumps(lock_rep.to_dict(), indent=2, ensure_ascii=False))
+            return 0 if lock_rep.ok else 1
+        console.print(
+            f"{lock_rep.locked} locked — "
+            f"[{'red' if lock_rep.changed else 'green'}]{len(lock_rep.changed)} changed[/], "
+            f"{len(lock_rep.missing)} missing, {len(lock_rep.extra)} unlocked"
+        )
+        for n in lock_rep.changed:
+            console.print(f"  [yellow]changed[/yellow] {n}")
+        for n in lock_rep.missing:
+            console.print(f"  [red]missing[/red] {n}")
+        for n in lock_rep.extra:
+            console.print(f"  [dim]unlocked[/dim] {n}")
+        return 0 if lock_rep.ok else 1
+    elif args.skill_subcommand == "lock-update":
+        from runtime.skill_lock import SkillLock
+
+        locked_n = SkillLock(_root(args)).record_all_local()
+        console.print(f"[green]skills-lock.json updated[/green] — {locked_n} skills locked")
+        return 0
     return 0
 
 
@@ -1914,6 +2054,38 @@ def cmd_models(args: argparse.Namespace) -> int:
     """List the model routing catalog with tiers and costs."""
     from runtime.model_router import _MODELS
 
+    if getattr(args, "catalog", False):
+        from runtime.models_catalog import catalog_summary, find_model, load_catalog
+
+        entries = load_catalog(_root(args))
+        if getattr(args, "query", None):
+            entries = find_model(entries, args.query)
+        if args.json:
+            print(json.dumps(
+                {"summary": catalog_summary(entries),
+                 "models": [e.to_dict() for e in entries]},
+                indent=2, ensure_ascii=False))
+            return 0
+        table = Table(title=f"models.dev catalog ({len(entries)} models)")
+        table.add_column("Model", style="cyan")
+        table.add_column("Provider", style="green")
+        table.add_column("Ctx", justify="right")
+        table.add_column("$/1M in", justify="right")
+        table.add_column("$/1M out", justify="right")
+        table.add_column("Tools")
+        table.add_column("Reasoning")
+        for e in entries[:200]:
+            table.add_row(
+                e.model_id, e.provider,
+                str(e.context or "-"),
+                f"{e.input_cost:.3f}" if e.input_cost is not None else "-",
+                f"{e.output_cost:.3f}" if e.output_cost is not None else "-",
+                "yes" if e.tools else "-",
+                "yes" if e.reasoning else "-",
+            )
+        console.print(table)
+        return 0
+
     if args.json:
         print(json.dumps([m.to_dict() for m in _MODELS], indent=2, ensure_ascii=False))
         return 0
@@ -2338,6 +2510,20 @@ def main(argv: list[str] | None = None) -> int:
     # --- models ---
     p_models = sub.add_parser("models", help="List the model routing catalog")
     p_models.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_models.add_argument("--catalog", action="store_true", help="Show the offline models.dev catalog instead of the routing table")
+    p_models.add_argument("--query", default="", help="Filter catalog by model id/name (with --catalog)")
+
+    # --- plan (callscript-style inert JSON plans) ---
+    p_plan = sub.add_parser("plan", help="Validate/run an inert JSON plan (callscript-style)")
+    p_plan.add_argument("plan_action", choices=["validate", "run", "resume"], help="validate a plan file, run it, or resume a suspended state")
+    p_plan.add_argument("file", help="Plan JSON file (or state JSON for resume)")
+    p_plan.add_argument("--plan-file", dest="plan_file", default="", help="Plan JSON file for resume")
+    p_plan.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_plan.add_argument("--max-calls", type=int, default=200, help="Tool-call budget")
+
+    # --- check-docs (lat.md-style [[file#symbol]] drift) ---
+    p_docs = sub.add_parser("check-docs", help="Validate [[path#symbol]] doc→code links (lat.md-style)")
+    p_docs.add_argument("--json", action="store_true", help="Machine-readable output")
 
     # --- gateway ---
     p_gateway = sub.add_parser("gateway", help="Governed LLM proxy (failover + enforcement on path)")
@@ -2434,6 +2620,9 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_lint.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_scan = sp_skill.add_parser("scan", help="Security-scan skills for prompt-injection/exfil patterns")
     p_skill_scan.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_lcheck = sp_skill.add_parser("lock-check", help="Verify installed skills against skills-lock.json hashes")
+    p_skill_lcheck.add_argument("--json", action="store_true", help="Machine-readable output")
+    sp_skill.add_parser("lock-update", help="Rebuild skills-lock.json from on-disk skills")
 
     # --- hooks ---
     p_hooks = sub.add_parser("hooks", help="Agent-harness hooks: install | status | fire")
@@ -2538,6 +2727,8 @@ def main(argv: list[str] | None = None) -> int:
         "spec": cmd_spec,
         "eval": cmd_eval,
         "intel": cmd_intel,
+        "plan": cmd_plan,
+        "check-docs": cmd_check_docs,
         "audit": cmd_audit,
         "mcp": cmd_mcp,
         "chat": cmd_chat,

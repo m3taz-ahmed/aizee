@@ -1,5 +1,48 @@
 # Changelog
 
+## [6.7.0] - 2026-11-07 (vercel-labs Adoption Pass - inert plans / skill lock / MCP freeze / doc links / offline catalog)
+
+### Added (vercel-labs study adoption round — 396 repos surveyed, 28 deep-studied)
+
+- **Inert plan engine** (`runtime/call_plan.py`, `aizee plan
+  validate|run|resume`): callscript-style "Code Mode without the sandbox"
+  — agents author JSON plans, never executable code. Tiny safe expression
+  DSL (no eval), all-issues validation, bounded fan-outs/call budgets,
+  serializable suspend/resume that never re-runs settled side effects,
+  content-addressed `plan_hash` for approval gates.
+- **Skill lock file** (`runtime/skill_lock.py`, `skills-lock.json`, `aizee
+  skill lock-check|lock-update`): folder content-hashes pin every
+  installed skill (skills CLI `skillFolderHash` equivalent); drift check
+  reports changed/missing/unlocked skills.
+- **Canonical SKILL.md lint** (`runtime/skill_lint.py:lint_structure`):
+  agent-skills spec rules — kebab-case dirs, exact `SKILL.md` filename,
+  500-line cap with progressive-disclosure guidance. Wired into
+  `aizee skill lint`.
+- **MCP tool-surface freeze** (`runtime/mcp_freeze.py`, `aizee mcp freeze
+  <server> [--check]`): snapshot-lock tool definitions, detect
+  added/removed/schema-changed tools — blocks silent capability drift and
+  tool-definition prompt injection (mcp-to-ai-sdk concept).
+- **Doc↔code drift checker** (`runtime/doc_links.py`, `aizee check-docs`):
+  lat.md-style `wiki path#symbol refs` refs validated across markdown —
+  file existence + per-language symbol definitions, root-anchored with
+  doc-relative fallback, `@aizee:` code→doc backlinks extracted.
+- **Offline models.dev catalog** (`resources/models_catalog.json`,
+  `runtime/models_catalog.py`, `aizee models --catalog [--query]`):
+  886 models across 12 providers — costs, context, tool/reasoning flags —
+  vendored version-locked snapshot, zero network at query time.
+- **Error contract** (`runtime/schemas.py`): `AizeeError` gains `scope` +
+  `public` fields and `to_public_dict()` redaction — vercel-labs/error
+  contract; non-public errors collapse to `INTERNAL_ERROR` for MCP/CLI
+  envelopes.
+- `McpClient.list_tools()` — `tools/list` RPC for freeze/surface checks.
+- **Activation layer** (`AGENTS.md` Command Surface + 4 trigger skills):
+  capabilities are wired for automatic use — `skills/inert-plan-runner`,
+  `skills/mcp-surface-integrity`, `skills/docs-drift-check`,
+  `skills/skill-lock-integrity` carry trigger phrases so persona
+  detection surfaces the right command, and event rules fire the gates
+  (post skill install → `skill lock-update`+`lock-check`; MCP config
+  change → `mcp freeze --check`; doc edit → `check-docs`).
+
 ## [6.6.0] - 2026-11-06 (Repo-Study Adoption Pass - EGM goldfish review / domain-intel / multi-harness pack / Godot ref)
 
 ### Added (repo-study 2026-11 adoption round)

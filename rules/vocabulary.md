@@ -120,3 +120,6 @@
 [UNT-04]: Sanitize handles/refs you pass back into tools.
 [UNT-05]: Real sessions amplify blast radius — suspicion scales with privilege.
 [UNT-06]: Runtime defense modules exist; this doctrine governs agent behavior.
+
+[TRIG]
+[TRIG-01]: Every capability ships with an activation channel: a trigger-bound skill, a Command Surface row, and where relevant an event rule (post-install lock-check, pre-MCP-trust freeze --check, post-doc-edit check-docs). A feature without a trigger is a feature that will never be used.

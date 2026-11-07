@@ -5,14 +5,14 @@
   <p><strong>Your AI agent ships hallucinated APIs and secrets.<br>aiZee blocks them — enforced, not advised.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/Version-6.6.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.6.0">
-    <img src="https://img.shields.io/badge/Tests-7559%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7559 passed">
+    <img src="https://img.shields.io/badge/Version-6.7.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.6.0">
+    <img src="https://img.shields.io/badge/Tests-7624%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7624 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-151-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="151 Skills">
+    <img src="https://img.shields.io/badge/Skills-155-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="155 Skills">
     <img src="https://img.shields.io/badge/Workflows-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-269-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="269 Tech-Stack refs">
   </p>
@@ -61,6 +61,37 @@ A **zero-compromise, version-controlled operating system** that sits between you
 | Guardrails that exist but aren't on the path | **v6: enforcement wired into `Kernel.act()` + every MCP call** |
 
 ---
+
+## What's New in v6.7.0 — vercel-labs Adoption Pass
+
+From a survey of all 396 vercel-labs repos (28 deep-studied; report in
+`.ai/vercel-labs-study-2026-11.md`):
+
+- **Inert plan engine** — `aizee plan validate|run|resume` runs
+  callscript-style JSON plans: no eval, all-issues validation, bounded
+  fan-outs/call budgets, suspend/resume that never re-runs settled side
+  effects, auditable `plan_hash`.
+- **Skill lock + drift** — `skills-lock.json` pins every skill by folder
+  hash (`skillFolderHash` equivalent); `aizee skill lock-check` reports
+  changed/missing/unlocked, `lock-update` rebuilds.
+- **Canonical SKILL.md lint** — kebab-case dirs, exact `SKILL.md`, 500-line
+  progressive-disclosure cap, folded into `aizee skill lint`.
+- **MCP tool-surface freeze** — `aizee mcp freeze <server> [--check]`
+  snapshot-locks tool definitions and detects added/removed/changed tools.
+- **Doc→code drift gate** — `aizee check-docs` validates
+  `wiki path#symbol refs` links across docs (lat.md-style).
+- **Offline models.dev catalog** — `aizee models --catalog [--query]`:
+  886 models/12 providers vendored snapshot.
+- **Error contract** — `AizeeError.scope`/`public` + `to_public_dict()`
+  redaction for safe MCP/CLI envelopes.
+- **Activation layer** — every capability is wired for automatic use, not
+  just installed: a `Command Surface & Auto-Triggers` section in
+  `AGENTS.md` (propagated to all agent adapters) + four trigger skills
+  (`inert-plan-runner`, `mcp-surface-integrity`, `docs-drift-check`,
+  `skill-lock-integrity`) so persona-detection surfaces the right
+  command at the right moment, and event rules fire the gates
+  (post-install → lock-check, MCP change → freeze --check, doc edit →
+  check-docs) without being asked.
 
 ## What's New in v6.6.0 — Repo-Study Adoption Pass
 
@@ -221,7 +252,7 @@ aizee status    # Current persona, skills, budget
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 132 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 137 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -231,7 +262,7 @@ aizee status    # Current persona, skills, budget
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
 ├── aizee_mcp/               # MCP server (46 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
-├── skills/                  # 151 persona + lord skills
+├── skills/                  # 155 persona + lord skills
 ├── workflows/               # 66 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # Version-locked stack references

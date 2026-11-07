@@ -53,6 +53,9 @@ class TestAuditKey:
     def test_stored_key_reused(self, monkeypatch, tmp_path):
         monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
         monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)
+        # Hermetic: the default key file lives at AIZEE_ROOT/state/audit.key —
+        # sharing the real root across xdist workers races regeneration.
+        monkeypatch.setenv("AIZEE_ROOT", str(tmp_path))
         audit._audit_key_cache = None
         k1 = _get_audit_key()
         audit._audit_key_cache = None

@@ -58,6 +58,32 @@ license: MIT
 
 
 
+## Command Surface & Auto-Triggers `[TRIG-01]`
+
+Every built-in capability below is installed and verified. Prefer the matching command over ad-hoc scripts — these are the supported paths.
+
+| Command | Use when |
+|---------|----------|
+| `aizee plan validate\|run\|resume <file>` | Multi-step tool orchestration, fan-outs, approval gates — author inert JSON plans, never executable code (see `skills/inert-plan-runner.md`) |
+| `aizee skill lock-check` / `lock-update` | After installing/updating skills, and before trusting the skill library (see `skills/skill-lock-integrity.md`) |
+| `aizee mcp freeze <srv> [--check]` | After MCP config changes and before trusting an MCP server (see `skills/mcp-surface-integrity.md`) |
+| `aizee check-docs` | After editing markdown docs — validates `[[file#symbol]]` refs (see `skills/docs-drift-check.md`) |
+| `aizee models [--catalog] [--query]` | Choosing a model, checking cost/context/reasoning — offline catalog, no network needed |
+| `aizee spec review <spec\|--file>` | Spec/plan review before implementation (EGM goldfish pipeline) |
+| `aizee intel <domain>` | Domain intelligence: DNS/WHOIS/certs/subdomains/IP |
+| `aizee eval` | Behavioral skill-scenario checks after changing skills/workflows |
+| `aizee skill link --pack <dir>` | Packaging skills for other agent harnesses (claude/codex/cursor/opencode) |
+| `aizee find <q>` / `aizee goal <obj>` | Discovering the right skill/workflow for a task |
+
+**Event-triggered rules (fire without being asked):**
+
+- When a task's domain matches none of the loaded persona skills → run `aizee find <task description>` before implementing; 155 skills + 80 workflows are indexed (name + triggers + description) even when not persona-mapped.
+- After adding/installing a skill → run `aizee skill lock-update`, then `aizee skill lock-check`.
+- After changing an MCP server config → run `aizee mcp freeze <server> --check`.
+- After editing `*.md` docs → run `aizee check-docs`.
+- Orchestrating 3+ dependent tool calls or an approval checkpoint → use `aizee plan`, not a script.
+- Before trusting generated orchestration → `aizee plan validate` first, cite `plan_hash` for approvals.
+
 ## Context & Memory
 
 - Detect stack from `package.json` / `composer.json` and load matching `tech-stack/<pkg>-<ver>.md` only after reading the lockfile for the exact version (`[VER-01]`).
@@ -146,7 +172,7 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 132 governance modules in `runtime/`.
+- **Runtime Modules** — 137 governance modules in `runtime/`.
 
 - **MCP Server** — `aizee_mcp/` exposes 46 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
@@ -197,16 +223,16 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 132 governance modules
+├── runtime/                   # Kernel + 137 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 132 governance modules
+│   └── ...                    # 137 governance modules
 ├── aizee_mcp/                 # MCP server (46 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
-├── skills/                    # 151 persona + lord skills
+├── skills/                    # 155 persona + lord skills
 ├── workflows/                 # 66 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
 ├── tech-stack/                # 269 version-locked stack references

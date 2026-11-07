@@ -732,3 +732,58 @@ def test_call_tool_response_error_after_successful_init(tmp_path: Path) -> None:
                 result = client._call_tool_sync("my_tool", {})
     assert result["ok"] is False
     assert result["error"] == "tool error"
+
+# ---------------------------------------------------------------------------
+# list_tools (tool-surface freeze support)
+# ---------------------------------------------------------------------------
+
+
+def test_list_tools_happy(tmp_path: Path) -> None:
+    client = McpClient("srv", tmp_path, enforce=False)
+    client.config = {"command": "echo"}
+    proc = MagicMock()
+    resp = {"result": {"tools": [{"name": "t1"}, {"name": "t2"}]}}
+    with patch.object(client, "_ensure_process", return_value=proc), \
+         patch.object(client, "_send", return_value=resp):
+        out = client.list_tools()
+    assert out["ok"] is True and len(out["tools"]) == 2
+
+
+def test_list_tools_no_result(tmp_path: Path) -> None:
+    client = McpClient("srv", tmp_path, enforce=False)
+    client.config = {"command": "echo"}
+    with patch.object(client, "_ensure_process", return_value=MagicMock()), \
+         patch.object(client, "_send", return_value={"result": None}):
+        assert client.list_tools() == {"ok": True, "tools": []}
+
+
+def test_list_tools_rpc_error(tmp_path: Path) -> None:
+    client = McpClient("srv", tmp_path, enforce=False)
+    client.config = {"command": "echo"}
+    with patch.object(client, "_ensure_process", return_value=MagicMock()), \
+         patch.object(client, "_send", return_value={"error": {"code": -1}}):
+        out = client.list_tools()
+    assert out["ok"] is False
+
+
+def test_list_tools_send_raises(tmp_path: Path) -> None:
+    client = McpClient("srv", tmp_path, enforce=False)
+    client.config = {"command": "echo"}
+    with patch.object(client, "_ensure_process", return_value=MagicMock()), \
+         patch.object(client, "_send", side_effect=RuntimeError("pipe dead")), \
+         patch.object(client, "_release_locked"):
+        out = client.list_tools()
+    assert out["ok"] is False and "pipe dead" in out["error"]
+
+
+def test_list_tools_not_configured(tmp_path: Path) -> None:
+    client = McpClient("ghost", tmp_path, enforce=False)
+    out = client.list_tools()
+    assert out["ok"] is False and "not configured" in out["error"]
+
+
+def test_list_tools_disabled(tmp_path: Path, monkeypatch) -> None:
+    client = McpClient("srv", tmp_path, enforce=False)
+    monkeypatch.setattr(client, "_is_enabled", lambda: False)
+    out = client.list_tools()
+    assert out["ok"] is False

@@ -1,0 +1,935 @@
+{
+  "skills": {
+    "accessibility-auditor": {
+      "hash": "c8c9bdfa68a6744f",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/accessibility-auditor.md",
+      "source": "local"
+    },
+    "affiliate-manager": {
+      "hash": "18370359aa45fe48",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/affiliate-manager",
+      "source": "local"
+    },
+    "agent-governance-lord": {
+      "hash": "8d7abc099783db86",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/agent-governance-lord",
+      "source": "local"
+    },
+    "agent-orchestration-lord": {
+      "hash": "ce15e5324ebf09e4",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/agent-orchestration-lord",
+      "source": "local"
+    },
+    "ai-agents-architect": {
+      "hash": "940664406543fcd0",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ai-agents-architect.md",
+      "source": "local"
+    },
+    "ai-code-review-lord": {
+      "hash": "153ea96dd8493641",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ai-code-review-lord",
+      "source": "local"
+    },
+    "ai-ml-lord": {
+      "hash": "1aae62846a5b93d8",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ai-ml-lord",
+      "source": "local"
+    },
+    "ai-observability-lord": {
+      "hash": "d4ec79cd5b2dc0ef",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ai-observability-lord",
+      "source": "local"
+    },
+    "ai-redteam-lord": {
+      "hash": "9b8625b56a23406d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ai-redteam-lord",
+      "source": "local"
+    },
+    "aizee-lite": {
+      "hash": "5a1b81e6ea40ae89",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/aizee-lite",
+      "source": "local"
+    },
+    "api-architect": {
+      "hash": "7ac58404a83693c5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/api-architect.md",
+      "source": "local"
+    },
+    "api-versioning": {
+      "hash": "51179c271b367a38",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/api-versioning.md",
+      "source": "local"
+    },
+    "arabic-dialect-lord": {
+      "hash": "677bca439008701c",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/arabic-dialect-lord",
+      "source": "local"
+    },
+    "arabic-freelance": {
+      "hash": "b1c6c59cf80a4ffc",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/arabic-freelance",
+      "source": "local"
+    },
+    "b2b-cold-outreach": {
+      "hash": "2f6224f27f3fc8c4",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/b2b-cold-outreach",
+      "source": "local"
+    },
+    "backend-api-expert": {
+      "hash": "ac054f585deb92b5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/backend-api-expert.md",
+      "source": "local"
+    },
+    "backend-design": {
+      "hash": "5bfa25af932bbdd0",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/backend-design.md",
+      "source": "local"
+    },
+    "backend-frameworks-lord": {
+      "hash": "31a0dd4b8d7db04a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/backend-frameworks-lord",
+      "source": "local"
+    },
+    "brainstorming": {
+      "hash": "dd3b4123f67c1e9a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/brainstorming.md",
+      "source": "local"
+    },
+    "brand-kit": {
+      "hash": "5ce17051707e916c",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/brand-kit",
+      "source": "local"
+    },
+    "browser-automation": {
+      "hash": "720b5b51785d8f7f",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/browser-automation",
+      "source": "local"
+    },
+    "browser-extension-builder": {
+      "hash": "f41ea0a968727dba",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/browser-extension-builder.md",
+      "source": "local"
+    },
+    "clean-code-guard": {
+      "hash": "ec7849d3c9627c66",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/clean-code-guard.md",
+      "source": "local"
+    },
+    "cli-first-access": {
+      "hash": "0a9a918363666a52",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/cli-first-access.md",
+      "source": "local"
+    },
+    "client-onboarding": {
+      "hash": "f55eb309cf6a689e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/client-onboarding",
+      "source": "local"
+    },
+    "client-retention": {
+      "hash": "e5bd79ee9d946d75",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/client-retention",
+      "source": "local"
+    },
+    "cloud-platforms-lord": {
+      "hash": "6cef6cb178c773d5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/cloud-platforms-lord",
+      "source": "local"
+    },
+    "code-reviewer": {
+      "hash": "95a165af922359ce",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/code-reviewer.md",
+      "source": "local"
+    },
+    "community-builder": {
+      "hash": "f45b526fe3df1a1f",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/community-builder",
+      "source": "local"
+    },
+    "compliance-lord": {
+      "hash": "1e3374b19c6ec114",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/compliance-lord",
+      "source": "local"
+    },
+    "content-marketing": {
+      "hash": "f5f7d9c541164ea4",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/content-marketing",
+      "source": "local"
+    },
+    "content-quality-lord": {
+      "hash": "426be51d8dd50843",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/content-quality-lord",
+      "source": "local"
+    },
+    "context-compressor": {
+      "hash": "218095b808032c4b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/context-compressor.md",
+      "source": "local"
+    },
+    "contract-studio": {
+      "hash": "c5522ee4d4cc8850",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/contract-studio",
+      "source": "local"
+    },
+    "copy-frameworks": {
+      "hash": "bac1c07f1288c66b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/copy-frameworks",
+      "source": "local"
+    },
+    "cro-optimization": {
+      "hash": "8d13b7b1d6848809",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/cro-optimization",
+      "source": "local"
+    },
+    "cv-writer": {
+      "hash": "ad8066381cddbf8d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/cv-writer",
+      "source": "local"
+    },
+    "data-engineer": {
+      "hash": "67672d0336d721c4",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/data-engineer.md",
+      "source": "local"
+    },
+    "database-lord": {
+      "hash": "a139455137790e61",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/database-lord",
+      "source": "local"
+    },
+    "database-migration-lord": {
+      "hash": "9d0633341eca5274",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/database-migration-lord",
+      "source": "local"
+    },
+    "design-innovation-lord": {
+      "hash": "15b3e498ccf93d43",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/design-innovation-lord",
+      "source": "local"
+    },
+    "design-md-lord": {
+      "hash": "85471d98de4a03bf",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/design-md-lord",
+      "source": "local"
+    },
+    "design-research": {
+      "hash": "85517633f57fcec6",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/design-research",
+      "source": "local"
+    },
+    "design-taste": {
+      "hash": "b2c9dcffcda40526",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/design-taste.md",
+      "source": "local"
+    },
+    "devops-engineer": {
+      "hash": "2f28021642f8fd19",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/devops-engineer.md",
+      "source": "local"
+    },
+    "devops-lord": {
+      "hash": "987eed0ac951392e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/devops-lord",
+      "source": "local"
+    },
+    "dispute-resolution": {
+      "hash": "7fd71980f7776a63",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/dispute-resolution",
+      "source": "local"
+    },
+    "docs-drift-check": {
+      "hash": "795d9de24630e29e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/docs-drift-check.md",
+      "source": "local"
+    },
+    "docs-guard": {
+      "hash": "32471f742e2b87ea",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/docs-guard.md",
+      "source": "local"
+    },
+    "docx": {
+      "hash": "a5a169258d6fce09",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/docx.md",
+      "source": "local"
+    },
+    "durable-execution-lord": {
+      "hash": "7cb8534b61c60c04",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/durable-execution-lord",
+      "source": "local"
+    },
+    "email-marketing": {
+      "hash": "a4ad97d94e332bef",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/email-marketing",
+      "source": "local"
+    },
+    "eval-reliability-lord": {
+      "hash": "36eb78828700e969",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/eval-reliability-lord",
+      "source": "local"
+    },
+    "filament-performance-lord": {
+      "hash": "0d0861e1ac12ece3",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/filament-performance-lord",
+      "source": "local"
+    },
+    "flutter-architect": {
+      "hash": "6955e69a5cf69340",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/flutter-architect",
+      "source": "local"
+    },
+    "flutter-design": {
+      "hash": "74d121cc29bf1f53",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/flutter-design",
+      "source": "local"
+    },
+    "flutter-developer": {
+      "hash": "c42c4375ce583847",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/flutter-developer",
+      "source": "local"
+    },
+    "freelance-financials": {
+      "hash": "7f631814d15f6b84",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/freelance-financials",
+      "source": "local"
+    },
+    "freelance-niche": {
+      "hash": "b72dde502b57a1a6",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/freelance-niche",
+      "source": "local"
+    },
+    "freelance-platforms": {
+      "hash": "55b7f9003dd837be",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/freelance-platforms",
+      "source": "local"
+    },
+    "frontend-frameworks-lord": {
+      "hash": "915d1f685ef09059",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/frontend-frameworks-lord",
+      "source": "local"
+    },
+    "frontend-ui-expert": {
+      "hash": "4441dd9301684846",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/frontend-ui-expert.md",
+      "source": "local"
+    },
+    "fullstack-optimizer": {
+      "hash": "c64294a453d1ee29",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/fullstack-optimizer.md",
+      "source": "local"
+    },
+    "game-architect": {
+      "hash": "d84adb2cd525e7da",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-architect",
+      "source": "local"
+    },
+    "game-design-lord": {
+      "hash": "28485dd51111d7c1",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-design-lord",
+      "source": "local"
+    },
+    "game-economy-lord": {
+      "hash": "69efc32215396bdc",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-economy-lord",
+      "source": "local"
+    },
+    "game-level-design-lord": {
+      "hash": "b3b10f38cd89e176",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-level-design-lord",
+      "source": "local"
+    },
+    "game-narrative-lord": {
+      "hash": "2099542b58a2edb5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-narrative-lord",
+      "source": "local"
+    },
+    "game-production-lord": {
+      "hash": "b4873f1307965db7",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-production-lord",
+      "source": "local"
+    },
+    "game-qa-lord": {
+      "hash": "9f22bb0d8909ad6d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/game-qa-lord",
+      "source": "local"
+    },
+    "gitops-lord": {
+      "hash": "23e810419cb31a6e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/gitops-lord",
+      "source": "local"
+    },
+    "google-play-warlord": {
+      "hash": "afca631275dc0baa",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/google-play-warlord",
+      "source": "local"
+    },
+    "graphify": {
+      "hash": "44a7be6705ff4be0",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/graphify.md",
+      "source": "local"
+    },
+    "growth-loops": {
+      "hash": "a473a7267977817a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/growth-loops",
+      "source": "local"
+    },
+    "gsap-animated-frontend": {
+      "hash": "918bb29ac8ba4b24",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/gsap-animated-frontend",
+      "source": "local"
+    },
+    "image-to-code": {
+      "hash": "37a1178dd1cbbdd7",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/image-to-code.md",
+      "source": "local"
+    },
+    "incident-commander": {
+      "hash": "18f308c0f166654a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/incident-commander.md",
+      "source": "local"
+    },
+    "inert-plan-runner": {
+      "hash": "c819ecb65b056e6e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/inert-plan-runner.md",
+      "source": "local"
+    },
+    "influencer-outreach": {
+      "hash": "e593a27f7bf7ff40",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/influencer-outreach",
+      "source": "local"
+    },
+    "invoice-manager": {
+      "hash": "6ce24117aa15c312",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/invoice-manager",
+      "source": "local"
+    },
+    "language-lord": {
+      "hash": "b29d0962f4fdc0c5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/language-lord",
+      "source": "local"
+    },
+    "laravel-ai-lord": {
+      "hash": "a7689f9f79e232c4",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/laravel-ai-lord",
+      "source": "local"
+    },
+    "laravel-filament-lord": {
+      "hash": "36cb22cb3382ae8b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/laravel-filament-lord",
+      "source": "local"
+    },
+    "laravel-testing-lord": {
+      "hash": "ca5691f5786b4655",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/laravel-testing-lord",
+      "source": "local"
+    },
+    "lead-generation-crm": {
+      "hash": "b8f704540841ee55",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/lead-generation-crm",
+      "source": "local"
+    },
+    "legal-compliance": {
+      "hash": "d6c01bc5aac867c3",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/legal-compliance.md",
+      "source": "local"
+    },
+    "linkedin-platform": {
+      "hash": "4b7f22afe88bef93",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/linkedin-platform",
+      "source": "local"
+    },
+    "linux-systems-lord": {
+      "hash": "5058fd5cf3ec99cf",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/linux-systems-lord",
+      "source": "local"
+    },
+    "llm-evals-lord": {
+      "hash": "144b4c4c40135c0e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/llm-evals-lord",
+      "source": "local"
+    },
+    "local-ai-lord": {
+      "hash": "4e973609f335868e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/local-ai-lord",
+      "source": "local"
+    },
+    "local-seo": {
+      "hash": "7d43afe347f3f64a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/local-seo",
+      "source": "local"
+    },
+    "mariadb-lord": {
+      "hash": "56cefc74827d5efa",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/mariadb-lord",
+      "source": "local"
+    },
+    "marketing-analytics": {
+      "hash": "20359baf3e65e4ce",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/marketing-analytics",
+      "source": "local"
+    },
+    "marketing-automation": {
+      "hash": "a9049c2a4c340bce",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/marketing-automation",
+      "source": "local"
+    },
+    "marketing-compliance": {
+      "hash": "beb3244ea0c5a158",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/marketing-compliance",
+      "source": "local"
+    },
+    "marketing-strategy": {
+      "hash": "5411338dbe32df93",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/marketing-strategy",
+      "source": "local"
+    },
+    "mcp-architect-lord": {
+      "hash": "f19f96259d44458f",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/mcp-architect-lord",
+      "source": "local"
+    },
+    "mcp-surface-integrity": {
+      "hash": "dafcdb20ad807211",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/mcp-surface-integrity.md",
+      "source": "local"
+    },
+    "messaging-streaming-lord": {
+      "hash": "a40ada9a88e41e7d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/messaging-streaming-lord",
+      "source": "local"
+    },
+    "migration-specialist": {
+      "hash": "72a7a8a8dc804095",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/migration-specialist.md",
+      "source": "local"
+    },
+    "ml-engineer": {
+      "hash": "bbd7377e3807291f",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ml-engineer.md",
+      "source": "local"
+    },
+    "mobile-architect": {
+      "hash": "0e89502df5717f29",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/mobile-architect",
+      "source": "local"
+    },
+    "mobile-game-producer": {
+      "hash": "ac5b96c152794112",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/mobile-game-producer",
+      "source": "local"
+    },
+    "motion-design": {
+      "hash": "84c5b2e313afccda",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/motion-design.md",
+      "source": "local"
+    },
+    "page-sections-lord": {
+      "hash": "9f48730f63482f7c",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/page-sections-lord",
+      "source": "local"
+    },
+    "paid-ads": {
+      "hash": "adaabe765ef6811b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/paid-ads",
+      "source": "local"
+    },
+    "pdf": {
+      "hash": "c327a3ef5f658b09",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/pdf.md",
+      "source": "local"
+    },
+    "performance-engineer": {
+      "hash": "fa87c67a9f8a1ddd",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/performance-engineer.md",
+      "source": "local"
+    },
+    "personal-branding": {
+      "hash": "a5a670b7755d49c5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/personal-branding",
+      "source": "local"
+    },
+    "ponytail": {
+      "hash": "0a137300a205b485",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ponytail",
+      "source": "local"
+    },
+    "ponytail-audit": {
+      "hash": "60f876db9306326c",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ponytail-audit",
+      "source": "local"
+    },
+    "ponytail-debt": {
+      "hash": "67825b4c43462fe3",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ponytail-debt",
+      "source": "local"
+    },
+    "ponytail-gain": {
+      "hash": "077d2ee9462eb139",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ponytail-gain",
+      "source": "local"
+    },
+    "ponytail-help": {
+      "hash": "b40ab4936216495d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ponytail-help",
+      "source": "local"
+    },
+    "ponytail-review": {
+      "hash": "a469674ef0850f3e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ponytail-review",
+      "source": "local"
+    },
+    "post-quantum-lord": {
+      "hash": "202e2ed58179eaf9",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/post-quantum-lord",
+      "source": "local"
+    },
+    "pptx": {
+      "hash": "0fe2b475cd8dcf9d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/pptx.md",
+      "source": "local"
+    },
+    "pr-pitch": {
+      "hash": "491500c20054a75a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/pr-pitch",
+      "source": "local"
+    },
+    "pricing-strategy": {
+      "hash": "9ca1d714a6ed3dcd",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/pricing-strategy",
+      "source": "local"
+    },
+    "problem-solving-lord": {
+      "hash": "e5c87dca74f6259a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/problem-solving-lord",
+      "source": "local"
+    },
+    "product-manager": {
+      "hash": "3789f3c86a678c2d",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/product-manager.md",
+      "source": "local"
+    },
+    "production-readiness-lord": {
+      "hash": "52966a3a1b04c403",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/production-readiness-lord",
+      "source": "local"
+    },
+    "productized-service": {
+      "hash": "410938758848a0e2",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/productized-service",
+      "source": "local"
+    },
+    "project-voice": {
+      "hash": "cf33d2d0bdbc9329",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/project-voice",
+      "source": "local"
+    },
+    "prompt-engineer": {
+      "hash": "c1cb8f1ed833a3a1",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/prompt-engineer.md",
+      "source": "local"
+    },
+    "prompt-master-patterns": {
+      "hash": "51000d962265db09",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/prompt-master-patterns.md",
+      "source": "local"
+    },
+    "prompt-master-templates": {
+      "hash": "47286cc6d6835b4b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/prompt-master-templates.md",
+      "source": "local"
+    },
+    "proposal-writer": {
+      "hash": "7d25354eb343ea73",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/proposal-writer",
+      "source": "local"
+    },
+    "python-ui-lord": {
+      "hash": "ed3d91b4a373a8bf",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/python-ui-lord",
+      "source": "local"
+    },
+    "qa-automation": {
+      "hash": "c1ee339f366b63cc",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/qa-automation.md",
+      "source": "local"
+    },
+    "qa-debugger": {
+      "hash": "5916392044f9b40a",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/qa-debugger.md",
+      "source": "local"
+    },
+    "reverse-engineering-lord": {
+      "hash": "843f77487fd52403",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/reverse-engineering-lord",
+      "source": "local"
+    },
+    "search-vector-lord": {
+      "hash": "0757be59f4e86e91",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/search-vector-lord",
+      "source": "local"
+    },
+    "security-auditor": {
+      "hash": "69f43e3db3440d20",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/security-auditor.md",
+      "source": "local"
+    },
+    "security-lord": {
+      "hash": "f7def669b141d6cc",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/security-lord",
+      "source": "local"
+    },
+    "seo-lord": {
+      "hash": "c8bba6627704e4b3",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/seo-lord",
+      "source": "local"
+    },
+    "server-ops-lord": {
+      "hash": "563f01d3a0d91cd7",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/server-ops-lord",
+      "source": "local"
+    },
+    "skill-finder": {
+      "hash": "3e4b0d98a31daa3e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/skill-finder",
+      "source": "local"
+    },
+    "skill-lock-integrity": {
+      "hash": "e6733b9ad696c3a3",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/skill-lock-integrity.md",
+      "source": "local"
+    },
+    "social-media-marketing": {
+      "hash": "3f757039809e3fa5",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/social-media-marketing",
+      "source": "local"
+    },
+    "sre": {
+      "hash": "14727a404d6734c6",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/sre.md",
+      "source": "local"
+    },
+    "subagent-driven-development": {
+      "hash": "ada48a787adb429f",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/subagent-driven-development.md",
+      "source": "local"
+    },
+    "supply-chain-lord": {
+      "hash": "03fc1f82f4a4d3e9",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/supply-chain-lord",
+      "source": "local"
+    },
+    "technical-writer": {
+      "hash": "663e76ee22fb2a04",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/technical-writer.md",
+      "source": "local"
+    },
+    "test-driven-development": {
+      "hash": "97dfb93497df416b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/test-driven-development.md",
+      "source": "local"
+    },
+    "test-guard": {
+      "hash": "7e6a6cdc590e130b",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/test-guard.md",
+      "source": "local"
+    },
+    "ui-design-lord": {
+      "hash": "223f8e023bd2a134",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/ui-design-lord",
+      "source": "local"
+    },
+    "vector-db-lord": {
+      "hash": "e77c73752b99ca53",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/vector-db-lord",
+      "source": "local"
+    },
+    "web-design-guidelines": {
+      "hash": "76077bb40b46ad64",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/web-design-guidelines.md",
+      "source": "local"
+    },
+    "web-quality": {
+      "hash": "2d425f727b390a44",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/web-quality.md",
+      "source": "local"
+    },
+    "web-security-checklist": {
+      "hash": "4ddbba50e1f48c90",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/web-security-checklist",
+      "source": "local"
+    },
+    "whatsapp-sms": {
+      "hash": "8134a5c475eb8061",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/whatsapp-sms",
+      "source": "local"
+    },
+    "wordpress-expert": {
+      "hash": "ddf62c0a2e763102",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/wordpress-expert.md",
+      "source": "local"
+    },
+    "writing-plans": {
+      "hash": "e4dd442253003e3e",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/writing-plans.md",
+      "source": "local"
+    },
+    "xlsx": {
+      "hash": "4a402aed6ce25257",
+      "installed": "2026-11-06T23:41:33+00:00",
+      "path": "skills/xlsx.md",
+      "source": "local"
+    }
+  },
+  "version": 1
+}

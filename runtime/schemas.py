@@ -35,6 +35,10 @@ class AizeeError(Exception):
         message: Human-readable description.
         severity: Error severity level.
         context: Optional structured context dict for debugging/logging.
+        scope: Originating subsystem (e.g., "policy", "budget") — the
+            vercel-labs/error contract dimension.
+        public: Whether the error is safe to surface to clients/MCP
+            callers. Non-public errors are redacted by ``to_public_dict``.
     """
 
     def __init__(
@@ -43,12 +47,17 @@ class AizeeError(Exception):
         message: str,
         severity: ErrorSeverity = ErrorSeverity.HIGH,
         context: dict[str, Any] | None = None,
+        *,
+        scope: str = "runtime",
+        public: bool = True,
     ) -> None:
         super().__init__(message)
         self.error_code = error_code
         self.message = message
         self.severity = severity
         self.context = context or {}
+        self.scope = scope
+        self.public = public
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize to a structured dict for logging/API responses."""
@@ -57,6 +66,25 @@ class AizeeError(Exception):
             "message": str(self.args[0]) if self.args else "",
             "severity": self.severity.value,
             "context": dict(self.context),
+            "scope": self.scope,
+            "public": self.public,
+        }
+
+    def to_public_dict(self) -> dict[str, Any]:
+        """Client-safe serialization — redacts internals when not public.
+
+        Non-public errors collapse to a generic code + scope so MCP/CLI
+        envelopes never leak stack details, paths, or secrets.
+        """
+        if self.public:
+            return self.to_dict()
+        return {
+            "error_code": "INTERNAL_ERROR",
+            "message": "Internal error",
+            "severity": self.severity.value,
+            "context": {},
+            "scope": self.scope,
+            "public": False,
         }
 
 

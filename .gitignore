@@ -93,5 +93,10 @@ build/
 scripts/gen_post_assets.py
 /linkedin/
 
+# Personal tooling + notes (per-machine, contains live OAuth tokens and
+# personal data — gmail-cleaner credentials/token/email index, games list)
+tools/
+/GAMES.md
+
 # Permanent reference clones (kept local-only, multi-GB)
 refs/

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# aiZee Validation Script (Python) v6.6.0
+# aiZee Validation Script (Python) v6.7.0
 # Source of truth validator - PowerShell wrapper delegates to this script.
 
 import argparse
@@ -307,6 +307,8 @@ IGNORED_FILE_REFS = {
     'seo-content-generator.md',
     # Laravel Boost context files (live in client project's .ai/ dir, not aiZee)
     'laravel.md', 'filament.md', 'project.md',
+    # vercel-labs repo named literally "lat.md" (upstream repo ref, not a file)
+    'lat.md',
     # project-voice GENERATED artifacts (produced into the client project's
     # .ai/ dir by the skill at runtime — not tracked aiZee inputs)
     'about-me.md', 'voice.md', 'newsletter-voice.md',
@@ -456,7 +458,7 @@ def run_pass1(rule_files: list[str], global_path: str, manifest: dict[str, str],
     return file_data
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="aiZee Validation v6.6.0")
+    p = argparse.ArgumentParser(description="aiZee Validation v6.7.0")
     p.add_argument("--dry-run",            action="store_true", help="Scan without writing")
     p.add_argument("--generate-manifest",  action="store_true", help="Force regenerate manifest")
     p.add_argument("--force",              action="store_true", help="Bypass manifest cache")
@@ -495,11 +497,14 @@ def check_runtime_exports(global_path: str, ctx: ValidationContext) -> None:
             if not (isinstance(target, ast.Name) and isinstance(value, (ast.List, ast.Tuple))):
                 continue
             if target.id == "__all__":
-                all_names = [e.value for e in value.elts if isinstance(e, ast.Constant)]
+                all_names = [
+                    e.value for e in value.elts
+                    if isinstance(e, ast.Constant) and isinstance(e.value, str)
+                ]
             elif target.id == "_LAZY_TABLE":
                 for elt in value.elts:
                     if isinstance(elt, ast.Tuple) and len(elt.elts) >= 2:
-                        if isinstance(elt.elts[0], ast.Constant):
+                        if isinstance(elt.elts[0], ast.Constant) and isinstance(elt.elts[0].value, str):
                             lazy_names.add(elt.elts[0].value)
                         if isinstance(elt.elts[1], ast.Constant):
                             lazy_mods.add(str(elt.elts[1].value))
@@ -557,7 +562,7 @@ def main() -> None:
         cprint(f"MISCONFIG: rules/vocabulary.md not found at {vocab_path}", Colors.RED)
         sys.exit(2)
 
-    cprint(f"aiZee Validation v6.6.0 [Fix: {'ON' if args.fix else 'OFF'}]", Colors.CYAN)
+    cprint(f"aiZee Validation v6.7.0 [Fix: {'ON' if args.fix else 'OFF'}]", Colors.CYAN)
 
     rule_files = collect_rule_files(global_path)
     manifest_path = os.path.join(global_path, "integrity.manifest")
