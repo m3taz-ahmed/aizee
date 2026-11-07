@@ -122,7 +122,7 @@ Configure in Sentry project settings:
 python scripts/backup_brain.py
 
 # Custom destination
-python scripts/backup_brain.py --dest D:\backups
+python scripts/backup_brain.py --dest ./backups
 ```
 Backs up: `memory/`, `state/`, `brain/`, `graphify-out/`, `.env`.
 

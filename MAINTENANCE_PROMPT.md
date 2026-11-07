@@ -30,7 +30,7 @@ I want you to perform a holistic audit of the current codebase and propose/imple
 
 **[EXECUTION STEPS]**
 1. **Discovery & Audit:**
-   - Quietly review the core files (`E:\server\aizee\runtime/`, `memory/`, `E:\server\aizee\aizee_mcp/`, `E:\server\aizee\aizee_cli.py`, `E:\server\aizee\pyproject.toml`).
+   - Quietly review the core files, resolved from the discovered root (`AIZEE_ROOT` or `config.discover_root()`): `runtime/`, `memory/`, `aizee_mcp/`, `aizee_cli.py`, `pyproject.toml`.
    - Identify any hidden technical debt, security flaws, performance bottlenecks, or outdated dependencies.
 2. **Brainstorming & Innovation:**
    - Propose 2-3 new ideas to improve the MCP server capabilities, memory ingestion efficiency, CLI DevEx, or strict rule validation.

@@ -19,7 +19,7 @@ Production deployment steps, environment configuration, health checks, and rollb
 
 2. **Set the root directory:**
    ```powershell
-   $env:AIZEE_ROOT = "D:\.ai"
+   $env:AIZEE_ROOT = "C:\aizee"   # or wherever you installed, e.g. /opt/aizee on Linux
    ```
    Add to system environment variables for persistence.
 
@@ -62,7 +62,7 @@ Production deployment steps, environment configuration, health checks, and rollb
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
-| `AIZEE_ROOT` | Root directory of aiZee install | `D:\.ai` |
+| `AIZEE_ROOT` | Root directory of aiZee install | `C:\aizee` / `/opt/aizee` |
 | `AIOS_ENCRYPTION_KEY` | Fernet key for at-rest encryption | (generated key) |
 
 > If `AIOS_ENCRYPTION_KEY` is unset, aiZee auto-generates one at `state/.encryption_key`. For production, set it explicitly.

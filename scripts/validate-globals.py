@@ -327,10 +327,11 @@ IGNORED_FILE_REFS = {
     'react-19.md',
     # working-root-only artifacts referenced from Memory.md audit entries —
     # temp/ and nested .ai/ dirs are not synced to the deployment mirror
-    'temp\\competitor-study-v3\\analysis.md', '.ai\\repos-report.md',
+    'temp\\competitor-study-v3\\analysis.md', '.ai\\repos-report.md', 'repos-report.md',
     # session review reports under the gitignored .ai/ working dir
     'ccgs-report.md', 'star-repos-report.md', 'star-repos-report-batch2.md',
     'ui-repos-report.md', 'repos-study.md', 'review-findings.md',
+    'repo-study-2026-11.md', 'vercel-labs-study-2026-11.md',
     # external-repo / generated-artifact names referenced descriptively:
     # impeccable's PRODUCT.md truth file; ui-ux-pro-max's generated MASTER.md output
     'product.md', 'master.md',
@@ -357,8 +358,18 @@ def check_file_references(content: str, rel_name: str, ctx: ValidationContext, g
         if raw_t.startswith("//"):
             continue
         target = raw_t.replace("/", os.sep)
-        if "server" + os.sep + ".ai" in target:
-            target = target.split("server" + os.sep + ".ai" + os.sep)[-1]
+        # Root-relative resolution: a ref must never hardcode the install
+        # dir name (.ai on the dev mirror, aizee on deployments, anything
+        # else on user installs). Relativize absolute refs that point under
+        # the discovered root, and strip a leading root-name or ./ segment.
+        root_name = os.path.basename(os.path.normpath(global_path))
+        sep_root = os.sep + root_name + os.sep
+        if sep_root in target:
+            target = target.split(sep_root)[-1]
+        elif target.startswith(root_name + os.sep):
+            target = target[len(root_name) + 1:]
+        elif target.startswith("." + os.sep):
+            target = target[2:]
         base = os.path.basename(target).lower()
         # Normalize separators so IGNORED_FILE_REFS entries match on any OS
         norm = target.replace("\\", "/").lower()
@@ -405,6 +416,8 @@ def check_version_consistency(global_path: str, ctx: ValidationContext) -> bool:
         "CHANGELOG.md":         extract_version(os.path.join(global_path, "CHANGELOG.md"),             r"(?m)^##\s*\[v?" + vp + r"\]"),
         "validate-globals.ps1":extract_version(os.path.join(global_path, "scripts", "validate-globals.ps1"), r"Validation.*?v" + vp),
         "validate-globals.py": extract_version(os.path.join(global_path, "scripts", "validate-globals.py"),  r"Validation.*?v" + vp),
+        "manifest.json":       extract_version(os.path.join(global_path, "manifest.json"),               r'"version"\s*:\s*"' + vp + r'"\s*\}'),
+        "manifest.json(_meta)":extract_version(os.path.join(global_path, "manifest.json"),               r'"_meta"[^}]*"version"\s*:\s*"' + vp),
     }
     unique = {v for v in versions.values() if v != "NF"}
     if len(unique) != 1:

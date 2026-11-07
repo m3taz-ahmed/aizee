@@ -12,8 +12,8 @@ Output: <dest>/aizee-backup-<YYYY-MM-DD>-<HHMMSS>/
 
 Usage:
     python scripts/backup_brain.py                    # backup to <root>/backups/
-    python scripts/backup_brain.py --dest D:\backups  # custom destination
-    python scripts/backup_brain.py --root C:\aizee    # custom aiZee root
+    python scripts/backup_brain.py --dest ./backups   # custom destination
+    python scripts/backup_brain.py --root /opt/aizee  # custom aiZee root
     python scripts/backup_brain.py --schedule daily   # run backup every 24h (Ctrl+C to stop)
     python scripts/backup_brain.py --schedule hourly  # run backup every 1h (Ctrl+C to stop)
     python scripts/backup_brain.py --verify <path>    # verify backup integrity

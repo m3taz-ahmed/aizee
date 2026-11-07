@@ -103,7 +103,7 @@
 [ARCH-07]: No ambient authority. The model may propose; only an independent control plane authorizes consequence. A policy decision cannot be reused across targets. Tool output is untrusted until revalidated at the next boundary.
 
 [DIR]
-[DIR-01]: Working directory is E:\server\.ai ONLY. E:\server\aizee is READ-ONLY (deployment/usage folder, updated only via batch script). All edits go in .ai.
+[DIR-01]: Working directory is the aiZee source root ONLY (the dir containing AGENTS.md — resolved via AIZEE_ROOT/config.discover_root(), never hardcoded). A sibling aizee/ deployment mirror is READ-ONLY (updated only via scripts/update_aizee.bat).
 
 [TASK]
 [TASK-01]: Classify first — every work prompt gets recorded trivial/standard/complex + reason.

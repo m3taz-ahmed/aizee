@@ -98,5 +98,8 @@ scripts/gen_post_assets.py
 tools/
 /GAMES.md
 
+# Personal session index (per-machine; 400+ absolute local paths — privacy)
+archives/
+
 # Permanent reference clones (kept local-only, multi-GB)
 refs/

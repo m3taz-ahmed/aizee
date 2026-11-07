@@ -3,7 +3,8 @@
 # `aizee update`/clone — see README install section).
 include LICENSE NOTICE README.md CHANGELOG.md AGENTS.md spec.md llms.txt
 include manifest.json global-roles.md global-workflow.md
-include plugins.yaml .env.example
+include plugins.yaml .env.example skills-lock.json
+recursive-include resources *.json
 include install.ps1 install.sh update.bat uninstall.bat backup.bat restore.bat
 include create-shortcuts.ps1
 recursive-include installer *

@@ -33,11 +33,11 @@ license: MIT
 
 ## Working Directory [DIR-01]
 
-- **Working directory: E:\server\.ai ONLY.** All edits, new files, and modifications go here.
+- **Working directory: the directory containing this file ONLY** (the aiZee root — resolved in code via `AIZEE_ROOT` or `config.discover_root()`, never a hardcoded path `[OS-ROOT-01]`). All edits, new files, and modifications go here.
 
-- **E:\server\aizee is READ-ONLY.** Never edit files in aizee directly. It is the deployment/usage folder, updated only via the batch update script. If you need to sync changes from .ai to aizee, use the batch script.
+- **A sibling `aizee/` deployment mirror, when present, is READ-ONLY.** Never edit the mirror directly — it is updated only via `scripts/update_aizee.bat`. To sync source → mirror, run the batch script.
 
-- When the IDE opens files from aizee, copy them to .ai first, edit in .ai, then sync back via the batch script.
+- When the IDE opens files from the mirror, copy them into the source root first, edit there, then sync back via the batch script.
 
 
 
@@ -109,9 +109,9 @@ Before declaring done, run from the OS root:
 
 - `ruff check .`
 
-- `mypy` (strict, 216 files)
+- `mypy` (strict, 195 files)
 
-- `aizee test --full` (full suite with coverage, parallel by default — ~91s, 7590 tests, 100% cov)
+- `aizee test --full` (full suite with coverage, parallel by default — ~180s, 7653 tests, 100% cov)
 
 - `python eval/harness.py` (read-only: ruff + mypy + pytest + validate-globals)
 

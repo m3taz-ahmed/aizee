@@ -65,7 +65,7 @@ A **zero-compromise, version-controlled operating system** that sits between you
 ## What's New in v6.7.0 — vercel-labs Adoption Pass
 
 From a survey of all 396 vercel-labs repos (28 deep-studied; report in
-`.ai/vercel-labs-study-2026-11.md`):
+`vercel-labs-study-2026-11.md`):
 
 - **Inert plan engine** — `aizee plan validate|run|resume` runs
   callscript-style JSON plans: no eval, all-issues validation, bounded
@@ -97,7 +97,7 @@ From a survey of all 396 vercel-labs repos (28 deep-studied; report in
 
 Adopted from a structured study of google/elephant-goldfish-model,
 wotschofsky/domain-digger, and godotengine/godot
-(full report in `.ai/repo-study-2026-11.md`):
+(full report in `repo-study-2026-11.md`):
 
 - **Goldfish spec review** — `aizee spec review <spec_id|--file> [--preset]`
   plans a fresh-zero-context reviewer pipeline (EGM port): semantic

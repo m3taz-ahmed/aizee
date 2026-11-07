@@ -54,7 +54,7 @@ REM Excluded dirs: VCS internals, runtime/learned state, regenerable output.
 REM Excluded files: secrets, generated configs, local overrides, scratch notes.
 
 robocopy "%SOURCE%" "%TARGET%" /MIR /R:2 /W:2 /NFL /NDL /NP /NJH ^
-    /XD .git .ai temp state brain backups graphify-out htmlcov .mypy_cache .pytest_cache .ruff_cache __pycache__ node_modules .venv venv abstracts .idea .claude .devin tools ^
+    /XD .git .ai temp state brain backups graphify-out htmlcov .mypy_cache .pytest_cache .ruff_cache __pycache__ node_modules .venv venv abstracts .idea .claude .devin tools archives ^
     /XF .env .coverage *.pyc *.pyo *.log .aizee-version settings.json settings.local.json mcp_config.local.json config.local.json notes-*.md implementation_plan.md DEEP_AUDIT_PROMPT.md GRAPH_REPORT.md GAMES.md
 set "RC1=%ERRORLEVEL%"
 

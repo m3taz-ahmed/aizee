@@ -4,7 +4,7 @@
 Writes ``mcp_config.json`` to the global Devin config directory
 (``%APPDATA%\\devin`` on Windows, ``~/.config/devin`` on Linux/macOS)
 so that MCP servers are available in **any** workspace, not just
-``D:\\.ai``.
+the aiZee root.
 
 All script paths are resolved to absolute paths pointing at the
 aiZee root, so the config works regardless of which project

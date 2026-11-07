@@ -43,7 +43,7 @@
 
 ## الجديد في v6.7.0 — تبنّي vercel-labs
 
-من مسح 396 مستودعًا في vercel-labs (28 بدراسة عميقة؛ التقرير في `.ai/vercel-labs-study-2026-11.md`):
+من مسح 396 مستودعًا في vercel-labs (28 بدراسة عميقة؛ التقرير في `vercel-labs-study-2026-11.md`):
 
 - **محرك خطط خاملة** — `aizee plan validate|run|resume`: خطط JSON بأسلوب callscript — بلا eval، تحقق شامل، حدود على fan-out والاستدعاءات، إيقاف/استئناف قابل للتسلسل دون إعادة تنفيذ الخطوات المنجزة، وبصمة `plan_hash` للتدقيق.
 - **قفل المهارات** — `skills-lock.json` يثبّت كل مهارة ببصمة مجلدها؛ `aizee skill lock-check` يكشف التعديل/الحذف/غير المقفل، و`lock-update` يعيد البناء.

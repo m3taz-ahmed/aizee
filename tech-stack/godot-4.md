@@ -26,4 +26,4 @@
 - https://github.com/godotengine/godot-docs
 - https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/index.html
 - Local reference clone: `refs/godot` (blobless, 4.8.0-beta @ 8cc3a57) - query on demand: `git -C refs/godot show HEAD:<path>` / `git -C refs/godot ls-tree -r --name-only HEAD | Select-String <pat>`; do NOT `git checkout` (fetches blobs lazily).
-- Lab install: `E:\server\tools\godot\Godot_v4.7.2-stable_win64.exe` (verified `4.7.2.stable.official`) - headless CI via `--headless`; editor binary pairs with `_console.exe` for stdout.
+- Lab install: `Godot_v4.7.2-stable_win64.exe` (verified `4.7.2.stable.official`) - headless CI via `--headless`; editor binary pairs with `_console.exe` for stdout.

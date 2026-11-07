@@ -77,7 +77,7 @@
   7 new MCP tools (`domain_resolve`, `domain_walk`, `domain_whois`,
   `domain_certs`, `domain_subdomains`, `domain_summary`, `ip_info`).
 - **Godot reference**: permanent clone at `refs/godot` (4.8.0-beta,
-  blobless) + lab install `E:\server\tools\godot\Godot_v4.7.2-stable_win64.exe`
+  blobless) + lab install `Godot_v4.7.2-stable_win64.exe`
   (verified `4.7.2.stable.official`); pointers in `tech-stack/godot-4.md`.
 
 ### Added (DeepTutor adoption round 2)
@@ -110,7 +110,7 @@
 ## [6.5.0] - 2026-10-26 (Star-Repos Adoption Pass — artemis / agent-reach / OpenSpec / DeepTutor / free-claude-code / paperless)
 
 Features adopted from a structured study of 16 open-source agent repos
-(full matrix: `.ai/star-repos-report.md`), plus REA (morluto/rea, MIT)
+(full matrix: `star-repos-report.md`), plus REA (morluto/rea, MIT)
 integration and Arabic persona-detection fixes.
 
 ### Added (star-repos adoption)
