@@ -1,0 +1,5 @@
+#!/bin/sh
+# NVENC ffmpeg shim — routes x264/x265/AV1 encodes to the NVIDIA GPU.
+# Put this directory earlier on PATH than the real ffmpeg.
+# Bypass per call: AIZEE_FFMPEG_NVENC=0 ffmpeg ...
+exec python "$(dirname "$0")/ffmpeg_nvenc_shim.py" "$@"

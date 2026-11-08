@@ -1,0 +1,345 @@
+# aiZee external dependency manifest.
+#
+# Declares software that aiZee FEATURES need but that lives outside this repo:
+# binaries, pip packages, git-cloned media kits/apps, docker images, env keys.
+#
+# Consumed by:
+#   - `aizee deps check|install`   (CLI: report + fix)
+#   - `aizee doctor`               (folded into health report)
+#   - `scripts/update.py`          (post-install hook: offers to install missing)
+#
+# Add an entry here whenever a skill/workflow/plugin starts needing external
+# software — never let a feature ship with silent missing requirements.
+#
+# Schema per dep:
+#   id           unique slug (used by `aizee deps install <id>`)
+#   name         display name (defaults to id)
+#   kind         binary | pip | git-repo | docker-daemon | docker-image | env | any-path
+#   severity     required | recommended | optional   (drives doctor verdict)
+#   required_by  free-form list of features/skills that need it (reported to the user)
+#   tags         grouping labels (e.g. video) for `aizee deps check --tag`
+#
+# kind-specific fields:
+#   binary        bin, version_cmd, version_regex, min_version
+#   pip           package, min_version
+#   git-repo      path, repo          (install = git clone --depth 1, update = git pull)
+#   docker-daemon (no fields — runs `docker info`)
+#   docker-image  image, install.all  (build command)
+#   env           env_vars, env_any_of
+#   any-path      paths               (any one existing = ok)
+#
+# Commands in install:/update: are per-OS keys (windows|linux|darwin) or `all`.
+# Placeholders expanded before running: {media} {root} {python} {path} {repo}
+# {image} {package} {bin} {user_profile}
+version: 1
+
+media_dir_env: AIZEE_MEDIA_DIR
+media_dir_default: "~/.aizee/media"
+
+deps:
+  # ---------- core toolchain ----------
+  - id: git
+    name: Git
+    kind: binary
+    bin: git
+    version_cmd: ["git", "--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    severity: required
+    required_by: [core]
+    install:
+      windows: winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements
+      darwin: brew install git
+      linux: sudo apt-get install -y git
+    update:
+      windows: winget upgrade -e --id Git.Git --accept-source-agreements --accept-package-agreements
+      darwin: brew upgrade git
+      linux: sudo apt-get install -y git
+
+  - id: python
+    name: Python
+    kind: binary
+    bin: python
+    version_cmd: ["python", "--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    min_version: "3.9"
+    severity: required
+    required_by: [core]
+    guidance: Install Python 3.11+ from https://www.python.org/downloads/ (tick "Add to PATH")
+
+  - id: node
+    name: Node.js
+    kind: binary
+    bin: node
+    version_cmd: ["node", "--version"]
+    version_regex: 'v?(\d+\.\d+\.\d+)'
+    min_version: "22.0"
+    severity: recommended
+    required_by: [cinecode, bang-motion, motion-graphics, hyperframes]
+    tags: [video]
+    install:
+      windows: winget install -e --id OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements
+      darwin: brew install node@22
+      linux: curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt-get install -y nodejs
+    update:
+      windows: winget upgrade -e --id OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements
+      darwin: brew upgrade node@22
+
+  - id: ffmpeg
+    name: FFmpeg
+    kind: binary
+    bin: ffmpeg
+    version_cmd: ["ffmpeg", "-version"]
+    version_regex: 'ffmpeg version n?(\d+\.\d+)'
+    min_version: "6.0"
+    severity: recommended
+    required_by: ["video-produce (CINECODE/BANG-MOTION/MOTION-*/HYPERFRAMES/EDIT)"]
+    tags: [video]
+    install:
+      windows: winget install -e --id Gyan.FFmpeg --accept-source-agreements --accept-package-agreements
+      darwin: brew install ffmpeg
+      linux: sudo apt-get install -y ffmpeg
+    update:
+      windows: winget upgrade -e --id Gyan.FFmpeg --accept-source-agreements --accept-package-agreements
+      darwin: brew upgrade ffmpeg
+      linux: sudo apt-get install -y ffmpeg
+
+  # ---------- optional runtimes ----------
+  - id: docker-cli
+    name: Docker CLI
+    kind: binary
+    bin: docker
+    version_cmd: ["docker", "--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    severity: optional
+    required_by: [code2video]
+    tags: [video]
+    guidance: Install Docker Desktop — https://www.docker.com/products/docker-desktop/
+
+  - id: docker-daemon
+    name: Docker daemon running
+    kind: docker-daemon
+    severity: optional
+    required_by: [code2video]
+    tags: [video]
+    guidance: Start Docker Desktop and wait for the engine to come up
+
+  - id: bun
+    name: Bun
+    kind: binary
+    bin: bun
+    version_cmd: ["bun", "--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    severity: optional
+    required_by: ["motion-graphics engine (template/)"]
+    tags: [video]
+    install:
+      all: npm i -g bun
+
+  - id: hyperframes
+    name: hyperframes CLI
+    kind: binary
+    bin: hyperframes
+    version_cmd: ["hyperframes", "--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    severity: recommended
+    required_by: ["video-produce (HYPERFRAMES path)"]
+    tags: [video]
+    install:
+      all: npm i -g hyperframes
+    update:
+      all: npm i -g hyperframes@latest
+
+  - id: playwright
+    name: Playwright (+Chromium)
+    kind: pip
+    package: playwright
+    severity: recommended
+    required_by: ["motion-design kit (render_template.py)"]
+    tags: [video]
+    install:
+      all: "{python} -m pip install --user playwright && {python} -m playwright install chromium"
+    guidance: Browsers install via `{python} -m playwright install chromium` (bundled in the install command)
+
+  - id: faster-whisper
+    name: faster-whisper
+    kind: pip
+    package: faster-whisper
+    severity: optional
+    required_by: ["video-produce EDIT path (transcripts/captions)"]
+    tags: [video]
+    install:
+      all: "{python} -m pip install --user faster-whisper"
+
+  - id: edge-tts
+    name: edge-tts
+    kind: pip
+    package: edge-tts
+    severity: optional
+    required_by: [MoneyPrinterTurbo (free TTS)]
+    tags: [video]
+    install:
+      all: "{python} -m pip install --user edge-tts"
+
+  # ---------- media kits (cloned outside the repo) ----------
+  - id: kit-cinecode
+    name: cinecode kit
+    kind: git-repo
+    path: "{media}/kits/cinecode"
+    repo: https://github.com/sarpstar/cinecode
+    severity: recommended
+    required_by: ["video-produce (CINECODE path)"]
+    tags: [video, kit]
+
+  - id: kit-bang-motion
+    name: bang-motion kit
+    kind: git-repo
+    path: "{media}/kits/bang-motion"
+    repo: https://github.com/bangtutorial/bang-motion
+    severity: recommended
+    required_by: ["video-produce (BANG-MOTION path)"]
+    tags: [video, kit]
+
+  - id: kit-motion-graphics
+    name: motion-graphics kit
+    kind: git-repo
+    path: "{media}/kits/motion-graphics"
+    repo: https://github.com/igorls/motion-graphics
+    severity: recommended
+    required_by: ["video-produce (MOTION-GRAPHICS path)"]
+    tags: [video, kit]
+
+  - id: kit-motion-design
+    name: motion-design kit
+    kind: git-repo
+    path: "{media}/kits/motion-design"
+    repo: https://github.com/howseen-ai/claude-motion-design
+    severity: recommended
+    required_by: ["video-produce (MOTION-DESIGN path)"]
+    tags: [video, kit]
+
+  - id: app-moneyprinterturbo
+    name: MoneyPrinterTurbo
+    kind: git-repo
+    path: "{media}/apps/MoneyPrinterTurbo"
+    repo: https://github.com/harry0703/MoneyPrinterTurbo
+    severity: optional
+    required_by: ["video-produce (MPT path — needs its own venv + LLM/TTS keys)"]
+    tags: [video, app]
+    guidance: After clone, follow its README — needs a venv + requirements install + LLM key
+
+  - id: app-vvveb
+    name: Vvveb CMS
+    kind: git-repo
+    path: "{media}/apps/Vvveb"
+    repo: https://github.com/Vvveb/Vvveb
+    severity: optional
+    required_by: [web builder (PHP 8.4+sqlite via Herd)]
+    tags: [app]
+    guidance: Needs PHP 8.4+ with sqlite (Herd covers this on this machine)
+
+  # ---------- code2video plugin ----------
+  - id: docker-image-code2video
+    name: code2video image
+    kind: docker-image
+    image: code2video:latest
+    severity: optional
+    required_by: [code2video plugin]
+    tags: [video]
+    install:
+      all: docker build -t code2video:latest -f "{root}/plugins/code2video/Dockerfile" "{root}/plugins/code2video"
+    guidance: Needs docker-daemon running first (30 min build timeout)
+
+  - id: code2video-keys
+    name: code2video API keys
+    kind: env
+    env_vars: [CODE2VIDEO_CLAUDE_API_KEY, CODE2VIDEO_OPENAI_API_KEY, CODE2VIDEO_GEMINI_API_KEY]
+    env_any_of: true
+    severity: optional
+    required_by: [code2video plugin]
+    tags: [video]
+    guidance: >-
+      Set at least one CODE2VIDEO_<PROVIDER>_API_KEY env var (secret store or env).
+      No provider account? Free route: litellm --config plugins/code2video/litellm-c2v.yaml
+      --port 4010 (uses NVIDIA_API_KEY via NIM), then CODE2VIDEO_CLAUDE_BASE_URL=
+      http://host.docker.internal:4010/v1 + CODE2VIDEO_CLAUDE_API_KEY=<master key>.
+      See plugins/code2video/README.md.
+
+  - id: code2video-nim-proxy
+    name: code2video LiteLLM NIM proxy (port 4010)
+    kind: command
+    check_cmd:
+      all: ["curl", "-sf", "http://localhost:4010/health/liveliness"]
+    severity: optional
+    required_by:
+      - code2video plugin — ONLY when using the free NVIDIA NIM route
+        (real provider keys don't need it)
+    tags: [video]
+    install:
+      windows: >-
+        powershell -NoProfile -Command "Start-Process -FilePath litellm -ArgumentList '--config','{root}\plugins\code2video\litellm-c2v.yaml','--port','4010' -WindowStyle Hidden"
+    guidance: >-
+      Start the proxy: litellm --config {root}\plugins\code2video\litellm-c2v.yaml
+      --port 4010. Requires NVIDIA_API_KEY (env) with NIM inference access.
+
+  # ---------- GPU acceleration (NVIDIA) ----------
+  - id: ffmpeg-nvenc
+    name: ffmpeg NVENC encoders
+    kind: command
+    check_cmd:
+      all: ["ffmpeg", "-hide_banner", "-encoders"]
+    expect_regex: "h264_nvenc"
+    severity: recommended
+    required_by: ["GPU video encode — kits' ffmpeg step runs 3-10x faster on NVENC"]
+    tags: [video, gpu]
+    guidance: Install a FULL ffmpeg build (winget Gyan.FFmpeg) — essentials builds lack NVENC
+
+  - id: gpu-shim-on-path
+    name: NVENC ffmpeg shim on PATH
+    kind: command
+    check_cmd:
+      # Resolve ffmpeg on the persisted Machine+User PATH (what fresh shells
+      # see) and require the first hit to be the gpu-bin shim. A stale parent
+      # process env cannot hide it; a system ffmpeg ahead of it still fails.
+      windows:
+        - powershell
+        - "-NoProfile"
+        - "-Command"
+        - >-
+          $dirs = ((([Environment]::GetEnvironmentVariable('PATH','Machine')) + ';' +
+          ([Environment]::GetEnvironmentVariable('PATH','User'))) -split ';') | Where-Object { $_ };
+          $hit = $dirs | Where-Object {
+          (Test-Path (Join-Path $_ 'ffmpeg.exe')) -or (Test-Path (Join-Path $_ 'ffmpeg.cmd')) -or (Test-Path (Join-Path $_ 'ffmpeg'))
+          } | Select-Object -First 1;
+          if ($hit -like '*gpu-bin*') { 'shim-first' } else { 'other-first:' + $hit }
+      all: ["sh", "-c", "command -v ffmpeg"]
+    expect_regex: "gpu-bin|shim-first"
+    severity: optional
+    required_by: ["auto GPU encode — kits' libx264 calls route to h264_nvenc"]
+    tags: [video, gpu]
+    install:
+      windows: >-
+        powershell -NoProfile -Command "[Environment]::SetEnvironmentVariable('PATH', '{root}\scripts\gpu-bin;' + [Environment]::GetEnvironmentVariable('PATH','User'), 'User')"
+    guidance: >-
+      Add {root}\scripts\gpu-bin to the FRONT of PATH (before the real ffmpeg).
+      Kit ffmpeg calls then encode on the GPU; AIZEE_FFMPEG_NVENC=0 bypasses per call.
+
+  - id: gpu-chrome-hiperf
+    name: Chrome high-performance GPU preference
+    kind: command
+    check_cmd:
+      windows:
+        - powershell
+        - "-NoProfile"
+        - "-Command"
+        - >-
+          (Get-ItemProperty 'HKCU:\Software\Microsoft\DirectX\UserGpuPreferences' -ErrorAction SilentlyContinue).'C:\Program Files\Google\Chrome\Application\chrome.exe'
+    expect_regex: "GpuPreference=2"
+    severity: optional
+    required_by: ["WebGL/Canvas kit renders — without it Chrome picks the iGPU"]
+    tags: [video, gpu]
+    install:
+      windows: >-
+        powershell -NoProfile -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\DirectX\UserGpuPreferences' -Name 'C:\Program Files\Google\Chrome\Application\chrome.exe' -Value 'GpuPreference=2;'"
+    guidance: >-
+      Windows Graphics settings — set chrome.exe (and Playwright/Puppeteer
+      chromium exes, per-path keys) to High performance so WebGL renders on the dGPU

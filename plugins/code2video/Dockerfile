@@ -32,10 +32,8 @@ RUN pip install --no-cache-dir -r src/requirements.txt
 # Patch a small upstream bug: agent.py uses pathlib.Path without importing
 # pathlib. The correct fix is to ensure the `Path` name is defined by adding
 # the import at the top of the module (instead of leaving `Path` undefined).
-RUN python -c "import pathlib; p = pathlib.Path('src/agent.py'); text = p.read_text(); lines = text.splitlines(); \
-    if not any('from pathlib import Path' in l or 'import pathlib' in l for l in lines): \
-        text = 'from pathlib import Path\n' + text; \
-    p.write_text(text)"
+RUN grep -qE "from pathlib import .*Path|import pathlib" src/agent.py \
+    || sed -i '1i from pathlib import Path' src/agent.py
 
 # Copy container entrypoint
 COPY --chown=manimuser:manimuser entrypoint.py /manim/code2video/entrypoint.py

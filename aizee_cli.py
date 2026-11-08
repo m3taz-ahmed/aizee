@@ -1687,6 +1687,103 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     return 0 if report.verdict == "ready" else 1
 
 
+def _dep_status_dict(status: Any) -> dict[str, Any]:
+    return {
+        "id": status.spec.id,
+        "name": status.spec.name,
+        "kind": status.spec.kind.value,
+        "severity": status.spec.severity,
+        "ok": status.ok,
+        "state": status.state.value,
+        "version": status.version,
+        "detail": status.detail,
+        "required_by": list(status.spec.required_by),
+        "can_install": status.can_install,
+        "fix": status.fix_cmd or status.spec.guidance,
+    }
+
+
+def _deps_exit_code(statuses: list[Any]) -> int:
+    return 1 if any(not s.ok and s.spec.severity == "required" for s in statuses) else 0
+
+
+def cmd_deps(args: argparse.Namespace) -> int:
+    """Check/install external dependencies declared in deps.yaml."""
+    from runtime.deps import check_all
+
+    os_root = _root(args)
+    if getattr(args, "deps_subcommand", None) == "install":
+        return _deps_install(args, os_root, check_all)
+
+    tags = {args.tag} if getattr(args, "tag", "") else None
+    statuses = check_all(os_root, tags=tags)
+    if getattr(args, "json", False) or getattr(args, "deps_json", False):
+        print(json.dumps([_dep_status_dict(s) for s in statuses], indent=2, ensure_ascii=False))
+        return _deps_exit_code(statuses)
+
+    table = Table(title="aiZee external deps (deps.yaml)")
+    table.add_column("Dep", style="cyan")
+    table.add_column("Status")
+    table.add_column("Version", style="dim")
+    table.add_column("Needed by", style="dim")
+    table.add_column("Fix", style="dim")
+    for s in statuses:
+        if s.ok:
+            state = "[green]ok[/green]"
+        elif s.spec.severity == "required":
+            state = f"[red]{s.state.value}[/red]"
+        else:
+            state = f"[yellow]{s.state.value}[/yellow]"
+        fix = "-" if s.ok else (s.fix_cmd or s.spec.guidance or "manual — see deps.yaml")
+        table.add_row(s.spec.id, state, s.version or "-", ", ".join(s.spec.required_by) or "-", fix)
+    console.print(table)
+
+    failed = [s for s in statuses if not s.ok]
+    if failed:
+        installable = sum(1 for s in failed if s.can_install)
+        console.print(
+            f"[yellow]{len(failed)} dep(s) not satisfied[/yellow] — "
+            f"{installable} auto-installable. Run: aizee deps install"
+        )
+    return _deps_exit_code(statuses)
+
+
+def _deps_install(args: argparse.Namespace, os_root: Path, check_all: Any) -> int:
+    from runtime.deps import install_statuses
+
+    ids = set(args.ids or [])
+    statuses = check_all(os_root, ids=ids or None)
+    targets = [s for s in statuses if not s.ok]
+    if not targets:
+        console.print("[green]All requested deps satisfied.[/green]")
+        return 0
+
+    actionable = [s for s in targets if s.can_install]
+    for s in targets:
+        if not s.can_install:
+            console.print(f"[yellow]{s.spec.id}[/yellow]: manual — {s.spec.guidance or s.detail}")
+    if not actionable:
+        return 1
+    if not args.yes and not args.dry_run:
+        names = ", ".join(s.spec.id for s in actionable)
+        try:
+            answer = console.input(f"Install {len(actionable)} dep(s): {names}? [y/N]: ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            return 1
+        if answer != "y":
+            console.print("Cancelled.")
+            return 1
+
+    results = install_statuses(os_root, actionable, dry_run=args.dry_run)
+    if getattr(args, "json", False):
+        print(json.dumps([r.__dict__ for r in results], indent=2, ensure_ascii=False))
+    else:
+        for r in results:
+            color = "green" if r.ok else "red"
+            console.print(f"[{color}]{r.dep_id}[/{color}] {r.detail} [dim]{r.command}[/dim]")
+    return 0 if all(r.ok for r in results) else 1
+
+
 def cmd_heal(args: argparse.Namespace) -> int:
     """Diagnose the install; with --apply, run safe auto-fixes (else dry-run)."""
     from runtime.heal import Healer, HealStatus, Severity
@@ -2624,6 +2721,19 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_lcheck.add_argument("--json", action="store_true", help="Machine-readable output")
     sp_skill.add_parser("lock-update", help="Rebuild skills-lock.json from on-disk skills")
 
+    # --- deps ---
+    p_deps = sub.add_parser("deps", help="External dependencies: check/install software features need (deps.yaml)")
+    p_deps.add_argument("--json", action="store_true", dest="deps_json", help="Machine-readable output")
+    sp_deps = p_deps.add_subparsers(dest="deps_subcommand")
+    p_deps_check = sp_deps.add_parser("check", help="Check declared deps (default)")
+    p_deps_check.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_deps_check.add_argument("--tag", default="", help="Only deps carrying this tag (e.g. video)")
+    p_deps_install = sp_deps.add_parser("install", help="Install missing/outdated deps")
+    p_deps_install.add_argument("ids", nargs="*", help="Dep ids (default: all unsatisfied)")
+    p_deps_install.add_argument("--yes", "-y", action="store_true", help="Skip confirmation")
+    p_deps_install.add_argument("--dry-run", action="store_true", help="Print commands without running")
+    p_deps_install.add_argument("--json", action="store_true", help="Machine-readable output")
+
     # --- hooks ---
     p_hooks = sub.add_parser("hooks", help="Agent-harness hooks: install | status | fire")
     p_hooks.add_argument("hooks_action", choices=["install", "status", "fire"])
@@ -2747,6 +2857,7 @@ def main(argv: list[str] | None = None) -> int:
         "graphify": cmd_graphify,
         "version": cmd_version,
         "doctor": cmd_doctor,
+        "deps": cmd_deps,
         "heal": cmd_heal,
         "codemode": cmd_codemode,
         "hooks": cmd_hooks,

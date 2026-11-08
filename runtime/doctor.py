@@ -97,8 +97,34 @@ def _collect_checks(os_root: Path, project_root: Path) -> list[Check]:
     _fs_checks(checks, os_root, project_root)
     _module_checks(checks, os_root)
     _dep_checks(checks)
+    _external_dep_checks(checks, os_root)
     _runtime_checks(checks, os_root, project_root)
     return checks
+
+
+def _external_dep_checks(checks: list[Check], os_root: Path) -> None:
+    """Fold deps.yaml manifest results into the health report.
+
+    Advisory-only: a missing/broken manifest or checker never blocks doctor.
+    """
+    try:
+        from runtime.deps import check_all
+
+        for status in check_all(os_root):
+            if status.ok:
+                checks.append(Check(f"dep: {status.spec.id}", True))
+            elif status.can_install:
+                checks.append(Check(
+                    f"dep: {status.spec.id}", False, status.spec.severity,
+                    status.fix_cmd, "",
+                ))
+            else:
+                checks.append(Check(
+                    f"dep: {status.spec.id}", False, status.spec.severity, "",
+                    status.spec.guidance or status.detail or "Manual step — see deps.yaml",
+                ))
+    except Exception:
+        return
 
 
 def _fs_checks(checks: list[Check], os_root: Path, project_root: Path) -> None:

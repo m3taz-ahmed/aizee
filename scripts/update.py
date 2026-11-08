@@ -212,6 +212,8 @@ def _planned_post_steps(root: Path) -> list[str]:
         steps.append("settings migration")
     if (root / "graphify-out" / "graph.json").exists():
         steps.append("graphify refresh")
+    if (root / "deps.yaml").exists():
+        steps.append("external deps check (deps.yaml)")
     steps.append("post-update verification")
     return steps
 
@@ -269,7 +271,66 @@ def _remove_stale_files(root: Path) -> int:
     return removed
 
 
-def _post_install_hooks(root: Path) -> list[str]:
+def _confirm_deps_install(actionable: list[Any], assume_yes: bool) -> bool:
+    """Consent gate for installing external software during update.
+
+    ``--yes`` auto-confirms; otherwise ask interactively when a TTY is
+    attached. Non-interactive callers get a report + the manual command.
+    """
+    if assume_yes:
+        return True
+    if not sys.stdin.isatty():
+        return False
+    names = ", ".join(s.spec.id for s in actionable)
+    try:
+        answer = input(
+            f"    Install {len(actionable)} missing dep(s): {names}? [y/N]: "
+        ).strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        return False
+    return answer == "y"
+
+
+def _deps_check_step(root: Path, assume_yes: bool) -> list[str]:
+    """Check deps.yaml and offer/install whatever the machine is missing.
+
+    Advisory: any failure degrades to a report line, never an update error.
+    """
+    actions: list[str] = []
+    try:
+        if str(root) not in sys.path:
+            sys.path.insert(0, str(root))
+        from runtime.deps import check_all, install_statuses
+
+        statuses = check_all(root)
+        failed = [s for s in statuses if not s.ok]
+        if not failed:
+            actions.append("external deps: all satisfied")
+            return actions
+        actionable = [s for s in failed if s.can_install]
+        manual = [s for s in failed if not s.can_install]
+        actions.append(
+            f"external deps: {len(statuses) - len(failed)}/{len(statuses)} ok — "
+            f"{len(actionable)} installable, {len(manual)} manual"
+        )
+        if actionable and _confirm_deps_install(actionable, assume_yes):
+            results = install_statuses(root, actionable)
+            ok_n = sum(1 for r in results if r.ok)
+            actions.append(f"deps install: {ok_n}/{len(results)} succeeded")
+            for r in results:
+                if not r.ok:
+                    actions.append(f"  - {r.dep_id}: {r.detail}")
+        elif actionable:
+            actions.append("deps install: skipped (run `aizee deps install`)")
+        for s in manual:
+            hint = s.spec.guidance or "manual step — see deps.yaml"
+            actions.append(f"  manual dep: {s.spec.id} — {hint}")
+    except Exception as exc:
+        actions.append(f"external deps: check skipped ({exc})")
+    return actions
+
+
+def _post_install_hooks(root: Path, assume_yes: bool = False) -> list[str]:
     """Re-run post-install steps. Returns list of actions taken."""
     actions: list[str] = []
 
@@ -395,6 +456,13 @@ def _post_install_hooks(root: Path) -> list[str]:
         except FileNotFoundError:
             actions.append("graphify refresh: skipped (graphify not on PATH)")
 
+    # 7. External deps check — features must not ship with silent missing
+    #    requirements. deps.yaml declares what each feature needs; missing or
+    #    outdated entries are offered for install (consent-gated) or reported
+    #    with their manual fix.
+    if (root / "deps.yaml").exists():
+        actions.extend(_deps_check_step(root, assume_yes))
+
     return actions
 
 
@@ -501,7 +569,7 @@ def run_update(root: Path, assume_yes: bool = False, dry_run: bool = False, as_j
 
     # Step 7: Post-install hooks
     print("\n  Running post-install hooks...")
-    actions = _post_install_hooks(root)
+    actions = _post_install_hooks(root, assume_yes=assume_yes)
     for a in actions:
         print(f"    {a}")
 

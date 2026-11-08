@@ -92,7 +92,7 @@ Hard rules:
 
 ## 5. Per-path execution notes
 
-- **CINECODE** — read `kits/cinecode/SKILL.md`; it drives its own interview (mode Quick/Film + purpose). Setup: `python3 scripts/init_film.py <name> --quick|--to-film`. Needs Node≥22, Python≥3.9, ffmpeg, Chrome — all present; verify `ffmpeg -version` first.
+- **CINECODE** — read `kits/cinecode/SKILL.md`; it drives its own interview (mode Quick/Film + purpose). Setup: `python3 scripts/init_film.py <name> --quick|--to-film`. Needs Node≥22, Python≥3.9, ffmpeg, Chrome — verify with `aizee deps` first (deps.yaml).
 - **BANG-MOTION** — read `kits/bang-motion/SKILL.md` (Indonesian; translate instructions, keep rules). Flow: style brief (3 concept candidates + palette-with-sources) → approve → build `index.html` → `snap.mjs` verify → `export-frames.mjs` MP4. Watch = browser only; export needs Node+ffmpeg.
 - **MOTION-GRAPHICS (igorls)** — read `kits/motion-graphics/SKILL.md`. Brand profiles live in `kits/motion-graphics/profiles/` + `profiles/local/` (private). Engine = `template/` (bun + ffmpeg + Chrome). Generative clips via `scripts/comfy.ts`/adapters when keys exist.
 - **MOTION-DESIGN (howseen)** — read `kits/motion-design/SKILL.md`. Flow: inputs → BEATMAP → 4 stills → `render_template.py` (Playwright) → `audio_template.py` → critics → FIXES. `INDEX.md` film library pattern — append each finished film.
@@ -100,6 +100,7 @@ Hard rules:
 - **CODE2VIDEO** — `aizee generate video --topic "..."` (plugin; needs Docker image built once + provider API key env).
 - **MPT** — if installed: topic → WebUI/API/CLI; EdgeTTS free, LLM key for scripts.
 - **EDIT** — ffmpeg cut/trim/silence; whisper.cpp or Groq whisper for transcripts → word-timed captions.
+- **GPU encode** — `scripts/gpu-bin/` ships an ffmpeg shim that rewrites `libx264/x265/AV1` → `*_nvenc` and **auto-passes-through to CPU when NVENC is absent** (no GPU = everything works unchanged). Put it first on PATH for kit renders (`aizee deps` entries `ffmpeg-nvenc`, `gpu-shim-on-path`, `gpu-chrome-hiperf`); `AIZEE_FFMPEG_NVENC=0` forces CPU, `=1` forces GPU. When `aizee deps` shows `ffmpeg-nvenc` ok, fold the choice into G2: "نرندر على الكارت ولا الـ CPU؟" (★ GPU — أسرع ~3x) and record it in the plan file; when absent, never mention it.
 
 ## 6. Long videos — segment, don't marathon
 

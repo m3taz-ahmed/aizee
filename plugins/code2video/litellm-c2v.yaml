@@ -1,0 +1,30 @@
+# LiteLLM proxy config for the Code2Video plugin.
+#
+# Upstream Code2Video hardcodes `model="claude-4-opus"` and talks plain
+# OpenAI-compatible /v1 for the `claude` provider. This proxy exposes that
+# model name and routes it to NVIDIA NIM (OpenAI-compatible) using the
+# machine's existing NVIDIA_API_KEY — no extra provider accounts needed.
+#
+# Start:
+#   litellm --config plugins/code2video/litellm-c2v.yaml --port 4010
+#
+# Then point the plugin at it (User env, persisted):
+#   CODE2VIDEO_CLAUDE_BASE_URL=http://host.docker.internal:4010/v1
+#   CODE2VIDEO_CLAUDE_API_KEY=<your LITELLM_MASTER_KEY>
+#
+# Swap the upstream model by editing `model:` below.
+
+model_list:
+  - model_name: claude-4-opus
+    litellm_params:
+      model: openai/nvidia/nemotron-3-ultra-550b-a55b
+      api_base: https://integrate.api.nvidia.com/v1
+      api_key: os.environ/NVIDIA_API_KEY
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: openai/nvidia/nemotron-3-ultra-550b-a55b
+      api_base: https://integrate.api.nvidia.com/v1
+      api_key: os.environ/NVIDIA_API_KEY
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

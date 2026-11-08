@@ -79,6 +79,17 @@ echo.
 echo === Sync Complete ===
 echo Verify with: cd %TARGET% ^&^& python eval\harness.py
 echo.
+
+REM --- Advisory: external deps check (deps.yaml). Non-blocking. ---
+REM Features declare the software they need in deps.yaml; report what this
+REM machine is missing so synced features never fail silently.
+where aizee >nul 2>nul
+if %ERRORLEVEL% EQU 0 (
+    aizee deps check
+) else (
+    echo deps: aizee CLI not on PATH - run "python aizee_cli.py deps check" from the root
+)
+echo.
 pause
 endlocal
 exit /b 0
