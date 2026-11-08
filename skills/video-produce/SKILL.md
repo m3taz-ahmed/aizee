@@ -25,6 +25,8 @@ triggers:
 
 [CORE] Prompt → produce → deliver. When the user only wants a prompt, hand off to `video-prompt` and stop. When they want the video, this skill owns the whole run: intake → route → kit questions → build → gates → deliver.
 
+[RULES]
+
 ## 1. Intake — extract before asking
 
 From the message + chat history, extract: subject/idea, platform (aspect), duration, audio needs, style/mood, characters named, references sent, target model or kit named, deadline/cost sensitivity. Never re-ask answered dimensions.

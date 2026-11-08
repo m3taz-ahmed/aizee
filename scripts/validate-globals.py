@@ -79,7 +79,7 @@ def collect_rule_files(global_path: str) -> list[str]:
         if fname.endswith('.md') and os.path.isfile(os.path.join(global_path, fname)):
             rule_files.append(fname)
 
-    for d in ('rules', 'tech-stack', 'workflows', 'skills'):
+    for d in ('rules', 'tech-stack', 'workflows', 'skills', 'characters'):
         dir_path = os.path.join(global_path, d)
         if os.path.exists(dir_path):
             for root, _, files in os.walk(dir_path):
@@ -338,6 +338,15 @@ IGNORED_FILE_REFS = {
     # workflow-65 GENERATED artifacts (goldfish review output names — produced
     # into the spec's artifacts dir at runtime, not tracked aiZee inputs)
     'doc.md', 'goldfish_review_report.md', 'consolidated_review_report.md',
+    # illustrative example sheet name in the characters/ convention docs —
+    # <name>-char.md filled in, not a tracked file itself
+    'sara-char.md',
+    # external kit doc — lives under ~/.aizee/media/kits/motion-graphics/
+    # (device-local install outside the repo, not a tracked aiZee file)
+    'generative-video.md',
+    # archives/ is excluded from the deployment mirror (update_aizee.bat /XD)
+    # — working-root-only session index referenced from Memory.md audit entries
+    'devin-sessions-index.md',
 }
 
 _IGNORED_FILE_REFS_NORM = {x.replace("\\", "/").lower() for x in IGNORED_FILE_REFS}

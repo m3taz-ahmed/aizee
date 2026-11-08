@@ -27,6 +27,8 @@ triggers:
 
 [CORE] The user describes in their own words (Arabic/Egyptian OK); the skill does the translation. Never ask the user to write camera/lighting terms — offer choices in plain language and map them to film vocabulary internally.
 
+[RULES]
+
 ## 1. Trigger & Intake
 
 Fire when the user asks for a video prompt OR names a video model. Before asking anything, extract what the message already answers:
@@ -96,7 +98,7 @@ Canonical store: `characters/` at the aiZee root (global, works across projects 
 Convention — user's `-char` suffix design, refined:
 
 ```
-.ai/characters/
+characters/
 ├── README.md            # convention doc
 ├── _template-char.md    # copy this to create a character
 ├── sara-char.md         # THE SHEET — frontmatter + canonical description
