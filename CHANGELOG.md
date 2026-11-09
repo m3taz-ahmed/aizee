@@ -1,5 +1,9 @@
 # Changelog
 
+
+## [6.8.0] - 2026-11-09 (release automation + updating docs)
+
+
 ## [6.7.0] - 2026-11-07 (vercel-labs Adoption Pass - inert plans / skill lock / MCP freeze / doc links / offline catalog)
 
 ### Added (vercel-labs study adoption round — 396 repos surveyed, 28 deep-studied)

@@ -14,7 +14,7 @@
     },
     "rea": {
       "command": "npx",
-      "args": ["-y", "rea-agents@6.7.0", "mcp"]
+      "args": ["-y", "rea-agents@6.8.0", "mcp"]
     }
   },
   "disabledToolModules": [
