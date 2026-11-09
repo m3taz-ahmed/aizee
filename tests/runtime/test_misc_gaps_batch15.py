@@ -216,7 +216,7 @@ class TestPluginResidual:
         def flaky_stat(self: Path, *a: Any, **k: Any) -> Any:
             if self.parent == pkg:
                 calls["n"] += 1
-                if calls["n"] > 1:  # is_file (line 268) OK, loop stat (line 276) fails
+                if calls["n"] > 0:  # py3.14 is_file() bypasses Path.stat — only the loop call lands here
                     raise OSError
             return real_stat(self, *a, **k)
 
