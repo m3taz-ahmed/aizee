@@ -160,6 +160,17 @@ aizee heal      # تشخيص + إصلاح آمن (dry-run؛ --apply للتنفي
 aizee status    # الشخصية، المهارات، الميزانية
 ```
 
+### التحديث
+
+للنسخة **الموجودة أصلًا** (مش تثبيت جديد) — ملف واحد بيعمل كل حاجة:
+
+- **ويندوز:** دبل-كليك على `update.bat`
+- **أي نظام:** `python scripts/update.py --yes`
+
+اللي بيحصل: `git fetch` → حفظ أي تعديلات محلية (استرجاعها بـ `git stash pop`) → `git pull --rebase` → خطوات ما بعد التثبيت + تنبيه `aizee deps check`. بياناتك المتعلمة (`memory/`، `state/`، `brain/`، `.env`) متجاهلة في git ومحفوظة دائمًا. للمعاينة أولًا: `python scripts/update.py --dry-run`.
+
+للانتقال مباشرة لإصدار معيّن: `git checkout vX.Y.Z` ثم `python scripts/update.py --post-install-only`.
+
 ---
 
 ## المعمارية الأساسية

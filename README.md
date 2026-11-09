@@ -243,6 +243,17 @@ aizee heal      # Diagnose + safe autofixes (dry-run; --apply to fix)
 aizee status    # Current persona, skills, budget
 ```
 
+### Updating
+
+For an **existing install** (not a fresh install) — one file does everything:
+
+- **Windows:** double-click `update.bat`
+- **Any OS:** `python scripts/update.py --yes`
+
+What it does: `git fetch` → stashes any local edits (recover with `git stash pop`) → `git pull --rebase` → post-install hooks + `aizee deps check` advisory. Your learned data (`memory/`, `state/`, `brain/`, `.env`) is gitignored and always preserved. Preview first with `python scripts/update.py --dry-run`.
+
+To jump straight to a specific release: `git checkout vX.Y.Z` then `python scripts/update.py --post-install-only`.
+
 ---
 
 ## Core Architecture
