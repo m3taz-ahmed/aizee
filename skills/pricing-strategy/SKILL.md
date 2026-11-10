@@ -6,7 +6,6 @@ personas:
 triggers:
   - pricing strategy
   - pricing
-  - تسعير
   - retainer
   - value-based
 tech_stack:

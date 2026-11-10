@@ -103,3 +103,14 @@ archives/
 
 # Permanent reference clones (kept local-only, multi-GB)
 refs/
+
+# BMAD method framework + generated artifacts (local agent tooling)
+_bmad/
+_bmad-output/
+
+# Agent skill distribution (machine-local junctions/hardlinks -> skills/ — regenerated, never committed)
+.agents/
+.claude/skills/
+.devin/skills/
+
+runtime/_osroot.tar.gz

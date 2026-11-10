@@ -1,6 +1,40 @@
 # Changelog
 
 
+## [Unreleased] — 2026-11-10 Global skills migration into .ai (244-skill unified library)
+
+- **Migration:** all 87 skill dirs from `~/.agents/skills/` (BMAD suite ~34, marketingskills ~40, archify, video/image/misc) moved into `skills/` as canonical project skills; enriched with aiZee frontmatter (`personas`, `triggers`) via `temp/enrich_skills.py`; 12 rendered archify HTML examples (~9.8MB) dropped for progressive disclosure.
+- **Distribution:** `scripts/distribute-agent-skills.py` creates NTFS junctions/hardlinks into `.agents/skills` (244 entries), `.claude/skills`, `.devin/skills` so every agent harness resolves them per-project; `.claude`/`.devin` keep only `global-os`+`graphify`. `update_aizee.bat` excludes `.agents/skills` (+`/XJ`) so the junction forest never mirrors.
+- **Global cleanup:** `~/.agents/skills/` emptied after lock verification — skills no longer consume context in unrelated sessions; they resolve from `E:\server\.ai\.agents\skills\` junctions instead.
+- **BMAD localization:** `_bmad/` runtime stays project-local (gitignored); BMAD skills reference `{project-root}/_bmad/scripts/*` — updates now vendored through `skills/bmad-*` + lock, no global install needed.
+- **Architecture decision:** aiZee = identity/routing/governance; BMAD = lifecycle execution/artifacts. Full review + recommendations in `tech-stack/persona-bmad-review.md`.
+- **Gate fixes:** `pyproject.toml` ruff `exclude` += `"skills/"` (99 vendored .py files under skills/*/scripts are third-party — mypy already excluded skills/); validate-globals intentional-ref handling for runtime/template assets → 0 errors (1241 scanned).
+- **Gates:** skills-lock 244 locked/0 drift; check-docs 0 broken; memory ingest OK; mirror `E:\server\aizee` synced (195 dirs + 51 flat, lock 244).
+- **Persona-system implementation (review recommendations shipped):**
+  - `runtime/lifecycle.py` — BMAD phase detection (`_bmad/config.toml` active_initiative + `_bmad-output/` artifact markers) → `LifecyclePhase` enum + `PHASE_PERSONA_BIAS`; `None` on non-BMAD projects (zero regression).
+  - `runtime/persona.py` — `PersonaDetector(phase_detector=)` injectable; `detect_multiple` applies phase bias pre-selection, emits `lifecycle_phase` + `next_persona_hint`; `inject_persona_context` propagates both into context.
+  - `tests/test_lifecycle.py` — 14 tests: phase detection (markers, precedence, missing dirs) + bias + hint + injection.
+  - Trigger enrichment — `scripts/enrich-imported-triggers.py` (AR glossary + domain phrases on `metadata:`-marked imports, 55 skills) + `scripts/enrich-bmad-triggers.py` (curated AR triggers on 32 bmad-*/bmod-* skills) + `temp/clean_generic_triggers.py` removed 24 non-discriminative AR triggers (>3-skill share) + junk EN bigrams.
+  - `skills/finops.md` — new dedicated flat skill; `personas.yaml` FINOPS.skill `performance-engineer`→`finops` (MLOPS→ml-engineer verified correct — skill covers MLOps).
+  - `tech-stack/bmad-upstream-sync.md` — vendored-update runbook (no global install).
+  - README rewrite — badges canonical (245 skills/29 personas/66 workflows/271 stack), new "Unified Skill Library & BMAD Runtime" + "External Tooling & Auto-Provisioning" sections, lifecycle/handoff docs, deps commands; sync_docs owns counts (AGENTS/spec/README/README-AR).
+  - `pyproject.toml` ruff exclude += `"skills/"` (vendored scripts).
+- **Gates after implementation:** harness `all_pass:true` (ruff, mypy 223 files, pytest 7652, scenarios, validate-globals 1244 files 0 errors); skill lock 245/0 drift; check-docs 0 broken; sync_docs in sync; mirror re-synced + lock-check clean.
+
+
+## [Unreleased] — 2026-11-10 GitHub research wave (agentic video + dev/PM tooling)
+
+- **Research only** — no code changes. 81 repos cloned to `temp/repo-study-2026-11-10/` (depth-1); full report `temp/repo-study-2026-11-10/REPORT.md`.
+- **Video/image domain:** OpenMontage (AGPL, 79k★ — pipeline-manifest + stage-director + decision-log + capability-envelope patterns for `video-produce` v2), nexu-io agentic stack (open-design 107k★, html-anything, motion-anything 403 recipes, html-video, codex-slides), diffusionstudio suite (editor/core/agent/lottie/skills), kinetograph (Rust GPU compositor, Remotion-compatible), Wan2GP (GPU-poor one-stop gen app), FramePack, LTX-2.5, MiniMax-H3, HunyuanVideo-1.5, ComfyUI+12 nodes installed at `~/.aizee/media/apps/ComfyUI`, talking-head stack (LivePortrait/MuseTalk/hallo/SadTalker/Wav2Lip/facefusion), TTS/music zoo (kokoro/F5-TTS/GPT-SoVITS/CosyVoice/ACE-Step/audiocraft/demucs), dub/subtitle pipelines (VideoLingo/pyvideotrans/OpenCreator/pyJianYingDraft), enhance/segment stack (video2x/RIFE/Real-ESRGAN/IOPaint/rembg/SAM2/whisperX).
+- **Dev/PM domain:** spec-kit 149k★, OpenSpec 74k★, BMAD-METHOD 55k★, spec-kitty, spec-workflow-mcp, mda (multi-target agent-doc compiler), claude-code-templates 33k★, claude-mem 115k★, codebase-memory-mcp 48k★, archify 95k★, repomix (installed), plane 62k★, openproject, itsaplan, focalboard, leantime, AFFiNE/AppFlowy/outline/docmost, n8n 210k★, activepieces, windmill, kestra, agent browsers (agent-browser/ego-lite/BrowserOS/nanobrowser/camofox/BrowserSkill), devx layer (lazygit/mise/just/fd/bat/zoxide/fzf/git-cliff/gitbutler/biome/oxc/nx/turborepo).
+- **Installed this wave:** ComfyUI venv (py3.12, torch cu128) + `uv tool` set {yt-dlp(already), moviepy(lib), scenedetect, auto-editor, demucs, stable-ts, rembg[cpu], librosa} + `repomix` (bun global).
+- **GPU reality (RTX 4050 Laptop 6GB):** Wan2GP is the primary local-gen hub; ComfyUI lowvram/GGUF path; FramePack for I2V; avoid >14B full-precision. MiniMax H3 license excludes US/EU/UK/KR only — Egypt OK.
+- `tech-stack/useful-repos.md` += ~45 entries (dated wave section). Pending user decisions listed in REPORT.md §11.
+- **Implementation wave (same day, non-video/audio):** installed devx suite via mise+scoop {fd,bat,zoxide,fzf,lazygit,just,git-cliff,biome,hyperfine} + mise activate in both PS profiles; npm globals {n8n 2.47.3, mda, openspec, spec-workflow-mcp, agent-browser, oxlint}; uv tools {spec-kitty, specify-cli(spec-kit)}; cargo code2prompt; bun repomix (+`.bun\bin` added to user PATH); scoop GUI {super-productivity, gitbutler}; ComfyUI torch cu128 CUDA-verified; skills.sh global packs {archify, marketingskills ~40, BMAD-METHOD full}; spec-workflow MCP registered in `.devin/mcp_config.json`; `deps.yaml` +=22 entries (44 total, all verified via `aizee deps check --root`).
+- **Gate fixes (pre-existing failures surfaced by harness):** `config.py` `_version()` fallback literal bumped `"6.7.0"`→`"6.8.0"` (stale since 6.8.0 release — `test_no_version_match` enforces `_version()==VERSION`); `tests/test_config.py` stale literal → asserts `== config_mod.VERSION`; 3× SIM102 nested-if lint fixes in `runtime/budget.py`, `runtime/plugin.py`, `scripts/validate-globals.py` (behavior-identical); `tomli` installed into env (mypy `import-not-found` on the `<3.11` fallback branch of `runtime/tech_stack.py`); `aizee_mcp/aizee_server.py` ToolAnnotations kwargs camelCase→snake_case (mcp SDK 2.3.0 renamed fields — env drift).
+- **BMAD project scaffold:** `_bmad/` created in aiZee root via `~/.agents/skills/bmad/scripts/setup.py` (v6.13.0-next, 4 modules current) — detection pattern: `_bmad/` missing → `setup.py --status` → setup; `_bmad/`+`_bmad-output/` gitignored.
+
+
 ## [6.8.0] - 2026-11-09 (release automation + updating docs)
 
 

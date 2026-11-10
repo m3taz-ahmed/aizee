@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aizee"
-version = "6.8.0"
+version = "6.8.1"
 description = "aiZee — sovereign AI engineering control plane"
 readme = "README.md"
 license = "MIT"
@@ -78,6 +78,7 @@ exclude = ["tests*"]
 
 [tool.setuptools.package-data]
 "*" = ["*.yaml", "*.yml", "*.json", "*.md"]
+"runtime" = ["_osroot.tar.gz"]
 
 [tool.ruff]
 line-length = 100
@@ -94,6 +95,7 @@ exclude = [
     ".git",
     ".github",
     "scripts/ui-ux-pro-max",
+    "skills/",
     "skills/gsap-animated-frontend",
     "tmp/**",
     "scratch/**",

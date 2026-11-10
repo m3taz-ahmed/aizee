@@ -8,7 +8,6 @@ triggers:
   - lead generation crm
   - lead
   - CRM
-  - عميل محتمل
   - lead gen
   - prospecting
   - pipeline

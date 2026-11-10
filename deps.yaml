@@ -343,3 +343,252 @@ deps:
     guidance: >-
       Windows Graphics settings — set chrome.exe (and Playwright/Puppeteer
       chromium exes, per-path keys) to High performance so WebGL renders on the dGPU
+
+  # ---------- devx / agent tooling (research wave 2026-11-10) ----------
+  - id: mise
+    name: mise (dev toolchain manager)
+    kind: binary
+    bin: mise
+    version_cmd: ["mise", "--version"]
+    severity: optional
+    required_by: [devx-cli-suite]
+    tags: [devx]
+    install:
+      windows: scoop install mise
+      darwin: brew install mise
+      linux: curl https://mise.run | sh
+    guidance: >-
+      After install run `mise use -g fd bat zoxide fzf lazygit just git-cliff
+      biome hyperfine`, then add `mise activate` to your shell profile so the
+      tools resolve on PATH.
+
+  - id: devx-cli-suite
+    name: DevX CLI suite via mise (fd/bat/zoxide/fzf/lazygit/just/git-cliff/biome/hyperfine)
+    kind: command
+    check_cmd:
+      all: ["mise", "ls", "--global", "--no-header"]
+    expect_regex: "zoxide"
+    severity: optional
+    required_by: ["terminal productivity — fuzzy find, smart cd, fast cat, lazygit TUI, command runner, changelog gen, lint/format, benchmarking"]
+    tags: [devx]
+    guidance: Run `mise use -g fd bat zoxide fzf lazygit just git-cliff biome hyperfine`
+
+  - id: cli-repomix
+    name: repomix (repo -> single AI-friendly file)
+    kind: binary
+    bin: repomix
+    version_cmd: ["repomix", "--version"]
+    severity: optional
+    required_by: ["context packing for LLM prompts"]
+    tags: [devx, agent]
+    install:
+      all: npm i -g repomix
+    update:
+      all: npm i -g repomix@latest
+
+  - id: cli-code2prompt
+    name: code2prompt (repo -> prompt file, Rust)
+    kind: binary
+    bin: code2prompt
+    version_cmd: ["code2prompt", "--version"]
+    severity: optional
+    required_by: ["context packing for LLM prompts"]
+    tags: [devx, agent]
+    install:
+      all: cargo install code2prompt --locked
+
+  - id: cli-yt-dlp
+    name: yt-dlp (media downloader)
+    kind: binary
+    bin: yt-dlp
+    version_cmd: ["yt-dlp", "--version"]
+    severity: recommended
+    required_by: ["video-produce (stock footage / reference download)", "OpenMontage-style corpus paths"]
+    tags: [video, media]
+    install:
+      all: uv tool install yt-dlp
+
+  - id: cli-scenedetect
+    name: PySceneDetect (scene-cut detection)
+    kind: binary
+    bin: scenedetect
+    version_cmd: ["scenedetect", "--version"]
+    severity: optional
+    required_by: ["video-produce (segment planning)"]
+    tags: [video, media]
+    install:
+      all: uv tool install "scenedetect[opencv-headless]"
+
+  - id: cli-auto-editor
+    name: auto-editor (silence/boring-part cutter)
+    kind: binary
+    bin: auto-editor
+    version_cmd: ["auto-editor", "--version"]
+    severity: optional
+    required_by: ["video-produce (EDIT path)"]
+    tags: [video, media]
+    install:
+      all: uv tool install auto-editor
+
+  - id: cli-demucs
+    name: demucs (audio source separation)
+    kind: binary
+    bin: demucs
+    version_cmd: ["demucs", "--version"]
+    severity: optional
+    required_by: ["audio post — vocals/drums/bass stems"]
+    tags: [audio, media]
+    install:
+      all: uv tool install demucs
+
+  - id: cli-stable-ts
+    name: stable-ts (stabilized whisper timestamps)
+    kind: binary
+    bin: stable-ts
+    version_cmd: ["stable-ts", "--version"]
+    severity: optional
+    required_by: ["video-produce (word-level subtitle timing)"]
+    tags: [video, media, stt]
+    install:
+      all: uv tool install stable-ts
+
+  - id: cli-rembg
+    name: rembg (background removal, CPU)
+    kind: binary
+    bin: rembg
+    version_cmd: ["rembg", "--version"]
+    severity: optional
+    required_by: ["image assets — transparent PNG cutouts"]
+    tags: [image, media]
+    install:
+      all: uv tool install "rembg[cpu]"
+
+  - id: app-comfyui
+    name: ComfyUI (+12 custom nodes)
+    kind: git-repo
+    path: "{media}/apps/ComfyUI"
+    repo: https://github.com/comfyanonymous/ComfyUI
+    severity: recommended
+    required_by: ["local image/video generation — WanVideoWrapper, GGUF, IPAdapter, ReActor, LivePortraitKJ, TTS-Audio-Suite, RMBG, VideoHelperSuite, AnimateDiff, Impact-Pack, KJNodes, Manager"]
+    tags: [video, image, genai]
+    guidance: >-
+      Venv at {media}/apps/ComfyUI/.venv (py3.12 + torch cu128, CUDA-verified on
+      RTX 4050 6GB). Launch: `.venv\Scripts\python.exe main.py`. Low-VRAM:
+      use GGUF quants + --lowvram; see REPORT.md repo-study-2026-11-10.
+
+  - id: cli-spec-kitty
+    name: spec-kitty (spec->plan->tasks->review->accept->merge CLI)
+    kind: binary
+    bin: spec-kitty
+    version_cmd: ["spec-kitty", "--version"]
+    severity: optional
+    required_by: ["spec-driven development workflows"]
+    tags: [devx, sdd]
+    install:
+      all: uv tool install spec-kitty-cli
+
+  - id: cli-specify
+    name: specify CLI (GitHub spec-kit — spec-driven development)
+    kind: binary
+    bin: specify
+    version_cmd: ["specify", "--version"]
+    severity: optional
+    required_by: ["spec-driven development — /speckit.* commands in agent projects"]
+    tags: [devx, sdd]
+    install:
+      all: uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+
+  - id: cli-openspec
+    name: OpenSpec CLI (spec->plan->tasks->apply for coding agents)
+    kind: binary
+    bin: openspec
+    version_cmd: ["openspec", "--version"]
+    severity: optional
+    required_by: ["spec-driven development — openspec/ project artifacts"]
+    tags: [devx, sdd]
+    install:
+      all: npm i -g @fission-ai/openspec
+    guidance: >-
+      Per-project setup: run `openspec init --tools <ids>` inside the target
+      repo — do NOT run it inside the aiZee root.
+
+  - id: cli-spec-workflow-mcp
+    name: spec-workflow-mcp (@pimzino — spec workflow MCP + dashboard)
+    kind: binary
+    bin: spec-workflow-mcp
+    version_cmd: ["spec-workflow-mcp", "--version"]
+    severity: optional
+    required_by: ["spec-driven development — MCP server + live dashboard"]
+    tags: [devx, sdd, mcp]
+    install:
+      all: npm i -g @pimzino/spec-workflow-mcp
+
+  - id: cli-agent-browser
+    name: agent-browser (vercel-labs — browser automation CLI for agents)
+    kind: binary
+    bin: agent-browser
+    version_cmd: ["agent-browser", "--version"]
+    severity: optional
+    required_by: ["agent web automation — logged-in sessions, scraping, E2E"]
+    tags: [devx, agent]
+    install:
+      all: npm i -g agent-browser
+
+  - id: cli-oxlint
+    name: oxlint (oxc-project — fast JS/TS linter)
+    kind: binary
+    bin: oxlint
+    version_cmd: ["oxlint", "--version"]
+    severity: optional
+    required_by: ["JS/TS lint in agent-driven projects"]
+    tags: [devx]
+    install:
+      all: npm i -g oxlint
+
+  - id: cli-mda
+    name: mda (@markdown-ai/cli — .mda -> SKILL/AGENTS/MCP multi-target compiler)
+    kind: binary
+    bin: mda
+    version_cmd: ["mda", "--version"]
+    severity: optional
+    required_by: ["multi-adapter agent docs — compile once, emit for claude/codex/cursor/etc"]
+    tags: [devx, agent]
+    install:
+      all: npm i -g @markdown-ai/cli
+
+  - id: cli-n8n
+    name: n8n (workflow automation, 400+ integrations, native AI)
+    kind: binary
+    bin: n8n
+    version_cmd: ["n8n", "--version"]
+    severity: recommended
+    required_by: ["PM/automation backbone — agent-triggered workflows, integrations"]
+    tags: [automation, pm]
+    install:
+      all: npm i -g n8n
+    guidance: Launch with `n8n` (web UI on :5678). Fair-code license — self-hosted use is free.
+
+  - id: app-super-productivity
+    name: Super Productivity (todo + timeboxing + Jira/GitHub integrations)
+    kind: any-path
+    paths:
+      - "E:\\scoop\\apps\\super-productivity\\current\\Super Productivity.exe"
+      - "{user_profile}\\scoop\\apps\\super-productivity\\current\\Super Productivity.exe"
+    severity: optional
+    required_by: ["personal PM — task/time tracking"]
+    tags: [pm]
+    install:
+      windows: scoop install super-productivity
+    guidance: GUI app — launch from Start menu; integrates Jira/GitLab/GitHub/CalDAV. Exe name contains a space so no PATH shim — check via install path.
+
+  - id: app-gitbutler
+    name: GitButler (virtual-branch VCS client + `but` CLI)
+    kind: binary
+    bin: but
+    version_cmd: ["but", "--version"]
+    severity: optional
+    required_by: ["advanced git workflows — stacked/virtual branches"]
+    tags: [devx, git]
+    install:
+      windows: scoop install gitbutler
+    guidance: GUI = gitbutler-tauri.exe (Start-menu shortcut); CLI = `but` on PATH.

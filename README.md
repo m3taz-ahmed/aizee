@@ -1,33 +1,33 @@
 <!-- mcp-name: com.m3taz-ahmed/aizee -->
 <div align="center">
-  <img src="logo.png" width="160" alt="aiZee Logo">
+  <img src="https://raw.githubusercontent.com/m3taz-ahmed/aizee/main/logo.png" width="160" alt="aiZee Logo">
   <h1>aiZee</h1>
   <p><strong>Your AI agent ships hallucinated APIs and secrets.<br>aiZee blocks them — enforced, not advised.</strong></p>
 
   <p>
     <img src="https://img.shields.io/badge/Version-6.8.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.8.0">
-    <img src="https://img.shields.io/badge/Tests-7624%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7624 passed">
+    <img src="https://img.shields.io/badge/Tests-7656%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7656 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-155-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="155 Skills">
+    <img src="https://img.shields.io/badge/Skills-245-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="245 Skills">
     <img src="https://img.shields.io/badge/Workflows-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 Workflows">
-    <img src="https://img.shields.io/badge/Tech--Stack-269-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="269 Tech-Stack refs">
+    <img src="https://img.shields.io/badge/Tech--Stack-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 Tech-Stack refs">
   </p>
 </div>
 
 ---
 
-[Read this in Arabic](README-AR.md) · [Changelog](CHANGELOG.md) · [Installer Guide](#installation) · [llms.txt](llms.txt)
+[Read this in Arabic](https://github.com/m3taz-ahmed/aizee/blob/main/README-AR.md) · [Changelog](https://github.com/m3taz-ahmed/aizee/blob/main/CHANGELOG.md) · [Installer Guide](#installation) · [llms.txt](https://github.com/m3taz-ahmed/aizee/blob/main/llms.txt)
 
 ---
 
 ## See it block something
 
 <div align="center">
-  <img src="docs/media/demo.gif" width="780" alt="aiZee denies a secret-committing action, then reports doctor verdict ready">
+  <img src="https://raw.githubusercontent.com/m3taz-ahmed/aizee/main/docs/media/demo.gif" width="780" alt="aiZee denies a secret-committing action, then reports doctor verdict ready">
 </div>
 
 ```console
@@ -61,6 +61,45 @@ A **zero-compromise, version-controlled operating system** that sits between you
 | Guardrails that exist but aren't on the path | **v6: enforcement wired into `Kernel.act()` + every MCP call** |
 
 ---
+
+## What's New — Unified Skill Library & BMAD Runtime (v6.8.0+)
+
+The skill surface grew from 155 to **245 skills** — the entire agent-skills
+ecosystem is now vendored, persona-mapped, trigger-enriched (EN+AR), and
+integrity-locked inside the repo:
+
+- **BMAD-METHOD vendored** — all ~34 BMAD skills (`bmad-*`, `bmod-*`) live in
+  `skills/` with the project-local `_bmad/` runtime (config, scripts, ticket
+  tree). Agents: **Mary** (analyst), **John** (PM), **Winston** (architect),
+  **Sally** (UX), **Sofia** (PO), **Amelia** (dev) — invoked by natural
+  language, no global install needed.
+- **Marketing/growth suite** — ~55 skills (seo-audit, ai-seo, cro, ads,
+  cold-email, launch, pricing, paywalls, onboarding, referrals, revops…)
+  with bilingual triggers.
+- **Lifecycle-aware persona routing** — `runtime/lifecycle.py` reads the
+  active BMAD initiative (`_bmad/config.toml` + `_bmad-output/` artifacts)
+  and biases persona detection toward the current phase (discovery → PRD →
+  breakdown → architecture → UX → implementation → review → retro).
+  Non-BMAD projects are unaffected (`phase=None` → keyword-only routing).
+- **Handoff hints** — `detect_multiple` emits `next_persona_hint`, the
+  highest-scoring persona outside the selected set, injected into context
+  for smooth cross-domain transitions.
+- **Per-project skill distribution** — `scripts/distribute-agent-skills.py`
+  junctions/hardlinks all 245 skills into `.agents/skills` (every agent
+  harness: Devin, Claude, Cursor, Codex…) plus `.claude/skills` and
+  `.devin/skills`; nothing stays global, so unrelated sessions stay lean.
+- **Trigger enrichment + lint** — imported skills got Arabic glossary
+  triggers; `scripts/enrich-imported-triggers.py` /
+  `enrich-bmad-triggers.py` are idempotent and re-runnable after upstream
+  updates.
+- **FINOPS persona fixed** — new dedicated `finops` skill replaces the
+  mismatched `performance-engineer` mapping.
+- **External deps manifest** — `deps.yaml` declares every tool aiZee
+  features need (binaries, pip, git-repos, docker, env); `aizee deps
+  check|install` verifies and provisions them (see
+  [External Tooling](#external-tooling--auto-provisioning)).
+
+Full analysis: `tech-stack/persona-bmad-review.md`.
 
 ## What's New in v6.7.0 — vercel-labs Adoption Pass
 
@@ -176,7 +215,7 @@ Enforcement moved onto the execution path in v6.0.0:
 - **Fact-forcing guardrail** — recoverable destructive commands (force-push, hard reset) pass only with explicit `{target, rollback}` facts; catastrophic ones stay hard-blocked.
 - **Prompt-defense baseline** — every materialized harness rules file carries a fixed anti-injection section (identity lock, secret non-disclosure, untrusted external content, unicode-trick suspicion).
 
-Full detail: [CHANGELOG.md](CHANGELOG.md)
+Full detail: [CHANGELOG.md](https://github.com/m3taz-ahmed/aizee/blob/main/CHANGELOG.md)
 
 ---
 
@@ -241,6 +280,7 @@ Both install and update run the `scripts/stale_files.txt` retirement list, so fi
 aizee doctor    # Health check (46 checks)
 aizee heal      # Diagnose + safe autofixes (dry-run; --apply to fix)
 aizee status    # Current persona, skills, budget
+aizee deps install   # Provision external tools declared in deps.yaml
 ```
 
 ### Updating
@@ -256,6 +296,42 @@ To jump straight to a specific release: `git checkout vX.Y.Z` then `python scrip
 
 ---
 
+## External Tooling & Auto-Provisioning
+
+aiZee features sometimes need software that lives **outside** this repo —
+CLI tools, pip packages, media kits, docker images, API keys. All of it is
+declared in **`deps.yaml`** (44 entries) so nothing is a silent missing
+requirement:
+
+```bash
+aizee deps check            # Report every dep: ok / missing / wrong version
+aizee deps check --tag video # Filter by group (video, devx, agent, media…)
+aizee deps install           # Provision everything unsatisfied (per-OS cmds)
+aizee deps install --dry-run # Preview commands without running
+aizee doctor                 # deps verdict folded into the health report
+```
+
+`install.ps1` / `install.sh` / `scripts/update.py` already run
+`aizee deps check` as a post-install hook and offer to install what's
+missing — so a fresh clone reaches full capability with one command.
+
+| Category | Examples | Needed for |
+| :--- | :--- | :--- |
+| **Core (bundled)** | Python 3.10+, SQLite, pyyaml, pydantic | Everything — zero extra installs |
+| **DevX CLIs** | repomix, code2prompt, oxlint, agent-browser | Context packing, repo→prompt, JS lint, agent browsing |
+| **Spec/SDD** | specify (spec-kit), openspec, spec-kitty, spec-workflow-mcp | Spec-driven development workflows |
+| **Automation** | n8n, super-productivity, gitbutler | Workflow automation, PM, git branches |
+| **Media kits** | cinecode, bang-motion, motion-graphics (`~/.aizee/media`) | Video/motion production (optional) |
+| **ComfyUI** | `~/.aizee/media/apps/ComfyUI` + custom nodes | Local image/video generation (optional, GPU) |
+| **Docker** | Docker Desktop + `code2video` image | code2video plugin rendering (optional) |
+
+**Optional by design:** media/video deps are `severity: optional` — core
+governance, personas, skills, memory, and MCP work fully without them.
+`aizee deps check` tells you exactly what each feature is missing and the
+one command that fixes it.
+
+---
+
 ## Core Architecture
 
 ```
@@ -263,20 +339,24 @@ To jump straight to a specific release: `git checkout vX.Y.Z` then `python scrip
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 137 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 139 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
 │   ├── injection_detector.py# L1 regex + L2 embeddings + L3 LLM-judge
+│   ├── lifecycle.py         # BMAD phase detection → persona routing bias
 │   ├── codemode/            # Sandboxed code-mode tool execution
 │   └── policies/            # default/guardian/probity/mcp_firewall YAMLs
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
 ├── aizee_mcp/               # MCP server (46 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
-├── skills/                  # 155 persona + lord skills
+├── skills/                  # 245 persona + lord + BMAD + marketing skills
+├── _bmad/                   # BMAD runtime (config/scripts — gitignored)
+├── .agents/skills           # Junction distribution for agent harnesses
+├── deps.yaml                # External dependency manifest (check/install)
 ├── workflows/               # 66 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
-├── tech-stack/              # Version-locked stack references
+├── tech-stack/              # 271 version-locked stack references
 ├── dashboard/               # Web dashboard (Python stdlib HTTP)
 ├── scripts/                 # Installers, validators, MCP wrappers
 ├── install.ps1 / install.sh # Idempotent OS installer
@@ -288,11 +368,22 @@ To jump straight to a specific release: `git checkout vX.Y.Z` then `python scrip
 ## The Six Pillars
 
 ### 1. Persona + Skill Composition
-29 personas (`ARCH`, `QA`, `SEC`, `DEV`, `SRE`, `DATA`, `ML`, `DEVOPS`, `API`, `FREELANCE`, `MARKETING`, `GROWTH`, `BRAND`, `EMAIL`, `SOCIAL`, `CRO`, `SALES`, etc.) with lord-level domain skills. Auto-detected per task — no manual selection needed.
+29 personas (`ARCH`, `QA`, `SEC`, `DEV`, `SRE`, `DATA`, `ML`, `MLOPS`, `FINOPS`, `DEVOPS`, `API`, `FREELANCE`, `MARKETING`, `GROWTH`, `BRAND`, `EMAIL`, `SOCIAL`, `CRO`, `SALES`, etc.) with lord-level domain skills — auto-detected per task, no manual selection needed.
+
+Two routing layers on top of keyword scoring:
+
+- **Lifecycle phase bias** — when a BMAD initiative is active, `_bmad-output/`
+  artifacts reveal the current phase (PRD → architecture → stories → review)
+  and `runtime/lifecycle.py` biases selection toward the matching persona
+  (e.g. mid-implementation → `DEV`, mid-review → `QA`+`ARCH`).
+- **Handoff hints** — the result carries `next_persona_hint`: the strongest
+  persona outside the selected set, so cross-domain tasks ("review the
+  design, then implement") transition cleanly.
 
 ```bash
 aizee persona detect --multi "build a secure docker API with postgres"
 # → Primary: ARCH + Secondary: SEC, DEVOPS + Lords: security-lord, cloud-platforms-lord
+# + lifecycle_phase / next_persona_hint when a BMAD initiative is active
 ```
 
 ### 2. Runtime Governance
@@ -393,6 +484,14 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 | `aizee bootstrap --target DIR` | Materialize an OS root (post-`pip install`) |
 | `aizee ci` | Full CI gates incl. reliability release gate |
 | `aizee security scan <path>` | SAST + external scanner orchestration |
+| `aizee deps check\|install [ids]` | Verify/provision external deps (deps.yaml) |
+| `aizee skill lock-check\|lock-update` | Skill integrity: drift detection / re-lock |
+| `aizee mcp freeze <srv> [--check]` | Snapshot-lock MCP tool surface |
+| `aizee check-docs` | Validate `[[file#symbol]]` doc references |
+| `aizee spec review <spec>` | Goldfish reviewer-pipeline plan |
+| `aizee intel <domain>` | DNS/WHOIS/certs/subdomain recon |
+| `aizee eval` | Behavioral skill-scenario checks |
+| `aizee persona detect --multi` | Multi-persona + lifecycle phase + hints |
 
 ---
 
@@ -404,7 +503,7 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 | Types | `mypy` | 0 errors (strict) |
 | Tests (fast) | `aizee test` | fast tier, no coverage |
 | Tests (full) | `aizee test --full` | full suite, coverage floor 100% |
-| Integrity | `scripts/validate-globals.py` | 540 files, 0 errors |
+| Integrity | `scripts/validate-globals.py` | 1242 files, 0 errors |
 | Docs sync | `scripts/sync_docs.py --check` | in sync |
 | E2E | `python eval/harness.py` | all gates pass |
 | Release | `python eval/release_gate.py` | reliability ladder over rollout evidence |
@@ -419,6 +518,25 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 - **Dashboard:** Python stdlib HTTP server + SQLite
 - **Knowledge graph:** graphify (optional)
 - **Dependencies:** pyyaml, pydantic, rich, cryptography, numpy, turbovec
+
+---
+
+## How aiZee compares
+
+aiZee is not a skills collection or a process framework — it is the **policy layer** that governs what any of them may do. The categories compose:
+
+| | aiZee | BMAD-METHOD | spec-kit | claude-skills |
+| :--- | :--- | :--- | :--- | :--- |
+| **Category** | Governance + agent OS | Agile-ai process | Spec-driven toolkit | Skill library |
+| **Enforcement** | Runtime gates on every action | Process conventions | Spec templates | None (content only) |
+| **Skills** | 245 vendored, hash-locked | ~34 `bmad-*` | Templates | 410+ |
+| **Personas** | 29 auto-detected + lifecycle-aware | 6 named agents | — | — |
+| **Memory** | Hybrid SQLite + vectors, bi-temporal | `persistent_facts` files | — | — |
+| **MCP** | Server (46 tools) + client firewall | — | — | — |
+| **Install** | `pip install aizee` | `npx skills add` | `uvx specify` | `npx skills add` |
+| **Best for** | Governing what agents *may do* | Running the agile-ai lifecycle | Spec-driven workflows | Plug-and-play skills |
+
+**They compose, not compete:** aiZee can govern BMAD workflows end-to-end (its `_bmad/` runtime is detected by `runtime/lifecycle.py`), ingest skills from any agent-skills repo into its locked library, and enforce policy over spec-kit-driven development.
 
 ---
 
@@ -456,11 +574,11 @@ Everything else (topics, description, release, `llms.txt`, root `SKILL.md`,
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](https://github.com/m3taz-ahmed/aizee/blob/main/LICENSE).
 
 ---
 
 <div align="center">
   <p><strong>aiZee</strong> — The policy layer for AI coding.</p>
-  <p>Built by <a href="https://linkedin.com/in/moataz-ahmed">Moataz Ahmed</a></p>
+  <p>Built by <a href="https://linkedin.com/in/m3taz-ahmed">Moataz Ahmed</a></p>
 </div>

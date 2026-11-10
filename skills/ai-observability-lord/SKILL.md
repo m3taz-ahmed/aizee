@@ -12,7 +12,6 @@ triggers:
   - openinference
   - otel
   - مراقبة
-  - تتبع
 personas:
   - SRE
   - ML

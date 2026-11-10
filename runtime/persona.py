@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 from typing import Any, ClassVar, cast
 
 import yaml
 
+from runtime.lifecycle import PHASE_PERSONA_BIAS, LifecyclePhase, detect_phase
 from runtime.skill_resolver import SkillResolver
 
 
@@ -276,6 +277,10 @@ def inject_persona_context(
     context["personas"] = result["personas"]
     context["skills"] = result["skills"]
     context["lords"] = result["lords"]
+    if result.get("lifecycle_phase"):
+        context["lifecycle_phase"] = result["lifecycle_phase"]
+    if result.get("next_persona_hint"):
+        context["next_persona_hint"] = result["next_persona_hint"]
     return context
 
 
@@ -312,11 +317,17 @@ class PersonaDetector:
         for kw in team.get("keywords", [])
     }
 
-    def __init__(self, default: str = DEFAULT, skill_resolver: SkillResolver | None = None) -> None:
+    def __init__(
+        self,
+        default: str = DEFAULT,
+        skill_resolver: SkillResolver | None = None,
+        phase_detector: Callable[[], LifecyclePhase | None] | None = None,
+    ) -> None:
         if default not in self.PERSONAS:
             raise ValueError(f"Unknown default persona: {default}")
         self.default = default
         self.skill_resolver = skill_resolver or SkillResolver()
+        self._phase_detector = phase_detector if phase_detector is not None else detect_phase
 
     def list_personas(self) -> list[str]:
         """Return all defined persona codes."""
@@ -411,10 +422,18 @@ class PersonaDetector:
         - default: the default persona code
         """
         scores = self._score_personas(text)
+        phase = self._phase_detector()
+        if phase is not None:
+            for code, bonus in PHASE_PERSONA_BIAS.get(phase, {}).items():
+                scores[code] = scores.get(code, 0.0) + bonus
         sorted_personas = sorted(scores, key=lambda k: scores[k], reverse=True)
         selected = [p for p in sorted_personas if scores[p] > 0][:max_personas]
         if not selected:
             selected = [self.default]
+        next_persona_hint = next(
+            (p for p in sorted_personas if p not in selected and scores[p] > 0),
+            None,
+        )
 
         primary = selected[0]
 
@@ -465,6 +484,8 @@ class PersonaDetector:
             "teams": self.detect_teams(text),
             "scores": normalized,
             "default": self.default,
+            "lifecycle_phase": phase.value if phase is not None else None,
+            "next_persona_hint": next_persona_hint,
         }
 
     def detect(self, text: str) -> dict[str, Any]:

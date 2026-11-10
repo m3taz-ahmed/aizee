@@ -22,8 +22,33 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+import tarfile
 from dataclasses import dataclass, field
 from pathlib import Path
+
+_OSROOT_ARCHIVE = Path(__file__).with_name("_osroot.tar.gz")
+
+
+def _extract_osroot(target: Path, *, force: bool, dry_run: bool) -> tuple[int, int]:
+    """Extract the shipped doctrine bundle; returns (extracted, skipped)."""
+    if not _OSROOT_ARCHIVE.is_file():
+        return -1, 0
+    extracted = skipped = 0
+    with tarfile.open(_OSROOT_ARCHIVE, "r:gz") as tar:
+        members = [m for m in tar.getmembers() if m.isfile() and not m.name.startswith("/") and ".." not in m.name.split("/")]
+        for m in members:
+            dest = target / m.name
+            if dest.exists() and not force:
+                skipped += 1
+                continue
+            extracted += 1
+            if not dry_run:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                src = tar.extractfile(m)
+                if src is not None:
+                    with dest.open("wb") as out:
+                        shutil.copyfileobj(src, out)
+    return extracted, skipped
 
 _DEFAULT_POLICY = """\
 name: default
@@ -109,6 +134,7 @@ class BootstrapResult:
     written_files: list[str] = field(default_factory=list)
     skipped_existing: list[str] = field(default_factory=list)
     mcp_synced: bool = False
+    osroot_files: int = 0
     notes: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, object]:
@@ -119,6 +145,7 @@ class BootstrapResult:
             "written_files": self.written_files,
             "skipped_existing": self.skipped_existing,
             "mcp_synced": self.mcp_synced,
+            "osroot_files": self.osroot_files,
             "notes": self.notes,
         }
 
@@ -177,6 +204,14 @@ def bootstrap(
         if not dry_run:
             env_example.write_text(_ENV_EXAMPLE, encoding="utf-8", newline="\n")
         result.written_files.append(".env.example")
+
+    extracted, _skipped = _extract_osroot(target, force=force, dry_run=dry_run)
+    if extracted >= 0:
+        result.osroot_files = extracted
+        if extracted:
+            result.notes.append(f"osroot bundle: {extracted} files materialized")
+    else:
+        result.notes.append("osroot bundle not found — minimal install (no skills/workflows)")
 
     if mcp_sync and not dry_run:
         sync_script = (source_root or Path(__file__).resolve().parent.parent) / "scripts" / "mcp_global_sync.py"

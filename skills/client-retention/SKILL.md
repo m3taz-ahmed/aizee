@@ -10,7 +10,6 @@ triggers:
   - upsell
   - cross-sell
   - client retention
-  - إحالة
 tech_stack:
   - twentyhq/twenty
   - lago/getlago

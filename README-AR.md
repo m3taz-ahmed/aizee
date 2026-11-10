@@ -5,15 +5,15 @@
 
   <p>
     <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.8.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.8.0">
-    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7624%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7624 اختبار ناجح">
+    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7656%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7656 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/%D8%B4%D8%AE%D8%B5%D9%8A%D8%A7%D8%AA-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 شخصية">
-    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-151-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="155 مهارة">
+    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-245-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="245 مهارة">
     <img src="https://img.shields.io/badge/%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 سير عمل">
-    <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-269-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="269 مرجع تقنية">
+    <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 مرجع تقنية">
   </p>
 </div>
 
@@ -24,6 +24,26 @@
 [اقرأ النسخة الإنجليزية](README.md) · [سجل التغييرات](CHANGELOG.md) · [دليل التثبيت](#التثبيت)
 
 ---
+
+## شوفه يمنع حاجة
+
+<div align="center">
+  <img src="docs/media/demo.gif" width="780" alt="aiZee يرفض إجراءً يحاول commit لملف secrets ثم يبلغ عن جاهزية doctor">
+</div>
+
+```console
+$ aizee check 'Bash' --args '{"command":"git add .env && git commit -m keys"}'
+{
+  "ok": false,
+  "decision": "deny",
+  "reason": "guardian: commits secrets file .env"
+}
+
+$ aizee doctor --json | jq .verdict
+"ready"
+```
+
+كل استدعاء أداة، طلب LLM، كتابة ذاكرة، أو تغيير ملف بيمر عبر `Kernel.act()` — **Probity → Guardian → Policy → LoopDetector → Budget → Audit** — فالرفض جدار مش مجرد اقتراح.
 
 ## ما هو aiZee؟
 
@@ -41,6 +61,21 @@
 
 ---
 
+## الجديد — مكتبة مهارات موحدة + بيئة BMAD (v6.8.0+)
+
+سطح المهارات كبر من 155 لـ**245 مهارة** — منظومة agent-skills كاملة بقت مدمجة جوه الريبو، مربوطة بالشخصيات، والتريجرز مترجمة (EN+AR)، والنزاهة مقفولة بالـlock:
+
+- **BMAD-METHOD مدمج بالكامل** — كل مهارات BMAD (~34: `bmad-*`، `bmod-*`) عايشة في `skills/` مع بيئة `_bmad/` المحلية (config + scripts + شجرة التذاكر). الوكلاء: **Mary** (محللة)، **John** (PM)، **Winston** (مهندس معماري)، **Sally** (UX)، **Sofia** (PO)، **Amelia** (مطورة) — بيناديهم بلغة طبيعية، من غير تثبيت global.
+- **حزمة تسويق/نمو** — ~55 مهارة (seo-audit، ai-seo، cro، ads، cold-email، launch، pricing، paywalls، onboarding، referrals، revops…) بتريجرز ثنائية اللغة.
+- **توجيه شخصيات واعٍ بدورة الحياة** — `runtime/lifecycle.py` بيقرا الـinitiative النشطة في BMAD (`_bmad/config.toml` + artifacts في `_bmad-output/`) وبيميل اختيار الشخصية للمرحلة الحالية (discovery → PRD → breakdown → architecture → UX → implementation → review → retro). المشاريع بدون BMAD مش بتتأثر.
+- **تلميحات التسليم** — `detect_multiple` بيرجّع `next_persona_hint`: أقوى شخصية خارج المختارين، بتتحقن في السياق عشان المهام متعددة المجالات تنتقل بسلاسة.
+- **توزيع المهارات لكل مشروع** — `scripts/distribute-agent-skills.py` بيعمل junctions/hardlinks لكل الـ245 مهارة في `.agents/skills` (كل agent harness: Devin، Claude، Cursor، Codex…) + `.claude/skills` + `.devin/skills` — مفيش حاجة بتفضل global فالجلسات التانية تفضل خفيفة.
+- **إثراء التريجرز + lint** — المهارات المستوردة خدّت تريجرز عربية؛ السكريبتات `enrich-imported-triggers.py` / `enrich-bmad-triggers.py` قابلة لإعادة التشغيل بعد تحديثات upstream.
+- **شخصية FINOPS اتصلحت** — مهارة `finops` مخصصة جديدة بدل الربط الغلط بـ`performance-engineer`.
+- **مانيفست الاعتماديات الخارجية** — `deps.yaml` بيعلن كل أداة محتاجاها aiZee (binaries، pip، git-repos، docker، env)؛ `aizee deps check|install` بيتحقق ويوفّرها (شوف [الأدوات الخارجية](#الأدوات-الخارجية--التوفير-التلقائي)).
+
+التحليل الكامل: `tech-stack/persona-bmad-review.md`.
+
 ## الجديد في v6.7.0 — تبنّي vercel-labs
 
 من مسح 396 مستودعًا في vercel-labs (28 بدراسة عميقة؛ التقرير في `vercel-labs-study-2026-11.md`):
@@ -53,6 +88,16 @@
 - **كتالوج models.dev أوفلاين** — `aizee models --catalog [--query]`: 886 نموذجًا/12 مزوّدًا من نسخة مثبّتة.
 - **عقد الأخطاء** — `AizeeError.scope`/`public` + `to_public_dict()` لتنقية أخطاء MCP/CLI.
 - **طبقة التفعيل** — كل قدرة موصولة للاستخدام التلقائي مش مجرد مثبّتة: قسم `Command Surface & Auto-Triggers` في `AGENTS.md` (ينتشر لكل محوّلات الوكلاء) + 4 مهارات trigger (`inert-plan-runner`، `mcp-surface-integrity`، `docs-drift-check`، `skill-lock-integrity`) عشان كشف الشخصيات يقترح الأمر الصح في الوقت الصح، وقواعد أحداث تشغّل البوابات (بعد التثبيت → lock-check، تغيير MCP → freeze --check، تعديل دوكس → check-docs) بدون ما تسأل.
+
+## الجديد في v6.6.0 — موجة تبنّي Repo-Study
+
+اتبنّت من دراسة منظمة لـgoogle/elephant-goldfish-model وwotschofsky/domain-digger وgodotengine/godot (التقرير الكامل في `repo-study-2026-11.md`):
+
+- **مراجعة مواصفات Goldfish** — `aizee spec review <spec_id|--file> [--preset]` بيخطّط pipeline مراجع بسياق صفري جديد (منقولة من EGM): فصل دلالي spec/plan، 5 شخصيات مراجع على مراحل، فرز شدة + تجميع تتبع. المعايير والشخصيات المرخّصة Apache-2.0 تحت `resources/`؛ الوركفلو: `workflows/65-goldfish-review.md`.
+- **تغليف مهارات متعدد المحفّزات** — `aizee skill link --pack <dir>` بيطلّع حزمة محمولة بأسلوب EGM: `plugin.json` قانوني + manifests لـ`.claude-plugin/` و`.codex-plugin/` و`.cursor-plugin/` و`.agents/` + `skills/` و`agents/` و`resources/` vendored. الاستبدال fail-closed على وجهات مش حزم.
+- **عدّة استخبارات نطاق** — `aizee intel <domain>` + 7 أدوات MCP (`runtime/dns_wire.py` + `runtime/domain_intel.py`، إعادة كتابة بايثون لمفاهيم domain-digger): codec بصيغة DNS wire، UDP→TCP fallback، مشي authoritative تكراري، DoH، WHOIS، تاريخ شهادات، وتعداد subdomains — كلها محدودة وfail-closed.
+- **تقييم سيناريوهات المهارات** — `eval/skill_scenarios.py` بيشغّل فحوص سلوكية static/live (`eval/scenarios/goldfish-review.yaml`) ويدخلها في الـharness كبوابة `skill-scenarios`.
+- **مرجع Godot** — سورس المحرك الكامل مثبّت تحت `refs/godot` (محلي فقط) + `tech-stack/godot-4.md` بيسجّل التثبيت المحمول الموثّق (`4.7.2.stable.official`) لخط GAME.
 
 ## الجديد في v6.1.0 — سطح أخف وأصدق
 
@@ -158,6 +203,7 @@ export AIZEE_ROOT=~/.aizee
 aizee doctor    # فحص صحة (46 فحصًا)
 aizee heal      # تشخيص + إصلاح آمن (dry-run؛ --apply للتنفيذ)
 aizee status    # الشخصية، المهارات، الميزانية
+aizee deps install   # توفير الأدوات الخارجية المعلنة في deps.yaml
 ```
 
 ### التحديث
@@ -173,6 +219,34 @@ aizee status    # الشخصية، المهارات، الميزانية
 
 ---
 
+## الأدوات الخارجية والتوفير التلقائي
+
+بعض مميزات aiZee محتاجة سوفتوير **خارج** الريبو ده — أدوات CLI، حزم pip، عدّة ميديا، صور docker، مفاتيح API. كلها معلنة في **`deps.yaml`** (44 مدخل) فمفيش متطلب صامت:
+
+```bash
+aizee deps check            # تقرير كل اعتمادية: ok / missing / wrong version
+aizee deps check --tag video # فلترة بالمجموعة (video, devx, agent, media…)
+aizee deps install           # توفير كل غير المُرضى (أوامر لكل OS)
+aizee deps install --dry-run # معاينة الأوامر بدون تنفيذ
+aizee doctor                 # حكم deps داخل تقرير الصحة
+```
+
+`install.ps1` / `install.sh` / `scripts/update.py` بيشغّلوا `aizee deps check` كـpost-install hook وبياخدوا موافقتك على تثبيت الناقص — يعني clone جديد بيوصل للقدرة الكاملة بأمر واحد.
+
+| الفئة | أمثلة | مطلوبة لـ |
+| :--- | :--- | :--- |
+| **الأساسية (مضمّنة)** | Python 3.10+، SQLite، pyyaml، pydantic | كل حاجة — صفر تثبيتات إضافية |
+| **DevX CLIs** | repomix، code2prompt، oxlint، agent-browser | تجميع السياق، ريبو→برومبت، lint للـJS، تصفح للـagents |
+| **Spec/SDD** | specify (spec-kit)، openspec، spec-kitty، spec-workflow-mcp | سير عمل التطوير الموجّه بالمواصفات |
+| **الأتمتة** | n8n، super-productivity، gitbutler | أتمتة workflows، إدارة مشاريع، فروع git |
+| **عدّة الميديا** | cinecode، bang-motion، motion-graphics (`~/.aizee/media`) | إنتاج فيديو/موشن (اختياري) |
+| **ComfyUI** | `~/.aizee/media/apps/ComfyUI` + custom nodes | توليد صور/فيديو محلي (اختياري، GPU) |
+| **Docker** | Docker Desktop + صورة `code2video` | رندر بلجن code2video (اختياري) |
+
+**اختيارية بالتصميم:** اعتماديات الميديا/الفيديو بـ`severity: optional` — الحوكمة الأساسية والشخصيات والمهارات والذاكرة وMCP شغالين كامل بدونها. `aizee deps check` بيقولك بالظبط كل ميزة ناقصها إيه والأمر الواحد اللي بيصلحها.
+
+---
+
 ## المعمارية الأساسية
 
 ```
@@ -180,23 +254,27 @@ aizee status    # الشخصية، المهارات، الميزانية
 ├── AGENTS.md                # البوتلودر المرجعي لكل الأدوات
 ├── global-roles.md          # 29 شخصية + قواعد تشغيلية
 ├── global-workflow.md       # بروتوكول التحميل المعرفي والتنفيذ
-├── runtime/                 # النواة: policy، budget، audit، 129 وحدة حوكمة
+├── runtime/                 # النواة: policy، budget، audit، 139 وحدة حوكمة
 │   ├── kernel.py            # الواجهة — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # مكوّن إنفاذ موحّد (firewall + gateway)
 │   ├── agent_gateway.py     # حواجز طلب/استجابة (ALLOW/REDACT/BLOCK)
 │   ├── injection_detector.py# L1 أنماط + L2 دلالي + L3 حكم LLM
+│   ├── lifecycle.py         # كشف مرحلة BMAD → انحياز توجيه الشخصيات
 │   ├── codemode/            # تنفيذ code-mode معزول فوق أدوات MCP
 │   └── policies/            # YAMLs: default/guardian/probity/mcp_firewall
-├── design-library/          # بذور DESIGN.md أصلية (editorial, midnight, minimal)
 ├── memory/                  # SQLite + FTS5 + vector، استعلامات ثنائية الزمن
 ├── aizee_mcp/               # خادم MCP (46 أداة مفعّلة، 3 موارد)
 ├── eval/                    # معايير، فوضى، موثوقية، بوابة إصدار
-├── skills/                  # 151 مهارة شخصية + lord
+├── skills/                  # 245 مهارة (شخصيات + lords + BMAD + تسويق)
+├── _bmad/                   # بيئة BMAD التشغيلية (config/scripts — gitignored)
+├── .agents/skills           # توزيع junctions لمحفّزات الوكلاء
+├── deps.yaml                # ماني فيست الاعتماديات الخارجية (check/install)
 ├── workflows/               # 66 بروتوكول تنفيذ بالمحفزات
 ├── rules/                   # قواعد سلوكية مضغوطة
-├── tech-stack/              # مراجع مثبتة بالإصدار
+├── tech-stack/              # 271 مرجعًا مثبتًا بالإصدار
 ├── dashboard/               # لوحة ويب (Python stdlib HTTP)
 ├── scripts/                 # مثبتات، مدققون، أغلفة MCP
+├── install.ps1 / install.sh # مثبّت نظام التشغيل idempotent
 └── pyproject.toml           # بيانات الحزمة + إعدادات الجودة
 ```
 
@@ -205,11 +283,17 @@ aizee status    # الشخصية، المهارات، الميزانية
 ## الأعمدة الستة
 
 ### 1. تركيب الشخصية + المهارة
-29 شخصية (`ARCH`، `QA`، `SEC`، `DEV`، `SRE`، `DATA`، `ML`، `DEVOPS`، `API`…) مع مهارات lord للمجالات. تُكتشف تلقائيًا لكل مهمة — بلا اختيار يدوي.
+29 شخصية (`ARCH`، `QA`، `SEC`، `DEV`، `SRE`، `DATA`، `ML`، `MLOPS`، `FINOPS`، `DEVOPS`، `API`، `FREELANCE`، `MARKETING`، `GROWTH`، `BRAND`، `EMAIL`، `SOCIAL`، `CRO`، `SALES`…) مع مهارات lord للمجالات. تُكتشف تلقائيًا لكل مهمة — بلا اختيار يدوي.
+
+طبقتا توجيه فوق الـkeyword scoring:
+
+- **انحياز مرحلة دورة الحياة** — لما يكون فيه BMAD initiative نشط، الـartifacts في `_bmad-output/` بتكشف المرحلة الحالية (PRD → architecture → stories → review) و`runtime/lifecycle.py` بيميل الاختيار للـpersona المطابقة (مثلاً منتصف التنفيذ → `DEV`، منتصف المراجعة → `QA`+`ARCH`).
+- **تلميحات التسليم** — النتيجة بتحمل `next_persona_hint`: أقوى شخصية خارج المجموعة المختارة، عشان المهام متعددة المجالات ("راجع التصميم وبعدين نفّذ") تنتقل بسلاسة.
 
 ```bash
 aizee persona detect --multi "build a secure docker API with postgres"
 # → Primary: ARCH + Secondary: SEC, DEVOPS + Lords: security-lord, cloud-platforms-lord
+# + lifecycle_phase / next_persona_hint لما يكون فيه BMAD initiative نشط
 ```
 
 ### 2. حوكمة وقت التشغيل
@@ -286,16 +370,38 @@ python dashboard/server.py 8080
 
 | الأمر | الوظيفة |
 | :--- | :--- |
-| `aizee doctor` | صحة البيئة (46 فحصًا) |
-| `aizee heal [--apply] [-y]` | تشخيص + إصلاحات آمنة (dry-run افتراضيًا) |
+| `aizee doctor [--json]` | حكم الصحة + خطوات إصلاح مرتبة Run:/Guidance: |
+| `aizee heal [--apply] [-y]` | تشخيص + إصلاحات آمنة تلقائية (dry-run افتراضيًا) |
 | `aizee check <action>` | حكم السياسة على إجراء |
-| `aizee memory compact [--apply]` | ضغط Memory.md إلى سقف الأسطر |
+| `aizee find "<need>"` | بحث بلغة طبيعية على skills/workflows/tech-stack |
+| `aizee goal "<objective>"` | ربط هدف بأفضل workflow + خطوات |
+| `aizee config show` | لقطة إعدادات مقنّعة |
+| `aizee config apply <file> --check` | التحقق من ملف إعدادات (بدون كتابة) |
+| `aizee spec propose\|changes\|archive` | مجلدات تغييرات بأسلوب OpenSpec |
+| `aizee gateway init\|serve` | بروكسي LLM محكوم (failover + إنفاذ) |
+| `aizee models` | كتالوج توجيه النماذج (مستويات + تكلفة) |
+| `aizee work poll` | قضايا GitHub المفتوحة عبر `gh` (نموذج السحب) |
+| `aizee skill link` | تثبيت SKILL.md في محفّزات الوكلاء |
+| `aizee skill lint [--write-index]` | lint الأوصاف + كشف تصادم التريجرز |
+| `aizee skill scan` | فحص حقن برومبت / exfiltration للمهارات |
+| `aizee hooks install\|status` | ربط خطافات aiZee بمحفّزات الوكلاء |
+| `aizee abstract [--force]` | توليد ملخصات هرمية L0 `.abstract.md` |
+| `aizee session from-curl\|from-har` | فحص حزمة مصادقة API ملتقطة |
+| `aizee memory compact [--apply]` | ضغط Memory.md إلى سقف أسطره |
 | `aizee codemode --code/--file` | مقطع معزول يستدعي أدوات MCP |
-| `aizee task overcheck` | تدقيق الهندسة الزائدة للخطة النشطة |
+| `aizee task overcheck` | تدقيق over-engineering للخطة النشطة |
 | `aizee task curriculum --stack …` | خطة تعلم مرحلية من مراجع tech-stack |
 | `aizee bootstrap --target DIR` | بناء جذر OS (بعد `pip install`) |
 | `aizee ci` | بوابات CI كاملة تشمل بوابة موثوقية الإصدار |
 | `aizee security scan <path>` | SAST + تنسيق الماسحات الخارجية |
+| `aizee deps check\|install [ids]` | التحقق/توفير الاعتماديات الخارجية (deps.yaml) |
+| `aizee skill lock-check\|lock-update` | نزاهة المهارات: كشف الانحراف / إعادة القفل |
+| `aizee mcp freeze <srv> [--check]` | قفل لقطة سطح أدوات MCP |
+| `aizee check-docs` | التحقق من مراجع `[[file#symbol]]` في الدوكس |
+| `aizee spec review <spec>` | خطة pipeline مراجع Goldfish |
+| `aizee intel <domain>` | استطلاع DNS/WHOIS/certs/subdomains |
+| `aizee eval` | فحوص سلوكية لسيناريوهات المهارات |
+| `aizee persona detect --multi` | شخصيات متعددة + مرحلة دورة حياة + تلميحات |
 
 ---
 
@@ -307,7 +413,7 @@ python dashboard/server.py 8080
 | Types | `mypy` | 0 أخطاء (صارم) |
 | Tests (سريعة) | `aizee test` | طبقة سريعة بدون تغطية |
 | Tests (كاملة) | `aizee test --full` | المجموعة الكاملة، تغطية بحد أدنى 100% |
-| السلامة | `scripts/validate-globals.py` | 540 ملفًا، 0 أخطاء |
+| السلامة | `scripts/validate-globals.py` | 1242 ملفًا، 0 أخطاء |
 | مزامنة الوثائق | `scripts/sync_docs.py --check` | متزامنة |
 | E2E | `python eval/harness.py` | كل البوابات تنجح |
 | الإصدار | `python eval/release_gate.py` | سلم موثوقية على أدلة rollouts |
@@ -325,6 +431,25 @@ python dashboard/server.py 8080
 
 ---
 
+## إزاي aiZee بيقارن
+
+aiZee مش مكتبة مهارات ولا إطار عملية — هو **طبقة السياسة** اللي بتحكم في إيه اللي أي واحد فيهم ممكن يعمله. الفئات بتتكامل:
+
+| | aiZee | BMAD-METHOD | spec-kit | claude-skills |
+| :--- | :--- | :--- | :--- | :--- |
+| **الفئة** | حوكمة + نظام تشغيل وكلاء | عملية agile-ai | عدّة spec-driven | مكتبة مهارات |
+| **الإنفاذ** | بوابات runtime على كل إجراء | اتفاقيات عملية | قوالب مواصفات | مفيش (محتوى بس) |
+| **المهارات** | 245 مدمجة ومقفولة بالبصمة | ~34 `bmad-*` | قوالب | 410+ |
+| **الشخصيات** | 29 تلقائية + واعية بدورة الحياة | 6 وكلاء مسمّين | — | — |
+| **الذاكرة** | SQLite + vectors هجين، ثنائية الزمن | ملفات `persistent_facts` | — | — |
+| **MCP** | خادم (46 أداة) + جدار للعميل | — | — | — |
+| **التثبيت** | `pip install aizee` | `npx skills add` | `uvx specify` | `npx skills add` |
+| **الأنسب لـ** | الحكم على إيه اللي الوكلاء *يقدروا* يعملوه | إدارة دورة حياة agile-ai | سير عمل موجّه بالمواصفات | مهارات plug-and-play |
+
+**بتتكامل مش بتتنافس:** aiZee يقدر يحكم على سير عمل BMAD بالكامل (بيئة `_bmad/` بتتكشف عبر `runtime/lifecycle.py`)، ويدمج مهارات من أي ريبو agent-skills في مكتبته المقفولة، ويفرض سياسة على تطوير موجّه بـspec-kit.
+
+---
+
 ## المساهمة
 
 1. Fork ← فرع feature (`feature/*`)
@@ -336,6 +461,25 @@ python dashboard/server.py 8080
 
 ---
 
+## النظام البيئي والتوزيع
+
+aiZee بيشحن خادم MCP خاص بيه ومهارة agent-facing. الأسطح دي بتخليه قابل للاكتشاف للوكلاء والبشر — بعضها محتاج حسابات maintainer:
+
+| السطح | اللي بيفتحه | الحالة |
+|---|---|---|
+| **PyPI** (`aizee`) | `pip install aizee` — مسار التثبيت في الـREADME | ⏳ نشر معلّق |
+| **قائمة MCP الرسمية** | مدرج في `modelcontextprotocol/servers` — حيث يكتشف مستخدمو Claude/Cursor أدوات MCP | ⏳ PR مطلوب |
+| **mcpservers.org / Smithery / Glama** | أدلة MCP بتثبيت بنقرة | ⏳ تقديم مطلوب |
+| **awesome-claude-code / awesome-mcp** | قوائم منتقاة بتقود معظم النجوم الأولى | ⏳ PR مطلوب |
+| **معاينة GitHub الاجتماعية** | الصورة اللي بتظهر لما الريبو يتشارك على X/LinkedIn/Discord | ⏳ محتاج banner (1280×640) |
+| **GIF تجريبي** | اللقطة الأساسية: agent متمنوع في نص commit | ⏳ يتسجّل بـScreenToGif/asciinema+agg |
+| **Show HN · r/ClaudeAI · r/cursor** | ترافيك الإطلاق | ⏳ بعد ما اللي فوق يخلص |
+| **مقال Dev.to / Hashnode** | تغطية إطلاق قابلة للبحث | ⏳ اختياري |
+
+كل حاجة تانية (topics، الوصف، release، `llms.txt`، `SKILL.md` في الجذر، `aizee skill link` لمحفّزات الوكلاء) متشحّنة فعلاً.
+
+---
+
 ## الرخصة
 
 MIT — انظر [LICENSE](LICENSE).
@@ -344,5 +488,5 @@ MIT — انظر [LICENSE](LICENSE).
 
 <div align="center" dir="ltr">
   <p><strong>aiZee</strong> — The policy layer for AI coding.</p>
-  <p>Built by <a href="https://linkedin.com/in/moataz-ahmed">Moataz Ahmed</a></p>
+  <p>Built by <a href="https://linkedin.com/in/m3taz-ahmed">Moataz Ahmed</a></p>
 </div>

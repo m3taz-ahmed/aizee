@@ -159,9 +159,12 @@ class BudgetWindowManager:
                         return BudgetAction.REJECT
                     if w.action == BudgetAction.ALERT:
                         action = BudgetAction.ALERT
-                elif projected_util >= ALERT_THRESHOLD and w.limit > 0:
-                    if w.action in (BudgetAction.ALERT, BudgetAction.REJECT):
-                        action = BudgetAction.ALERT
+                elif (
+                    projected_util >= ALERT_THRESHOLD
+                    and w.limit > 0
+                    and w.action in (BudgetAction.ALERT, BudgetAction.REJECT)
+                ):
+                    action = BudgetAction.ALERT
             return action
 
     def check_escalation(

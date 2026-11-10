@@ -891,7 +891,7 @@ personas:
   FINOPS:
     name: Cloud Cost Optimization Engineer
     weight: 1.2
-    skill: performance-engineer
+    skill: finops
     lords:
     - cloud-platforms-lord
     - devops-lord

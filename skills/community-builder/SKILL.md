@@ -10,7 +10,6 @@ triggers:
   - تليجرام
   - group
   - community builder
-  - مجتمع
 tech_stack:
   - chatwoot/chatwoot
   - plausible/analytics

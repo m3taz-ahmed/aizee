@@ -151,7 +151,7 @@ def _has_yaml_frontmatter_name(content: str) -> bool:
     if end == -1:
         return False
     front = stripped[:end]
-    return bool(re.search(r"(?m)^name\s*:", front))
+    return bool(re.search(r"(?m)^(?:name|title)\s*:", front))
 
 def check_title(content: str, rel_name: str, ctx: ValidationContext) -> bool:
     """Accept [FILE]/[TECH]/[WORKFLOW]/[SKILL] (AI files), YAML frontmatter with name:
@@ -277,11 +277,14 @@ def check_cross_references(content: str, rel_name: str, ctx: ValidationContext) 
             content, err, mod = handle_broken_section(content, raw_t, resolved, sec, rel_name, ctx)
             error = error or err
             modified = modified or mod
-        elif ctx.fix and target != resolved:
-            if not ctx.interactive or input(f"Fix path '{target}'->'{resolved}' in {rel_name}? [Y/N]: ").strip().upper() == 'Y':
-                content = content.replace(raw_t, resolved.replace(os.sep, "/"))
-                modified = True
-                ctx.healed_count += 1
+        elif (
+            ctx.fix
+            and target != resolved
+            and (not ctx.interactive or input(f"Fix path '{target}'->'{resolved}' in {rel_name}? [Y/N]: ").strip().upper() == 'Y')
+        ):
+            content = content.replace(raw_t, resolved.replace(os.sep, "/"))
+            modified = True
+            ctx.healed_count += 1
     return content, error, modified
 
 IGNORED_FILE_REFS = {
@@ -348,6 +351,155 @@ IGNORED_FILE_REFS = {
     # — working-root-only session index referenced from Memory.md audit entries
     'devin-sessions-index.md',
 }
+IGNORED_FILE_REFS.update({
+
+    # adopted agent-skills runtime/external refs - artifacts produced in
+    # user projects at runtime (.claude/.agents product-marketing, .memlog,
+    # BMAD ticket-tree docs) or external tool-registry pages the skills cite;
+    # not tracked aiZee inputs (same convention as project-voice/goldfish above)
+    '-customer-notice.md',
+    '-log.md',
+    '-primary.md',
+    '.memlog.md',
+    '01.md',
+    '02.md',
+    '03.md',
+    '0X.md',
+    'BOND.md',
+    'CREED.md',
+    'EXPERIENCE.md',
+    'HOW-I-REMEMBER.md',
+    'PERSONA.md',
+    'PULSE.md',
+    'REGISTRY.md',
+    'VARIANT.md',
+    'YYYY-MM-DD-first-breath.md',
+    'YYYY-MM-DD.md',
+    'YYYY-MM.md',
+    '_summary.md',
+    'activecampaign.md',
+    'ahrefs.md',
+    'airtable.md',
+    'amplitude.md',
+    'apify.md',
+    'apollo.md',
+    'attentive.md',
+    'attio.md',
+    'audiencetap.md',
+    'brevo.md',
+    'browserbase.md',
+    'bug-checkout-total-ignores-discount-codes.md',
+    'calendly.md',
+    'candidate.archify.md',
+    'capterra.md',
+    'claims.md',
+    'clay.md',
+    'close.md',
+    'converly.md',
+    'conversion-tracking.md',
+    'crossbeam.md',
+    'customer-io.md',
+    'dataforseo.md',
+    'db-rules.md',
+    'deferred-work.md',
+    'dub-co.md',
+    'epic-cart-rules.md',
+    'exa.md',
+    'experience.md',
+    'final_plan.md',
+    'firecrawl.md',
+    'first-breath.md',
+    'fullenrich.md',
+    'g2.md',
+    'ga4.md',
+    'github.md',
+    'google-search-console.md',
+    'heygen.md',
+    'heyreach.md',
+    'homepage.md',
+    'hubspot.md',
+    'hyperframes.md',
+    'icp.md',
+    'identifier-lookup.md',
+    'initiative-checkout.md',
+    'instantly.md',
+    'introw.md',
+    'inventory.md',
+    'keyword-shortlist.md',
+    'kit.md',
+    'klaviyo.md',
+    'leadmagic.md',
+    'lemlist.md',
+    'linkedin-ads.md',
+    'listening-sources.md',
+    'location-pages-and-measurement.md',
+    'mailchimp.md',
+    'marketing-os.md',
+    'media-list.md',
+    'meditation-vs-regulation.md',
+    'mention-me.md',
+    'meta-ads.md',
+    'mixpanel.md',
+    'module-setup.md',
+    'monday.md',
+    'nitrosend.md',
+    'notes.md',
+    'notion.md',
+    'onboarding-recommendation.md',
+    'partnerstack.md',
+    'pending.md',
+    'plausible.md',
+    'plivo.md',
+    'ploy.md',
+    'posthog.md',
+    'postscript.md',
+    'prd-billing.md',
+    'prd-checkout.md',
+    'prd-drift.md',
+    'prd-quill.md',
+    'prd-x.md',
+    'pricing.md',
+    'product-marketing-context.md',
+    'product-marketing.md',
+    'progress.md',
+    'prompts.md',
+    'queue.md',
+    'rankparse.md',
+    'rb2b.md',
+    'replacement.md',
+    'resend.md',
+    'review-rubric.md',
+    'rewardful.md',
+    'salesforce.md',
+    'savvycal.md',
+    'scrapecreators.md',
+    'segment.md',
+    'semrush.md',
+    'sendgrid.md',
+    'session-01.md',
+    'session-02.md',
+    'similarweb.md',
+    'snov.md',
+    'sound-philosophy.md',
+    'sparktoro.md',
+    'spike-discount-engine-latency.md',
+    'story-apply-discount-codes-plan.md',
+    'story-cart-service-scaffold-plan.md',
+    'story-cart-service-scaffold.md',
+    'stripe.md',
+    'supermetrics.md',
+    'target.md',
+    'theirstack.md',
+    'tiktok-ads.md',
+    'tolt.md',
+    'truelist.md',
+    'twilio.md',
+    'validation-report.md',
+    'zapier.md',
+    'zoominfo.md',
+    # path-qualified README refs (basename readme.md stays resolvable)
+    'snippets/README.md',
+})
 
 _IGNORED_FILE_REFS_NORM = {x.replace("\\", "/").lower() for x in IGNORED_FILE_REFS}
 
@@ -382,11 +534,16 @@ def check_file_references(content: str, rel_name: str, ctx: ValidationContext, g
         base = os.path.basename(target).lower()
         # Normalize separators so IGNORED_FILE_REFS entries match on any OS
         norm = target.replace("\\", "/").lower()
-        if norm in _IGNORED_FILE_REFS_NORM or base in IGNORED_FILE_REFS:
+        if norm in _IGNORED_FILE_REFS_NORM or base in _IGNORED_FILE_REFS_NORM:
             continue
         if get_fuzzy_match(target, list(ctx.global_headers.keys())):
             continue
         if os.path.exists(os.path.join(global_path, target)):
+            continue
+        # Skill-internal relative refs (e.g. ../renderers/x/README.md cited
+        # inside skills/<name>/references/) resolve against the citing file's dir.
+        local = os.path.normpath(os.path.join(global_path, os.path.dirname(rel_name), target))
+        if os.path.exists(local):
             continue
         cprint(f"ERROR: Broken file ref in {rel_name}: '{raw_t}' not found", Colors.RED)
         error = True

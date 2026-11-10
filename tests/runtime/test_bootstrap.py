@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import io
+import tarfile
 from pathlib import Path
 
+import runtime.bootstrap as bs
 from runtime.bootstrap import bootstrap
 
 
@@ -72,6 +75,59 @@ def test_mcp_sync_script_missing(tmp_path: Path) -> None:
     src.mkdir()
     res = bootstrap(tmp_path / "r", source_root=src, mcp_sync=True)
     assert any("mcp_global_sync.py not found" in n for n in res.notes)
+
+
+def _make_bundle(path: Path, files: dict[str, str]) -> None:
+    with tarfile.open(path, "w:gz") as tar:
+        for name, content in files.items():
+            data = content.encode()
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+
+
+def test_osroot_bundle_extracts(tmp_path: Path, monkeypatch) -> None:
+    bundle = tmp_path / "_osroot.tar.gz"
+    _make_bundle(bundle, {"skills/demo/SKILL.md": "---\nname: demo\n---\n", "AGENTS.md": "agents"})
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", bundle)
+    target = tmp_path / "root"
+    res = bootstrap(target, mcp_sync=False)
+    assert res.osroot_files == 2
+    assert (target / "skills" / "demo" / "SKILL.md").read_text() == "---\nname: demo\n---\n"
+    assert (target / "AGENTS.md").read_text() == "agents"
+    assert any("osroot bundle" in n for n in res.notes)
+
+
+def test_osroot_bundle_idempotent_and_force(tmp_path: Path, monkeypatch) -> None:
+    bundle = tmp_path / "_osroot.tar.gz"
+    _make_bundle(bundle, {"AGENTS.md": "new"})
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", bundle)
+    target = tmp_path / "root"
+    bootstrap(target, mcp_sync=False)
+    (target / "AGENTS.md").write_text("custom")
+    res = bootstrap(target, mcp_sync=False)
+    assert res.osroot_files == 0
+    assert (target / "AGENTS.md").read_text() == "custom"
+    res2 = bootstrap(target, force=True, mcp_sync=False)
+    assert res2.osroot_files == 1
+    assert (target / "AGENTS.md").read_text() == "new"
+
+
+def test_osroot_bundle_missing_is_note(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", tmp_path / "nope.tar.gz")
+    res = bootstrap(tmp_path / "root", mcp_sync=False)
+    assert res.osroot_files == 0
+    assert any("minimal install" in n for n in res.notes)
+
+
+def test_osroot_bundle_dry_run(tmp_path: Path, monkeypatch) -> None:
+    bundle = tmp_path / "_osroot.tar.gz"
+    _make_bundle(bundle, {"a.txt": "x", "b.txt": "y"})
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", bundle)
+    target = tmp_path / "root"
+    res = bootstrap(target, dry_run=True, mcp_sync=False)
+    assert res.osroot_files == 2
+    assert not target.exists()
 
 
 def test_mcp_sync_runs_script(tmp_path: Path, monkeypatch) -> None:

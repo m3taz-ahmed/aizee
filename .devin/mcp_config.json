@@ -11,6 +11,10 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@3.1.0"]
+    },
+    "spec-workflow": {
+      "command": "npx",
+      "args": ["-y", "@pimzino/spec-workflow-mcp@2.2.7"]
     }
   }
 }

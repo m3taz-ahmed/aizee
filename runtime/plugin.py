@@ -88,10 +88,13 @@ def _is_plugin_source_safe(source: str, filename: str) -> tuple[bool, str]:
         elif isinstance(node, ast.Attribute):
             if node.attr.startswith("__") and node.attr.endswith("__") and len(node.attr) > 4:
                 return False, f"Blocked dunder attribute access '{node.attr}' in {filename}"
-        elif isinstance(node, ast.Subscript):
+        elif (
+            isinstance(node, ast.Subscript)
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "__builtins__"
+        ):
             # Block __builtins__['eval'] style bypasses
-            if isinstance(node.value, ast.Name) and node.value.id == "__builtins__":
-                return False, f"Blocked __builtins__ subscript in {filename}"
+            return False, f"Blocked __builtins__ subscript in {filename}"
     return True, ""
 
 

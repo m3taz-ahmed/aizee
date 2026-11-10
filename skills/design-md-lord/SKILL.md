@@ -12,7 +12,6 @@ triggers:
   - dashboard design
   - pricing page
   - design tokens
-  - تصميم
   - هوية بصرية
 personas:
   - UX

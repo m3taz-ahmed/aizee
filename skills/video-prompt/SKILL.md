@@ -4,7 +4,6 @@ description: AI video generation prompt engineering. Guided interview -> cinemat
 personas:
   - MARKETING
 triggers:
-  - فيديو
   - برومبت فيديو
   - video prompt
   - ai video

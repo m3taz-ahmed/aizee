@@ -197,16 +197,16 @@ def _annotate_tools() -> None:
     for name, tool in tools.items():
         if name in _READ_ONLY_TOOLS:
             tool.annotations = ToolAnnotations(
-                readOnlyHint=True, openWorldHint=False,
+                read_only_hint=True, open_world_hint=False,
             )
         elif name in _DESTRUCTIVE_TOOLS:
             tool.annotations = ToolAnnotations(
-                readOnlyHint=False, destructiveHint=True,
-                idempotentHint=True, openWorldHint=False,
+                read_only_hint=False, destructive_hint=True,
+                idempotent_hint=True, open_world_hint=False,
             )
         elif name in _IDEMPOTENT_TOOLS:
             tool.annotations = ToolAnnotations(
-                readOnlyHint=False, idempotentHint=True,
+                read_only_hint=False, idempotent_hint=True,
             )
 
 
