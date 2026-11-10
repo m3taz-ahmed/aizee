@@ -1,6 +1,6 @@
 {
   "name": "aizee",
-  "version": "6.8.0",
+  "version": "6.8.2",
   "description": "Sovereign AI engineering control plane — policy, budget, guardrails, and audit enforced on every agent action. 151 governance skills, 66 workflows, 269 version-locked tech-stack references.",
   "license": "MIT",
   "homepage": "https://github.com/m3taz-ahmed/aizee",

@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [6.8.2] - 2026-11-11 (version consistency release)
+
+- **Version unification:** every version-bearing surface now reads `6.8.2` — pyproject, `config.py` fallback, `manifest.json` (×2), `plugin.json`, README/README-AR badges, `validate-globals.py/.ps1` labels. Fixes the stale `6.8.0` badge shown inside the PyPI project page.
+- **`scripts/release.py` hardened** so version drift can't recur: `config.py` added to the atomic bump list; `aizee_mcp/config.json` removed (its `x.y.z` literals are external npm pins, not aiZee's — a coincidental match would corrupt them); new README relative-link gate (fails release if a link would 404 on PyPI); osroot bundle rebuilt automatically during release; new `--publish-pypi` flag builds + uploads the wheel in the same run.
+- No functional changes from 6.8.1.
+
+## [6.8.1] - 2026-11-11 (PyPI packaging + link fixes)
+
+- **Full-capability wheel:** `runtime/_osroot.tar.gz` (1900 files / ~8 MiB — all skills, workflows, rules, tech-stack, resources, scripts, docs, eval scenarios) ships inside the wheel; `aizee bootstrap` extracts it so `pip install aizee` installs the complete system, not just the code. Built by `scripts/build_osroot_bundle.py`.
+- **README link fixes for PyPI:** logo/demo images and doc links rewritten to absolute `raw.githubusercontent.com`/`github.com` URLs (relative paths 404 on PyPI).
+- **LinkedIn footer corrected:** `linkedin.com/in/moataz-ahmed` → `linkedin.com/in/m3taz-ahmed` (matches CV/GitHub handle).
+
 ## [Unreleased] — 2026-11-10 Global skills migration into .ai (244-skill unified library)
 
 - **Migration:** all 87 skill dirs from `~/.agents/skills/` (BMAD suite ~34, marketingskills ~40, archify, video/image/misc) moved into `skills/` as canonical project skills; enriched with aiZee frontmatter (`personas`, `triggers`) via `temp/enrich_skills.py`; 12 rendered archify HTML examples (~9.8MB) dropped for progressive disclosure.

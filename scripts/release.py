@@ -25,15 +25,20 @@ VERSION_RE = re.compile(r"\d+\.\d+\.\d+")
 
 # Files where replacing the OLD version literal with NEW is safe — the
 # version appears only as display/config metadata in each.
+# NOTE: aizee_mcp/config.json is intentionally EXCLUDED — its version
+# literals are external npm pins (e.g. rea-agents@x.y.z), not aiZee's.
 PLAIN_BUMP = [
     "pyproject.toml",
     "manifest.json",
     "plugin.json",
-    "aizee_mcp/config.json",
+    "config.py",
     "scripts/validate-globals.py",
     "scripts/validate-globals.ps1",
 ]
 README_FILES = ["README.md", "README-AR.md"]
+
+# Relative links/images break on PyPI — every README link must be absolute.
+REL_LINK_RE = re.compile(r"\]\((?!https?://|#|mailto:)[^)\s]+\)|<img[^>]+src=\"(?!https?://)[^\"]+\"")
 
 
 def _err(msg: str) -> None:
@@ -81,6 +86,19 @@ def _bump_changelog(path: Path, new: str, title: str, today: str, dry_run: bool)
     return True
 
 
+def _check_readme_links() -> list[str]:
+    """Fail the release if any README link/image is relative (PyPI breaks them)."""
+    bad = []
+    for rel in README_FILES:
+        path = ROOT / rel
+        if not path.exists():
+            continue
+        for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for m in REL_LINK_RE.finditer(line):
+                bad.append(f"{rel}:{i}: {m.group(0)[:80]}")
+    return bad
+
+
 def bump(old: str, new: str, title: str, today: str, dry_run: bool) -> list[str]:
     touched = []
     for rel in PLAIN_BUMP:
@@ -114,6 +132,7 @@ def main() -> int:
     ap.add_argument("--skip-tests", action="store_true", help="Skip the full test suite")
     ap.add_argument("--no-push", action="store_true", help="Commit + tag locally; do not push")
     ap.add_argument("--no-release", action="store_true", help="Do not create the GitHub release")
+    ap.add_argument("--publish-pypi", action="store_true", help="uv build + uv publish to PyPI (needs UV_PUBLISH_TOKEN)")
     args = ap.parse_args()
 
     if not VERSION_RE.fullmatch(args.version):
@@ -133,11 +152,22 @@ def main() -> int:
         _err("no files were bumped; aborting")
         return 1
 
+    bad_links = _check_readme_links()
+    if bad_links:
+        for bl in bad_links:
+            _err(f"relative link in {bl} — PyPI renders it 404; use absolute github.com URL")
+        return 1
+
     if _run([sys.executable, "scripts/validate-globals.py"], check=False).returncode != 0:
         _err("validate-globals failed — fix the reported files (likely a missed version) and rerun")
         return 1
     if not args.skip_tests and _run([sys.executable, "aizee_cli.py", "test", "--full"], check=False).returncode != 0:
         _err("test suite failed — release aborted")
+        return 1
+
+    # Rebuild the bundled OS root so the wheel ships the new README/version.
+    if _run([sys.executable, "scripts/build_osroot_bundle.py"], check=False).returncode != 0:
+        _err("osroot bundle rebuild failed — release aborted")
         return 1
 
     _run(["git", "add", *touched])
@@ -150,6 +180,18 @@ def main() -> int:
     _run(["git", "push", "origin", f"v{new}"])
     if not args.no_release:
         _run(["gh", "release", "create", f"v{new}", "--title", f"aiZee v{new}", "--generate-notes"])
+    if args.publish_pypi:
+        import os
+        if not (os.environ.get("UV_PUBLISH_TOKEN") or os.environ.get("TWINE_PASSWORD")):
+            _err("--publish-pypi needs UV_PUBLISH_TOKEN (or TWINE_PASSWORD) in env")
+            return 1
+        if _run(["uv", "build"], check=False).returncode != 0:
+            _err("uv build failed — PyPI publish aborted")
+            return 1
+        if _run(["uv", "publish"], check=False).returncode != 0:
+            _err("uv publish failed — check token/scope")
+            return 1
+        print(f"[release] PyPI: https://pypi.org/project/aizee/{new}/")
     print(f"[release] DONE — v{new} published. Users update via update.bat (scripts/update.py).")
     return 0
 
