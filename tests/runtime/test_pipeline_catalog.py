@@ -281,3 +281,13 @@ class TestRouteResolution:
         assert status is not None
         assert status.current_phase == "concept"
         assert status.next_step == "pillars"
+
+def test_glob_files_returns_empty_on_error(tmp_path: Path) -> None:
+    """OSError/ValueError inside Path.glob degrades to empty (118-119)."""
+    from runtime.pipeline_catalog import _glob_files
+
+    class _Root:
+        def glob(self, _pattern):
+            raise ValueError("bad pattern")
+
+    assert _glob_files(_Root(), "*.md") == []

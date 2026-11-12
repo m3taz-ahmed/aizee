@@ -1,10 +1,10 @@
 <div align="right" dir="rtl">
-  <img src="logo.png" width="160" alt="شعار aiZee">
+  <img src="https://raw.githubusercontent.com/m3taz-ahmed/aizee/main/logo.png" width="160" alt="شعار aiZee">
   <h1>aiZee — نظام التشغيل العالمي للذكاء الاصطناعي</h1>
   <p><strong>حول أي مساعد ذكاء اصطناعي إلى مهندسك الرئيسي — سيادة كاملة، جودة صفرية العيوب.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.8.2-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.8.2">
+    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.8.3-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.8.3">
     <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7656%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7656 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
@@ -21,14 +21,14 @@
 
 <div dir="rtl">
 
-[اقرأ النسخة الإنجليزية](README.md) · [سجل التغييرات](CHANGELOG.md) · [دليل التثبيت](#التثبيت)
+[اقرأ النسخة الإنجليزية](https://github.com/m3taz-ahmed/aizee/blob/main/README.md) · [سجل التغييرات](https://github.com/m3taz-ahmed/aizee/blob/main/CHANGELOG.md) · [دليل التثبيت](#التثبيت)
 
 ---
 
 ## شوفه يمنع حاجة
 
 <div align="center">
-  <img src="docs/media/demo.gif" width="780" alt="aiZee يرفض إجراءً يحاول commit لملف secrets ثم يبلغ عن جاهزية doctor">
+  <img src="https://raw.githubusercontent.com/m3taz-ahmed/aizee/main/docs/media/demo.gif" width="780" alt="aiZee يرفض إجراءً يحاول commit لملف secrets ثم يبلغ عن جاهزية doctor">
 </div>
 
 ```console
@@ -154,7 +154,7 @@ $ aizee doctor --json | jq .verdict
 - **حارس فرض الحقائق** — الأوامر الهدامة القابلة للاسترداد (force-push، hard reset) تمرّ فقط بحقائق صريحة `{target, rollback}`؛ الكارثية تبقى محظورة دائمًا.
 - **خط دفاع ضد الحقن** — كل ملف قواعد مُصدَّر يحمل قسمًا ثابتًا مضادًا للحقن (قفل الهوية، عدم إفصاح الأسرار، محتوى خارجي غير موثوق، اشتباه بحيل unicode).
 
-التفاصيل الكاملة: [CHANGELOG.md](CHANGELOG.md)
+التفاصيل الكاملة: [CHANGELOG.md](https://github.com/m3taz-ahmed/aizee/blob/main/CHANGELOG.md)
 
 ---
 
@@ -482,7 +482,7 @@ aiZee بيشحن خادم MCP خاص بيه ومهارة agent-facing. الأس�
 
 ## الرخصة
 
-MIT — انظر [LICENSE](LICENSE).
+MIT — انظر [LICENSE](https://github.com/m3taz-ahmed/aizee/blob/main/LICENSE).
 
 ---
 

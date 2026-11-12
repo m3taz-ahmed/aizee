@@ -1,11 +1,11 @@
-<!-- mcp-name: com.m3taz-ahmed/aizee -->
+<!-- mcp-name: io.github.m3taz-ahmed/aizee -->
 <div align="center">
   <img src="https://raw.githubusercontent.com/m3taz-ahmed/aizee/main/logo.png" width="160" alt="aiZee Logo">
   <h1>aiZee</h1>
   <p><strong>Your AI agent ships hallucinated APIs and secrets.<br>aiZee blocks them — enforced, not advised.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/Version-6.8.2-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.8.2">
+    <img src="https://img.shields.io/badge/Version-6.8.3-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.8.3">
     <img src="https://img.shields.io/badge/Tests-7656%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7656 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">

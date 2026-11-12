@@ -258,3 +258,12 @@ class TestSkillResolverFrontmatter:
 
         assert resolver.resolve_with_frontmatter("flat", {"persona": "ARCH"}) is not None
         assert resolver.resolve_with_frontmatter("flat", {"persona": "DEV"}) is None
+
+def test_match_path_fallback_when_full_match_missing() -> None:
+    """PurePosixPath without full_match falls back to .match (84->86)."""
+    from pathlib import PurePosixPath
+    from unittest.mock import patch
+
+    with patch.object(PurePosixPath, "full_match", None, create=True):
+        assert _match_path("**/*.md", "docs/a.md") is True
+        assert _match_path("**/*.md", "docs/a.txt") is False

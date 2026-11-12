@@ -31,6 +31,7 @@ PLAIN_BUMP = [
     "pyproject.toml",
     "manifest.json",
     "plugin.json",
+    "server.json",
     "config.py",
     "scripts/validate-globals.py",
     "scripts/validate-globals.ps1",
@@ -139,12 +140,16 @@ def main() -> int:
         _err(f"--version must be x.y.z, got {args.version!r}")
         return 1
     old, new, today = _current_version(), args.version, date.today().isoformat()
-    if tuple(map(int, new.split("."))) <= tuple(map(int, old.split("."))):
-        _err(f"new version {new} must be > current {old}")
+    if tuple(map(int, new.split("."))) < tuple(map(int, old.split("."))):
+        _err(f"new version {new} must be >= current {old}")
         return 1
     print(f"[release] {old} -> {new} ({'DRY-RUN' if args.dry_run else 'LIVE'})")
 
-    touched = bump(old, new, args.title, today, args.dry_run)
+    if new == old:
+        print("[release] version already bumped — resuming from gates")
+        touched = PLAIN_BUMP + README_FILES + ["CHANGELOG.md"]
+    else:
+        touched = bump(old, new, args.title, today, args.dry_run)
     if args.dry_run:
         print("[release] dry-run done — no files changed, nothing committed")
         return 0

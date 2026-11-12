@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aizee"
-version = "6.8.2"
+version = "6.8.3"
 description = "aiZee — sovereign AI engineering control plane"
 readme = "README.md"
 license = "MIT"
@@ -67,6 +67,7 @@ Changelog = "https://github.com/m3taz-ahmed/aizee/blob/main/CHANGELOG.md"
 
 [project.scripts]
 aizee = "aizee_cli:main"
+aizee-mcp = "aizee_mcp.aizee_server:main"
 
 [tool.setuptools]
 py-modules = ["aizee_cli", "config"]

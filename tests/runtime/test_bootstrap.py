@@ -145,3 +145,33 @@ def test_mcp_sync_runs_script(tmp_path: Path, monkeypatch) -> None:
     res2 = bootstrap(tmp_path / "r2", source_root=src, mcp_sync=True)
     assert not res2.mcp_synced
     assert any("mcp sync failed" in n for n in res2.notes)
+
+def test_extract_skips_write_when_extractfile_none(tmp_path: Path, monkeypatch) -> None:
+    """Member whose extractfile returns None is counted but not written (48->39)."""
+    class _Member:
+        name = "x.md"
+
+        def isfile(self) -> bool:
+            return True
+
+    class _Tar:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def getmembers(self):
+            return [_Member()]
+
+        def extractfile(self, m):
+            return None
+
+    archive = tmp_path / "fake.tar.gz"
+    archive.write_bytes(b"x")
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", archive)
+    monkeypatch.setattr(bs.tarfile, "open", lambda *a, **k: _Tar())
+    extracted, skipped = bs._extract_osroot(tmp_path / "out", force=False, dry_run=False)
+    assert extracted == 1
+    assert skipped == 0
+    assert not (tmp_path / "out" / "x.md").exists()

@@ -131,3 +131,86 @@ def test_inject_persona_context_propagates_phase_and_hint() -> None:
     inject_persona_context(detector, context)
     assert context.get("lifecycle_phase") == "implementation"
     assert "personas" in context
+
+# --- config / scan edge cases ---
+
+
+def test_detect_phase_missing_config_toml(tmp_path: Path) -> None:
+    (tmp_path / "_bmad").mkdir()
+    assert detect_phase(tmp_path) is None
+
+
+def test_detect_phase_malformed_toml(tmp_path: Path) -> None:
+    bmad = tmp_path / "_bmad"
+    bmad.mkdir()
+    (bmad / "config.toml").write_text("[[[ not toml", encoding="utf-8")
+    assert detect_phase(tmp_path) is None
+
+
+def test_detect_phase_core_not_dict(tmp_path: Path) -> None:
+    bmad = tmp_path / "_bmad"
+    bmad.mkdir()
+    (bmad / "config.toml").write_text('core = "oops"\n', encoding="utf-8")
+    assert detect_phase(tmp_path) is None
+
+
+def test_detect_phase_non_str_output_folder_uses_default(tmp_path: Path) -> None:
+    bmad = tmp_path / "_bmad"
+    bmad.mkdir()
+    (bmad / "config.toml").write_text(
+        "[core]\noutput_folder = 123\nactive_initiative = \"i\"\n", encoding="utf-8"
+    )
+    (tmp_path / "_bmad-output" / "i").mkdir(parents=True)
+    assert detect_phase(tmp_path) == LifecyclePhase.DISCOVERY
+
+
+def test_detect_phase_non_marker_files_default_discovery(tmp_path: Path) -> None:
+    init_dir = _write_bmad(tmp_path)
+    (init_dir / "notes.md").write_text("x", encoding="utf-8")
+    assert detect_phase(tmp_path) == LifecyclePhase.DISCOVERY
+
+
+def test_detect_phase_marker_beyond_max_depth_skipped(tmp_path: Path) -> None:
+    init_dir = _write_bmad(tmp_path)
+    deep = init_dir / "a" / "b" / "c" / "d" / "e" / "f"
+    deep.mkdir(parents=True)
+    (deep / "retro.md").write_text("x", encoding="utf-8")
+    assert detect_phase(tmp_path) == LifecyclePhase.DISCOVERY
+
+
+def test_detect_phase_scan_limit_zero_breaks(tmp_path: Path, monkeypatch) -> None:
+    from runtime import lifecycle
+
+    init_dir = _write_bmad(tmp_path)
+    (init_dir / "retro.md").write_text("x", encoding="utf-8")
+    monkeypatch.setattr(lifecycle, "_MAX_SCAN_FILES", 0)
+    assert detect_phase(tmp_path) == LifecyclePhase.DISCOVERY
+
+
+def test_detect_phase_lower_rank_marker_after_higher(tmp_path: Path) -> None:
+    init_dir = _write_bmad(tmp_path)
+    # Alphabetical rglob order scans aaa-retro first (rank 7); every
+    # lower-rank file after it exercises the rank<=best_rank branch.
+    (init_dir / "aaa-retro.md").write_text("x", encoding="utf-8")
+    (init_dir / "zzz-brief.md").write_text("x", encoding="utf-8")
+    (init_dir / "zzz2-prd.md").write_text("x", encoding="utf-8")
+    assert detect_phase(tmp_path) == LifecyclePhase.RETROSPECTIVE
+
+
+def test_detect_phase_initiative_oserror(tmp_path: Path, monkeypatch) -> None:
+    from unittest.mock import Mock
+
+    from runtime import lifecycle
+
+    monkeypatch.setattr(lifecycle, "_initiative_dir", Mock(side_effect=OSError("boom")))
+    assert detect_phase(tmp_path) is None
+
+
+def test_detect_phase_scan_oserror(tmp_path: Path, monkeypatch) -> None:
+    from unittest.mock import Mock
+
+    from runtime import lifecycle
+
+    monkeypatch.setattr(lifecycle, "_initiative_dir", lambda _root: tmp_path)
+    monkeypatch.setattr(lifecycle, "_scan_phase", Mock(side_effect=OSError("boom")))
+    assert detect_phase(tmp_path) is None

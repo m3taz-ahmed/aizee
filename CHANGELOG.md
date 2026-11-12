@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.8.3] - 2026-11-12 (MCP Registry metadata + aizee-mcp entry point)
+
+
+
 ## [6.8.2] - 2026-11-11 (version consistency release)
 
 - **Version unification:** every version-bearing surface now reads `6.8.2` — pyproject, `config.py` fallback, `manifest.json` (×2), `plugin.json`, README/README-AR badges, `validate-globals.py/.ps1` labels. Fixes the stale `6.8.0` badge shown inside the PyPI project page.

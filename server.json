@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.m3taz-ahmed/aizee",
+  "title": "aiZee",
+  "description": "Policy-governed MCP control plane for AI coding agents: enforcement gates, budget caps, prompt-injection defense, tamper-evident audit, and 46 memory/governance tools.",
+  "repository": {
+    "url": "https://github.com/m3taz-ahmed/aizee",
+    "source": "github"
+  },
+  "version": "6.8.3",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "aizee",
+      "version": "6.8.3",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "uvx",
+      "runtimeArguments": ["--from", "aizee", "aizee-mcp"]
+    }
+  ]
+}

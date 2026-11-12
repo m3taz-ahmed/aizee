@@ -78,7 +78,7 @@ _MAX_SCAN_DEPTH = 5
 def _load_bmad_config(bmad_dir: Path) -> dict[str, Any]:
     try:
         import tomllib  # type: ignore[import-not-found,unused-ignore]
-    except ImportError:
+    except ImportError:  # pragma: no cover - py<3.11 fallback
         import tomli as tomllib  # type: ignore[unused-ignore]
     config_path = bmad_dir / "config.toml"
     if not config_path.is_file():

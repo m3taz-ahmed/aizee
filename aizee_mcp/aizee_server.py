@@ -493,9 +493,13 @@ def _graceful_shutdown(signum: int, frame: Any) -> None:
     raise SystemExit(0)
 
 
-if __name__ == "__main__":
+def main() -> None:
     import signal
 
     signal.signal(signal.SIGTERM, _graceful_shutdown)
     signal.signal(signal.SIGINT, _graceful_shutdown)
     mcp.run(transport="stdio")
+
+
+if __name__ == "__main__":
+    main()

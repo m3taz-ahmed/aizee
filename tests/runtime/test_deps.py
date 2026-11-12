@@ -204,3 +204,262 @@ class TestFilters:
         assert [s.spec.id for s in video] == ["a"]
         only_b = deps.check_all(root, ids={"b"})
         assert [s.spec.id for s in only_b] == ["b"]
+
+class TestCoverageGaps:
+    """Cover the remaining uncovered branches in deps.py."""
+
+    def _ctx(self, tmp_path: Path) -> deps._Ctx:
+        return deps._Ctx(root=tmp_path, media=tmp_path / "media")
+
+    def _spec(self, **over) -> DepSpec:
+        base = {"id": "d", "name": "d", "kind": Kind.BINARY, "severity": "optional"}
+        return DepSpec(**{**base, **over})
+
+    def test_os_key_darwin_and_linux(self, monkeypatch):
+        monkeypatch.setattr(deps.sys, "platform", "darwin")
+        assert deps.os_key() == "darwin"
+        monkeypatch.setattr(deps.sys, "platform", "linux")
+        assert deps.os_key() == "linux"
+
+    def test_check_cmd_map_flat_list_and_invalid(self):
+        assert deps._check_cmd_map(["a", "b"]) == {"all": ("a", "b")}
+        assert deps._check_cmd_map("nope") == {}
+
+    def test_pip_outdated(self, tmp_path: Path, monkeypatch):
+        import importlib.metadata as im
+
+        monkeypatch.setattr(im, "version", lambda _p: "1.0")
+        spec = self._spec(kind=Kind.PIP, package="x", min_version="2.0")
+        state, ver, _ = deps._check_pip(spec, self._ctx(tmp_path))
+        assert state is State.OUTDATED
+        assert ver == "1.0"
+
+    def test_docker_daemon_no_binary(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: None)
+        state, _, detail = deps._check_docker_daemon(self._spec(), self._ctx(tmp_path))
+        assert state is State.MISSING
+        assert "PATH" in detail
+
+    def test_docker_daemon_info_oserror(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: "/usr/bin/docker")
+
+        def _raise(*a, **k):
+            raise OSError("boom")
+
+        monkeypatch.setattr(deps.subprocess, "run", _raise)
+        state, _, _ = deps._check_docker_daemon(self._spec(), self._ctx(tmp_path))
+        assert state is State.MISSING
+
+    def test_docker_daemon_not_running(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: "/usr/bin/docker")
+
+        class _P:
+            returncode = 1
+            stdout = ""
+            stderr = ""
+
+        monkeypatch.setattr(deps.subprocess, "run", lambda *a, **k: _P())
+        state, _, detail = deps._check_docker_daemon(self._spec(), self._ctx(tmp_path))
+        assert state is State.MISSING
+        assert "not running" in detail
+
+    def test_docker_image_no_binary(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: None)
+        state, _, _ = deps._check_docker_image(self._spec(image="img"), self._ctx(tmp_path))
+        assert state is State.MISSING
+
+    def test_docker_image_oserror_and_unreachable(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: "/usr/bin/docker")
+
+        def _raise(*a, **k):
+            raise OSError("boom")
+
+        monkeypatch.setattr(deps.subprocess, "run", _raise)
+        state, _, _ = deps._check_docker_image(self._spec(image="i"), self._ctx(tmp_path))
+        assert state is State.UNKNOWN
+
+        class _P:
+            returncode = 2
+            stdout = ""
+            stderr = ""
+
+        monkeypatch.setattr(deps.subprocess, "run", lambda *a, **k: _P())
+        state, _, detail = deps._check_docker_image(self._spec(image="i"), self._ctx(tmp_path))
+        assert state is State.UNKNOWN
+        assert "unreachable" in detail
+
+    def test_docker_image_not_built(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: "/usr/bin/docker")
+
+        class _P:
+            returncode = 0
+            stdout = "  "
+            stderr = ""
+
+        monkeypatch.setattr(deps.subprocess, "run", lambda *a, **k: _P())
+        state, _, detail = deps._check_docker_image(self._spec(image="img"), self._ctx(tmp_path))
+        assert state is State.MISSING
+        assert "not built" in detail
+
+    def test_registry_env_posix_false(self, monkeypatch):
+        monkeypatch.setattr(deps.os, "name", "posix")
+        assert deps._registry_env_has("AIZEE_TEST_VAR") is False
+
+    def test_registry_env_found_and_hive_oserror(self, monkeypatch):
+        import types
+
+        fake = types.ModuleType("winreg")
+        fake.HKEY_CURRENT_USER = 1
+        fake.HKEY_LOCAL_MACHINE = 2
+
+        class _Key:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        calls = []
+
+        def _open(hive, sub):
+            calls.append(hive)
+            if hive == 1:
+                raise OSError("denied")
+            return _Key()
+
+        fake.OpenKey = _open
+        fake.QueryValueEx = lambda k, n: ("v", 1)
+        monkeypatch.setitem(sys.modules, "winreg", fake)
+        assert deps._registry_env_has("AIZEE_TEST_VAR") is True
+        assert calls == [1, 2]
+
+    def test_any_path_first_missing_second_found(self, tmp_path: Path):
+        found = tmp_path / "exists.txt"
+        found.write_text("x", encoding="utf-8")
+        spec = self._spec(kind=Kind.ANY_PATH, paths=(str(tmp_path / "nope"), str(found)))
+        state, _, _ = deps._check_any_path(spec, self._ctx(tmp_path))
+        assert state is State.OK
+
+    def test_any_path_all_missing(self, tmp_path: Path):
+        spec = self._spec(kind=Kind.ANY_PATH, paths=(str(tmp_path / "a"), str(tmp_path / "b")))
+        state, _, detail = deps._check_any_path(spec, self._ctx(tmp_path))
+        assert state is State.MISSING
+        assert "none of the expected paths" in detail
+
+    def test_command_no_os_entry(self, tmp_path: Path):
+        spec = self._spec(kind=Kind.COMMAND, check_cmd={"other-os": ("echo", "hi")})
+        state, _, detail = deps._check_command(spec, self._ctx(tmp_path))
+        assert state is State.UNKNOWN
+        assert "no check command" in detail
+
+    def test_resolve_git_repo_update_pulls(self, tmp_path: Path):
+        spec = self._spec(kind=Kind.GIT_REPO, path=str(tmp_path / "kit"), repo="https://x/y.git")
+        cmd = deps._resolve({}, spec, self._ctx(tmp_path), update=True)
+        assert cmd is not None
+        assert "git -C" in cmd
+        assert "pull --ff-only" in cmd
+
+    def test_install_command_outdated_uses_update(self, tmp_path: Path):
+        spec = self._spec(kind=Kind.PIP, package="p", update={"all": "pip install -U p"})
+        cmd = deps.install_command(spec, self._ctx(tmp_path), outdated=True)
+        assert cmd == "pip install -U p"
+
+    def test_default_runner_success_and_timeout(self, monkeypatch):
+        class _P:
+            returncode = 3
+            stdout = "o"
+            stderr = "e"
+
+        monkeypatch.setattr(deps.subprocess, "run", lambda *a, **k: _P())
+        rc, out = deps._default_runner("anything")
+        assert rc == 3
+        assert out == "oe"
+
+        def _raise(*a, **k):
+            raise deps.subprocess.TimeoutExpired("cmd", 1)
+
+        monkeypatch.setattr(deps.subprocess, "run", _raise)
+        rc, out = deps._default_runner("anything")
+        assert rc == 124
+        assert out == "timed out"
+
+    def test_install_statuses_skips_ok(self, tmp_path: Path):
+        ok = deps.DepStatus(spec=self._spec(), ok=True, state=State.OK)
+        assert deps.install_statuses(tmp_path, [ok], dry_run=True) == []
+
+    def test_ensure_parent_noop_for_pip(self, tmp_path: Path):
+        deps._ensure_parent(self._spec(kind=Kind.PIP), self._ctx(tmp_path))
+
+    def test_recheck_exception_returns_false(self, tmp_path: Path, monkeypatch):
+        def _boom(*a, **k):
+            raise RuntimeError("boom")
+
+        monkeypatch.setattr(deps, "check_dep", _boom)
+        assert deps._recheck(self._spec(), self._ctx(tmp_path)) is False
+
+    def test_detect_version_no_cmd_or_regex(self):
+        assert deps._detect_version(self._spec(version_cmd=(), version_regex="x")) == ""
+        assert deps._detect_version(self._spec(version_cmd=("a",), version_regex="")) == ""
+
+    def test_detect_version_run_fails(self, monkeypatch):
+        def _raise(*a, **k):
+            raise OSError("boom")
+
+        monkeypatch.setattr(deps.subprocess, "run", _raise)
+        spec = self._spec(version_cmd=("tool", "-v"), version_regex=r"(\d+)")
+        assert deps._detect_version(spec) == ""
+
+    def test_docker_daemon_up(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: "/usr/bin/docker")
+
+        class _P:
+            returncode = 0
+            stdout = "27.1.0\n"
+            stderr = ""
+
+        monkeypatch.setattr(deps.subprocess, "run", lambda *a, **k: _P())
+        state, ver, detail = deps._check_docker_daemon(self._spec(), self._ctx(tmp_path))
+        assert state is State.OK
+        assert ver == "27.1.0"
+        assert "up" in detail
+
+    def test_docker_image_found(self, tmp_path: Path, monkeypatch):
+        monkeypatch.setattr(deps.shutil, "which", lambda _: "/usr/bin/docker")
+
+        class _P:
+            returncode = 0
+            stdout = "sha256:abc\n"
+            stderr = ""
+
+        monkeypatch.setattr(deps.subprocess, "run", lambda *a, **k: _P())
+        state, _, _ = deps._check_docker_image(self._spec(image="img"), self._ctx(tmp_path))
+        assert state is State.OK
+
+    def test_registry_env_falsy_value_continues(self, monkeypatch):
+        import types
+
+        fake = types.ModuleType("winreg")
+        fake.HKEY_CURRENT_USER = 1
+        fake.HKEY_LOCAL_MACHINE = 2
+
+        class _Key:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        fake.OpenKey = lambda hive, sub: _Key()
+        fake.QueryValueEx = lambda k, n: ("", 1)
+        monkeypatch.setitem(sys.modules, "winreg", fake)
+        assert deps._registry_env_has("AIZEE_TEST_VAR") is False
+
+    def test_command_check_oserror(self, tmp_path: Path, monkeypatch):
+        def _raise(*a, **k):
+            raise OSError("boom")
+
+        monkeypatch.setattr(deps.subprocess, "run", _raise)
+        spec = self._spec(kind=Kind.COMMAND, check_cmd={"all": ("tool", "-v")})
+        state, _, detail = deps._check_command(spec, self._ctx(tmp_path))
+        assert state is State.MISSING
+        assert "failed to run" in detail
