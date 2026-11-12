@@ -329,6 +329,14 @@ def _client_ip(handler: DashboardHandler) -> str:
     return direct
 
 
+def _drain_events(kernel: Any) -> list[dict[str, Any]]:
+    """Pull buffered bus events for the SSE payload; never breaks the stream."""
+    try:
+        return kernel.event_bus.drain()
+    except Exception:
+        return []
+
+
 def _dashboard_token(root: Path) -> str | None:
     """Return the configured dashboard token, or None for open access.
 
@@ -572,6 +580,12 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self._send_graph()
         elif parsed.path == "/api/graph/stats":
             self._send_graph_stats()
+        elif parsed.path == "/api/replay":
+            self._send_replay(parsed.query)
+        elif parsed.path == "/api/ui-schema":
+            self._send_ui_schema(parsed.query)
+        elif parsed.path == "/api/farm":
+            self._send_farm()
         elif parsed.path == "/api/events":
             self._send_sse_events()
         elif parsed.path == "/api/settings" and self.command == "GET":
@@ -1059,6 +1073,49 @@ class DashboardHandler(BaseHTTPRequestHandler):
         except (json.JSONDecodeError, OSError) as exc:
             self._send(200, json.dumps({"ok": False, "error": str(exc)}).encode("utf-8"), "application/json", cors=True)
 
+    def _send_replay(self, query: str) -> None:
+        """Audit log as a scrubbable timeline (read-only)."""
+        from runtime.replay import ReplayTrack, load_frames
+
+        qs = urllib.parse.parse_qs(query)
+        try:
+            tail = min(int(qs.get("tail", ["200"])[0]), 1000)
+        except (ValueError, TypeError):
+            tail = 200
+        event_type = qs.get("type", [""])[0] or None
+        track = ReplayTrack(load_frames(self.root / "state" / "audit.log", event_type=event_type, limit=tail))
+        self._send(200, json.dumps(track.to_dict(), default=str).encode("utf-8"), "application/json")
+
+    def _send_ui_schema(self, query: str) -> None:
+        """Schema-driven control pane for a frontmatter file under root."""
+        from runtime.ui_concepts import frontmatter_concepts
+
+        qs = urllib.parse.parse_qs(query)
+        raw = qs.get("file", [""])[0]
+        if not raw:
+            self._send(400, b"file query param required")
+            return
+        target = (self.root / raw).resolve()
+        try:
+            target.relative_to(self.root.resolve())
+            in_root = True
+        except ValueError:
+            in_root = False
+        if not in_root or not target.is_file():
+            self._send(400, b"file must resolve under root")
+            return
+        pane = frontmatter_concepts(target)
+        self._send(200, json.dumps(pane, default=str).encode("utf-8"), "application/json")
+
+    def _send_farm(self) -> None:
+        """Task farm status: leases, worker heartbeats, task counts."""
+        from runtime.task_farm import TaskFarm
+
+        farm = TaskFarm(self.root / "state" / "farm")
+        data = farm.stats()
+        data["tasks"] = [t.__dict__ for t in farm.list_tasks()][:100]
+        self._send(200, json.dumps(data, default=str).encode("utf-8"), "application/json")
+
     _sse_clients: ClassVar[int] = 0
     _sse_lock: ClassVar[threading.Lock] = threading.Lock()
     _MAX_SSE_CLIENTS: ClassVar[int] = 20
@@ -1104,6 +1161,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     "guardian_rules": status.get("guardian_rules"),
                     "capabilities": status.get("capabilities"),
                     "tech_stack": status.get("tech_stack"),
+                    "events": _drain_events(self.kernel),
                     "timestamp": time.time(),
                 }, default=str)
                 self.wfile.write(f"data: {payload}\n\n".encode())

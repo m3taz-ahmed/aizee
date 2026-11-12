@@ -5,8 +5,8 @@
   <p><strong>Your AI agent ships hallucinated APIs and secrets.<br>aiZee blocks them — enforced, not advised.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/Version-6.8.3-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.8.3">
-    <img src="https://img.shields.io/badge/Tests-7656%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7656 passed">
+    <img src="https://img.shields.io/badge/Version-6.9.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.9.0">
+    <img src="https://img.shields.io/badge/Tests-7887%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7887 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
@@ -61,6 +61,45 @@ A **zero-compromise, version-controlled operating system** that sits between you
 | Guardrails that exist but aren't on the path | **v6: enforcement wired into `Kernel.act()` + every MCP call** |
 
 ---
+
+## What's New in v6.9.0 — Creative-Tools Adoption Pass
+
+Ten architectural patterns adopted (clean-room reimplementations) from a
+study of ten open-source creative tools — OpenToonz, Friction, FreeMoCap,
+Synfig, Effekseer, Theatre.js, Pencil2D, OpenVDB, SVG.js, Natron — for
+programmers *and* designers (report: `ideas-repo-study-2026-11.md`):
+
+- **Event bus** (FreeMoCap) — typed pub/sub inside the kernel:
+  `ActionEvent`/`StepEvent`/`TaskEvent` auto-register, bounded history,
+  `state/events.jsonl` sink, dashboard SSE drain, `aizee events tail`.
+- **Step memoization** (Natron) — `call` steps cache by
+  `sha256(tool+args)`; `aizee plan run --memo` replays identical work
+  without re-invoking tools.
+- **Fluent plan builder** (SVG.js) — `runtime/plan_builder.py`:
+  `plan().let_().call().fanout().suspend().return_()` emits the same
+  validated inert JSON; authoring plans no longer means hand-editing JSON.
+- **Predictive prefetch** (OpenToonz) — `--lookahead N` warms upcoming
+  steps' tools/files on a background worker (read-only, bounded).
+- **Schema-driven UI** (Theatre.js) — `aizee ui --spec '{...}'` or
+  `--file <md>` renders control panes (sliders/enums/lists) from schemas;
+  `GET /api/ui-schema?file=` for the dashboard.
+- **Timeline replay** (Theatre.js) — `aizee replay` scrubs the
+  hash-chained audit log as a dope sheet; `GET /api/replay`.
+- **Task farm** (OpenToonz) — `aizee farm submit|work|reap` distributes
+  work to heartbeat-ing workers with expiring leases; `GET /api/farm`.
+- **Value bindings** (Synfig/Friction) — `$step.s0` and `$mem.<key>`
+  namespaces resolve inside plan expressions (still no `eval`).
+- **Memory snapshots** (OpenVDB) — `aizee memory snapshot` bakes an
+  immutable, compacted, checksummed read-only copy of the memory DB.
+- **Onion-skin ghost view** (Pencil2D) — `aizee plan ghost <file>` shows
+  what a plan *would* do (done/cached/pending/gated) without executing;
+- **Diff impact analysis** (Understand-Anything, MIT) — `aizee impact`
+  maps changed files onto the graphify dependency graph and reverse-BFSes
+  the blast radius: impacted files, tests to re-run, communities, layers.
+- **Guided architecture tour** (Understand-Anything) — `aizee tour`
+  walks the codebase foundations-first: graphify communities ordered by
+  inbound dependency weight with per-stop file highlights and layer tags.
+  shared `WorkingSet` LRU bounds event history, cache index, and prefetch.
 
 ## What's New — Unified Skill Library & BMAD Runtime (v6.8.0+)
 
@@ -339,7 +378,7 @@ one command that fixes it.
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 139 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 151 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -492,6 +531,15 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 | `aizee intel <domain>` | DNS/WHOIS/certs/subdomain recon |
 | `aizee eval` | Behavioral skill-scenario checks |
 | `aizee persona detect --multi` | Multi-persona + lifecycle phase + hints |
+| `aizee plan ghost <file>` | Onion-skin preview: what a plan would do |
+| `aizee plan run --memo --lookahead N` | Cached steps + predictive prefetch |
+| `aizee replay [--tail N]` | Scrub the audit log as a timeline |
+| `aizee events tail\|stats` | Event bus log (kernel action events) |
+| `aizee farm submit\|work\|reap` | Task farm with worker leases/heartbeats |
+| `aizee ui --file <md>\|--spec '{json}'` | Schema-driven control panes |
+| `aizee memory snapshot [--out DIR]` | Immutable compacted memory export |
+| `aizee impact [--base ref]` | Blast radius of pending changes over the code graph |
+| `aizee tour [--stops N]` | Dependency-ordered guided architecture walkthrough |
 
 ---
 

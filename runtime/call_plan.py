@@ -42,12 +42,15 @@ Plan shape::
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
+
+from runtime.step_cache import MISSING as _CACHE_MISS
 
 MAX_STEPS = 500
 MAX_FANOUT = 100
@@ -262,6 +265,11 @@ def _resolve_path(path: tuple[str, ...], env: dict[str, Any]) -> Any:
     cur: Any = env.get(path[0], _MISSING)
     if cur is _MISSING:
         raise PlanError("UNBOUND_VAR", f"unbound variable ${path[0]}")
+    if isinstance(cur, (_StepView, _MemView)) and len(path) == 1:
+        # Bare `$step`/`$mem` would hand back the resolver view itself — a
+        # non-serializable object that breaks PlanState persistence on
+        # suspend and escapes as AttributeError inside expr funcs.
+        raise PlanError("UNBOUND_VAR", f"${path[0]} needs a key — use ${path[0]}.<id>")
     for part in path[1:]:
         try:
             cur = cur[int(part)] if isinstance(cur, (list, tuple)) and part.lstrip("-").isdigit() else cur[part]
@@ -271,6 +279,80 @@ def _resolve_path(path: tuple[str, ...], env: dict[str, Any]) -> Any:
 
 
 _MISSING = object()
+
+# Binding namespaces resolvable in expressions beyond step vars
+# (Synfig ValueNode / Friction property-binding adoption):
+#   $step.<key> -> settled result of a prior step (e.g. $step.s0)
+#   $mem.<key>  -> injected memory lookup (kernel-attached store)
+_BINDING_ROOTS = frozenset({"step", "mem"})
+
+
+class _MemView:
+    """Lazy ``$mem.<key>`` namespace — resolves via an injected lookup."""
+
+    def __init__(self, lookup: Callable[[str], Any] | None) -> None:
+        self._lookup = lookup
+
+    def __getitem__(self, key: str) -> Any:
+        if self._lookup is None:
+            raise PlanError("UNBOUND_VAR", f"no memory store attached; $mem.{key} unresolvable")
+        try:
+            return self._lookup(str(key))
+        except PlanError:
+            raise
+        except Exception as exc:
+            raise PlanError("PATH_MISS", f"$mem.{key} lookup failed: {exc}") from exc
+
+
+class _StepView:
+    """Lazy ``$step.<key>`` — settled results by ``sN`` key or declared ``id``."""
+
+    def __init__(self, settled: dict[str, Any], steps: list[dict[str, Any]]) -> None:
+        self._settled = settled
+        self._steps = steps
+
+    def __getitem__(self, key: str) -> Any:
+        if key in self._settled:
+            return self._settled[key]
+        for i, step in enumerate(self._steps):
+            if step.get("id") == key:
+                k = f"s{i}"
+                if k in self._settled:
+                    return self._settled[k]
+                break
+        raise KeyError(key)
+
+
+class _BoundEnv(dict[Any, Any]):
+    """Vars dict overlaid with binding namespaces for expression eval.
+
+    Reads hit the plain step vars first; a missing root name falls back
+    to the resolver table so ``$step.s0`` reads settled results and
+    ``$mem.<key>`` queries the attached memory store. Writes stay on the
+    raw vars dict — the overlay is read-only.
+    """
+
+    def __init__(self, vars_dict: dict[str, Any], roots: dict[str, Any]) -> None:
+        super().__init__()
+        self._vars = vars_dict
+        self._roots = roots
+
+    def get(self, key: Any, default: Any = None) -> Any:
+        if key in self._vars:
+            return self._vars[key]
+        if key in self._roots:
+            return self._roots[key]
+        return default
+
+    def __getitem__(self, key: Any) -> Any:
+        if key in self._vars:
+            return self._vars[key]
+        if key in self._roots:
+            return self._roots[key]
+        raise KeyError(key)
+
+    def __contains__(self, key: Any) -> bool:
+        return key in self._vars or key in self._roots
 
 
 def _eval(node: Any, env: dict[str, Any]) -> Any:
@@ -444,17 +526,26 @@ def _count_steps(plan: dict[str, Any]) -> int:
     return walk(steps) if isinstance(steps, list) else 0
 
 
+def _eval_value(raw: Any, env: dict[str, Any]) -> Any:
+    """Evaluate ``raw`` as an expression if it's a string, else pass it through.
+
+    Non-string positions (``expr``, ``value``, ``cond``, ``over``) are
+    literal JSON constants — they evaluate to themselves, so a ``let`` can
+    bind a literal list/dict without quoting it as an expression.
+    """
+    return eval_expr(raw, env) if isinstance(raw, str) else raw
+
+
 def _validate_expr(src: object, step_i: int, bound: set[str], issues: list[PlanIssue]) -> None:
     if not isinstance(src, str):
-        issues.append(PlanIssue("EXPR_TYPE", "expression must be a string", step_i))
-        return
+        return  # non-string = literal constant; always valid
     try:
         refs = expr_vars(src)
     except PlanError as exc:
         issues.append(PlanIssue(exc.code, exc.message, step_i))
         return
     for name in sorted(refs):
-        if name not in bound:
+        if name not in bound and name not in _BINDING_ROOTS:
             issues.append(PlanIssue("UNBOUND_VAR", f"expression references unbound ${name}", step_i))
 
 
@@ -530,7 +621,7 @@ def _validate_block(
                     if isinstance(v, str) and v.startswith("$"):
                         try:
                             for name in expr_vars(v):
-                                if name not in bound:
+                                if name not in bound and name not in _BINDING_ROOTS:
                                     issues.append(
                                         PlanIssue("UNBOUND_VAR", f"arg references unbound ${name}", i)
                                     )
@@ -574,7 +665,7 @@ def _validate_block(
         elif op == "suspend":
             pass
         else:  # op == "return" (last valid op)
-            _validate_expr(step.get("value", "null"), i, bound, issues)
+            _validate_expr(step.get("value", step.get("expr", "null")), i, bound, issues)
 
 
 # ---------------------------------------------------------------------------
@@ -588,6 +679,7 @@ class PlanState:
     vars: dict[str, Any] = field(default_factory=dict)
     settled: dict[str, Any] = field(default_factory=dict)  # step-id -> result
     calls: int = 0
+    cache_hits: int = 0  # steps replayed from the content-hash cache
     suspended_at: int | None = None
     suspend_reason: str = ""
 
@@ -596,6 +688,7 @@ class PlanState:
             "vars": self.vars,
             "settled": self.settled,
             "calls": self.calls,
+            "cache_hits": self.cache_hits,
             "suspended_at": self.suspended_at,
             "suspend_reason": self.suspend_reason,
         }
@@ -606,6 +699,7 @@ class PlanState:
             vars=dict(data.get("vars", {})),
             settled=dict(data.get("settled", {})),
             calls=int(data.get("calls", 0)),
+            cache_hits=int(data.get("cache_hits", 0)),
             suspended_at=data.get("suspended_at"),
             suspend_reason=str(data.get("suspend_reason", "")),
         )
@@ -642,10 +736,25 @@ class PlanRunner:
         *,
         max_calls: int = MAX_CALLS,
         approve: Callable[[int, dict[str, Any]], bool] | None = None,
+        cache: Any | None = None,
+        memo_default: bool = False,
+        prefetch: Callable[[list[dict[str, Any]]], object] | None = None,
+        lookahead: int = 0,
+        mem: Callable[[str], Any] | None = None,
+        on_event: Callable[[dict[str, Any]], None] | None = None,
     ) -> None:
         self.tools = tools
         self.max_calls = max_calls
         self.approve = approve or (lambda _i, _s: True)
+        self.cache = cache
+        self.memo_default = memo_default
+        self.prefetch = prefetch
+        self.lookahead = max(0, int(lookahead))
+        self.mem = mem
+        self.on_event = on_event
+        self._prefetched: set[str] = set()
+        self._memo_plan = False
+        self._plan_steps: list[dict[str, Any]] = []
 
     def run(
         self,
@@ -655,13 +764,51 @@ class PlanRunner:
         state = state or PlanState()
         state.suspended_at = None  # resume: clear prior suspension, retry the gate
         state.suspend_reason = ""
+        self._memo_plan = bool(plan.get("memo", False))  # plan-level memoization opt-in
+        self._plan_steps = [s for s in plan.get("steps", []) if isinstance(s, dict)]
         try:
             value = self._exec_block(plan["steps"], state)
         except PlanError as exc:
+            self._emit(type="plan.failed", code=exc.code, message=exc.message, step=exc.step)
             return PlanResult(status="failed", state=state, error=exc, calls=state.calls)
+        except KeyError as exc:  # missing required step key on unvalidated plans
+            exc2 = PlanError("SHAPE", f"step missing required key {exc}")
+            self._emit(type="plan.failed", code=exc2.code, message=exc2.message)
+            return PlanResult(status="failed", state=state, error=exc2, calls=state.calls)
         if state.suspended_at is not None:
+            self._emit(type="plan.suspended", step=state.suspended_at, reason=state.suspend_reason)
             return PlanResult(status="suspended", value=value, state=state, calls=state.calls)
         return PlanResult(status="completed", value=value, state=state, calls=state.calls)
+
+    # -- hooks ------------------------------------------------------------
+
+    def _emit(self, **fields: Any) -> None:
+        """Fire a lifecycle event; taps must never break the run."""
+        if self.on_event is None:
+            return
+        with contextlib.suppress(Exception):
+            self.on_event(fields)  # event taps never break the run
+
+    def _env(self, state: PlanState) -> _BoundEnv:
+        """Vars + binding namespaces (`$step`, `$mem`) for expression eval."""
+        return _BoundEnv(
+            state.vars,
+            {"step": _StepView(state.settled, self._plan_steps), "mem": _MemView(self.mem)},
+        )
+
+    def _maybe_prefetch(self, steps: list[dict[str, Any]], i: int, key: str) -> None:
+        """Speculatively warm resources for the next ``lookahead`` calls."""
+        if self.prefetch is None or self.lookahead < 1 or key in self._prefetched:
+            return
+        self._prefetched.add(key)
+        upcoming = [
+            s
+            for s in steps[i + 1 : i + 1 + self.lookahead]
+            if isinstance(s, dict) and s.get("op") == "call"
+        ]
+        if upcoming:
+            with contextlib.suppress(Exception):
+                self.prefetch(upcoming)  # speculation never breaks the real run
 
     # -- block/step execution ---------------------------------------------
 
@@ -679,6 +826,7 @@ class PlanRunner:
                 continue  # resume: settled steps never re-run
             if state.suspended_at is not None:
                 return last
+            self._maybe_prefetch(steps, i, key)
             out = self._exec_step(step, state, i, key)
             if isinstance(out, _Return):
                 return out.value
@@ -695,13 +843,15 @@ class PlanRunner:
     ) -> Any:
         op = step.get("op")
         if op == "let":
-            state.vars[step["name"]] = value = eval_expr(step["expr"], state.vars)
+            value = _eval_value(step["expr"], self._env(state))
+            state.vars[step["name"]] = value
             state.settled[key] = True
+            self._emit(type="step.settled", key=key, op="let")
             return value
         if op == "call":
             return self._exec_call(step, state, i, key)
         if op == "fanout":
-            items = eval_expr(step["over"], state.vars)
+            items = _eval_value(step["over"], self._env(state))
             if not isinstance(items, (list, tuple)):
                 raise PlanError("EXPR_TYPE", "fanout 'over' must evaluate to a list", i)
             results = []
@@ -722,7 +872,7 @@ class PlanRunner:
             state.settled[key] = results
             return results
         if op == "if":
-            cond = eval_expr(step["cond"], state.vars)
+            cond = _eval_value(step["cond"], self._env(state))
             branch = step["then"] if cond else step.get("else", [])
             out = self._exec_block(branch, state, prefix=f"{key}/")
             state.settled[key] = True
@@ -737,7 +887,7 @@ class PlanRunner:
             state.settled[key] = True
             return _NO_VAL
         if op == "return":
-            value = eval_expr(step.get("value", "null"), state.vars)
+            value = _eval_value(step.get("value", step.get("expr", "null")), self._env(state))
             state.settled[key] = value
             return _Return(value)
         raise PlanError("BAD_OP", f"unknown op {op!r}", i)
@@ -755,10 +905,24 @@ class PlanRunner:
         tool = self.tools.get(step["tool"])
         if tool is None:
             raise PlanError("UNKNOWN_TOOL", f"unknown tool {step['tool']!r}", i)
+        env = self._env(state)
         args = {
-            k: eval_expr(v, state.vars) if isinstance(v, str) and v.startswith("$") else v
+            k: eval_expr(v, env) if isinstance(v, str) and v.startswith("$") else v
             for k, v in (step.get("args") or {}).items()
         }
+        # Content-hash memoization (Natron render cache): replay on hit.
+        memo = bool(step.get("memo", self.memo_default or self._memo_plan))
+        cache_key: str | None = None
+        if memo and self.cache is not None:
+            cache_key = self.cache.key_for(step["tool"], args)
+            cached = self.cache.get(cache_key)
+            if cached is not _CACHE_MISS:
+                state.cache_hits += 1
+                if "save" in step:
+                    state.vars[step["save"]] = cached
+                state.settled[key] = cached
+                self._emit(type="step.cached", key=key, op="call", tool=step["tool"])
+                return cached
         try:
             result = tool(**args)
         except PlanError:
@@ -768,6 +932,9 @@ class PlanRunner:
         if "save" in step:
             state.vars[step["save"]] = result
         state.settled[key] = result
+        if cache_key is not None and self.cache is not None:
+            self.cache.put(cache_key, result, tool=step["tool"])
+        self._emit(type="step.settled", key=key, op="call", tool=step["tool"])
         return result
 
 
@@ -788,6 +955,12 @@ def run_plan(
     state: PlanState | dict[str, Any] | None = None,
     max_calls: int = MAX_CALLS,
     approve: Callable[[int, dict[str, Any]], bool] | None = None,
+    cache: Any | None = None,
+    memo_default: bool = False,
+    prefetch: Callable[[list[dict[str, Any]]], object] | None = None,
+    lookahead: int = 0,
+    mem: Callable[[str], Any] | None = None,
+    on_event: Callable[[dict[str, Any]], None] | None = None,
 ) -> PlanResult:
     """Convenience one-shot: validate-shape-then-run.
 
@@ -795,4 +968,14 @@ def run_plan(
     """
     if isinstance(state, dict):
         state = PlanState.from_dict(state)
-    return PlanRunner(tools, max_calls=max_calls, approve=approve).run(plan, state)
+    return PlanRunner(
+        tools,
+        max_calls=max_calls,
+        approve=approve,
+        cache=cache,
+        memo_default=memo_default,
+        prefetch=prefetch,
+        lookahead=lookahead,
+        mem=mem,
+        on_event=on_event,
+    ).run(plan, state)

@@ -170,7 +170,7 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 139 governance modules in `runtime/`.
+- **Runtime Modules** — 151 governance modules in `runtime/`.
 
 - **MCP Server** — `aizee_mcp/` exposes 46 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
@@ -221,13 +221,13 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 139 governance modules
+├── runtime/                   # Kernel + 151 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 139 governance modules
+│   └── ...                    # 151 governance modules
 ├── aizee_mcp/                 # MCP server (46 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
 ├── skills/                    # 245 persona + lord skills

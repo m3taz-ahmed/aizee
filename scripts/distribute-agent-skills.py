@@ -9,10 +9,11 @@ Targets: .agents/skills (agentskills.io standard), .devin/skills (Devin),
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(r"E:\server\.ai")
+ROOT = Path(os.environ.get("AIZEE_ROOT") or Path(__file__).resolve().parents[1])
 SRC = ROOT / "skills"
 TARGETS = [ROOT / ".agents" / "skills", ROOT / ".devin" / "skills", ROOT / ".claude" / "skills"]
 
@@ -20,7 +21,12 @@ TARGETS = [ROOT / ".agents" / "skills", ROOT / ".devin" / "skills", ROOT / ".cla
 def junction(link: Path, target: Path) -> str:
     if link.exists() or link.is_junction():
         return "exists"
-    os.system(f'cmd /c mklink /J "{link}" "{target}" >nul 2>&1')
+    # mklink is a cmd builtin — list args, never a shell string.
+    subprocess.run(
+        ["cmd", "/c", "mklink", "/J", str(link), str(target)],
+        capture_output=True,
+        check=False,
+    )
     return "junction" if link.exists() else "FAIL"
 
 

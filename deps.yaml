@@ -474,7 +474,7 @@ deps:
     guidance: >-
       Venv at {media}/apps/ComfyUI/.venv (py3.12 + torch cu128, CUDA-verified on
       RTX 4050 6GB). Launch: `.venv\Scripts\python.exe main.py`. Low-VRAM:
-      use GGUF quants + --lowvram; see REPORT.md repo-study-2026-11-10.
+      use GGUF quants + --lowvram; see repo-study-2026-11-10.md at repo root.
 
   - id: cli-spec-kitty
     name: spec-kitty (spec->plan->tasks->review->accept->merge CLI)

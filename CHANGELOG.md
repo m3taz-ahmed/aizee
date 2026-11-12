@@ -1,6 +1,86 @@
 # Changelog
 
 
+## [6.9.0] - 2026-11-12 (Creative-tools adoption pass — 10 repos → 10 capabilities)
+
+All ten capabilities are clean-room reimplementations of architectural
+patterns studied from the 2026-11 creative-tools repo wave (licenses
+respected: MIT/Apache patterns adopted, GPL/AGPL reimplemented from
+concepts only — see `ideas-repo-study-2026-11.md`).
+
+- **Event bus** (FreeMoCap pubsub): `runtime/event_bus.py` — typed,
+  auto-registering topic channels (`ActionEvent`/`StepEvent`/`TaskEvent`/
+  `InfoEvent`), bounded ring history, fail-soft subscribers, optional
+  `state/events.jsonl` sink. Kernel publishes an `action.checked` event
+  per `act()`; dashboard SSE `/api/events` drains the buffer each poll;
+  `aizee events tail|stats` for CLI visibility.
+- **Step memoization** (Natron content-hash render cache):
+  `runtime/step_cache.py` — `call` steps cache by `sha256(tool+args)`;
+  `--memo` CLI flag or plan/step `memo` opt-in; hits replay results
+  without re-invoking tools (verified: 2 cache hits on re-run).
+- **Fluent plan builder** (SVG.js chainability): `runtime/plan_builder.py`
+  — `plan().let_().call().fanout().if_().suspend().return_().build()`
+  emits the same validated, hashable inert JSON; `strict` build runs the
+  real `validate_plan` gate.
+- **Predictive prefetch** (OpenToonz TPredictiveCacheManager):
+  `runtime/prefetch.py` — background worker warms upcoming `call` steps
+  (tool resolution + file pre-read into a bounded LRU) during execution;
+  `--lookahead N`; read-only, bounded queue, fail-soft.
+- **Schema-driven UI concepts** (Theatre.js prop-types + OpenToonz param
+  UI): `runtime/ui_concepts.py` — pydantic models, YAML frontmatter, or
+  explicit schemas → renderer-agnostic control panes; `aizee ui --file
+  <md>|--spec '{json}'` + `GET /api/ui-schema?file=`.
+- **Audit timeline replay** (Theatre.js dope sheet): `runtime/replay.py`
+  — HMAC-chained audit log → scrubbable `ReplayTrack`; `aizee replay
+  --tail/--type/--head` + `GET /api/replay`; read-only, never re-executes.
+- **Task farm** (OpenToonz TFarm leases): `runtime/task_farm.py` —
+  file-backed tasks with worker leases, heartbeats, expiry reaping,
+  bounded attempts → dead-letter; `aizee farm submit|claim|heartbeat|
+  complete|fail|work|reap|status|list` + `GET /api/farm`.
+- **Value-node bindings** (Synfig/Friction property binding):
+  `$step.<key>` and `$mem.<key>` namespaces resolve in plan expressions
+  via a read-only `_BoundEnv` overlay — no `eval`, still statically
+  validated (`_BINDING_ROOTS`).
+- **Immutable memory snapshots** (OpenVDB/NanoVDB): `memory/snapshot.py`
+  — compacted `VACUUM`ed SQLite copy + `manifest.json` + `SHA256SUMS`;
+  `mode=ro&immutable=1` open, tamper-detect verify; `aizee memory
+  snapshot [--out <dir>]`.
+- **Onion-skin ghost view + working set** (Pencil2D): `runtime/plan_ghost
+  .py` annotates every step (done/cached/pending/gated/pure/branch) and
+  previews args without executing — `aizee plan ghost <file>`;
+  `runtime/working_set.py` is the shared bounded-LRU primitive behind
+  event history, step-cache index, and prefetch window.
+
+Also: `let`/`return`/`if`/`fanout` positions now accept literal JSON
+values (non-string = constant), `return` accepts `expr` as an alias of
+`value`, `PlanState.cache_hits` tracked, kernel lazy service `event_bus`,
+manifest triggers + module map updated, README/README-AR feature
+sections, version 6.8.3 → 6.9.0.
+
+**Hardening pass** (SEC+QA audit of the new surfaces): `/api/ui-schema`
+containment uses `relative_to` (prefix-sibling escape closed);
+`task_farm` whitelists task/worker ids used as filenames; `run()`
+converts stray `KeyError` into `PlanError("SHAPE")` for unvalidated
+plans; `$step.<id>` resolves declared step ids via `_StepView` (not just
+`sN`); `--root` rejects drive-relative paths that a backslash-eating
+shell produces; `ui --spec` maps `options` to the enum/select control;
+event-bus publish failures log at debug instead of silent `pass`.
+
+**Understand-Anything adoption** (Egonex-AI/Understand-Anything, MIT —
+clean-room Python, no TS copied; study: `repo-study-2026-11-12.md`):
+- **Diff impact analysis** (`/understand-diff`): `runtime/impact.py` —
+  changed files (git worktree/index/`--base`) → graph nodes → bounded
+  reverse-BFS over depends-on edges (imports/calls/uses/inherits/…) →
+  impacted files, tests to re-run, communities, layer histogram;
+  `aizee impact [--base ref] [--staged] [--files a,b] [--depth N]`.
+- **Guided architecture tour** (`tour-builder`): `runtime/tour.py` —
+  graphify communities ranked foundations-first by inbound
+  cross-community edge weight, per-stop repo-file highlights + layer
+  tags; `aizee tour [--stops N] [--per-stop N] [--out file]`.
+- **Layer classifier**: `runtime/layers.py` — shared path/name heuristic
+  (cli/dashboard/runtime/memory/skills/workflows/tests/docs/…) used by
+  both reports.
+
 ## [6.8.3] - 2026-11-12 (MCP Registry metadata + aizee-mcp entry point)
 
 

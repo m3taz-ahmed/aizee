@@ -181,8 +181,9 @@ class TestValidate:
         r = validate_plan(plan, _tools())
         codes = {i.code for i in r.issues}
         assert not r.ok
+        # EXPR_TYPE no longer fires: non-string exprs are literal constants.
         assert {"BAD_OP", "SHAPE", "UNKNOWN_TOOL", "UNBOUNDED",
-                "BOUND_FANOUT", "UNBOUND_VAR", "EXPR_TYPE"} <= codes
+                "BOUND_FANOUT", "UNBOUND_VAR"} <= codes
 
     def test_bad_shape(self) -> None:
         r = validate_plan({"steps": "no"})

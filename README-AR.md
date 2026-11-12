@@ -4,8 +4,8 @@
   <p><strong>حول أي مساعد ذكاء اصطناعي إلى مهندسك الرئيسي — سيادة كاملة، جودة صفرية العيوب.</strong></p>
 
   <p>
-    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.8.3-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.8.3">
-    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7656%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7656 اختبار ناجح">
+    <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.9.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.9.0">
+    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7887%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7887 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
   </p>
@@ -60,6 +60,40 @@ $ aizee doctor --json | jq .verdict
 | حواجز حماية موجودة لكن خارج المسار | **v6: الإنفاذ مربوط بـ `Kernel.act()` وكل استدعاء MCP** |
 
 ---
+
+## الجديد في v6.9.0 — تبنّي أدوات الإبداع
+
+عشرة أنماط معمارية متبنّاة (إعادة تنفيذ نظيفة) من دراسة عشر أدوات إبداعية
+مفتوحة المصدر — OpenToonz وFriction وFreeMoCap وSynfig وEffekseer و
+Theatre.js وPencil2D وOpenVDB وSVG.js وNatron — للمبرمجين *و* المصممين
+(التقرير: `ideas-repo-study-2026-11.md`):
+
+- **ناقل أحداث** (FreeMoCap) — pub/sub مُنمّط داخل الكيرنل؛ الداشبورد
+  يسحب الأحداث لايف، و`aizee events tail` من الـCLI.
+- **تخزين الخطوات** (Natron) — كل استدعاء يتخزّن ببصمة محتواه؛
+  `aizee plan run --memo` يعيد النتيجة بدل إعادة الشغل.
+- **باني خطط سلس** (SVG.js) — `runtime/plan_builder.py` يكتب الخطة بسلسلة
+  استدعاءات بدل تحرير JSON يدويًا — نفس الصيغة الآمنة المتحققة.
+- **تحميل استباقي** (OpenToonz) — `--lookahead N` يجهّز موارد الخطوات
+  الجاية على خيط خلفي (قراءة فقط ومحدود).
+- **واجهة من المخطط** (Theatre.js) — `aizee ui --spec '{...}'` يولّد أدوات
+  تحكم (سلايدر/قوائم/حقول) تلقائيًا من الأنواع.
+- **إعادة تشغيل زمنية** (Theatre.js) — `aizee replay` يعرض سجل التدقيق
+  كشريط زمني تتحرك فيه (قراءة فقط).
+- **مزرعة مهام** (OpenToonz) — `aizee farm` توزّع الشغل على عمال بعقود
+  إيجار ونبضات قلب وإعادة جدولة عند السقوط.
+- **قيم مترابطة** (Synfig/Friction) — `$step.s0` و`$mem.<key>` تتحلّل
+  داخل تعبيرات الخطة (لسة بدون `eval`).
+- **لقطات ذاكرة** (OpenVDB) — `aizee memory snapshot` يصدّر نسخة
+  read-only مضغوطة ومفضوطة بالشيكسوم.
+- **عرض الظل** (Pencil2D) — `aizee plan ghost` يوريك الخطة هتعمل إيه
+  قبل ما تنفّذ؛ و`WorkingSet` يحصر الذاكرة المؤقتة في كل الأنظمة الجديدة.
+- **تحليل أثر التغيير** (Understand-Anything) — `aizee impact` بيربط
+  الملفات المتغيرة بجراف الاعتماديات ويحسب الـblast radius: الملفات
+  المتأثرة والاختبارات اللي لازم تتعاد والطبقات المعمارية.
+- **جولة معمارية** (Understand-Anything) — `aizee tour` يمشيك في
+  الكود من الأساس للواجهة: المجتمعات مترتبة بوزن الاعتماد عليها مع
+  أهم الملفات وطبقة كل محطة.
 
 ## الجديد — مكتبة مهارات موحدة + بيئة BMAD (v6.8.0+)
 
@@ -402,6 +436,15 @@ python dashboard/server.py 8080
 | `aizee intel <domain>` | استطلاع DNS/WHOIS/certs/subdomains |
 | `aizee eval` | فحوص سلوكية لسيناريوهات المهارات |
 | `aizee persona detect --multi` | شخصيات متعددة + مرحلة دورة حياة + تلميحات |
+| `aizee plan ghost <file>` | معاينة "ظل": الخطة هتعمل إيه قبل التنفيذ |
+| `aizee plan run --memo --lookahead N` | خطوات مخزّنة + تحميل استباقي |
+| `aizee replay [--tail N]` | سجل التدقيق كشريط زمني |
+| `aizee events tail\|stats` | سجل ناقل الأحداث |
+| `aizee farm submit\|work\|reap` | مزرعة مهام بعقود إيجار ونبضات |
+| `aizee ui --file <md>\|--spec '{json}'` | أدوات تحكم من المخطط |
+| `aizee memory snapshot [--out DIR]` | تصدير ذاكرة مضغوط ثابت |
+| `aizee impact [--base ref]` | نصف قطر تأثير التغييرات فوق جراف الكود |
+| `aizee tour [--stops N]` | جولة معمارية مرتبة بالاعتماديات |
 
 ---
 

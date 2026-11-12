@@ -190,3 +190,16 @@ def test_main_block_prints_status(tmp_path, monkeypatch, capsys):
     )
     data = json.loads(result.stdout)
     assert "version" in data
+
+
+def test_act_survives_event_publish_failure(tmp_path, monkeypatch):
+    """Observability is fail-soft: a broken bus must not break act() (541-542)."""
+    from runtime.event_bus import EventBus
+
+    def _boom(self, msg):
+        raise RuntimeError("sink dead")
+
+    monkeypatch.setattr(EventBus, "publish", _boom)
+    k = _kernel(tmp_path)
+    result = k.act("Read", path="x")
+    assert isinstance(result, dict)

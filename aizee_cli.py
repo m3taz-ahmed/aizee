@@ -42,7 +42,14 @@ def _load_json(raw: str, label: str, expected_type: type = dict) -> Any:
 
 
 def _root(args: argparse.Namespace) -> Path:
-    return args.root if args.root else config.discover_root()
+    root = args.root if args.root else config.discover_root()
+    s = str(root)
+    if len(s) > 2 and s[1] == ":" and s[2] not in "/\\":
+        raise CLIInputError(
+            f"--root {s} is drive-relative — the shell likely ate the "
+            "backslashes; quote it or use forward slashes (E:/server/.ai)"
+        )
+    return root
 
 
 def _project_root(args: argparse.Namespace) -> Path:
@@ -302,6 +309,15 @@ def cmd_memory(args: argparse.Namespace) -> int:
                     time.sleep(2)
             except KeyboardInterrupt:
                 console.print("[cyan]Stopped watching.[/cyan]")
+    elif args.subcommand == "snapshot":
+        from memory.snapshot import export_snapshot
+
+        out = Path(args.out or (root / "state" / "snapshots" / "latest"))
+        info = export_snapshot(store.db_path, out, aizee_version=getattr(config, "VERSION", ""))
+        console.print(
+            f"[green]snapshot → {info.dir}[/green] "
+            f"tables={sum(info.tables.values())} sha={info.source_sha256[:12]}"
+        )
     elif args.subcommand == "compact":
         from memory.compactor import compact_memory
 
@@ -1076,8 +1092,10 @@ def cmd_plan(args: argparse.Namespace) -> int:
         for issue in report.issues:
             console.print(f"  [red]s{issue.step}[/red] {issue.code}: {issue.message}")
         return 0 if report.ok else 1
+    if args.plan_action == "ghost":
+        return _plan_ghost(args, plan)
     # run / resume — mount a conservative builtin tool surface
-    tools = _plan_tools()
+    tools = _plan_tools(_root(args))
     state = None
     if args.plan_action == "resume":
         try:
@@ -1086,11 +1104,40 @@ def cmd_plan(args: argparse.Namespace) -> int:
             console.print(f"[red]cannot read state: {exc}[/red]")
             return 1
         plan = json.loads(plan_path.read_text(encoding="utf-8"))
-    result = run_plan(plan, tools, state=state, max_calls=args.max_calls)
+    cache = None
+    if getattr(args, "memo", False):
+        from runtime.step_cache import StepCache
+
+        cache = StepCache(_root(args) / "state" / "step-cache")
+    prefetcher = None
+    if getattr(args, "lookahead", 0):
+        from runtime.prefetch import Prefetcher
+
+        prefetcher = Prefetcher(tools=tools)
+        prefetcher.start()
+    events: list[dict[str, Any]] = []
+    try:
+        result = run_plan(
+            plan,
+            tools,
+            state=state,
+            max_calls=args.max_calls,
+            cache=cache,
+            memo_default=getattr(args, "memo", False),
+            prefetch=prefetcher.suggest if prefetcher is not None else None,
+            lookahead=getattr(args, "lookahead", 0),
+            on_event=events.append,
+        )
+    finally:
+        if prefetcher is not None:
+            prefetcher.stop()
     if args.json:
         print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False, default=str))
     else:
-        console.print(f"status: {result.status}  calls: {result.calls}  value: {result.value!r}")
+        console.print(
+            f"status: {result.status}  calls: {result.calls}  "
+            f"cache_hits: {result.state.cache_hits}  value: {result.value!r}"
+        )
         if result.error:
             console.print(f"  [red]{result.error.code}[/red] {result.error.message}")
         if result.status == "suspended":
@@ -1100,7 +1147,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
     return 0 if result.status == "completed" else 1
 
 
-def _plan_tools() -> dict[str, Any]:
+def _plan_tools(root: Path) -> dict[str, Any]:
     """Builtin plan tool surface — read-only helpers, no side effects."""
     from runtime.models_catalog import load_catalog
 
@@ -1109,15 +1156,216 @@ def _plan_tools() -> dict[str, Any]:
         "add": lambda a, b: a + b,
         "mul": lambda a, b: a * b,
         "upper": lambda s: str(s).upper(),
-        "skill_count": lambda: len(list((_root_ns() / "skills").glob("*.md"))),
-        "catalog_count": lambda: len(load_catalog(_root_ns())),
+        "skill_count": lambda: len(list((root / "skills").glob("*.md"))),
+        "catalog_count": lambda: len(load_catalog(root)),
     }
 
 
-def _root_ns() -> Path:
-    from config import discover_root
+def _plan_ghost(args: argparse.Namespace, plan: dict[str, Any]) -> int:
+    """Onion-skin preview — what the plan WOULD do, without executing."""
+    from runtime.call_plan import PlanState, plan_hash
+    from runtime.plan_ghost import ghost_plan, render_ghost
+    from runtime.step_cache import StepCache
 
-    return discover_root()
+    state = None
+    if getattr(args, "state", ""):
+        try:
+            state = PlanState.from_dict(json.loads(Path(args.state).read_text(encoding="utf-8")))
+        except (OSError, json.JSONDecodeError) as exc:
+            console.print(f"[red]cannot read state: {exc}[/red]")
+            return 1
+    ghost = ghost_plan(plan, state=state, cache=StepCache(_root(args) / "state" / "step-cache"))
+    ghost["plan_hash"] = plan_hash(plan)
+    if args.json:
+        print(json.dumps(ghost, indent=2, ensure_ascii=False, default=str))
+    else:
+        console.print(render_ghost(ghost))
+    return 0
+
+
+def cmd_replay(args: argparse.Namespace) -> int:
+    """Scrub the audit log as a dope-sheet timeline (Theatre.js adoption)."""
+    from runtime.replay import ReplayTrack, load_frames
+
+    log = _root(args) / "state" / "audit.log"
+    frames = load_frames(log, event_type=args.type or None, limit=args.tail or None)
+    track = ReplayTrack(frames)
+    if args.head is not None:
+        track.scrub(args.head)
+    if args.json:
+        print(json.dumps(track.to_dict(), indent=2, ensure_ascii=False))
+    else:
+        console.print(track.render(tail=args.show or None))
+    return 0
+
+
+def cmd_events(args: argparse.Namespace) -> int:
+    """Inspect the event bus — persisted log tail or topic stats."""
+    log = _root(args) / "state" / "events.jsonl"
+    rows: list[dict[str, Any]] = []
+    if log.exists():
+        for line in log.read_text(encoding="utf-8", errors="replace").splitlines():
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    if args.events_action == "stats":
+        counts: dict[str, int] = {}
+        for row in rows:
+            topic = str(row.get("topic", "?"))
+            counts[topic] = counts.get(topic, 0) + 1
+        if args.json:
+            print(json.dumps({"total": len(rows), "by_topic": counts}, indent=2))
+        else:
+            console.print(f"{len(rows)} events — {counts}")
+        return 0
+    # tail
+    tail = rows[-args.tail :] if args.tail else rows[-20:]
+    if args.json:
+        print(json.dumps(tail, indent=2, ensure_ascii=False))
+    else:
+        for row in tail:
+            topic = row.get("topic", "?")
+            rest = {k: v for k, v in row.items() if k not in ("topic", "ts")}
+            console.print(f"  [cyan]{topic:14}[/cyan] {rest}")
+    return 0
+
+
+def cmd_farm(args: argparse.Namespace) -> int:
+    """Task farm — submit/lease/heartbeat/complete across workers (OpenToonz)."""
+    from runtime.task_farm import FarmError, TaskFarm
+
+    farm = TaskFarm(_root(args) / "state" / "farm")
+    act = args.farm_action
+    try:
+        if act == "submit":
+            task = farm.submit(
+                args.tool,
+                _load_json(args.args or "{}", "--args"),
+                name=args.name or "",
+            )
+            console.print(f"[green]task {task.id}[/green] submitted ({task.tool})")
+            return 0
+        if act == "list":
+            tasks = farm.list_tasks(status=args.status or None)
+            if args.json:
+                print(json.dumps([t.__dict__ for t in tasks], indent=2, default=str))
+            else:
+                for t in tasks:
+                    console.print(f"  {t.id}  {t.status:7} {t.tool}  worker={t.worker or '-'}")
+            return 0
+        if act == "status":
+            print(json.dumps(farm.stats(), indent=2, default=str))
+            return 0
+        if act == "reap":
+            reaped = farm.reap_expired()
+            console.print(f"reaped {len(reaped)} expired leases: {reaped}")
+            return 0
+        if act == "claim":
+            claimed = farm.claim(args.worker, lease_seconds=args.lease)
+            print(json.dumps(claimed.__dict__ if claimed else None, indent=2, default=str))
+            return 0 if claimed else 1
+        if act == "heartbeat":
+            task = farm.heartbeat(args.worker, args.task, extend=args.lease)
+            console.print(f"[green]heartbeat[/green] lease→{task.lease_until:.0f}")
+            return 0
+        if act == "complete":
+            result = _load_json(args.result or "null", "--result")
+            farm.complete(args.worker, args.task, result=result)
+            console.print(f"[green]task {args.task} done[/green]")
+            return 0
+        if act == "fail":
+            farm.fail(args.worker, args.task, args.error or "worker error")
+            console.print(f"[yellow]task {args.task} failed[/yellow]")
+            return 0
+        if act == "work":
+            return _farm_work(farm, args)
+    except FarmError as exc:
+        console.print(f"[red]{exc.error_code}[/red] {exc.message}")
+        return 1
+    return 0
+
+
+def _farm_work(farm: Any, args: argparse.Namespace) -> int:
+    """Inline worker loop: claim → run tool → heartbeat/complete."""
+    tools = _plan_tools(_root(args))
+    ran = 0
+    while ran < args.max:
+        task = farm.claim(args.worker, lease_seconds=args.lease)
+        if task is None:
+            break
+        tool = tools.get(task.tool)
+        try:
+            if tool is None:
+                farm.fail(args.worker, task.id, f"unknown tool {task.tool}")
+                continue
+            result = tool(**task.args)
+            farm.complete(args.worker, task.id, result=result)
+            ran += 1
+        except Exception as exc:
+            farm.fail(args.worker, task.id, str(exc))
+    console.print(f"[green]worker {args.worker}[/green] completed {ran} task(s)")
+    return 0
+
+
+def cmd_ui(args: argparse.Namespace) -> int:
+    """Schema-driven UI concepts — data panes any frontend can render."""
+    from runtime.ui_concepts import frontmatter_concepts, pane_for
+
+    if args.file:
+        pane = frontmatter_concepts(args.file)
+    elif args.spec:
+        pane = pane_for(args.title or "pane", _load_json(args.spec, "--spec"))
+    else:
+        console.print("[red]Provide --file <md> or --spec '{json}'[/red]")
+        return 1
+    print(json.dumps(pane, indent=2, ensure_ascii=False, default=str))
+    return 0
+
+
+def cmd_impact(args: argparse.Namespace) -> int:
+    """Diff blast radius over the graphify dependency graph (Understand-Anything)."""
+    from runtime.impact import ImpactAnalyzer, ImpactError, changed_files, render_report
+
+    root = _root(args)
+    try:
+        files = changed_files(root, base=args.base or None, staged=args.staged)
+        if args.files:
+            files += [f.strip() for f in args.files.split(",") if f.strip()]
+        if not files:
+            console.print("[yellow]No changed files — nothing to analyze.[/yellow]")
+            return 0
+        report = ImpactAnalyzer(root).analyze(files, max_depth=args.depth)
+    except ImpactError as exc:
+        console.print(f"[red]{exc}[/red]")
+        return 1
+    if args.json:
+        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+    else:
+        print(render_report(report))
+    return 0
+
+
+def cmd_tour(args: argparse.Namespace) -> int:
+    """Dependency-ordered guided architecture tour (Understand-Anything)."""
+    from runtime.tour import TourBuilder, TourError, render_tour
+
+    root = _root(args)
+    try:
+        tour = TourBuilder(root).build(max_stops=args.stops, per_stop=args.per_stop)
+    except TourError as exc:
+        console.print(f"[red]{exc}[/red]")
+        return 1
+    if args.json:
+        print(json.dumps(tour.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+    text = render_tour(tour)
+    if args.out:
+        Path(args.out).write_text(text + "\n", encoding="utf-8")
+        console.print(f"[green]tour written → {args.out}[/green]")
+    else:
+        print(text)
+    return 0
 
 
 def cmd_check_docs(args: argparse.Namespace) -> int:
@@ -2387,7 +2635,7 @@ def main(argv: list[str] | None = None) -> int:
     p_query.add_argument("--explain", action="store_true")
 
     p_mem = sub.add_parser("memory", help="Memory commands")
-    p_mem.add_argument("subcommand", choices=["search", "vector", "add", "ingest", "compact", "banks", "reflect", "handoff", "handoffs", "instinct-add", "instinct-reinforce", "instincts"])
+    p_mem.add_argument("subcommand", choices=["search", "vector", "add", "ingest", "compact", "banks", "reflect", "handoff", "handoffs", "instinct-add", "instinct-reinforce", "instincts", "snapshot"])
     p_mem.add_argument("--query", default="")
     p_mem.add_argument("--bank", default=None, help="Memory bank namespace (default: all/global)")
     p_mem.add_argument("--apply", action="store_true", help="compact: apply (default is dry-run)")
@@ -2407,6 +2655,7 @@ def main(argv: list[str] | None = None) -> int:
     p_mem.add_argument("--action", default="", help="instinct: action to take")
     p_mem.add_argument("--instinct-id", default="", dest="instinct_id", help="instinct: id to reinforce")
     p_mem.add_argument("--min-confidence", type=float, default=0.0, dest="min_confidence", help="instincts: min confidence filter")
+    p_mem.add_argument("--out", default="", help="snapshot: output dir (default <root>/state/snapshots/latest)")
 
     p_policy = sub.add_parser("policy", help="Policy commands")
     p_policy.add_argument("subcommand", choices=["test", "lint"])
@@ -2612,11 +2861,64 @@ def main(argv: list[str] | None = None) -> int:
 
     # --- plan (callscript-style inert JSON plans) ---
     p_plan = sub.add_parser("plan", help="Validate/run an inert JSON plan (callscript-style)")
-    p_plan.add_argument("plan_action", choices=["validate", "run", "resume"], help="validate a plan file, run it, or resume a suspended state")
+    p_plan.add_argument("plan_action", choices=["validate", "run", "resume", "ghost"], help="validate a plan file, run it, resume a suspended state, or preview without executing")
     p_plan.add_argument("file", help="Plan JSON file (or state JSON for resume)")
     p_plan.add_argument("--plan-file", dest="plan_file", default="", help="Plan JSON file for resume")
     p_plan.add_argument("--json", action="store_true", help="Machine-readable output")
     p_plan.add_argument("--max-calls", type=int, default=200, help="Tool-call budget")
+    p_plan.add_argument("--memo", action="store_true", help="Memoize call steps by content hash (Natron-style)")
+    p_plan.add_argument("--lookahead", type=int, default=0, help="Speculatively prefetch resources for the next N call steps")
+    p_plan.add_argument("--state", default="", help="Prior state JSON for ghost preview")
+
+    # --- replay (audit timeline — Theatre.js dope sheet) ---
+    p_replay = sub.add_parser("replay", help="Scrub the audit log as a timeline")
+    p_replay.add_argument("--tail", type=int, default=0, help="Only the last N frames")
+    p_replay.add_argument("--type", default="", help="Filter by audit event type")
+    p_replay.add_argument("--head", type=float, default=None, help="Playhead position 0.0-1.0")
+    p_replay.add_argument("--show", type=int, default=0, help="Render only the last N rows")
+    p_replay.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- events (event bus) ---
+    p_events = sub.add_parser("events", help="Event bus log tail/stats (FreeMoCap pubsub)")
+    p_events.add_argument("events_action", choices=["tail", "stats"], nargs="?", default="tail")
+    p_events.add_argument("--tail", type=int, default=20, help="Rows for tail")
+    p_events.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- farm (task leases/heartbeats — OpenToonz TFarm) ---
+    p_farm = sub.add_parser("farm", help="Task farm: submit/lease/heartbeat/complete work")
+    p_farm.add_argument("farm_action", choices=["submit", "list", "status", "claim", "heartbeat", "complete", "fail", "reap", "work"])
+    p_farm.add_argument("--tool", default="", help="Tool name for submit")
+    p_farm.add_argument("--args", default="", help="JSON args for submit")
+    p_farm.add_argument("--name", default="", help="Task name")
+    p_farm.add_argument("--worker", default="cli-worker", help="Worker id")
+    p_farm.add_argument("--task", default="", help="Task id")
+    p_farm.add_argument("--lease", type=float, default=60.0, help="Lease seconds")
+    p_farm.add_argument("--result", default="", help="JSON result for complete")
+    p_farm.add_argument("--error", default="", help="Error text for fail")
+    p_farm.add_argument("--status", default="", help="Filter list by status")
+    p_farm.add_argument("--max", type=int, default=10, help="Max tasks for work")
+    p_farm.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- ui (schema-driven concepts — Theatre.js prop types) ---
+    p_ui = sub.add_parser("ui", help="Schema-driven UI concepts -> control pane JSON")
+    p_ui.add_argument("--file", default="", help="Markdown file with YAML frontmatter")
+    p_ui.add_argument("--spec", default="", help="Inline JSON schema {key: {type, range, options}}")
+    p_ui.add_argument("--title", default="", help="Pane title")
+
+    # --- impact (diff blast radius — Understand-Anything /understand-diff) ---
+    p_impact = sub.add_parser("impact", help="Blast radius of pending changes over the code graph")
+    p_impact.add_argument("--base", default="", help="Diff against ref (e.g. main); default: worktree+index")
+    p_impact.add_argument("--staged", action="store_true", help="Only staged changes")
+    p_impact.add_argument("--files", default="", help="Extra comma-separated file list")
+    p_impact.add_argument("--depth", type=int, default=6, help="Max reverse-BFS depth (default 6)")
+    p_impact.add_argument("--json", action="store_true", help="Machine-readable output")
+
+    # --- tour (dependency-ordered walkthrough — Understand-Anything tour-builder) ---
+    p_tour = sub.add_parser("tour", help="Guided architecture tour from the code graph")
+    p_tour.add_argument("--stops", type=int, default=12, help="Max communities to visit (default 12)")
+    p_tour.add_argument("--per-stop", type=int, default=6, help="Highlight nodes per stop (default 6)")
+    p_tour.add_argument("--out", default="", help="Write markdown tour to a file instead of stdout")
+    p_tour.add_argument("--json", action="store_true", help="Machine-readable output")
 
     # --- check-docs (lat.md-style [[file#symbol]] drift) ---
     p_docs = sub.add_parser("check-docs", help="Validate [[path#symbol]] doc→code links (lat.md-style)")
@@ -2838,6 +3140,12 @@ def main(argv: list[str] | None = None) -> int:
         "eval": cmd_eval,
         "intel": cmd_intel,
         "plan": cmd_plan,
+        "replay": cmd_replay,
+        "events": cmd_events,
+        "farm": cmd_farm,
+        "ui": cmd_ui,
+        "impact": cmd_impact,
+        "tour": cmd_tour,
         "check-docs": cmd_check_docs,
         "audit": cmd_audit,
         "mcp": cmd_mcp,

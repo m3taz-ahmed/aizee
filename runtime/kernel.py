@@ -526,6 +526,20 @@ def _act_via_middleware(
     return {"ok": False, "error": err_msg}
 
 
+def _publish_action_event(kernel: Kernel, action_type: str, result: dict[str, Any], dry_run: bool) -> None:
+    """Emit an ActionEvent on the bus; observability must never break act()."""
+    try:
+        from runtime.event_bus import ActionEvent
+
+        kernel.event_bus.publish(
+            ActionEvent(
+                action=action_type,
+                decision=str(result.get("decision") or ("ok" if result.get("ok", True) else "denied")),
+                dry_run=dry_run,
+            )
+        )
+    except Exception as exc:  # fail-soft: event loss must not break the action
+        _logger.debug("action event publish failed", exc_info=exc)
 
 
 class Kernel:
@@ -589,7 +603,7 @@ class Kernel:
         "model_router", "fairness_detector", "laravel_policy_linter",
         "filament_access_auditor", "db_migration_safety",
         "ui_a11y_checker", "blade_template_linter",
-        "project_config",
+        "project_config", "event_bus",
     })
     # Freelance/marketing helper modules exposed as kernel.<module> attrs —
     # imported on first access, not eagerly at init.
@@ -916,6 +930,16 @@ class Kernel:
 
         return load_project_config(self.project_root)
 
+    def _build_event_bus(self) -> Any:
+        """Build the typed in-process event bus (FreeMoCap pubsub adoption).
+
+        Persisted to ``state/events.jsonl`` so `aizee events tail` can see
+        events across processes; dashboard SSE drains the live buffer.
+        """
+        from runtime.event_bus import EventBus
+
+        return EventBus(persist=self.root / "state" / "events.jsonl")
+
     def detect_persona(self, text: str) -> dict[str, Any]:
         """Detect the best persona for a user prompt."""
         return self.persona.detect(text)
@@ -945,8 +969,11 @@ class Kernel:
             if fresh_context and session_id is None:
                 session_id = uuid.uuid4().hex
             if self._middleware_pipeline.has_middlewares():
-                return _act_via_middleware(self, action_type, dry_run, kwargs, session_id, fresh_context, verify)
-            return self._act_direct(action_type, dry_run, kwargs, session_id, fresh_context, verify)
+                result = _act_via_middleware(self, action_type, dry_run, kwargs, session_id, fresh_context, verify)
+            else:
+                result = self._act_direct(action_type, dry_run, kwargs, session_id, fresh_context, verify)
+            _publish_action_event(self, action_type, result, dry_run)
+            return result
 
     def _act_direct(
         self,

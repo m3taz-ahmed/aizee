@@ -324,3 +324,40 @@ def test_stale_cleanup_insufficient_falls_to_lru(monkeypatch):
         assert len(srv._rate_state) <= 9
     finally:
         srv._rate_state.clear()
+
+
+class TestUiSchemaContainment:
+    """REGRESSION: ?file= must not escape root via prefix-collision siblings."""
+
+    def _stub(self, root: Path):
+        h = object.__new__(DashboardHandler)
+        h.root = root
+        h.sent = []
+        h._send = lambda code, body=b"", *a, **k: h.sent.append((code, body))
+        return h
+
+    def test_rejects_traversal(self, tmp_path: Path):
+        root = tmp_path / "root"
+        root.mkdir()
+        (tmp_path / "secret.md").write_text("---\nname: x\n---\nbody", encoding="utf-8")
+        h = self._stub(root)
+        h._send_ui_schema("file=../secret.md")
+        assert h.sent[0][0] == 400
+
+    def test_rejects_prefix_sibling(self, tmp_path: Path):
+        root = tmp_path / "root"
+        sibling = tmp_path / "root-evil"          # shares the 'root' prefix
+        sibling.mkdir(parents=True)
+        (sibling / "x.md").write_text("---\nname: x\n---\nbody", encoding="utf-8")
+        root.mkdir()
+        h = self._stub(root)
+        h._send_ui_schema("file=../root-evil/x.md")
+        assert h.sent[0][0] == 400
+
+    def test_accepts_inside_root(self, tmp_path: Path):
+        root = tmp_path / "root"
+        (root / "skills").mkdir(parents=True)
+        (root / "skills" / "s.md").write_text("---\nname: demo\n---\nbody", encoding="utf-8")
+        h = self._stub(root)
+        h._send_ui_schema("file=skills/s.md")
+        assert h.sent[0][0] == 200

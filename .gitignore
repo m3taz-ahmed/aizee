@@ -55,11 +55,15 @@ scratch/
 state/
 backups/
 .coverage
+.coverage.*
+server.ai/
 .aizee-version
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+dist/
+htmlcov/
 
 # Personal utility scripts (not part of aiZee system)
 scripts/run-opencode-free.ps1
