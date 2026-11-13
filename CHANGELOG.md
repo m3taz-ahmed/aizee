@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.10.2] - 2026-11-13 (release gate on windows-latest)
+
+
+
 ## [6.10.1] - 2026-11-13 (ship routines convention dir in osroot wheel bundle)
 
 

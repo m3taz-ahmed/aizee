@@ -7,12 +7,12 @@
     "url": "https://github.com/m3taz-ahmed/aizee",
     "source": "github"
   },
-  "version": "6.10.1",
+  "version": "6.10.2",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "aizee",
-      "version": "6.10.1",
+      "version": "6.10.2",
       "transport": {
         "type": "stdio"
       },
