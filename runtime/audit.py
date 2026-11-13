@@ -104,8 +104,24 @@ def _get_audit_key() -> bytes:
                 _audit_key_cache = stored
                 return _audit_key_cache
         generated = secrets.token_bytes(32)
-        key_file.write_bytes(generated)
+        # Atomic publish: write to a sibling tmp then rename — readers can
+        # never observe a partially written key (write_bytes truncates
+        # first, which races concurrent processes, e.g. xdist workers).
+        tmp_file = key_file.with_name(f"{key_file.name}.{os.getpid()}.tmp")
+        try:
+            tmp_file.write_bytes(generated)
+            os.replace(tmp_file, key_file)
+        finally:
+            tmp_file.unlink(missing_ok=True)
         _restrict_file_permissions(key_file)
+        # Converge: a racing process may have replaced the file after us —
+        # re-read so every caller on this machine shares one key.
+        try:
+            stored = key_file.read_bytes().strip()
+            if stored:
+                generated = stored
+        except OSError:
+            pass
         _logger.warning(
             "SECURITY: No AIZEE_AUDIT_KEY set - auto-generated audit HMAC key "
             "stored at %s. For production, set AIZEE_AUDIT_KEY env var or "
