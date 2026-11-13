@@ -21,6 +21,11 @@
   `aizee find "وظايف"` matches instead of returning empty.
 
 ### Fixed
+- **Audit HMAC key generation**: `secrets.token_bytes(32)` can emit a token
+  whose edge bytes are ASCII whitespace; `read_bytes().strip()` on the key
+  file then truncated it to <32 bytes — a ~5%-per-generation intermittent
+  failure on shared runners. Generated keys now regenerate until both edge
+  bytes are non-whitespace; file format and user-supplied keys unchanged.
 - **CI pipeline (`aizee ci`)**: per-check timeouts replace the hardcoded
   120s cap that could never fit the test suite on shared runners
   (`subprocess.TimeoutExpired` is now caught as a gate failure — it is not

@@ -104,6 +104,11 @@ def _get_audit_key() -> bytes:
                 _audit_key_cache = stored
                 return _audit_key_cache
         generated = secrets.token_bytes(32)
+        # strip() is applied on every read of the key file; a token whose
+        # edge bytes happen to be ASCII whitespace would be truncated on
+        # re-read (31 != 32) — regenerate until the edges are safe.
+        while generated[:1].isspace() or generated[-1:].isspace():
+            generated = secrets.token_bytes(32)
         # Atomic publish: write to a sibling tmp then rename — readers can
         # never observe a partially written key (write_bytes truncates
         # first, which races concurrent processes, e.g. xdist workers).

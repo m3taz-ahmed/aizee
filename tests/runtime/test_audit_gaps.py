@@ -77,6 +77,20 @@ class TestAuditKey:
         monkeypatch.setattr(Path, "read_bytes", boom)
         assert len(_get_audit_key()) == 32
 
+    def test_generated_key_never_has_whitespace_edges(self, monkeypatch, tmp_path):
+        # Regression: a token with ASCII-whitespace edge bytes was truncated
+        # by strip() on re-read -> 31-byte key (random CI failure).
+        monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
+        monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)
+        bad = b" " + b"x" * 30 + b"\n"
+        calls = [bad, b"k" * 32]
+        monkeypatch.setattr(
+            "runtime.audit.secrets.token_bytes", lambda n: calls.pop(0)
+        )
+        key = _get_audit_key()
+        assert len(key) == 32
+        assert key == b"k" * 32
+
     def test_stored_key_reused(self, monkeypatch, tmp_path):
         monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
         monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)
