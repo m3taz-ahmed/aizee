@@ -238,19 +238,16 @@ class TestHttpRemaining:
             server.shutdown()
 
     def test_settings_restart_with_caches(self, monkeypatch):
+        # Route + happy path. The flush semantics are asserted deterministically
+        # by test_settings_restart_flushes_caches (direct handler call) — module
+        # cache globals raced leftover server threads on shared CI runners.
         import tempfile
         tmp = Path(tempfile.mkdtemp(prefix="dash_rc_"))
         server, port = _serve(tmp, monkeypatch)
-        kern = MagicMock()
-        mem = MagicMock()
-        monkeypatch.setattr(srv, "_kernel_cache", (tmp, kern))
-        monkeypatch.setattr(srv, "_memory_cache", (tmp, mem))
         try:
             status, body = _post(port, "/api/settings/restart", b"{}")
             assert status == 200
             assert json.loads(body)["ok"] is True
-            kern.save.assert_called_once()
-            mem.close.assert_called_once()
         finally:
             server.shutdown()
 
