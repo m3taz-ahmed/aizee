@@ -28,6 +28,8 @@ jobs:
         run: python -m pytest -q --cov-fail-under=100
       - name: Validate globals
         run: python scripts/validate-globals.py
+      - name: Dockerfile check
+        run: docker buildx build --check .
       - name: Docs sync check (counts + workflow table)
         run: python scripts/sync_docs.py --check
       - name: Docs guard — API.md exists

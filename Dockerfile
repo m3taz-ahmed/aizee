@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # === Stage 1: Builder ===
-FROM python:3.14-slim@sha256:03fa7aa0f269338f55f72dd1c06aa246f1b80d82d6f4d7ac2d6f8d5dad5c556 AS builder
+FROM python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f AS builder
 
 # Create build user
 RUN groupadd -r aios && useradd -r -g aios -m -d /app aios
@@ -35,7 +35,7 @@ COPY scripts/validate-globals.py ./scripts/validate-globals.py
 RUN pip install --no-cache-dir -e .
 
 # === Stage 2: Runtime ===
-FROM python:3.14-slim@sha256:03fa7aa0f269338f55f72dd1c06aa246f1b80d82d6f4d7ac2d6f8d5dad5c556 AS runtime
+FROM python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f AS runtime
 
 # Create non-root user
 RUN groupadd -r aios && useradd -r -g aios -m -d /app aios
@@ -53,6 +53,7 @@ COPY AGENTS.md global-roles.md global-workflow.md manifest.json ./
 COPY rules/ ./rules/
 COPY tech-stack/ ./tech-stack/
 COPY workflows/ ./workflows/
+COPY routines/ ./routines/
 COPY skills/ ./skills/
 COPY --from=builder /app/runtime/ ./runtime/
 COPY --from=builder /app/memory/ ./memory/
