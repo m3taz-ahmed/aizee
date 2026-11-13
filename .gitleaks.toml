@@ -1,0 +1,17 @@
+# Gitleaks configuration — the repo intentionally embeds fake secret
+# patterns in tests (secret-scrubber coverage), skill eval prompts, and
+# docs. All 8 baseline findings were verified non-secret.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures, eval prompts, and doc prose — never real credentials"
+paths = [
+    '''^tests/''',
+    '''^skills/''',
+    '''^CHANGELOG\.md$''',
+]
+regexes = [
+    # Env-var names, not values (analytics_tools.py descriptor fields).
+    '''requires_credentials_env''',
+]

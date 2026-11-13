@@ -211,16 +211,20 @@ class TestPluginResidual:
         pkg.mkdir()
         (pkg / "__init__.py").write_text("x = 1")
         real_stat = Path.stat
-        calls = {"n": 0}
 
         def flaky_stat(self: Path, *a: Any, **k: Any) -> Any:
             if self.parent == pkg:
-                calls["n"] += 1
-                if calls["n"] > 0:  # py3.14 is_file() bypasses Path.stat — only the loop call lands here
-                    raise OSError
+                raise OSError
             return real_stat(self, *a, **k)
 
-        with patch.object(Path, "stat", flaky_stat):
+        # On <=3.13 is_file() calls Path.stat and re-raises bare OSError
+        # (errno=None is not an ignored errno) before the loop is reached;
+        # on 3.14 it bypasses Path.stat. Pin is_file so the in-loop stat()
+        # is the only call that lands on flaky_stat on every version.
+        with (
+            patch.object(Path, "is_file", return_value=True),
+            patch.object(Path, "stat", flaky_stat),
+        ):
             assert pm._load_plugin_module("p") is None
 
 class TestMiddlewareResidual:
@@ -359,6 +363,7 @@ class TestServiceCatalogResidual:
 
 class TestTaintResidual:
     def _fn(self) -> Any:
+        import runtime.taint  # noqa: F401 — registers taint_flow_check on import
         from runtime.policy import default_guardrail_registry
 
         return default_guardrail_registry._guardrails["input"]["taint_flow_check"]
