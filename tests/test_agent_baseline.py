@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 import pytest
 
 from runtime.agent_baseline import (
@@ -68,8 +70,11 @@ def test_detects_new_endpoint(baseline: AgentBaseline) -> None:
 
 
 def test_no_anomaly_for_known_action(baseline: AgentBaseline) -> None:
-    for _ in range(AgentBaseline.LEARNING_THRESHOLD):
-        baseline.observe(_make_action(tool="search", action_type="read"))
+    base = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    for i in range(AgentBaseline.LEARNING_THRESHOLD):
+        baseline.observe(
+            _make_action(tool="search", action_type="read", timestamp=base + timedelta(seconds=i))
+        )
     alert = baseline.check(_make_action(tool="search", action_type="read"))
     assert alert is None
 
