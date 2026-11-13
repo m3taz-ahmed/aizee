@@ -1,4 +1,4 @@
-# aiZee Validation Script (PowerShell) v6.10.2
+# aiZee Validation Script (PowerShell) v6.10.3
 # Thin wrapper - delegates all logic to validate-globals.py (source of truth).
 
 [CmdletBinding()]

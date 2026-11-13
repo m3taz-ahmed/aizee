@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.10.3] - 2026-11-13 (deterministic CI on windows-latest runners)
+
+
+
 ## [6.10.2] - 2026-11-13 (release gate on windows-latest)
 
 
