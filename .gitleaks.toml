@@ -6,6 +6,7 @@ useDefault = true
 
 [allowlist]
 description = "Test fixtures, eval prompts, and doc prose — never real credentials"
+regexTarget = "line"
 paths = [
     '''^tests/''',
     '''^skills/''',
