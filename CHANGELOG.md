@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.10.4] - 2026-11-13 (deterministic global-devin coverage arcs)
+
+
+
 ## [6.10.3] - 2026-11-13 (deterministic CI on windows-latest runners)
 
 

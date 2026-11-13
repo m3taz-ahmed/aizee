@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "6.10.3",
+    "version": "6.10.4",
     "description": "Machine-readable trigger->workflow/file routing map for aiZee.",
     "updated": "2026-11-13"
   },
@@ -571,5 +571,5 @@
     "anti-patterns": "rules/anti-patterns.md",
     "behavioral": "rules/core-behavioral-compact.md"
   },
-  "version": "6.10.3"
+  "version": "6.10.4"
 }
