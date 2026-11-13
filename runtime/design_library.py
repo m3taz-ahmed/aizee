@@ -421,7 +421,11 @@ class DesignLibrary:
                         _stack.append(Path(entry.path))
                 elif current.is_file():
                     _count += 1
-                    all_files.append(str(current).lower())
+                    # Score relative paths only — an absolute path can inject
+                    # false keywords from the host layout (e.g. "admin" in
+                    # C:/Users/runneradmin/... on CI runners).
+                    rel = os.path.relpath(str(current), str(project_dir))
+                    all_files.append(rel.replace(os.sep, "/").lower())
             except OSError:
                 continue
 

@@ -78,6 +78,10 @@ class Task:
     result: Any = None
     error: str = ""
     created_at: float = field(default_factory=time.time)
+    # Nanosecond submission sequence — created_at is float wall time and can
+    # tie (~15.6ms Windows tick), which made "oldest first" order depend on
+    # filesystem glob order on shared runners.
+    seq: int = field(default_factory=time.time_ns)
     updated_at: float = field(default_factory=time.time)
 
 
@@ -242,7 +246,7 @@ class TaskFarm:
 
     def _oldest_pending(self) -> Task | None:
         pending = [t for t in self._iter_tasks() if t.status == "pending"]
-        return min(pending, key=lambda t: t.created_at, default=None)
+        return min(pending, key=lambda t: (t.created_at, t.seq), default=None)
 
     @staticmethod
     def _safe_id(ident: str) -> str:

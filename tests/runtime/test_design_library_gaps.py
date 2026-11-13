@@ -133,6 +133,16 @@ class TestProjectType:
         lib = DesignLibrary(tmp_path)
         assert lib.detect_project_type(tmp_path) is ProjectType.MOBILE_APP
 
+    def test_host_path_keywords_do_not_pollute(self, tmp_path):
+        # Regression: scoring must use paths relative to project_dir — a host
+        # layout like "C:/Users/runneradmin/..." injects "admin" -> DASHBOARD.
+        polluted = tmp_path / "admin-dashboard-analytics"
+        project = polluted / "proj"
+        (project / "app").mkdir(parents=True)
+        (project / "app" / "expo.json").write_text("{}")
+        lib = DesignLibrary(tmp_path)
+        assert lib.detect_project_type(project) is ProjectType.MOBILE_APP
+
     def test_skips_vendored_dirs(self, tmp_path):
         (tmp_path / "node_modules" / "x").mkdir(parents=True)
         (tmp_path / "node_modules" / "x" / "dashboard.js").write_text("x")
