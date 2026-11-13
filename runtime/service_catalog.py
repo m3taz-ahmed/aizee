@@ -22,11 +22,16 @@ Usage::
 
 from __future__ import annotations
 
+import re
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+_TRIGGER_LINE_RE = re.compile(r"^\[TRIGGER\]\s*(.+)$", re.IGNORECASE)
+_OBJ_LINE_RE = re.compile(r"^\[OBJ\]\s*(.+)$", re.IGNORECASE)
+_META_SCAN_LINES = 120
 
 
 @dataclass(frozen=True)
@@ -206,15 +211,58 @@ class ServiceCatalog:
         }
 
 
+def _descriptor_meta(md_file: Path) -> tuple[set[str], set[str], set[str], str]:
+    """Extract triggers, personas, tech-stack, and description from a doc.
+
+    Reads YAML frontmatter (skills) plus the ``[TRIGGER]``/``[OBJ]``
+    header lines used by workflow files. Scans the head of the file only.
+    """
+    from runtime.rule_frontmatter import parse_frontmatter
+
+    try:
+        text = md_file.read_text(encoding="utf-8")
+    except OSError:
+        return set(), set(), set(), ""
+    head = "\n".join(text.splitlines()[:_META_SCAN_LINES])
+    fm, body = parse_frontmatter(head)
+    triggers = {t.strip().lower() for t in (fm.triggers or []) if t.strip()}
+    personas = {p.strip() for p in (fm.personas or []) if p.strip()}
+    tech = {t.strip() for t in (fm.tech_stack or []) if t.strip()}
+    description = ""
+    for line in body.splitlines():
+        if tmatch := _TRIGGER_LINE_RE.match(line.strip()):
+            triggers.update(
+                t.strip().lower() for t in tmatch.group(1).split(",") if t.strip()
+            )
+        if not description and (omatch := _OBJ_LINE_RE.match(line.strip())):
+            description = omatch.group(1).strip()[:200]
+    return triggers, personas, tech, description
+
+
+def _file_descriptor(name: str, md_file: Path, kind: str) -> ServiceDescriptor:
+    """Build a descriptor for one markdown file (flat or SKILL.md layout)."""
+    triggers, personas, tech, description = _descriptor_meta(md_file)
+    triggers.add(name.lower().replace("-", " "))
+    return ServiceDescriptor(
+        name=name,
+        kind=kind,
+        triggers=frozenset(triggers),
+        personas=frozenset(personas),
+        tech_stack=frozenset(tech),
+        file_path=str(md_file),
+        description=description,
+    )
+
+
 def build_catalog_from_directory(
     skills_dir: Path,
     kind: str = "skill",
 ) -> ServiceCatalog:
     """Build a ServiceCatalog by scanning a directory for skill files.
 
-    Scans for ``{name}.md`` and ``{name}/SKILL.md`` layouts.
-    Extracts triggers from frontmatter if present (heuristic: keywords
-    in description or filename).
+    Scans for ``{name}.md`` and ``{name}/SKILL.md`` layouts. Triggers are
+    real metadata: YAML frontmatter ``triggers:`` + ``[TRIGGER]`` lines,
+    with the filename as a fallback trigger.
 
     This is a convenience builder - for full metadata (personas, tech_stack),
     construct ServiceDescriptor instances explicitly.
@@ -226,28 +274,14 @@ def build_catalog_from_directory(
 
     # Flat layout: {name}.md
     for md_file in skills_path.glob("*.md"):
-        name = md_file.stem
-        triggers = frozenset({name.lower().replace("-", " ")})
-        descriptors.append(ServiceDescriptor(
-            name=name,
-            kind=kind,
-            triggers=triggers,
-            file_path=str(md_file),
-        ))
+        descriptors.append(_file_descriptor(md_file.stem, md_file, kind))
 
     # Directory layout: {name}/SKILL.md
     for skill_dir in skills_path.iterdir():
         if skill_dir.is_dir():
             skill_file = skill_dir / "SKILL.md"
             if skill_file.exists():
-                name = skill_dir.name
-                triggers = frozenset({name.lower().replace("-", " ")})
-                descriptors.append(ServiceDescriptor(
-                    name=name,
-                    kind=kind,
-                    triggers=triggers,
-                    file_path=str(skill_file),
-                ))
+                descriptors.append(_file_descriptor(skill_dir.name, skill_file, kind))
 
     return ServiceCatalog(descriptors)
 

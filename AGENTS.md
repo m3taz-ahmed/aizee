@@ -72,10 +72,12 @@ Every built-in capability below is installed and verified. Prefer the matching c
 | `aizee eval` | Behavioral skill-scenario checks after changing skills/workflows |
 | `aizee skill link --pack <dir>` | Packaging skills for other agent harnesses (claude/codex/cursor/opencode) |
 | `aizee find <q>` / `aizee goal <obj>` | Discovering the right skill/workflow for a task |
+| `aizee routine <list\|match\|begin\|seen\|done>` | Recurring personal routines: named dossiers + durable cross-session state (see `workflows/66-routine-runner.md`) |
 
 **Event-triggered rules (fire without being asked):**
 
 - When a task's domain matches none of the loaded persona skills → run `aizee find <task description>` before implementing; 155 skills + 80 workflows are indexed (name + triggers + description) even when not persona-mapped.
+- When the user references a standing/recurring task ("تابع X", "check X again", "follow up", a named routine) → run `aizee routine match "<message>"` before asking for context; ambiguous → present candidates, never guess.
 - After adding/installing a skill → run `aizee skill lock-update`, then `aizee skill lock-check`.
 - After changing an MCP server config → run `aizee mcp freeze <server> --check`.
 - After editing `*.md` docs → run `aizee check-docs`.
@@ -170,7 +172,7 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 151 governance modules in `runtime/`.
+- **Runtime Modules** — 152 governance modules in `runtime/`.
 
 - **MCP Server** — `aizee_mcp/` exposes 46 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
@@ -221,17 +223,17 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 151 governance modules
+├── runtime/                   # Kernel + 152 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 151 governance modules
+│   └── ...                    # 152 governance modules
 ├── aizee_mcp/                 # MCP server (46 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
 ├── skills/                    # 245 persona + lord skills
-├── workflows/                 # 66 trigger-based execution protocols
+├── workflows/                 # 67 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
 ├── tech-stack/                # 271 version-locked stack references
 │   └── spec-driven-templates/ # SDD templates (spec/plan/tasks/constitution/checklist)

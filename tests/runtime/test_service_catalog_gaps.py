@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from runtime.service_catalog import (
     REL_DEPENDS_ON,
     CatalogEntity,
@@ -64,6 +66,8 @@ class TestServiceCatalog:
         c = self._catalog()
         out = c.match_tech_stack("we use python and pytest")
         assert {d.name for d in out} == {"a", "b"}
+        out = c.match_tech_stack("we use python only")
+        assert [d.name for d in out] == ["a"]  # non-matching tech continues the scan
 
     def test_all_and_status(self) -> None:
         c = self._catalog()
@@ -96,6 +100,37 @@ class TestBuildFromDirectory:
         names = {x.name for x in c.all()}
         assert names == {"flat-skill", "dir-skill"}
         assert c.by_trigger("flat skill")[0].name == "flat-skill"
+
+    def test_metadata_extraction(self, tmp_path: Path) -> None:
+        (tmp_path / "wf.md").write_text(
+            "[WORKFLOW] wf\n[OBJ] does things\n[TRIGGER] alpha, beta\n## body\n"
+        )
+        (tmp_path / "sk.md").write_text(
+            "---\ntriggers: [yaml-trig]\npersonas: [ARCH]\ntech_stack: [python]\n---\n# s\n"
+        )
+        (tmp_path / "two-obj.md").write_text("[OBJ] first\n[OBJ] second\n")
+        c = build_catalog_from_directory(tmp_path)
+        wf = c.by_name("wf")
+        sk = c.by_name("sk")
+        two = c.by_name("two-obj")
+        assert wf is not None and sk is not None and two is not None
+        assert {"alpha", "beta"} <= wf.triggers
+        assert wf.description == "does things"
+        assert "yaml-trig" in sk.triggers
+        assert "ARCH" in sk.personas and "python" in sk.tech_stack
+        assert two.description == "first"
+        assert c.match_trigger("do alpha")[0].name == "wf"
+
+    def test_meta_read_error(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        (tmp_path / "x.md").write_text("x")
+
+        def boom(*args: object, **kwargs: object) -> str:
+            raise OSError("nope")
+
+        monkeypatch.setattr(Path, "read_text", boom)
+        c = build_catalog_from_directory(tmp_path)
+        x = c.by_name("x")
+        assert x is not None and x.triggers == frozenset({"x"})
 
 
 def _entity(name: str, kind: str = "Skill", **kw: Any) -> CatalogEntity:

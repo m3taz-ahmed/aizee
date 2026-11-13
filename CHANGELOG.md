@@ -3,6 +3,23 @@
 
 ## [Unreleased]
 
+### Added
+- **Recurring routines** (`runtime/routines.py`): named, invocable personal
+  workflows with durable cross-session state — the "don't make me re-explain
+  it" system. A routine = private markdown dossier (CONTEXT / PROTOCOL /
+  RULES / STATE sections, YAML frontmatter with Arabic-safe trigger phrases)
+  + `aizee.routine-state.v1` JSON state (atomic writes, claim-before-start
+  `in_progress`, idempotent `run_id` per day, seen-ids dedup store capped at
+  5000, run history capped at 50). Three discovery scopes: `refs/routines/`
+  (project, gitignored), `~/.aizee/routines/` (user), `routines/` (shipped
+  templates + convention README). CLI: `aizee routine
+  list|match|show|new|status|begin|done|seen`. Agent protocol in
+  `workflows/66-routine-runner.md`; routines surface in `aizee find` as
+  `kind="routine"`.
+- **`find`/`goal` Arabic queries**: `_TOKEN_RE` widened from `[a-z0-9_]`
+  to `[^\W_]` — Arabic (and any unicode-letter) triggers now tokenize, so
+  `aizee find "وظايف"` matches instead of returning empty.
+
 ### Fixed
 - **CI pipeline (`aizee ci`)**: per-check timeouts replace the hardcoded
   120s cap that could never fit the test suite on shared runners

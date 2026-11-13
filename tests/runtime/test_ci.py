@@ -31,6 +31,16 @@ def test_run_command_file_not_found(tmp_path: Path) -> None:
     assert "Command not found" in output
 
 
+def test_run_command_timeout(tmp_path: Path) -> None:
+    """Cover the TimeoutExpired branch deterministically (no real sleep)."""
+    import subprocess
+    from unittest.mock import patch
+
+    with patch("runtime.ci.subprocess.run", side_effect=subprocess.TimeoutExpired("x", 1)):
+        code, output = run_command(["slow-cmd"], tmp_path, timeout=1)
+    assert code == 1 and "timed out" in output
+
+
 def test_run_command_success(tmp_path: Path) -> None:
     """Cover line 19: run_command returns (returncode, output) on success."""
     import sys

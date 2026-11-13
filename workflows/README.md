@@ -4,7 +4,7 @@ Each file here activates when the AI detects a specific task type. Counts and th
 
 ## Numbered Workflows (Trigger-Based)
 
-This directory contains **80** `.md` files: **66** numbered trigger-based workflows (`00`-`65`) plus standards protocols and reference files.
+This directory contains **81** `.md` files: **67** numbered trigger-based workflows (`00`-`66`) plus standards protocols and reference files.
 
 | Trigger / Task Type | Workflow File | When to Use |
 |---|---|---|
@@ -74,6 +74,7 @@ This directory contains **80** `.md` files: **66** numbered trigger-based workfl
 | game pipeline / game project / build a game /... | `63-game-studio-pipeline.md` | Full-lifecycle game pipeline — concept to release — adapted from Claude-Code-Game-Studios... |
 | game feature team / team combat / team ui / t... | `64-game-feature-teams.md` | Cross-domain team recipes for one game feature — adapted from CCGS /team-* orchestration.... |
 | 65-goldfish-review | `65-goldfish-review.md` | An **Elephant** (the primary agent, full context) drafts a design document. **Goldfish**... |
+| routine | `66-routine-runner.md` | Invoke a named recurring routine: resolve it from the user's message, load its private do... |
 
 ## Standards & Reference Files
 

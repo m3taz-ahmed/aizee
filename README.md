@@ -7,14 +7,14 @@
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI status"></a>
     <img src="https://img.shields.io/badge/Version-6.9.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.9.0">
-    <img src="https://img.shields.io/badge/Tests-7887%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7887 passed">
+    <img src="https://img.shields.io/badge/Tests-7921%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7921 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
     <img src="https://img.shields.io/badge/Skills-245-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="245 Skills">
-    <img src="https://img.shields.io/badge/Workflows-66-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="66 Workflows">
+    <img src="https://img.shields.io/badge/Workflows-67-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="67 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 Tech-Stack refs">
   </p>
 </div>
@@ -251,6 +251,7 @@ Enforcement moved onto the execution path in v6.0.0:
 - **Advisory audits** — `aizee task overcheck` (over-engineering signals from plan + graph), `aizee task curriculum` (staged learning plan from tech-stack refs).
 - **Cross-harness handoffs** — `aizee memory handoff --to-harness <h>` stamps a portable `aizee.handoff.v1` doc into the scoped vault (`brain/handoffs/`, fail-closed gitignore guard) so another agent picks up exactly where this one stopped.
 - **Instincts** — `aizee memory instinct-*` records atomic trigger→action behaviors with confidence 0.3→0.9; observed in ≥2 projects → auto-promotes project→user scope.
+- **Recurring routines** — `aizee routine` binds a named private dossier (`refs/routines/`, `~/.aizee/routines/`) to durable JSON state: claim-before-start `in_progress`, per-day `run_id` idempotency, a 5000-id seen-store for new-only digests, and a dated artifact per run. Agents resolve routines from free text (Arabic-safe trigger matching) via workflow `66-routine-runner`.
 - **MCP supply-chain audit** — `aizee security mcp` scans discovered MCP configs (JSONC-tolerant) for plaintext/token-shaped secrets in `env` *and* `args`, unpinned `npx`/`uvx` packages, writable command paths, and rug-pull drift vs locked baselines.
 - **Fact-forcing guardrail** — recoverable destructive commands (force-push, hard reset) pass only with explicit `{target, rollback}` facts; catastrophic ones stay hard-blocked.
 - **Prompt-defense baseline** — every materialized harness rules file carries a fixed anti-injection section (identity lock, secret non-disclosure, untrusted external content, unicode-trick suspicion).
@@ -379,7 +380,7 @@ one command that fixes it.
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 151 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 152 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -394,7 +395,7 @@ one command that fixes it.
 ├── _bmad/                   # BMAD runtime (config/scripts — gitignored)
 ├── .agents/skills           # Junction distribution for agent harnesses
 ├── deps.yaml                # External dependency manifest (check/install)
-├── workflows/               # 66 trigger-based execution protocols
+├── workflows/               # 67 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # 271 version-locked stack references
 ├── dashboard/               # Web dashboard (Python stdlib HTTP)
@@ -503,8 +504,9 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 | `aizee doctor [--json]` | Health verdict + ordered Run:/Guidance: fix steps |
 | `aizee heal [--apply] [-y]` | Diagnose + safe auto-fixes (dry-run default) |
 | `aizee check <action>` | Policy verdict for an action |
-| `aizee find "<need>"` | NL search over skills/workflows/tech-stack |
+| `aizee find "<need>"` | NL search over skills/workflows/tech-stack/routines |
 | `aizee goal "<objective>"` | Map a goal to the best workflow + steps |
+| `aizee routine list\|match\|begin\|done\|seen` | Recurring routines: named dossiers + durable cross-session state |
 | `aizee config show` | Masked settings snapshot |
 | `aizee config apply <file> --check` | Validate a settings file (no write) |
 | `aizee spec propose\|changes\|archive` | OpenSpec-style change folders |

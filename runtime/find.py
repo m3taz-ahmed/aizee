@@ -53,7 +53,7 @@ class GoalResult:
         }
 
 
-_TOKEN_RE = re.compile(r"[a-z0-9_]+")
+_TOKEN_RE = re.compile(r"[^\W_]+")  # unicode letters+digits — Arabic triggers tokenize too
 _MIN_SCORE = 0.05
 
 
@@ -102,6 +102,9 @@ def _build_full_catalog(os_root: Path) -> ServiceCatalog:
     for subdir, kind in (("skills", "skill"), ("workflows", "workflow"), ("tech-stack", "tech-stack")):
         cat = build_catalog_from_directory(os_root / subdir, kind=kind)
         descriptors.extend(cat.all())
+    from runtime.routines import discover, to_descriptors
+
+    descriptors.extend(to_descriptors(discover(os_root)))
     return ServiceCatalog(descriptors)
 
 

@@ -79,7 +79,7 @@ def collect_rule_files(global_path: str) -> list[str]:
         if fname.endswith('.md') and os.path.isfile(os.path.join(global_path, fname)):
             rule_files.append(fname)
 
-    for d in ('rules', 'tech-stack', 'workflows', 'skills', 'characters'):
+    for d in ('rules', 'tech-stack', 'workflows', 'skills', 'characters', 'routines'):
         dir_path = os.path.join(global_path, d)
         if os.path.exists(dir_path):
             for root, _, files in os.walk(dir_path):

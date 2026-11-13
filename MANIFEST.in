@@ -10,6 +10,7 @@ include create-shortcuts.ps1
 recursive-include installer *
 recursive-include skills *.md
 recursive-include workflows *.md
+recursive-include routines *.md
 recursive-include rules *.md *.yaml
 recursive-include tech-stack *.md
 recursive-include docs *.md

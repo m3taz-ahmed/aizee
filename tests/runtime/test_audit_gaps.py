@@ -50,6 +50,33 @@ class TestAuditKey:
         monkeypatch.setenv("AIZEE_AUDIT_KEY_FILE", str(kf))
         assert len(_get_audit_key()) == 32
 
+    def test_reread_converges_to_written_key(self, monkeypatch, tmp_path):
+        # Deterministic cover of the convergence re-read: generated key is
+        # written, re-read, and adopted (121->122 arc).
+        monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
+        monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)
+        key = _get_audit_key()
+        assert len(key) == 32
+        assert (tmp_path / "state" / "audit.key").read_bytes().strip() == key
+
+    def test_reread_empty_keeps_generated(self, monkeypatch, tmp_path):
+        # 121->125 arc: re-read returns empty -> generated token is kept.
+        monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
+        monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)
+        monkeypatch.setattr(Path, "read_bytes", lambda self: b"")
+        assert len(_get_audit_key()) == 32
+
+    def test_reread_oserror_keeps_generated(self, monkeypatch, tmp_path):
+        # 123-124: re-read raises OSError -> generated token is kept.
+        monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
+        monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)
+
+        def boom(self: Path) -> bytes:
+            raise OSError("gone")
+
+        monkeypatch.setattr(Path, "read_bytes", boom)
+        assert len(_get_audit_key()) == 32
+
     def test_stored_key_reused(self, monkeypatch, tmp_path):
         monkeypatch.delenv("AIZEE_AUDIT_KEY", raising=False)
         monkeypatch.delenv("AIZEE_AUDIT_KEY_FILE", raising=False)

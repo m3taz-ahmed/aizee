@@ -2374,6 +2374,120 @@ def cmd_goal(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_routine(args: argparse.Namespace) -> int:
+    """Recurring routines: named dossiers + durable cross-session state."""
+    from runtime import routines as rt
+
+    root = _root(args)
+    action = args.routine_action
+    if action == "list":
+        rows = rt.discover(root)
+        if args.json:
+            print(json.dumps([rt.status(r) for r in rows], indent=2, ensure_ascii=False))
+            return 0
+        if not rows:
+            console.print("[yellow]No routines found.[/yellow] Create one: aizee routine new <name>")
+            return 0
+        table = Table(title="Routines")
+        table.add_column("Name", style="cyan")
+        table.add_column("Scope", style="magenta")
+        table.add_column("Triggers", style="dim")
+        table.add_column("Last run", style="green")
+        table.add_column("Seen", style="green")
+        for r in rows:
+            st = rt.status(r)
+            table.add_row(r.name, r.scope, ", ".join(r.triggers)[:48], st["last_run"] or "-", str(st["seen"]))
+        console.print(table)
+        return 0
+    if action == "match":
+        matches = rt.match_routines(args.query, rt.discover(root), limit=args.limit)
+        if args.json:
+            print(json.dumps([m.to_dict() for m in matches], indent=2, ensure_ascii=False))
+            return 0 if matches else 1
+        if not matches:
+            console.print(f"[yellow]No routine matches:[/yellow] {args.query}")
+            return 1
+        table = Table(title=f"Routine match: {args.query}")
+        table.add_column("Name", style="cyan")
+        table.add_column("Scope", style="magenta")
+        table.add_column("Score", style="green")
+        table.add_column("Matched", style="dim")
+        for m in matches:
+            table.add_row(m.routine.name, m.routine.scope, f"{m.score:.0f}", ", ".join(m.matched))
+        console.print(table)
+        return 0
+    if action == "new":
+        try:
+            result = rt.scaffold(
+                args.name, root, scope=args.scope,
+                description=args.description, triggers=args.trigger or None,
+            )
+        except ValueError as exc:
+            console.print(f"[red]{exc}[/red]")
+            return 1
+        console.print(f"[green]Routine created:[/green] {result['name']} (scope={result['scope']})")
+        console.print(f"  dossier: {result['dossier']}")
+        console.print(f"  state:   {result['state']}")
+        return 0
+
+    routine = rt.resolve(root, args.name)
+    if routine is None:
+        console.print(
+            f"[red]No routine matches '{args.name}'.[/red] "
+            "Try: aizee routine list | aizee routine match <text>"
+        )
+        return 2
+    if action == "show":
+        console.print(f"[cyan]{routine.name}[/cyan] (scope={routine.scope})")
+        console.print(f"  dossier: {routine.path}")
+        console.print(f"  state:   {routine.state_path}")
+        if routine.triggers:
+            console.print(f"  triggers: {', '.join(routine.triggers)}")
+        if args.body:
+            console.print(routine.path.read_text(encoding="utf-8"))
+        return 0
+    if action == "status":
+        st = rt.status(routine)
+        if args.json:
+            print(json.dumps(st, indent=2, ensure_ascii=False))
+            return 0
+        console.print(
+            f"[cyan]{routine.name}[/cyan] last_run={st['last_run'] or 'never'} "
+            f"ran_today={st['ran_today']} runs={st['runs']} seen={st['seen']}"
+        )
+        if st["in_progress"]:
+            console.print(f"  [yellow]in_progress:[/yellow] {st['in_progress']['run_id']}")
+        return 0
+    if action == "begin":
+        rep = rt.begin(routine, force=args.force)
+        if args.json:
+            rep = {k: v for k, v in rep.items() if k != "state"}
+            print(json.dumps(rep, indent=2, ensure_ascii=False))
+        elif rep["already_ran"]:
+            msg = "Run already in progress" if rep.get("in_progress") else "Already ran today"
+            console.print(f"[yellow]{msg}:[/yellow] {rep['run_id']} — use --force to restart")
+        else:
+            console.print(f"[green]Run started:[/green] {rep['run_id']}")
+        return 1 if rep["already_ran"] and not args.force else 0
+    if action == "done":
+        if not args.summary.strip():
+            console.print("[red]done requires --summary[/red]")
+            return 1
+        rep = rt.complete(routine, summary=args.summary, artifact=args.artifact, notes=args.notes or None)
+        console.print(f"[green]Run closed:[/green] {rep['run_id']} (total runs={rep['runs']})")
+        return 0
+    if action == "seen":
+        if args.check:
+            result = rt.seen_check(routine, args.ids)
+            for i, known in result.items():
+                console.print(f"{'[dim]seen[/dim]' if known else '[green]new[/green]'}  {i}")
+            return 0 if all(result.values()) else 1
+        rep = rt.seen_add(routine, args.ids)
+        console.print(f"[green]Seen updated:[/green] +{rep['added']} new (total={rep['total']})")
+        return 0
+    return 1
+
+
 def cmd_config(args: argparse.Namespace) -> int:
     """Settings: masked show + apply with --check dry-run."""
     from runtime.config_ops import apply_config, show_config
@@ -2661,6 +2775,39 @@ def main(argv: list[str] | None = None) -> int:
     p_mem.add_argument("--instinct-id", default="", dest="instinct_id", help="instinct: id to reinforce")
     p_mem.add_argument("--min-confidence", type=float, default=0.0, dest="min_confidence", help="instincts: min confidence filter")
     p_mem.add_argument("--out", default="", help="snapshot: output dir (default <root>/state/snapshots/latest)")
+
+    p_routine = sub.add_parser("routine", help="Recurring routines: named dossiers + durable cross-session state")
+    sp_routine = p_routine.add_subparsers(dest="routine_action", required=True)
+    p_r_list = sp_routine.add_parser("list", help="List all routines (all scopes)")
+    p_r_list.add_argument("--json", action="store_true")
+    p_r_match = sp_routine.add_parser("match", help="Match a free-text message to candidate routines")
+    p_r_match.add_argument("query")
+    p_r_match.add_argument("--limit", type=int, default=5)
+    p_r_match.add_argument("--json", action="store_true")
+    p_r_show = sp_routine.add_parser("show", help="Show a routine's dossier path + metadata")
+    p_r_show.add_argument("name")
+    p_r_show.add_argument("--body", action="store_true", help="Print the full dossier markdown")
+    p_r_new = sp_routine.add_parser("new", help="Scaffold a new routine dossier + state")
+    p_r_new.add_argument("name")
+    p_r_new.add_argument("--scope", default="user", choices=["user", "project", "shipped"], help="user=~/.aizee, project=refs/, shipped=routines/")
+    p_r_new.add_argument("--description", default="")
+    p_r_new.add_argument("--trigger", action="append", default=[], help="Trigger phrase (repeatable)")
+    p_r_status = sp_routine.add_parser("status", help="Run state summary")
+    p_r_status.add_argument("name")
+    p_r_status.add_argument("--json", action="store_true")
+    p_r_begin = sp_routine.add_parser("begin", help="Claim today's run (idempotent; --force to re-run)")
+    p_r_begin.add_argument("name")
+    p_r_begin.add_argument("--force", action="store_true")
+    p_r_begin.add_argument("--json", action="store_true")
+    p_r_done = sp_routine.add_parser("done", help="Close the run: record summary + artifact")
+    p_r_done.add_argument("name")
+    p_r_done.add_argument("--summary", required=True)
+    p_r_done.add_argument("--artifact", default="", help="Path to the run artifact (dated report)")
+    p_r_done.add_argument("--notes", default="", help="Replace the free-text notes field")
+    p_r_seen = sp_routine.add_parser("seen", help="Dedup store: record/check item ids")
+    p_r_seen.add_argument("name")
+    p_r_seen.add_argument("ids", nargs="*", help="Item ids to record (or check with --check)")
+    p_r_seen.add_argument("--check", action="store_true", help="Check instead of record")
 
     p_policy = sub.add_parser("policy", help="Policy commands")
     p_policy.add_argument("subcommand", choices=["test", "lint"])
@@ -3188,6 +3335,7 @@ def main(argv: list[str] | None = None) -> int:
         "models": cmd_models,
         "gateway": cmd_gateway,
         "work": cmd_work,
+        "routine": cmd_routine,
     }
     try:
         return commands[args.command](args)
