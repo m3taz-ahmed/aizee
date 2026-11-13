@@ -27,7 +27,7 @@
   PyPI and the MCP Registry are live at v6.9.0, the social-preview asset
   exists (manual repo-settings upload pending), the demo GIF is embedded.
 
-
+## [6.9.0] - 2026-11-12 (Creative-tools adoption pass — 10 repos → 10 capabilities)
 
 All ten capabilities are clean-room reimplementations of architectural
 patterns studied from the 2026-11 creative-tools repo wave (licenses

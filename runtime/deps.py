@@ -309,7 +309,7 @@ def _registry_env_has(name: str) -> bool:
     yet every fresh shell will see it. Registry is the honest source for
     "is the machine configured". POSIX: no equivalent; returns False.
     """
-    if os.name != "nt":
+    if sys.platform != "win32":
         return False
     import winreg
 

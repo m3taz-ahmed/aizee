@@ -30,6 +30,7 @@ import pytest
 
 class TestUninstallerGuiResidual:
     def _gui(self):
+        pytest.importorskip("tkinter")
         from runtime.uninstaller_gui import UninstallerGUI
 
         gui = UninstallerGUI.__new__(UninstallerGUI)

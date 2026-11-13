@@ -302,12 +302,13 @@ class TestCoverageGaps:
         assert "not built" in detail
 
     def test_registry_env_posix_false(self, monkeypatch):
-        monkeypatch.setattr(deps.os, "name", "posix")
+        monkeypatch.setattr(deps.sys, "platform", "linux")
         assert deps._registry_env_has("AIZEE_TEST_VAR") is False
 
     def test_registry_env_found_and_hive_oserror(self, monkeypatch):
         import types
 
+        monkeypatch.setattr(deps.sys, "platform", "win32")
         fake = types.ModuleType("winreg")
         fake.HKEY_CURRENT_USER = 1
         fake.HKEY_LOCAL_MACHINE = 2

@@ -1412,6 +1412,11 @@ def cmd_ci(args: argparse.Namespace) -> int:
     for r in pipeline.results:
         color = "green" if r["ok"] else "red"
         console.print(f"[{color}]{r['name']}: {'PASS' if r['ok'] else 'FAIL'}[/{color}]")
+    for r in pipeline.results:
+        if not r["ok"]:
+            output = str(r.get("output") or "(no output)")
+            tail = output[-3000:] if len(output) > 3000 else output
+            console.print(f"[red]--- {r['name']} output ---[/]\n{tail}")
     return rc
 
 
