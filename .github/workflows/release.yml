@@ -14,7 +14,10 @@ permissions:
 jobs:
   validate:
     name: Validate Release
-    runs-on: ubuntu-latest
+    # windows-latest: the suite's 100% coverage floor is only measurable where
+    # platform-gated tests (tkinter GUI, SIGALRM) actually run — on ubuntu
+    # ~44 tests skip and coverage structurally caps at ~99.4%.
+    runs-on: windows-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -33,6 +36,7 @@ jobs:
           python aizee_cli.py test --full
       - name: Extract version
         id: version
+        shell: bash
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
