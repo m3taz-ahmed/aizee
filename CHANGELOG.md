@@ -1,7 +1,33 @@
 # Changelog
 
 
-## [6.9.0] - 2026-11-12 (Creative-tools adoption pass — 10 repos → 10 capabilities)
+## [Unreleased]
+
+### Fixed
+- **CI pipeline (`aizee ci`)**: per-check timeouts replace the hardcoded
+  120s cap that could never fit the test suite on shared runners
+  (`subprocess.TimeoutExpired` is now caught as a gate failure — it is not
+  an `OSError` and was escaping as exit code 2). The pipeline runs the
+  canonical fast tier via `aizee_cli.py test`, plus
+  `scripts/validate-globals.py` and `eval/release_gate.py` — the eval
+  harness double-run is gone.
+- **`eval/release_gate.py`**: moved the `if __name__ == "__main__"` guard
+  below the `ReleaseGate` class — the script `NameError`'d on every
+  invocation, so the release gate could never pass.
+- **Workflows**: `ci.yml` matrix trimmed to ubuntu × {3.10, 3.13};
+  `security.yml` runs `python -m pip_audit` (module name) with the
+  setuptools>=84.1.0 pin; `supply-chain.yml` drops the duplicate SBOM
+  artifact upload that 409'd (sbom-action already uploads
+  `aizee-sbom`) and the unused install step; `release.yml` gates on
+  `aizee_cli.py test --full`; `graphify.yml` deleted — its auto-commit
+  step could never succeed while `graphify-out/` is gitignored.
+- **`.bandit`**: dropped `B608` from `skips` — the test was removed
+  upstream and its presence exits bandit 1.7.10 with code 2.
+- **README / README-AR**: distribution table updated to shipped state —
+  PyPI and the MCP Registry are live at v6.9.0, the social-preview asset
+  exists (manual repo-settings upload pending), the demo GIF is embedded.
+
+
 
 All ten capabilities are clean-room reimplementations of architectural
 patterns studied from the 2026-11 creative-tools repo wave (licenses

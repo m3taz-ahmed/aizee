@@ -164,7 +164,7 @@ class TestCI:
         calls: list[str] = []
         monkeypatch.setattr(
             ci_mod, "run_command",
-            lambda cmd, cwd: (calls.append(cmd[2] if len(cmd) > 2 else ""), (0, "ok"))[1],
+            lambda cmd, cwd, timeout=300: (calls.append(cmd[2] if len(cmd) > 2 else ""), (0, "ok"))[1],
         )
         rc = CIPipeline(tmp_path).run(skip_pytest=True)
         assert rc == 0

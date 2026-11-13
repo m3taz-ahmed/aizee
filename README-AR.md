@@ -510,16 +510,17 @@ aiZee بيشحن خادم MCP خاص بيه ومهارة agent-facing. الأس�
 
 | السطح | اللي بيفتحه | الحالة |
 |---|---|---|
-| **PyPI** (`aizee`) | `pip install aizee` — مسار التثبيت في الـREADME | ⏳ نشر معلّق |
-| **قائمة MCP الرسمية** | مدرج في `modelcontextprotocol/servers` — حيث يكتشف مستخدمو Claude/Cursor أدوات MCP | ⏳ PR مطلوب |
+| **PyPI** (`aizee`) | `pip install aizee` — مسار التثبيت في الـREADME | ✅ شغال على v6.9.0 |
+| **سجل MCP** (`io.github.m3taz-ahmed/aizee`) | اكتشاف MCP الرسمي — سطح التثبيت الأساسي | ✅ شغال على v6.9.0 |
+| **قائمة modelcontextprotocol/servers** | قائمة منتقاة في ريبو MCP الرسمي | ⏳ PR اختياري — السجل بيغطي الاكتشاف |
 | **mcpservers.org / Smithery / Glama** | أدلة MCP بتثبيت بنقرة | ⏳ تقديم مطلوب |
 | **awesome-claude-code / awesome-mcp** | قوائم منتقاة بتقود معظم النجوم الأولى | ⏳ PR مطلوب |
-| **معاينة GitHub الاجتماعية** | الصورة اللي بتظهر لما الريبو يتشارك على X/LinkedIn/Discord | ⏳ محتاج banner (1280×640) |
-| **GIF تجريبي** | اللقطة الأساسية: agent متمنوع في نص commit | ⏳ يتسجّل بـScreenToGif/asciinema+agg |
+| **معاينة GitHub الاجتماعية** | الصورة اللي بتظهر لما الريبو يتشارك على X/LinkedIn/Discord | 🟡 الأصل جاهز في `docs/media/social-preview.png` — رفع يدوي من إعدادات الريبو |
+| **GIF تجريبي** | اللقطة الأساسية: agent متمنوع في نص commit | ✅ `docs/media/demo.gif` مضمّن فوق |
 | **Show HN · r/ClaudeAI · r/cursor** | ترافيك الإطلاق | ⏳ بعد ما اللي فوق يخلص |
 | **مقال Dev.to / Hashnode** | تغطية إطلاق قابلة للبحث | ⏳ اختياري |
 
-كل حاجة تانية (topics، الوصف، release، `llms.txt`، `SKILL.md` في الجذر، `aizee skill link` لمحفّزات الوكلاء) متشحّنة فعلاً.
+كل حاجة تانية (topics، الوصف، releases، GitHub Discussions، `llms.txt`، `SKILL.md` في الجذر، `aizee skill link` لمحفّزات الوكلاء) متشحّنة فعلاً.
 
 ---
 

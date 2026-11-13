@@ -606,16 +606,17 @@ it discoverable to agents and humans — some require maintainer accounts:
 
 | Surface | What it unlocks | Status |
 |---|---|---|
-| **PyPI** (`aizee`) | `pip install aizee` — the README's install path | ⏳ pending publication |
-| **Official MCP servers list** | Listed in `modelcontextprotocol/servers` — where Claude/Cursor users discover MCP tools | ⏳ PR needed |
+| **PyPI** (`aizee`) | `pip install aizee` — the README's install path | ✅ live at v6.9.0 |
+| **MCP Registry** (`io.github.m3taz-ahmed/aizee`) | Official MCP discovery — the canonical install surface | ✅ live at v6.9.0 |
+| **modelcontextprotocol/servers list** | Curated upstream server list | ⏳ PR optional — the registry already covers discovery |
 | **mcpservers.org / Smithery / Glama** | MCP directories with one-click install | ⏳ submission needed |
 | **awesome-claude-code / awesome-mcp** | Curated lists that drive most early stars | ⏳ PR needed |
-| **GitHub social preview** | The image shown when the repo is shared on X/LinkedIn/Discord | ⏳ needs a banner image (1280×640) |
-| **Demo GIF** | The money shot: agent blocked mid-commit | ⏳ record with ScreenToGif/asciinema+agg |
+| **GitHub social preview** | The image shown when the repo is shared on X/LinkedIn/Discord | 🟡 asset ready at `docs/media/social-preview.png` — manual upload in repo settings |
+| **Demo GIF** | The money shot: agent blocked mid-commit | ✅ `docs/media/demo.gif`, embedded above |
 | **Show HN · r/ClaudeAI · r/cursor** | Launch traffic | ⏳ after the above land |
 | **Dev.to / Hashnode post** | Searchable launch write-up | ⏳ optional |
 
-Everything else (topics, description, release, `llms.txt`, root `SKILL.md`,
+Everything else (topics, description, releases, GitHub Discussions, `llms.txt`, root `SKILL.md`,
 `aizee skill link` into agent harnesses) is already shipped.
 
 ---

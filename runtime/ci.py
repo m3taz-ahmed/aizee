@@ -6,8 +6,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+DEFAULT_TIMEOUT = 300
 
-def run_command(cmd: list[str], cwd: Path) -> tuple[int, str]:
+
+def run_command(cmd: list[str], cwd: Path, timeout: int = DEFAULT_TIMEOUT) -> tuple[int, str]:
     if not cwd.is_dir():
         return 1, f"Invalid cwd (not a directory): {cwd}"
     try:
@@ -17,12 +19,14 @@ def run_command(cmd: list[str], cwd: Path) -> tuple[int, str]:
             capture_output=True,
             text=True,
             check=False,
-            timeout=120,
+            timeout=timeout,
         )
         return result.returncode, (result.stdout + result.stderr).strip()
+    except subprocess.TimeoutExpired:
+        return 1, f"Command timed out after {timeout}s: {cmd}"
     except FileNotFoundError as exc:
         return 1, f"Command not found: {exc}"
-    except (OSError, TimeoutError, PermissionError) as exc:
+    except (OSError, PermissionError) as exc:
         return 1, f"Command failed: {exc}"
 
 
@@ -37,19 +41,41 @@ class CIPipeline:
         self.results = []
         all_ok = True
 
-        checks: list[tuple[str, list[str]]] = [
-            ("ruff", [sys.executable, "-m", "ruff", "check", "."]),
-            ("mypy", [sys.executable, "-m", "mypy", "runtime", "memory", "aizee_mcp", "aizee_cli.py", "config.py", "dashboard/server.py"]),
+        checks: list[tuple[str, list[str], int]] = [
+            ("ruff", [sys.executable, "-m", "ruff", "check", "."], 300),
+            (
+                "mypy",
+                [
+                    sys.executable,
+                    "-m",
+                    "mypy",
+                    "runtime",
+                    "memory",
+                    "aizee_mcp",
+                    "aizee_cli.py",
+                    "config.py",
+                    "dashboard/server.py",
+                    "eval/harness.py",
+                    "eval/pipeline.py",
+                    "eval/reliability.py",
+                    "eval/redteam.py",
+                    "scripts/guard_invariants.py",
+                    "scripts/sync_docs.py",
+                ],
+                600,
+            ),
         ]
         if not skip_pytest:
-            checks.append(("pytest", [sys.executable, "-m", "pytest", "-q"]))
-        checks.append(("eval/harness", [sys.executable, "eval/harness.py"]))
+            # Fast tier via the canonical runner — same deselection + xdist
+            # logic as `aizee test` so CI can never drift from local runs.
+            checks.append(("pytest", [sys.executable, str(self.root / "aizee_cli.py"), "test"], 900))
+        checks.append(("validate-globals", [sys.executable, "scripts/validate-globals.py"], 180))
         # P1.7: reliability release gate — skips cleanly when no rollout
         # evidence exists, fails on KILL/INSUFFICIENT ladder verdicts.
-        checks.append(("release-gate", [sys.executable, "eval/release_gate.py", "--project", str(self.root)]))
+        checks.append(("release-gate", [sys.executable, "eval/release_gate.py", "--project", str(self.root)], 180))
 
-        for name, cmd in checks:
-            code, output = run_command(cmd, self.root)
+        for name, cmd, timeout in checks:
+            code, output = run_command(cmd, self.root, timeout)
             ok = code == 0
             self.results.append({"name": name, "ok": ok, "output": output})
             if not ok:

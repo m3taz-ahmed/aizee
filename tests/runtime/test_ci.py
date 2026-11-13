@@ -12,7 +12,7 @@ def test_ci_pipeline_reports(tmp_path: Path) -> None:
     import runtime.ci as ci
 
     original = ci.run_command
-    def fake_run(cmd, cwd):
+    def fake_run(cmd, cwd, timeout=300):
         return (0, "ok")
     ci.run_command = fake_run
     try:
@@ -48,7 +48,7 @@ def test_ci_pipeline_failure_returns_nonzero(tmp_path: Path) -> None:
 
     call_count = [0]
 
-    def fake_run(cmd, cwd):
+    def fake_run(cmd, cwd, timeout=300):
         call_count[0] += 1
         # First check fails, rest pass
         if call_count[0] == 1:
@@ -71,7 +71,7 @@ def test_ci_pipeline_report(tmp_path: Path) -> None:
 
     original = ci.run_command
 
-    def fake_run(cmd, cwd):
+    def fake_run(cmd, cwd, timeout=300):
         return (0, "ok")
 
     ci.run_command = fake_run

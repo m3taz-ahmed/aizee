@@ -55,10 +55,6 @@ def main(argv: list[str] | None = None) -> int:
     return 0 if verdict.ok else 1
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
-
-
 @dataclass
 class GateVerdict:
     """Aggregate release-gate verdict."""
@@ -155,3 +151,7 @@ __all__ = [
     "ReleaseGateError",
     "load_rollouts",
 ]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -29,7 +29,7 @@ jobs:
         run: |
           ruff check .
           mypy runtime memory aizee_mcp aizee_cli.py config.py dashboard/server.py eval/harness.py eval/pipeline.py eval/reliability.py eval/redteam.py scripts/guard_invariants.py scripts/sync_docs.py
-          pytest -q --cov-fail-under=100
+          python aizee_cli.py test --full
       - name: Extract version
         id: version
         run: |
