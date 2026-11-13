@@ -468,6 +468,9 @@ class TestGatewayGaps:
         except urllib.error.HTTPError as e:
             return e.code, e.read()
 
+    # Socket flake: WinError 10053 / ECONNRESET can abort the loopback
+    # connection before the server accepts — retry, never the logic.
+    @pytest.mark.flaky(reruns=2)
     def test_handler_unsupported_path(self, monkeypatch: pytest.MonkeyPatch) -> None:
         port, srv = self._server(monkeypatch)
         try:
