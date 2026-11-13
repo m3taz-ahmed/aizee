@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.10.1] - 2026-11-13 (ship routines convention dir in osroot wheel bundle)
+
+
+
 ## [6.10.0] - 2026-11-13 (recurring routines: named dossiers with durable cross-session state)
 
 
