@@ -191,6 +191,17 @@ class TestSyncGlobalDevin:
         gp.write_text("{bad")
         assert daemon._sync_global_devin({"srv": {"enabled": False}}) == 0
 
+    def test_no_matching_servers_returns_zero(self, daemon, tmp_path, monkeypatch):
+        # Covers elif-FALSE (416->406), entry-not-disabled (418->406) and
+        # changed-False (422->425) arcs — previously only covered via the dev
+        # machine's real %APPDATA% devin config, never by a test.
+        gp = self._global_cfg(tmp_path, monkeypatch)
+        gp.parent.mkdir(parents=True)
+        gp.write_text(json.dumps({"mcpServers": {"srv": {}}}))
+        n = daemon._sync_global_devin({"srv": {"enabled": True}, "ghost": {"enabled": True}})
+        assert n == 0
+        assert "disabled" not in gp.read_text()
+
     def test_bad_servers_type(self, daemon, tmp_path, monkeypatch):
         gp = tmp_path / "app" / "devin" / "mcp_config.json"
         gp.parent.mkdir(parents=True)
