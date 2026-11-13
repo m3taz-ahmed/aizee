@@ -21,6 +21,7 @@ OUT = ROOT / "runtime" / "_osroot.tar.gz"
 _DIRS = [
     "skills",
     "workflows",
+    "routines",
     "rules",
     "tech-stack",
     "resources",
