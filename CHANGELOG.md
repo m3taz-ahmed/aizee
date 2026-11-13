@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.10.0] - 2026-11-13 (recurring routines: named dossiers with durable cross-session state)
+
+
+
 ## [Unreleased]
 
 ### Added
