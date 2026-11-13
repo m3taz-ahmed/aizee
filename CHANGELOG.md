@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.10.5] - 2026-11-13 (fix Docker base-image digest; ship routines dir)
+
+
+
 ## [6.10.4] - 2026-11-13 (deterministic global-devin coverage arcs)
 
 
