@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.11.0] - 2026-11-14 (agent-ecosystem wave)
+
+
+
 ## [Unreleased]
 
 - `runtime/routines.py`: declarative schedules are now live — `schedule:` frontmatter accepts `manual | every:<n><unit> | cron:<5-field> | at:<ISO>`; new `aizee routine due [--all] [--json]` lists routines past their fire instant (stdlib cron parser, correct DOW/OR semantics).
