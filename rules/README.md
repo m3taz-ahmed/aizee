@@ -26,6 +26,7 @@ Rules load lazily per `global-workflow.md`:
 | `ai-integration-standards.md` | Agentic/LLM integration rules |
 | `persistent-state-execution.md` | Multi-step task state management |
 | `spec-cache.md` | Project spec caching protocol |
+| `release-version-parity.md` | Version-bump/release fan-out — single source, all surfaces, install+update paths |
 | `EXAMPLES.md` | Concrete ❌/✅ pattern examples |
 
 ## Format

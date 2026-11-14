@@ -2416,6 +2416,29 @@ def cmd_routine(args: argparse.Namespace) -> int:
             table.add_row(r.name, r.scope, ", ".join(r.triggers)[:48], st["last_run"] or "-", str(st["seen"]))
         console.print(table)
         return 0
+    if action == "due":
+        due_rows = rt.due_routines(root)
+        if not args.all:
+            due_rows = [dr for dr in due_rows if dr["due"]]
+        if args.json:
+            print(json.dumps(due_rows, indent=2, ensure_ascii=False))
+            return 0 if due_rows else 1
+        if not due_rows:
+            console.print("[green]No scheduled routines due.[/green]")
+            return 0
+        table = Table(title="Scheduled routines")
+        table.add_column("Routine", style="cyan")
+        table.add_column("Schedule", style="magenta")
+        table.add_column("Due", style="green")
+        table.add_column("Next fire", style="dim")
+        table.add_column("Last run", style="dim")
+        for dr in due_rows:
+            table.add_row(
+                dr["routine"], dr["schedule"], "yes" if dr["due"] else "-",
+                dr["next_fire"] or "-", dr.get("last_run") or "never",
+            )
+        console.print(table)
+        return 0
     if action == "match":
         matches = rt.match_routines(args.query, rt.discover(root), limit=args.limit)
         if args.json:
@@ -2825,6 +2848,9 @@ def main(argv: list[str] | None = None) -> int:
     p_r_seen.add_argument("name")
     p_r_seen.add_argument("ids", nargs="*", help="Item ids to record (or check with --check)")
     p_r_seen.add_argument("--check", action="store_true", help="Check instead of record")
+    p_r_due = sp_routine.add_parser("due", help="List scheduled routines past their fire time (every:/cron:/at:)")
+    p_r_due.add_argument("--all", action="store_true", help="Include not-yet-due scheduled routines")
+    p_r_due.add_argument("--json", action="store_true")
 
     p_policy = sub.add_parser("policy", help="Policy commands")
     p_policy.add_argument("subcommand", choices=["test", "lint"])

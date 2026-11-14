@@ -59,6 +59,9 @@ graphify = [
 vector = [
     "sentence-transformers>=6.0,<7.0",
 ]
+vector-lite = [
+    "fastembed>=0.4,<1.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/m3taz-ahmed/aizee"
@@ -127,7 +130,7 @@ exclude = [
     "scripts/ui-ux-pro-max/",
 ]
 [[tool.mypy.overrides]]
-module = ["yaml", "sentence_transformers", "turbovec", "numpy", "psutil", "sentry_sdk", "defusedxml", "defusedxml.ElementTree"]
+module = ["yaml", "sentence_transformers", "turbovec", "numpy", "psutil", "sentry_sdk", "defusedxml", "defusedxml.ElementTree", "fastembed", "sqlite_vec"]
 ignore_missing_imports = true
 
 # Test files: included in type checking but with relaxed strictness.

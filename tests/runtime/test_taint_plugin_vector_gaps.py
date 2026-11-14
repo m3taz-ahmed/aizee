@@ -586,6 +586,7 @@ class TestVectorMemoryGaps:
 
     def test_embedder_no_model(self, monkeypatch):
         monkeypatch.setattr(vec_mod, "SentenceTransformer", None)
+        monkeypatch.setattr(vec_mod, "FastTextEmbedding", None)
         e = vec_mod.Embedder()
         assert e.is_available() is False
         e._ensure_model()  # returns early, model stays None

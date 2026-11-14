@@ -592,3 +592,48 @@ deps:
     install:
       windows: scoop install gitbutler
     guidance: GUI = gitbutler-tauri.exe (Start-menu shortcut); CLI = `but` on PATH.
+
+  # ---------- research-wave 2026-11 adoptions (see docs/studies/study-agent-ecosystem-2026-11-14.md) ----------
+  - id: fastembed
+    name: fastembed (ONNX embeddings — no torch, 6GB-VRAM friendly)
+    kind: pip
+    package: fastembed
+    severity: optional
+    required_by: ["memory vector memory — torch-free embedder (AIZEE_EMBEDDER=fastembed or auto-fallback)"]
+    tags: [memory, local-inference]
+    install:
+      all: "{python} -m pip install --user fastembed"
+    guidance: Enables `memory.vector` embeddings without sentence-transformers/torch. Auto-detected; set AIZEE_EMBEDDER=fastembed to force.
+
+  - id: ast-grep
+    name: ast-grep (structural code search/lint/rewrite)
+    kind: binary
+    bin: sg
+    version_cmd: ["sg", "--version"]
+    version_regex: '(\d+\.\d+\.\d+)'
+    severity: optional
+    required_by: ["graphify/codebase tooling — AST-aware refactor & lint rules"]
+    tags: [devtools]
+    install:
+      all: npm i -g @ast-grep/cli
+    guidance: "Cargo alternative: `cargo install ast-grep`. Binary name is `sg`."
+
+  - id: llama-swap
+    name: llama-swap (hot-swap llama.cpp/vLLM models on one port — 6GB VRAM unlock)
+    kind: binary
+    bin: llama-swap
+    version_cmd: ["llama-swap", "--version"]
+    severity: optional
+    required_by: ["local LLM serving — run multiple models without VRAM stacking"]
+    tags: [local-inference]
+    guidance: "Download release binary: https://github.com/mostlygeek/llama-swap/releases — proxies :8080, unloads idle models; ideal for the 6 GB RTX 4050."
+
+  - id: microsandbox
+    name: microsandbox (microVM code-execution sandbox)
+    kind: binary
+    bin: msb
+    version_cmd: ["msb", "--version"]
+    severity: optional
+    required_by: ["isolated execution for untrusted agent code (security boundary)"]
+    tags: [security, sandbox]
+    guidance: "Install: https://github.com/superradcompany/microsandbox — Windows installer in releases; `msb server start`, MCP-ready."

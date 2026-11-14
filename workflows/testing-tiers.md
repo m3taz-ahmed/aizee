@@ -210,3 +210,18 @@ npx jest --coverage --coverageThreshold='{"global":{"lines":80}}'
 5. **If no test framework exists** in the project, write the first test for the touched code before declaring done.
 6. **E2E tests are always FULL tier.** Never run Playwright/Cypress during fast iteration.
 7. **Max-out resources on FULL tier.** Parallel runners are the default everywhere (`aizee test --full` uses all cores minus 2; `vitest --maxWorkers`, `artisan test --parallel` for JS/PHP). Leave the OS just enough to breathe — never 100% of resources. A GPU only helps when tests execute real GPU-bound code (un-mocked torch/TF/transformers) — verify with `nvidia-smi` during the run; a mocked suite pays CUDA-context overhead for zero gain (measured: 151s CUDA vs 127s CPU on aiZee). See `tech-stack/pytest-8.md` rules 34-36.
+8. **CI parity is mandatory [TEST-12].** `aizee ci` runs the fast tier — it does NOT cover validate.yml's coverage gate. Before declaring done, run the same commands CI runs:
+
+```bash
+# exact validate.yml gates (aiZee)
+python -m ruff check .
+python -m mypy runtime memory aizee_mcp aizee_cli.py config.py dashboard/server.py eval/harness.py eval/pipeline.py eval/reliability.py eval/redteam.py scripts/guard_invariants.py scripts/sync_docs.py
+python -m pytest -q --cov-fail-under=100
+python scripts/validate-globals.py
+python scripts/sync_docs.py --check
+
+# cheap per-module coverage probe while iterating (must hit 100% on touched files)
+pytest tests/<dir>/test_<mod>.py -q --cov=<pkg.mod> --cov-report=term-missing
+```
+
+The coverage floor is repo-wide 100%: a new line without a test fails CI even when every test passes. When `aizee ci` and validate.yml disagree, validate.yml is truth.

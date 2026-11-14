@@ -111,3 +111,8 @@ def test_main_installs_skill(
     ])
     assert rc == 0
     assert json.loads(capsys.readouterr().out)["ok"] is True
+
+
+def test_resolve_devin_project_dir(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.chdir(tmp_path)
+    assert resolve_harness_dir("devin") == tmp_path / ".devin" / "skills"

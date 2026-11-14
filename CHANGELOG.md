@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [Unreleased]
+
+- `runtime/routines.py`: declarative schedules are now live — `schedule:` frontmatter accepts `manual | every:<n><unit> | cron:<5-field> | at:<ISO>`; new `aizee routine due [--all] [--json]` lists routines past their fire instant (stdlib cron parser, correct DOW/OR semantics).
+- `memory/vector.py`: `Embedder` falls back to `fastembed` (ONNX, torch-free) when sentence-transformers is absent; `AIZEE_EMBEDDER=st|fastembed` forces a backend. New `pyproject` extra `vector-lite` (fastembed + sqlite-vec).
+- `runtime/harness_exporter.py`: new `devin` per-repo target (`./.devin/skills`) via `_PROJECT_DIRS`.
+- `deps.yaml`: +5 optional deps — fastembed, sqlite-vec, ast-grep, llama-swap, microsandbox.
+- Study: `docs/studies/study-agent-ecosystem-2026-11-14.md` (35-repo ecosystem wave).
+
+
 ## [6.10.5] - 2026-11-13 (fix Docker base-image digest; ship routines dir)
 
 

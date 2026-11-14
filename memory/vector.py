@@ -8,6 +8,7 @@ import importlib
 import json
 import logging
 import math
+import os
 import uuid
 from collections.abc import Sequence
 from pathlib import Path
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 _ST_UNSET: Any = object()
 SentenceTransformer: Any = _ST_UNSET
+FastTextEmbedding: Any = _ST_UNSET
 IdMapIndex: Any = None
 
 try:
@@ -52,6 +54,33 @@ def _resolve_sentence_transformer() -> None:
     except Exception as exc:  # absent or broken optional dependency
         logger.info("sentence_transformers unavailable: %s", exc)
         SentenceTransformer = None
+
+
+def _resolve_fastembed() -> None:
+    """Resolve ``fastembed.TextEmbedding`` on first use.
+
+    fastembed runs ONNX-runtime embeddings — no torch, ~40 MB RAM footprint —
+    which makes it the embedder of choice on constrained hardware (6 GB VRAM
+    or CPU-only boxes) where sentence_transformers is unavailable.
+    """
+    global FastTextEmbedding
+    if FastTextEmbedding is not _ST_UNSET:
+        return
+    try:
+        FastTextEmbedding = importlib.import_module("fastembed").TextEmbedding
+    except Exception as exc:  # absent or broken optional dependency
+        logger.info("fastembed unavailable: %s", exc)
+        FastTextEmbedding = None
+
+
+def _embed_backend() -> str:
+    """Embedder backend: env override or auto (sentence-transformers first)."""
+    choice = os.environ.get("AIZEE_EMBEDDER", "auto").strip().lower()
+    if choice in ("sentence-transformers", "st", "sentence"):
+        return "st"
+    if choice in ("fastembed", "fe"):
+        return "fastembed"
+    return "auto"
 
 
 def _mem_id_to_uint64(mem_id: str) -> int:
@@ -82,34 +111,59 @@ class Embedder:
         self.model_name = model_name
         self.model: Any = None
         self.dim = 384
+        self.backend: str | None = None
 
     def _ensure_model(self) -> None:
-        """Load the SentenceTransformer model on first use (lazy)."""
+        """Load the embedding model on first use (lazy).
+
+        Backend order for ``auto``: sentence-transformers, then fastembed
+        (ONNX — the 6 GB-VRAM/torch-free path). ``AIZEE_EMBEDDER`` forces one.
+        """
         if self.model is not None:
             return
-        _resolve_sentence_transformer()
-        if SentenceTransformer is None:
-            return
-        # Reuse the singleton if the model name matches
-        if Embedder._singleton is not None and Embedder._singleton_model_name == self.model_name:
-            self.model = Embedder._singleton
-        else:
-            self.model = SentenceTransformer(self.model_name)
-            Embedder._singleton = self.model
-            Embedder._singleton_model_name = self.model_name
+        backend = _embed_backend()
+        if backend in ("auto", "st"):
+            _resolve_sentence_transformer()
+            if SentenceTransformer is not None:
+                # Reuse the singleton if the model name matches
+                if Embedder._singleton is not None and Embedder._singleton_model_name == self.model_name:
+                    self.model = Embedder._singleton
+                else:
+                    self.model = SentenceTransformer(self.model_name)
+                    Embedder._singleton = self.model
+                    Embedder._singleton_model_name = self.model_name
+                self.backend = "st"
+                return
+        if backend in ("auto", "fastembed"):
+            _resolve_fastembed()
+            if FastTextEmbedding is not None:
+                name = (
+                    self.model_name
+                    if "/" in self.model_name
+                    else f"sentence-transformers/{self.model_name}"
+                )
+                self.model = FastTextEmbedding(model_name=name)
+                self.backend = "fastembed"
 
     def embed(self, texts: Sequence[str]) -> Any:
         self._ensure_model()
-        if self.model is not None:
-            if np is None:
-                raise RuntimeError("numpy is required for embeddings but is not installed.")
-            return np.asarray(self.model.encode(list(texts)), dtype=np.float32)
-        raise RuntimeError("SentenceTransformer model is not available.")
+        if self.model is None:
+            raise RuntimeError("Embedding model not available (sentence-transformers / fastembed).")
+        if np is None:
+            raise RuntimeError("numpy is required for embeddings but is not installed.")
+        if self.backend == "fastembed":
+            vectors = np.asarray(list(self.model.embed(list(texts))), dtype=np.float32)
+        else:
+            vectors = np.asarray(self.model.encode(list(texts)), dtype=np.float32)
+        if vectors.ndim == 2:
+            self.dim = int(vectors.shape[1])
+        return vectors
 
     def is_available(self) -> bool:
-        # Check without loading the model: resolves the optional import once.
+        # Check without loading the model: resolves the optional imports once.
         _resolve_sentence_transformer()
-        return SentenceTransformer is not None
+        _resolve_fastembed()
+        return SentenceTransformer is not None or FastTextEmbedding is not None
 
     @classmethod
     def _reset_singleton(cls) -> None:

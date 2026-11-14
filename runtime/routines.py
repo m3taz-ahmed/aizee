@@ -32,7 +32,7 @@ import os
 import re
 import tempfile
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -229,6 +229,183 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+# ---------------------------------------------------------------------------
+# Scheduling — declarative `schedule:` frontmatter (openclaw/agent-compose
+# model: manual | every:<n><unit> | cron:<5-field> | at:<ISO>)
+# ---------------------------------------------------------------------------
+
+_INTERVAL_RE = re.compile(r"^every\s*:?\s*(\d+)\s*([smhdw])$", re.IGNORECASE)
+_INTERVAL_SECONDS = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
+_CRON_RANGES = ((0, 59), (0, 23), (1, 31), (1, 12), (0, 7))
+_CRON_LOOKAHEAD_DAYS = 400
+
+
+def _cron_field(spec: str, lo: int, hi: int) -> set[int] | None:
+    """Parse one cron field into an allowed-value set; None on bad syntax."""
+    values: set[int] = set()
+    for part in spec.split(","):
+        part = part.strip()
+        if not part:
+            return None
+        step = 1
+        if "/" in part:
+            part, _, step_s = part.partition("/")
+            try:
+                step = int(step_s)
+            except ValueError:
+                return None
+            if step < 1:
+                return None
+        if part in ("*", ""):
+            lo_v, hi_v = lo, hi
+        elif "-" in part:
+            a, _, b = part.partition("-")
+            try:
+                lo_v, hi_v = int(a), int(b)
+            except ValueError:
+                return None
+        else:
+            try:
+                lo_v = hi_v = int(part)
+            except ValueError:
+                return None
+        if lo_v < lo or hi_v > hi or lo_v > hi_v:
+            return None
+        values.update(range(lo_v, hi_v + 1, step))
+    return values
+
+
+def _cron_next(expr: str, after: datetime) -> datetime | None:
+    """Next fire instant strictly after `after` for a 5-field cron expr.
+
+    Standard cron semantics: DOW 0/7 = Sunday (mapped to python weekday 6);
+    when DOM and DOW are both restricted the day matches on EITHER field.
+    """
+    fields = expr.split()
+    if len(fields) != 5:
+        return None
+    sets = [_cron_field(f, lo, hi) for f, (lo, hi) in zip(fields, _CRON_RANGES, strict=True)]
+    if any(s is None for s in sets):
+        return None
+    minute_s, hour_s, dom_s, month_s, dow_s = sets
+    assert minute_s is not None and hour_s is not None and dom_s is not None
+    assert month_s is not None and dow_s is not None
+    # cron DOW 0..7 (0 and 7 = Sunday) -> python weekday (Mon=0 .. Sun=6)
+    weekdays = {((d - 1) % 7) for d in dow_s}
+    dom_restricted = fields[2] != "*"
+    dow_restricted = fields[4] != "*"
+    start = (after + timedelta(minutes=1)).replace(second=0, microsecond=0)
+    for _ in range(_CRON_LOOKAHEAD_DAYS):
+        if start.month in month_s:
+            if dom_restricted and dow_restricted:
+                day_ok = start.day in dom_s or start.weekday() in weekdays
+            else:
+                day_ok = start.day in dom_s and start.weekday() in weekdays
+            if day_ok:
+                for hour in sorted(hour_s):
+                    for minute in sorted(minute_s):
+                        candidate = start.replace(hour=hour, minute=minute)
+                        if candidate >= start:
+                            return candidate
+        start = (start + timedelta(days=1)).replace(hour=0, minute=0)
+    return None
+
+
+def parse_schedule(raw: str) -> tuple[str, str]:
+    """Normalize a schedule string -> (kind, value).
+
+    Kinds: ``manual`` | ``every`` (value=seconds str) | ``cron`` (expr) |
+    ``at`` (ISO datetime). Unknown/empty -> ``manual``.
+    """
+    raw = (raw or "manual").strip()
+    m = _INTERVAL_RE.match(raw)
+    if m:
+        seconds = int(m.group(1)) * _INTERVAL_SECONDS[m.group(2).lower()]
+        return ("every", str(seconds))
+    if raw.lower().startswith("cron:"):
+        return ("cron", raw[5:].strip())
+    if raw.lower().startswith("at:"):
+        return ("at", raw[3:].strip())
+    return ("manual", "")
+
+
+def _parse_iso(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def _anchor_dt(routine: Routine, state: dict[str, Any]) -> datetime:
+    """Anchor for next-fire computation: last_run, else dossier mtime."""
+    dt = _parse_iso(state.get("last_run"))
+    if dt is not None:
+        return dt
+    try:
+        return datetime.fromtimestamp(routine.path.stat().st_mtime, tz=timezone.utc)
+    except OSError:
+        return datetime.now(timezone.utc)
+
+
+def next_fire(routine: Routine, state: dict[str, Any] | None = None) -> datetime | None:
+    """Next scheduled fire instant after the anchor (last_run/mtime)."""
+    kind, value = parse_schedule(routine.schedule)
+    if kind == "manual":
+        return None
+    state = load_state(routine) if state is None else state
+    anchor = _anchor_dt(routine, state)
+    if kind == "every":
+        return anchor + timedelta(seconds=int(value))
+    if kind == "at":
+        # One-shot: fires at the absolute instant unless last_run already
+        # covered it (anchor for `at` is last_run, never file mtime).
+        fire = _parse_iso(value)
+        last = _parse_iso(state.get("last_run"))
+        return fire if fire is not None and (last is None or fire > last) else None
+    if kind == "cron":
+        return _cron_next(value, anchor)
+    return None  # unreachable — parse_schedule maps to the four kinds
+
+
+def due(routine: Routine, state: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Is this routine's schedule past its fire instant?
+
+    OpenClaw model: schedules are declarative; a scheduler (or the user via
+    ``aizee routine due``) checks whether a fire instant elapsed since the
+    last completed run. One-shot ``at:`` schedules are never due twice.
+    """
+    state = load_state(routine) if state is None else state
+    kind, _ = parse_schedule(routine.schedule)
+    if kind == "manual":
+        return {"routine": routine.name, "schedule": "manual", "due": False, "next_fire": None}
+    fire = next_fire(routine, state)
+    now = datetime.now(timezone.utc)
+    is_due = fire is not None and fire <= now
+    return {
+        "routine": routine.name,
+        "schedule": routine.schedule,
+        "due": is_due,
+        "next_fire": fire.isoformat(timespec="seconds") if fire else None,
+        "last_run": state.get("last_run"),
+    }
+
+
+def due_routines(os_root: Path, home: Path | None = None) -> list[dict[str, Any]]:
+    """All scheduled routines with due status, soonest next_fire first."""
+    rows = []
+    for routine in discover(os_root, home):
+        kind, _ = parse_schedule(routine.schedule)
+        if kind == "manual":
+            continue
+        state = load_state(routine)
+        rows.append({**due(routine, state), "scope": routine.scope})
+    rows.sort(key=lambda r: (not r["due"], r["next_fire"] or "9999"))
+    return rows
+
+
 def run_id(name: str, when: datetime | None = None) -> str:
     day = (when or datetime.now(timezone.utc)).date().isoformat()
     return f"{name}_{day}"
@@ -376,6 +553,7 @@ _EMBEDDED_TEMPLATE = """---
 name: "{name}"
 description: "Recurring routine"
 triggers: []
+# manual | every:30m|2h|1d|1w | cron:0 9 * * 1-5 | at:2026-12-01T09:00
 schedule: manual
 ---
 # Routine: {name}

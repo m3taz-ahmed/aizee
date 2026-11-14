@@ -312,6 +312,8 @@ IGNORED_FILE_REFS = {
     'laravel.md', 'filament.md', 'project.md',
     # vercel-labs repo named literally "lat.md" (upstream repo ref, not a file)
     'lat.md',
+    # MrLesk repo named literally "Backlog.md" (upstream repo ref, not a file)
+    'backlog.md',
     # project-voice GENERATED artifacts (produced into the client project's
     # .ai/ dir by the skill at runtime — not tracked aiZee inputs)
     'about-me.md', 'voice.md', 'newsletter-voice.md',

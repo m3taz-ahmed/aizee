@@ -52,6 +52,7 @@
 [TEST-09]: If no test framework exists in the project, write the first test for touched code before declaring done.
 [TEST-10]: Mark slow tests (E2E, integration, model-loading, server-startup) with framework skip/group mechanism. Fast tier stays under 5s.
 [TEST-11]: FULL tier maxes machine resources — parallel runner at cpu_count-2 workers, leave the OS breathing room. GPU only for real GPU-bound test code (verify nvidia-smi util).
+[TEST-12]: CI parity — before declaring done, run the SAME gates the project CI runs, not a subset: lint, typecheck on the CI path list, tests at the CI coverage floor (aiZee = `--cov-fail-under=100` → every new/changed line needs a test), repo validators. A green suite with uncovered new lines is still a CI failure.
 
 [GIT]
 [GIT-01]: Conventional atomic commits.

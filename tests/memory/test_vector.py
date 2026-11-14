@@ -126,10 +126,13 @@ class TestEmbedder:
         assert result.shape[1] == 384
 
     def test_embed_without_model_raises(self):
-        with patch.object(vector_module, "SentenceTransformer", None):
+        with (
+            patch.object(vector_module, "SentenceTransformer", None),
+            patch.object(vector_module, "FastTextEmbedding", None),
+        ):
             emb = Embedder()
             emb.model = None
-            with pytest.raises(RuntimeError, match="SentenceTransformer"):
+            with pytest.raises(RuntimeError, match="not available"):
                 emb.embed(["test"])
 
     def test_is_available_true(self):
@@ -140,7 +143,10 @@ class TestEmbedder:
             assert emb.is_available() is True
 
     def test_is_available_false_when_no_model(self):
-        with patch.object(vector_module, "SentenceTransformer", None):
+        with (
+            patch.object(vector_module, "SentenceTransformer", None),
+            patch.object(vector_module, "FastTextEmbedding", None),
+        ):
             emb = Embedder()
             assert emb.is_available() is False
 
@@ -238,7 +244,10 @@ class TestVectorMemoryAdd:
             vm = _mock_vm(tmp)
             vm.embedder.model = None  # causes RuntimeError in embed()
             uid = str(uuid.uuid4())
-            with patch.object(vector_module, "SentenceTransformer", None):
+            with (
+                patch.object(vector_module, "SentenceTransformer", None),
+                patch.object(vector_module, "FastTextEmbedding", None),
+            ):
                 vm.add_batch([uid], ["text"])  # should not raise
             vm.index.add_with_ids.assert_not_called()
         finally:
@@ -564,3 +573,90 @@ class TestCoverageRestore:
             assert vm.index is fresh_idx
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+# ---------------------------------------------------------------------------
+# Embedder - fastembed backend + env selection
+# ---------------------------------------------------------------------------
+
+
+def _make_fe_mock():
+    """Mock fastembed.TextEmbedding instance: .embed -> iterator of 384-d arrays."""
+    inst = MagicMock()
+    inst.embed = MagicMock(
+        side_effect=lambda texts: iter(np.zeros((len(texts), 384), dtype=np.float32))
+    )
+    return inst
+
+
+class TestEmbedderFastEmbed:
+    def test_embed_backend_env_mapping(self, monkeypatch):
+        monkeypatch.setenv("AIZEE_EMBEDDER", "st")
+        assert vector_module._embed_backend() == "st"
+        monkeypatch.setenv("AIZEE_EMBEDDER", "sentence-transformers")
+        assert vector_module._embed_backend() == "st"
+        monkeypatch.setenv("AIZEE_EMBEDDER", "fe")
+        assert vector_module._embed_backend() == "fastembed"
+        monkeypatch.setenv("AIZEE_EMBEDDER", "bogus")
+        assert vector_module._embed_backend() == "auto"
+        monkeypatch.delenv("AIZEE_EMBEDDER")
+        assert vector_module._embed_backend() == "auto"
+
+    def test_fastembed_used_when_st_missing(self):
+        fe_inst = _make_fe_mock()
+        fe_cls = MagicMock(return_value=fe_inst)
+        with (
+            patch.object(vector_module, "SentenceTransformer", None),
+            patch.object(vector_module, "FastTextEmbedding", fe_cls),
+        ):
+            emb = Embedder()  # default name all-MiniLM-L6-v2 -> prefixed
+            result = emb.embed(["hello"])
+        fe_cls.assert_called_once_with(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        fe_inst.embed.assert_called_once()
+        assert result.shape[1] == 384
+        assert emb.backend == "fastembed"
+
+    def test_fastembed_qualified_name_passthrough(self):
+        fe_inst = _make_fe_mock()
+        fe_cls = MagicMock(return_value=fe_inst)
+        with (
+            patch.object(vector_module, "SentenceTransformer", None),
+            patch.object(vector_module, "FastTextEmbedding", fe_cls),
+        ):
+            emb = Embedder("BAAI/bge-small-en-v1.5")
+            emb.embed(["x"])
+        fe_cls.assert_called_once_with(model_name="BAAI/bge-small-en-v1.5")
+
+    def test_forced_st_skips_fastembed(self, monkeypatch):
+        monkeypatch.setenv("AIZEE_EMBEDDER", "st")
+        with (
+            patch.object(vector_module, "SentenceTransformer", None),
+            patch.object(vector_module, "FastTextEmbedding", MagicMock()),
+        ):
+            emb = Embedder()
+            with pytest.raises(RuntimeError, match="not available"):
+                emb.embed(["x"])
+
+    def test_forced_fastembed_skips_st(self, monkeypatch):
+        monkeypatch.setenv("AIZEE_EMBEDDER", "fastembed")
+        fe_inst = _make_fe_mock()
+        fe_cls = MagicMock(return_value=fe_inst)
+        st_cls = MagicMock()
+        with (
+            patch.object(vector_module, "SentenceTransformer", st_cls),
+            patch.object(vector_module, "FastTextEmbedding", fe_cls),
+        ):
+            emb = Embedder()
+            emb.embed(["x"])
+        st_cls.assert_not_called()
+        fe_cls.assert_called_once()
+        assert emb.backend == "fastembed"
+
+    def test_dim_not_overwritten_on_non_2d(self):
+        st_instance = _make_st_mock()
+        st_instance.encode = MagicMock(return_value=np.zeros(384, dtype=np.float32))
+        mock_st_cls = MagicMock(return_value=st_instance)
+        with patch.object(vector_module, "SentenceTransformer", mock_st_cls):
+            emb = Embedder()
+            emb.embed(["x"])
+            assert emb.dim == 384  # unchanged — result was 1-D

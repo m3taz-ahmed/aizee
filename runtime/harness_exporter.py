@@ -9,7 +9,8 @@ Supported harnesses:
     claude      ~/.claude/skills/<name>/
     codex       ~/.codex/skills/<name>/
     opencode    ~/.config/opencode/skills/<name>/
-    project     ./.agents/skills/<name>/    (per-repo)
+    project     ./.agents/skills/<name>/    (per-repo, read natively by Amp et al.)
+    devin       ./.devin/skills/<name>/     (per-repo, read natively by Devin)
     path        arbitrary --dest directory
 """
 
@@ -62,11 +63,18 @@ def harnesses() -> dict[str, str]:
     return {name: str(home / rel) for name, rel in _HARNESS_DIRS.items()}
 
 
+# Harness name -> project-relative skills dir (per-repo targets).
+_PROJECT_DIRS = {
+    "project": ".agents/skills",
+    "devin": ".devin/skills",
+}
+
+
 def resolve_harness_dir(harness: str, dest: str = "") -> Path:
     """Resolve target directory for a harness name or explicit path."""
     harness = harness.strip().lower()
-    if harness == "project":
-        return Path.cwd() / ".agents" / "skills"
+    if harness in _PROJECT_DIRS:
+        return Path.cwd() / _PROJECT_DIRS[harness]
     if harness == "path":
         if not dest:
             raise ValueError("harness 'path' requires --dest <dir>")
@@ -75,7 +83,7 @@ def resolve_harness_dir(harness: str, dest: str = "") -> Path:
         return Path.home() / _HARNESS_DIRS[harness]
     raise ValueError(
         f"unknown harness '{harness}' — supported: "
-        + ", ".join(sorted([*_HARNESS_DIRS, "project", "path"]))
+        + ", ".join(sorted([*_HARNESS_DIRS, *_PROJECT_DIRS, "path"]))
     )
 
 
