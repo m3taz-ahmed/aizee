@@ -1223,9 +1223,9 @@ if __name__ == "__main__":
     try:
         port = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
     except (ValueError, TypeError) as exc:
-        raise SystemExit(f"Invalid port {sys.argv[1]!r}: must be an integer 1..65535") from exc
-    if not 1 <= port <= 65535:
-        raise SystemExit(f"Invalid port {port}: must be 1..65535")
+        raise SystemExit(f"Invalid port {sys.argv[1]!r}: must be an integer 0..65535") from exc
+    if not 0 <= port <= 65535:  # 0 = OS-assigned ephemeral port
+        raise SystemExit(f"Invalid port {port}: must be 0..65535")
     host = _env_first("AIZEE_DASHBOARD_HOST", "AGENT_OS_HOST", default="127.0.0.1")
     token = _dashboard_token(Path(os.environ.get("AIZEE_ROOT", ".")))
     # SEC-W1: refuse to bind non-loopback host without authentication. When no
@@ -1287,7 +1287,8 @@ if __name__ == "__main__":
                 _thread_semaphore.release()
 
     server = _BoundedThreadingHTTPServer((host, port), DashboardHandler)
-    print(f"aiZee dashboard: http://{host}:{port}")
+    bound_port = getattr(server, "server_address", (None, port))[1]  # real port after ephemeral bind
+    print(f"aiZee dashboard: http://{host}:{bound_port}")
     if not token:
         print("Open-access mode: APIs are unauthenticated (localhost only). "
               "Set AIZEE_DASHBOARD_TOKEN to require a Bearer token.")
