@@ -124,11 +124,17 @@ def _apply_assertions(text: str, assertions: list[Assertion]) -> list[str]:
     return failures
 
 
+def _missing_reason(scenario: Scenario) -> str:
+    if scenario.skill_file:
+        return f"skill_file missing: {scenario.skill_file}"
+    return "no static skill_file — non-static/LLM-graded scenario (run via eval/vibe.py)"
+
+
 def run_static(scenario: Scenario, root: Path) -> CheckResult:
     target = root / scenario.skill_file if scenario.skill_file else None
     if target is None or not target.exists():
         return CheckResult(scenario.scenario_id, "static", False,
-                           skipped=True, reason=f"skill_file missing: {scenario.skill_file}")
+                           skipped=True, reason=_missing_reason(scenario))
     text = target.read_text(encoding="utf-8", errors="replace")
     failures: list[str] = []
     for turn in scenario.turns:
@@ -159,7 +165,7 @@ def run_live(scenario: Scenario, root: Path, endpoint: str, model: str,
     target = root / scenario.skill_file if scenario.skill_file else None
     if target is None or not target.exists():
         return CheckResult(scenario.scenario_id, "live", False,
-                           skipped=True, reason=f"skill_file missing: {scenario.skill_file}")
+                           skipped=True, reason=_missing_reason(scenario))
     skill_text = target.read_text(encoding="utf-8", errors="replace")
     failures: list[str] = []
     for turn in scenario.turns:

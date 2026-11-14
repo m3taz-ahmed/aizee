@@ -41,3 +41,16 @@ tests/test_sql_injection_guard.py
 tests/test_text_sanitize.py
 tests/test_tool_output_bounder.py
 tests/test_plugin_system.py
+
+# --- 2026-11-14: docs reorganization — prompts/studies/legal/audit/archive
+# subtrees; old paths are deleted from install roots on update ---
+MAINTENANCE_PROMPT.md
+docs/REVIEW-PROMPT.md
+repo-study-2026-11-10.md
+repo-study-2026-11-12.md
+ideas-repo-study-2026-11.md
+production-readiness-2026-11.md
+docs/AI_DISCLAIMER.md
+docs/PRIVACY_POLICY.md
+docs/TERMS_OF_USE.md
+docs/FEATURES.md

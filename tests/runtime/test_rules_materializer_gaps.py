@@ -79,6 +79,17 @@ class TestEmitOne:
         assert res.ok is False
         assert "traversal" in res.errors[0].lower()
 
+    def test_sibling_dir_traversal_blocked(self, tmp_path):
+        proj = tmp_path / "proj"
+        proj.mkdir()
+        m = RulesMaterializer(proj)
+        # startswith("/…/proj") also accepts "/…/proj-evil" — is_relative_to must not
+        evil_rel = "../" + proj.name + "-evil/x.md"
+        with patch.dict(m._TARGET_FILES, {ToolTarget.CLAUDE: evil_rel}):
+            res = m._emit_one(ToolTarget.CLAUDE, [_r("k")])
+        assert res.ok is False
+        assert "traversal" in res.errors[0].lower()
+
     def test_resolve_oserror_passes(self, tmp_path):
         m = RulesMaterializer(tmp_path)
         with patch.object(Path, "resolve", side_effect=OSError("x")):

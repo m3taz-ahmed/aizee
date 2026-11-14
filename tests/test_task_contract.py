@@ -357,6 +357,34 @@ class TestScopeEnforcement:
             mgr.scope_check("src/other.py")
         assert exc.value.error_code == "SCOPE_VIOLATION"
 
+    def test_dotdot_escape_denied(self, tmp_path: Path) -> None:
+        mgr = _mgr(tmp_path)
+        _plan(mgr)
+        mgr.start("impl")
+        assert mgr.scope_check("../src/x.py")["allowed"] is False
+        assert mgr.scope_check("src/../../etc/x.py")["allowed"] is False
+
+    def test_substring_does_not_widen_scope(self, tmp_path: Path) -> None:
+        mgr = _mgr(tmp_path)
+        _plan(mgr)
+        mgr.start("impl")
+        assert mgr.scope_check("my-src/x.py")["allowed"] is False
+        assert mgr.scope_check("other/src/x.py")["allowed"] is False
+
+    def test_dot_prefix_and_backslash_normalize(self, tmp_path: Path) -> None:
+        mgr = _mgr(tmp_path)
+        _plan(mgr)
+        mgr.start("impl")
+        assert mgr.scope_check("./src/x.py")["allowed"] is True
+        assert mgr.scope_check("src\\x.py")["allowed"] is True
+
+    def test_path_in_scope_empty_declared_never_matches(self) -> None:
+        from runtime.task_contract.enforce import _path_in_scope
+
+        assert _path_in_scope("x.py", [""]) is False
+        assert _path_in_scope("x.py", ["/"]) is False
+        assert _path_in_scope("src/x.py", ["./src/x.py"]) is True
+
     def test_hook_observe_edit_warns(self, tmp_path: Path) -> None:
         mgr = _mgr(tmp_path)
         _plan(mgr)

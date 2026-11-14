@@ -48,7 +48,6 @@ graphify-out/
 .agents/
 temp/
 .ai/
-docs/repos/
 
 tmp/
 scratch/
@@ -76,10 +75,12 @@ scripts/ingest-community-skill.ps1
 
 # Task-contract working state (per project)
 .task/
-DEEP_AUDIT_PROMPT.md
-docs/AUDIT_REPORT.md
-docs/CAPABILITIES.md
-docs/WORLD_CLASS_GAP.md
+
+# Local-only docs — personal audits, research prompts, reference screenshots
+# (project docs live in docs/*.md, docs/legal/, docs/studies/, docs/media/)
+docs/audit/
+docs/prompts/
+docs/repos/
 
 # Generated L0 tiered-context abstracts (`aizee abstract` regenerates)
 abstracts/
@@ -93,7 +94,8 @@ implementation_plan.md
 create-shortcuts.ps1
 
 build/
-/docs/media
+# Personal social-post renders only — demo.gif/social-preview.png stay tracked
+docs/media/post-*
 scripts/gen_post_assets.py
 /linkedin/
 
@@ -112,9 +114,14 @@ refs/
 _bmad/
 _bmad-output/
 
-# Agent skill distribution (machine-local junctions/hardlinks -> skills/ — regenerated, never committed)
+# Agent skill distribution — `aizee skill link` output stays local;
+# baseline global-os/graphify skills are tracked (shipped to all users)
 .agents/
-.claude/skills/
-.devin/skills/
+.claude/skills/*
+!.claude/skills/global-os/
+!.claude/skills/graphify/
+.devin/skills/*
+!.devin/skills/global-os/
+!.devin/skills/graphify/
 
 runtime/_osroot.tar.gz

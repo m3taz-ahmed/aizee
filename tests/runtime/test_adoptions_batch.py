@@ -328,6 +328,9 @@ class TestIngestRules:
         decision = match_file("docs/guide.md", rules)
         assert decision.bank == "docs" and decision.rule == "docs/*.md"
         assert match_file("other/x.md", rules).rule is None
+        # "./" prefix normalized once; "../" stays literal (no lstrip("./") collapse)
+        assert match_file("./docs/guide.md", rules).rule == "docs/*.md"
+        assert match_file("../docs/guide.md", rules).rule is None
 
     def test_empty_rules_file(self, tmp_path: Path) -> None:
         from runtime.ingest_rules import load_rules

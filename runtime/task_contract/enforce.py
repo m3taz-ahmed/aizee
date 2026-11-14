@@ -57,7 +57,7 @@ class EnforceMixin:
             return result
         allowed = _path_in_scope(path, task.files)
         result["allowed"] = allowed
-        result["declared"] = [f.replace("\\", "/").lstrip("./") for f in task.files]
+        result["declared"] = [_norm_scope_path(f) for f in task.files]
         if not allowed:
             _logger.warning(
                 "task-scope violation: %s outside declared scope of '%s' %s",
@@ -155,10 +155,18 @@ class EnforceMixin:
         }
 
 
+def _norm_scope_path(path: str) -> str:
+    """Normalize separators; strip only a single literal ``./`` prefix."""
+    p = path.replace("\\", "/")
+    return p[2:] if p.startswith("./") else p
+
+
 def _path_in_scope(path: str, declared: list[str]) -> bool:
-    normalized = path.replace("\\", "/").lstrip("./")
+    normalized = _norm_scope_path(path)
+    if ".." in normalized.split("/"):
+        return False
     for raw in declared:
-        d = raw.replace("\\", "/").lstrip("./")
-        if normalized == d or normalized.startswith(d.rstrip("/") + "/") or d in normalized:
+        d = _norm_scope_path(raw).rstrip("/")
+        if d and (normalized == d or normalized.startswith(d + "/")):
             return True
     return False

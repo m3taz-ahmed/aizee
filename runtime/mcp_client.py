@@ -230,6 +230,35 @@ def _validate_mcp_command(cmd: str, args: list[Any]) -> None:
         )
 
 
+def _env_key(env: dict[str, str], name: str) -> str:
+    """Return the key under which ``name`` lives in ``env``.
+
+    Windows keeps the original casing (``Path``), POSIX is uppercase — find
+    the existing key case-insensitively so writes update it in place instead
+    of adding a duplicate variable.
+    """
+    if name in env:
+        return name
+    folded = name.upper()
+    return next((k for k in env if k.upper() == folded), name)
+
+
+def _command_path_resolvable(cfg: dict[str, Any]) -> bool:
+    """True unless ``command`` is an absolute path that cannot exist here.
+
+    A foreign-platform absolute path (e.g. a WSL ``/usr/bin/python3`` entry in
+    ``.claude/settings.json`` read on Windows) can never spawn, so the caller
+    should fall through to the next config source. Bare command names are left
+    to PATH resolution at spawn time.
+    """
+    cmd = cfg.get("command")
+    if not isinstance(cmd, str) or not cmd:
+        return False
+    if cmd.startswith("/") or Path(cmd).is_absolute():
+        return Path(cmd).exists()
+    return True
+
+
 class _SettingsLike(Protocol):
     """Structural type for the settings manager dependency (avoids import cycle)."""
 
@@ -341,6 +370,7 @@ class McpClient:
         return result
 
     def _load_config(self) -> dict[str, Any]:
+        first_cfg: dict[str, Any] | None = None
         for settings_path in [self.os_root / ".claude" / "settings.json", self.os_root / "aizee_mcp" / "config.json"]:
             try:
                 if not settings_path.exists():
@@ -353,8 +383,13 @@ class McpClient:
             mcp_servers = cast(dict[str, Any], data.get("mcpServers") or data.get("mcp_servers", {}))
             if isinstance(mcp_servers, dict) and self.server_name in mcp_servers:
                 cfg = mcp_servers[self.server_name]
-                return cast(dict[str, Any], cfg) if isinstance(cfg, dict) else {}
-        return {}
+                if not isinstance(cfg, dict):
+                    return {}
+                if first_cfg is None:
+                    first_cfg = cast(dict[str, Any], cfg)
+                if _command_path_resolvable(cfg):
+                    return cast(dict[str, Any], cfg)
+        return first_cfg or {}
 
     def _spawn(self) -> subprocess.Popen[str]:
         if not self.config:
@@ -388,6 +423,11 @@ class McpClient:
             "AIZEE_ROOT", "PATH", "HOME", "USERPROFILE", "SYSTEMROOT",
             "TEMP", "TMP", "PYTHONPATH", "PYTHONIOENCODING",
             "LANG", "LC_ALL", "LC_CTYPE",
+            # Windows system locations — non-secret; required so the child
+            # interpreter resolves user-site (.pth-processed dirs like
+            # pywin32_system32), well-known folders, and executable lookups.
+            "APPDATA", "LOCALAPPDATA", "PROGRAMDATA", "PROGRAMFILES",
+            "HOMEDRIVE", "HOMEPATH", "PATHEXT", "COMSPEC", "WINDIR", "OS",
         }
         # Common API key prefixes that MCP servers may need.
         api_key_patterns = (
@@ -408,15 +448,23 @@ class McpClient:
             allowlist_raw = os.environ.get("AIZEE_MCP_ENV_ALLOWLIST", "")
             if allowlist_raw:
                 allowed.update(k.strip() for k in allowlist_raw.split(",") if k.strip())
-            env = {k: v for k, v in os.environ.items() if k in allowed}
+            # Windows stores env keys in mixed case (Path, SystemRoot, TEMP) —
+            # match the non-secret essential set case-insensitively or the
+            # child loses PATH/SYSTEMROOT and dies before answering. Secret
+            # and API-key names stay exact-match by convention.
+            folded_essential = {a.upper() for a in essential}
+            env = {k: v for k, v in os.environ.items()
+                   if k in allowed or k.upper() in folded_essential}
             env["AIZEE_ROOT"] = str(self.os_root)
         extra_path = _user_script_dirs()
         if extra_path:
-            env["PATH"] = os.pathsep.join([*extra_path, env.get("PATH", "")])
+            path_key = _env_key(env, "PATH")
+            env[path_key] = os.pathsep.join([*extra_path, env.get(path_key, "")])
         extra_site = _user_site_dirs()
         if extra_site:
-            existing = env.get("PYTHONPATH", "")
-            env["PYTHONPATH"] = os.pathsep.join([*extra_site, existing]) if existing else os.pathsep.join(extra_site)
+            ppath_key = _env_key(env, "PYTHONPATH")
+            existing = env.get(ppath_key, "")
+            env[ppath_key] = os.pathsep.join([*extra_site, existing]) if existing else os.pathsep.join(extra_site)
         return env
 
     def _send(

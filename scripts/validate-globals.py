@@ -336,6 +336,14 @@ IGNORED_FILE_REFS = {
     'ui-repos-report.md', 'repos-study.md', 'review-findings.md',
     'repo-study-2026-11.md', 'vercel-labs-study-2026-11.md',
     'ideas-repo-study-2026-11.md', 'repo-study-2026-11-10.md',
+    # pre-2026-11-14 names — files moved+renamed under docs/ subtrees
+    # (prompts/, studies/, archive/); historical refs stay readable
+    'deep_audit_prompt.md', 'deep_research_prompt.md',
+    'maintenance_prompt.md', 'review-prompt.md',
+    'repo-study-2026-11-12.md', 'production-readiness-2026-11.md',
+    'features.md',
+    # dated report placeholder name used inside the deep-research prompt doc
+    'repo-study-YYYY-MM-DD.md',
     # external-repo / generated-artifact names referenced descriptively:
     # impeccable's PRODUCT.md truth file; ui-ux-pro-max's generated MASTER.md output
     'product.md', 'master.md',

@@ -1056,11 +1056,23 @@ def _cmd_mcp_freeze(args: argparse.Namespace) -> int:
         console.print(f"[red]MCP server '{server}' not configured[/red]")
         return 1
     tools_result = client.list_tools()
+    if not tools_result.get("ok"):
+        console.print(
+            f"[red]tools/list failed for '{server}': "
+            f"{tools_result.get('error', 'unknown error')}[/red]"
+        )
+        return 1
     tools = tools_result.get("tools") or []
     lock = _root(args) / DEFAULT_LOCK
     if args.check:
         report = check_surface(server, tools, lock)
         print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        if report.frozen_count == 0:
+            console.print(
+                f"[yellow]no frozen baseline for '{server}' — "
+                f"run `aizee mcp freeze {server}` first[/yellow]"
+            )
+            return 1
         if not report.ok:
             console.print(
                 f"[red]drift[/red] +{len(report.added)}/-{len(report.removed)} "
@@ -1142,7 +1154,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
             console.print(f"  [red]{result.error.code}[/red] {result.error.message}")
         if result.status == "suspended":
             state_file = plan_path.with_suffix(".state.json")
-            state_file.write_text(json.dumps(result.state.to_dict(), indent=2))
+            state_file.write_text(json.dumps(result.state.to_dict(), indent=2), encoding="utf-8")
             console.print(f"[cyan]state → {state_file} (resume: aizee plan resume {state_file} --plan-file {plan_path})[/cyan]")
     return 0 if result.status == "completed" else 1
 
@@ -1380,6 +1392,11 @@ def cmd_check_docs(args: argparse.Namespace) -> int:
         f"{report.files} docs, {report.links} links — "
         f"[{'green' if report.ok else 'red'}]{len(report.issues)} broken[/]"
     )
+    if report.links == 0:
+        console.print(
+            "  [yellow]no \\[\\[file#symbol]] links found — "
+            "the drift gate has nothing to validate[/yellow]"
+        )
     for issue in report.issues[:50]:
         console.print(f"  [red]{issue.source}[/red] → {issue.target}: {issue.reason}")
     return 0 if report.ok else 1
@@ -1922,7 +1939,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         console.print(
             "[red]WARNING: budget state was quarantined (unreadable/corrupt) — "
             "limits reset to defaults. Check AIOS_ENCRYPTION_KEY and "
-            "state/.encryption_key (docs/AUDIT_REPORT.md H4).[/red]"
+            "state/.encryption_key (docs/audit/AUDIT_REPORT.md H4).[/red]"
         )
 
     # Root-source note: a dev checkout whose AIZEE_ROOT points at the
@@ -1934,7 +1951,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         src = "env AIZEE_ROOT" if os.environ.get("AIZEE_ROOT") else "script dir"
         console.print(
             f"[yellow]Note: os root ({os_root}, via {src}) diverges from code "
-            f"root ({code_root}) — dev/deploy boundary, see docs/AUDIT_REPORT.md C2[/yellow]"
+            f"root ({code_root}) — dev/deploy boundary, see docs/audit/AUDIT_REPORT.md C2[/yellow]"
         )
 
     return 0 if report.verdict == "ready" else 1

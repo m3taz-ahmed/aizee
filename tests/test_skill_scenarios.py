@@ -15,6 +15,7 @@ from eval.skill_scenarios import (
     load_scenarios,
     run_dir,
     run_file,
+    run_live,
 )
 
 
@@ -78,6 +79,23 @@ def test_static_missing_skill_skips(scen_root: Path) -> None:
          "turns": [{"user_input": "u"}]}]})
     (r,) = run_file(f, scen_root)
     assert r.skipped and "missing" in r.reason
+
+
+def test_static_no_skill_file_reports_vibe_schema(scen_root: Path) -> None:
+    # LLM-graded/vibe-schema scenarios have no system_prompt.skill_file —
+    # the skip reason must say so instead of "skill_file missing: ".
+    f = _write(scen_root / "s.yaml", {"scenarios": [
+        {"name": "graded", "prompt": "p", "grade": "contains"}]})
+    (r,) = run_file(f, scen_root)
+    assert r.skipped and "no static skill_file" in r.reason
+
+
+def test_live_no_skill_file_reports_vibe_schema(scen_root: Path) -> None:
+    f = _write(scen_root / "s.yaml", {"scenarios": [
+        {"name": "graded", "eval_type": "live", "prompt": "p", "grade": "contains"}]})
+    scen = load_scenarios(f)[0]
+    r = run_live(scen, scen_root, "http://127.0.0.1:1", "m", 0.1)
+    assert r.skipped and "no static skill_file" in r.reason
 
 
 def test_apply_assertions_types() -> None:

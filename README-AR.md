@@ -6,7 +6,7 @@
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="حالة CI"></a>
     <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.10.5-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.10.5">
-    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7924%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7924 اختبار ناجح">
+    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-7939%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="7939 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
   </p>
@@ -67,7 +67,7 @@ $ aizee doctor --json | jq .verdict
 عشرة أنماط معمارية متبنّاة (إعادة تنفيذ نظيفة) من دراسة عشر أدوات إبداعية
 مفتوحة المصدر — OpenToonz وFriction وFreeMoCap وSynfig وEffekseer و
 Theatre.js وPencil2D وOpenVDB وSVG.js وNatron — للمبرمجين *و* المصممين
-(التقرير: `ideas-repo-study-2026-11.md`):
+(التقرير: `docs/studies/study-creative-animation-tools-2026-11.md`):
 
 - **ناقل أحداث** (FreeMoCap) — pub/sub مُنمّط داخل الكيرنل؛ الداشبورد
   يسحب الأحداث لايف، و`aizee events tail` من الـCLI.

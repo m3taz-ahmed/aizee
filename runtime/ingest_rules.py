@@ -70,7 +70,9 @@ def match_file(
     default_kind: str = "note",
 ) -> IngestDecision:
     """Match a relative path against rules; first match wins."""
-    normalized = rel_path.replace("\\", "/").lstrip("./")
+    normalized = rel_path.replace("\\", "/")
+    if normalized.startswith("./"):
+        normalized = normalized[2:]
     for rule in rules:
         if fnmatch.fnmatch(normalized, rule.match):
             return IngestDecision(

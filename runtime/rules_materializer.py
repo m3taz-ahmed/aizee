@@ -305,7 +305,7 @@ class RulesMaterializer:
             try:
                 resolved = out_path.resolve()
                 project_resolved = self.project_root.resolve()
-                if not str(resolved).startswith(str(project_resolved)):
+                if not resolved.is_relative_to(project_resolved):
                     result.errors.append(f"Path traversal blocked: {rel}")
                     return result
             except OSError:  # aizee-scan: ignore A10-SWALLOW — canonicalize best-effort; emitter resolves next

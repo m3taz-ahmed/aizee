@@ -6,6 +6,7 @@ import asyncio
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -98,6 +99,88 @@ def test_mcp_client_loads_from_aizee_config(tmp_path: Path) -> None:
     client = McpClient("test-server", tmp_path, enforce=False)
     assert client.is_configured() is True
     assert client.config["command"] == "echo"
+
+
+def test_load_config_falls_through_unresolvable_absolute_command(tmp_path: Path) -> None:
+    # A .claude/settings.json entry pointing at a foreign-platform absolute
+    # path (e.g. WSL /usr/bin/python3 on Windows) must not shadow the
+    # portable aizee_mcp/config.json entry.
+    settings = tmp_path / ".claude"
+    settings.mkdir(parents=True)
+    (settings / "settings.json").write_text(
+        json.dumps({"mcpServers": {"srv": {"command": "/nonexistent/abs/python3", "args": ["w"]}}}),
+        encoding="utf-8",
+    )
+    config_dir = tmp_path / "aizee_mcp"
+    config_dir.mkdir()
+    (config_dir / "config.json").write_text(
+        json.dumps({"mcpServers": {"srv": {"command": "echo", "args": ["p"]}}}),
+        encoding="utf-8",
+    )
+    client = McpClient("srv", tmp_path, enforce=False)
+    assert client.config["command"] == "echo"
+    assert client.config["args"] == ["p"]
+
+
+def test_load_config_keeps_first_when_none_resolvable(tmp_path: Path) -> None:
+    # When every config source names an unresolvable absolute command, the
+    # first one is kept so _spawn fails with the real path, not "unconfigured".
+    settings = tmp_path / ".claude"
+    settings.mkdir(parents=True)
+    (settings / "settings.json").write_text(
+        json.dumps({"mcpServers": {"srv": {"command": "/nonexistent/first"}}}),
+        encoding="utf-8",
+    )
+    config_dir = tmp_path / "aizee_mcp"
+    config_dir.mkdir()
+    (config_dir / "config.json").write_text(
+        json.dumps({"mcpServers": {"srv": {"command": "/nonexistent/second"}}}),
+        encoding="utf-8",
+    )
+    client = McpClient("srv", tmp_path, enforce=False)
+    assert client.config["command"] == "/nonexistent/first"
+
+
+def test_load_config_missing_command_falls_through(tmp_path: Path) -> None:
+    settings = tmp_path / ".claude"
+    settings.mkdir(parents=True)
+    (settings / "settings.json").write_text(
+        json.dumps({"mcpServers": {"srv": {"args": ["x"]}}}),
+        encoding="utf-8",
+    )
+    config_dir = tmp_path / "aizee_mcp"
+    config_dir.mkdir()
+    (config_dir / "config.json").write_text(
+        json.dumps({"mcpServers": {"srv": {"command": "echo"}}}),
+        encoding="utf-8",
+    )
+    client = McpClient("srv", tmp_path, enforce=False)
+    assert client.config["command"] == "echo"
+
+
+def test_command_path_resolvable() -> None:
+    assert mcp_client._command_path_resolvable({"command": "python"}) is True
+    assert mcp_client._command_path_resolvable({"command": sys.executable}) is True
+    assert mcp_client._command_path_resolvable({"command": "/definitely/not/here"}) is False
+    assert mcp_client._command_path_resolvable({}) is False
+    assert mcp_client._command_path_resolvable({"command": 42}) is False
+
+
+def test_env_key() -> None:
+    assert mcp_client._env_key({"PATH": "x"}, "PATH") == "PATH"
+    assert mcp_client._env_key({"Path": "x"}, "PATH") == "Path"
+    assert mcp_client._env_key({}, "PATH") == "PATH"
+
+
+def test_spawn_env_matches_essential_case_insensitively(tmp_path: Path, monkeypatch) -> None:
+    # Windows stores Path/SystemRoot mixed-case; the allowlist must still
+    # pass them so the child interpreter can start.
+    monkeypatch.setattr(os, "environ", {"Path": r"C:\x", "SystemRoot": r"C:\Windows", "NOT_ALLOWED": "no"})
+    client = McpClient("srv", tmp_path, enforce=False)
+    env = client._build_spawn_env()
+    assert env.get("Path", "").endswith(r"C:\x")  # user script dirs prepended in-place
+    assert env.get("SystemRoot") == r"C:\Windows"
+    assert "NOT_ALLOWED" not in env
 
 
 def test_mcp_client_call_tool_not_configured(tmp_path: Path) -> None:

@@ -245,7 +245,7 @@
 [REF-ONLY] `remotion-dev/skills` — official 14 Remotion skills; repo has NO license file — reference/install via their CLI, never vendor.
 [REF-ONLY] `givanz/Vvveb` (AGPLv3) — PHP CMS+page builder+ecommerce+GraphQL/REST+own MCP server (mcp/ + system/mcp.php: tool annotations, capability-based tool filtering, config-gated writes, sandboxed paths, crud_models discovery); runnable local (PHP 8.4+ext, engine=sqlite); patterns only for aizee_mcp — AGPL no vendor.
 
-## Wave 2026-11-10 — Agentic Video Systems & Dev/PM Tooling (81 repos studied, report `repo-study-2026-11-10.md`)
+## Wave 2026-11-10 — Agentic Video Systems & Dev/PM Tooling (81 repos studied, report `docs/studies/study-agentic-video-and-devtools-2026-11-10.md`)
 
 [REQ] Agentic Video OS - `OpenMontageInc/OpenMontage` (AGPLv3, ~79k) — 13 pipeline YAMLs + stage-director skills + tool registry w/ provider contracts + append-only decision_log + capability-envelope preflight + backlot live board + 93 agent skills (hyperframes/manim/gsap/threejs/provider packs); real-footage corpus path (Archive.org/NASA/Wikimedia/Pexels→CLIP search→edit). AGPL = patterns only, no vendor. Top adoption target for video-produce v2.
 [REQ] Agentic Design Workspace - `nexu-io/open-design` (Apache-2.0, ~107k) — collaborative AI design-agent workspace (motion/prototypes/sites/apps/dashboards/presentations/images/videos); ecosystem hub for html-anything/motion-anything/html-video/codex-slides/nexu.
@@ -301,7 +301,7 @@
 [REF-ONLY] `techjarves/Portable-Local-Studio` · `off-grid-ai/OGAM` · `tetherto/qvac` · `PurpleDoubleD/locally-uncensored` — all-in-one local AI studios (chat+image+video+agent); evaluate before building own.
 [REF-ONLY] `antirez/iris.c` — Flux2 image gen in pure C (antirez); interesting minimal-inference reference.
 [REF-ONLY] `ffroliva/gflow-cli` — drive Google Flow (Veo/Imagen) from CLI+MCP server; alpha, unofficial.
-[REQ] Creative-Tools Study 2026-11 - 10-repo batch from showcase slides (depth-1 clones, temp copy purged; report: ideas-repo-study-2026-11.md). Patterns-only for GPL/AGPL; adapt MIT/Apache.
+[REQ] Creative-Tools Study 2026-11 - 10-repo batch from showcase slides (depth-1 clones, temp copy purged; report: docs/studies/study-creative-animation-tools-2026-11.md). Patterns-only for GPL/AGPL; adapt MIT/Apache.
 [REQ] VFX Engine - `NatronGitHub/Natron` (5.7k, GPL-2.0) per-node content-hash render cache (Engine/Cache*) + OpenFX plugin host ABI + Engine/Gui headless split -> inspires call_plan step memoization.
 [REQ] 2D Anim Engine - `opentoonz/opentoonz` (8.2k, BSD-derived) tfx pull-DAG + predictive/passive cache managers + tparamuiconcept schema->UI + toonzfarm lease/heartbeat workers + txsheet timeline.
 [REQ] Volume Data - `AcademySoftwareFoundation/openvdb` (3.5k, Apache-2.0) sparse Root->Internal->Leaf tree w/ active-inactive tiles + NanoVDB immutable compiled grids + openvdb_ax DSL -> inspires memory snapshot export + sector tiering.
@@ -311,4 +311,4 @@
 [REQ] Particle FX - `effekseer/Effekseer` (2.1k, MIT) single core + renderer backend matrix + SWIG multi-binding runtimes -> validates harness_exporter one-core/many-bindings direction.
 [REQ] 2D Draw - `pencil2d/pencil` (1.9k, GPL-2.0) ActiveFramePool bounded working-set cache + onion-skin ghost prev/next states -> inspires plan dry-run ghost diff + bounded hot caches.
 [REQ] SVG Lib - `svgdotjs/svg.js` (11.9k, MIT) chainable module registration on shared classes + single .d.ts surface -> inspires fluent plan-builder DSL emitting inert JSON.
-[REQ] Knowledge Graph - `Egonex-AI/Understand-Anything` (MIT, TS multi-harness plugin) multi-agent scan -> `.ua` graph + dashboard + guided tours + diff blast radius + domain view + onboarding; ADOPTED `impact`+`tour`+`layers` clean-room over graphify (report: repo-study-2026-11-12.md).
+[REQ] Knowledge Graph - `Egonex-AI/Understand-Anything` (MIT, TS multi-harness plugin) multi-agent scan -> `.ua` graph + dashboard + guided tours + diff blast radius + domain view + onboarding; ADOPTED `impact`+`tour`+`layers` clean-room over graphify (report: docs/studies/study-knowledge-graph-onboarding-2026-11-12.md).

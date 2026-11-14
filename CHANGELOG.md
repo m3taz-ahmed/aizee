@@ -2360,7 +2360,7 @@ Deep analysis of 22 GitHub repositories yielded 45 enhancements across 3 phases.
 - **E2E test suite** (`tests/e2e/`): kernel lifecycle, policy evaluation, chat, memory, workflows, metrics.
 - **MCP API reference** (`aizee_mcp/API.md`): full documentation of all MCP tools and resources.
 - **Feature documentation** (`docs/FEATURES.md`): documents approval_cache, hybrid memory, rule_frontmatter, fresh_context, encryption, migrations, observability, MCP modules, kernel facade.
-- **Legal docs**: `NOTICE`, `docs/PRIVACY_POLICY.md`, `docs/TERMS_OF_USE.md`, `docs/AI_DISCLAIMER.md`.
+- **Legal docs**: `NOTICE`, `docs/legal/PRIVACY_POLICY.md`, `docs/legal/TERMS_OF_USE.md`, `docs/legal/AI_DISCLAIMER.md`.
 - **Supply-chain CI** (`.github/workflows/supply-chain.yml`): OIDC keyless, SBOM (syft), Cosign, TruffleHog secret scanning, dependency-review.
 - **Release workflow** (`.github/workflows/release.yml`): PyPI (OIDC), Docker (GHCR), SBOM, Cosign, GitHub Release.
 - **CODEOWNERS** (`.github/CODEOWNERS`) and **branch protection** config (`.github/branch-protection.json`).

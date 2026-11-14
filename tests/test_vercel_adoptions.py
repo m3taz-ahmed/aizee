@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 from runtime.doc_links import (
     check_links,
@@ -179,6 +180,44 @@ class TestMcpFreeze:
         assert set(read_lock(lock, "s")) == {"read", "write"}
         report = check_surface("s", _TOOLS, lock)
         assert report.to_dict()["ok"] is True
+
+    def test_freeze_cli_fails_closed_when_list_tools_errors(self, tmp_path, monkeypatch) -> None:
+        import aizee_cli
+
+        class _BrokenClient:
+            def __init__(self, *a, **k):
+                pass
+
+            def is_configured(self) -> bool:
+                return True
+
+            def list_tools(self) -> dict:
+                return {"ok": False, "error": "spawn failed"}
+
+        monkeypatch.setattr("runtime.mcp_client.McpClient", _BrokenClient)
+        args = SimpleNamespace(tool="srv", check=False, root=tmp_path)
+        assert aizee_cli._cmd_mcp_freeze(args) == 1
+
+    def test_freeze_cli_check_requires_baseline(self, tmp_path, monkeypatch) -> None:
+        import aizee_cli
+
+        class _OkClient:
+            def __init__(self, *a, **k):
+                pass
+
+            def is_configured(self) -> bool:
+                return True
+
+            def list_tools(self) -> dict:
+                return {"ok": True, "tools": list(_TOOLS)}
+
+        monkeypatch.setattr("runtime.mcp_client.McpClient", _OkClient)
+        args = SimpleNamespace(tool="srv", check=True, root=tmp_path)
+        # No baseline lock exists -> check must fail closed, not vacuous-pass.
+        assert aizee_cli._cmd_mcp_freeze(args) == 1
+        # With a baseline that matches live -> passes.
+        write_lock(tmp_path / "aizee_mcp" / "tool-lock.json", "srv", _TOOLS)
+        assert aizee_cli._cmd_mcp_freeze(args) == 0
 
     def test_fingerprint_inputs(self) -> None:
         t1 = {"name": "t", "inputSchema": {"a": 1}}

@@ -35,7 +35,7 @@ EXCLUDE_DIRS = {
 EXCLUDE_FILES = {
     ".env", ".coverage", ".aizee-version", "settings.json",
     "settings.local.json", "mcp_config.local.json", "config.local.json",
-    "implementation_plan.md", "DEEP_AUDIT_PROMPT.md", "GRAPH_REPORT.md",
+    "implementation_plan.md", "GRAPH_REPORT.md",
     "GAMES.md",
 }
 EXCLUDE_GLOBS = ("*.pyc", "*.pyo", "*.log", "notes-*.md")
