@@ -38,6 +38,7 @@ _SECRETS_LOADED = False
 _ENV_ALLOWLIST: frozenset[str] = frozenset({
     # Core
     "AIZEE_ROOT", "AGENT_PROJECT_ROOT", "AIOS_ENCRYPTION_KEY", "AIOS_VERSION",
+    "AIZEE_ENFORCE_STRICT",
     # Dashboard
     "AIZEE_DASHBOARD_TOKEN", "AIZEE_DASHBOARD_ALLOW_NO_TOKEN",
     "AIZEE_DASHBOARD_ORIGIN", "AGENT_OS_DASHBOARD_TOKEN",
@@ -336,6 +337,13 @@ class McpClient:
             )
         except Exception as exc:  # pragma: no cover - enforcement must not crash calls
             _logger.warning("MCP enforcement error (degraded): %s", exc, exc_info=True)
+            if os.environ.get("AIZEE_ENFORCE_STRICT") == "1":
+                return {
+                    "ok": False,
+                    "decision": "deny",
+                    "gate": "enforcement",
+                    "error": f"enforcement crashed (AIZEE_ENFORCE_STRICT=1): {exc}",
+                }
             return None
 
     def _enforce_result(

@@ -109,3 +109,9 @@ The installer symlinks agent configs from the OS root to common locations:
 | `config.py` | Root discovery + configuration |
 | `runtime/kernel.py` | Runtime gate (policy + budget + guardian) |
 | `aizee_cli.py` | CLI entry point (`aizee` command) |
+
+### Code references
+`aizee check-docs` validates these live refs against the codebase:
+[[config.py#discover_root]] · [[runtime/kernel.py#Kernel]] ·
+[[runtime/storage_backend.py#StorageFactory]] · [[runtime/schemas.py#AizeeError]] ·
+[[runtime/mcp_client.py#McpClient]] · [[runtime/doc_links.py#check_links]]

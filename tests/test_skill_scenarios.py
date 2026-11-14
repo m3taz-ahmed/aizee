@@ -128,11 +128,13 @@ def test_run_dir_skips_legacy(scen_root: Path) -> None:
         "system_prompt": {"skill_file": "workflows/65-goldfish-review.md"},
         "turns": [{"user_input": "u", "assertions": [{"type": "required_pattern", "pattern": "artifact"}]}]}]})
     results = run_dir(d, scen_root)
-    assert len(results) == 2
+    assert len(results) == 3
     skipped = next(r for r in results if r.scenario_id == "n")
     assert skipped.skipped
     ok = next(r for r in results if r.scenario_id == "x")
     assert ok.passed
+    gate = results[-1]
+    assert gate.scenario_id == "vibe-schema-validation" and gate.passed
 
 
 def test_format_results() -> None:
@@ -215,7 +217,19 @@ def test_run_dir_yml_and_bad_file(scen_root: Path) -> None:
         "turns": [{"user_input": "u", "assertions": [{"type": "required_pattern", "pattern": "artifact"}]}]}]})
     _write(d / "bad.yaml", {"not_scenarios": 1})
     results = run_dir(d, scen_root)
-    assert len(results) == 1 and results[0].scenario_id == "y"
+    assert len(results) == 2 and results[0].scenario_id == "y"
+    gate = results[-1]
+    assert gate.scenario_id == "vibe-schema-validation" and gate.passed
+
+
+def test_run_dir_vibe_schema_failure(scen_root: Path) -> None:
+    d = scen_root / "sc3"
+    d.mkdir()
+    _write(d / "v.yaml", {"scenarios": [{"name": "bad", "prompt": "p", "grade": "bogus"}]})
+    results = run_dir(d, scen_root)
+    gate = results[-1]
+    assert gate.scenario_id == "vibe-schema-validation"
+    assert not gate.passed and gate.failures
 
 
 def test_run_file_live_flag_forces_live(scen_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:

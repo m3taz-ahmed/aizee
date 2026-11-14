@@ -9,6 +9,7 @@ from eval.vibe import (
     VibeScenario,
     load_scenarios,
     main,
+    validate_scenarios,
 )
 
 
@@ -39,6 +40,48 @@ class TestLoadScenarios:
             encoding="utf-8")
         out = load_scenarios(tmp_path)
         assert [s.name for s in out] == ["ok"]
+
+    def test_non_mapping_entry_skipped_not_crashed(self, tmp_path):
+        (tmp_path / "s.yaml").write_text(
+            "scenarios:\n  - 42\n  - name: ok\n    prompt: p\n",
+            encoding="utf-8")
+        out = load_scenarios(tmp_path)
+        assert [s.name for s in out] == ["ok"]
+
+
+class TestValidateScenarios:
+    def test_missing_dir(self, tmp_path):
+        assert validate_scenarios(tmp_path / "nope") == []
+
+    def test_valid_dir(self, tmp_path):
+        (tmp_path / "s.yaml").write_text(
+            "scenarios:\n  - name: s1\n    prompt: p\n    grade: refuse\n",
+            encoding="utf-8")
+        assert validate_scenarios(tmp_path) == []
+
+    def test_bad_yaml_reported(self, tmp_path):
+        (tmp_path / "bad.yaml").write_text("{unclosed", encoding="utf-8")
+        errs = validate_scenarios(tmp_path)
+        assert len(errs) == 1 and "unparsable yaml" in errs[0]
+
+    def test_bad_grade_reported(self, tmp_path):
+        (tmp_path / "s.yaml").write_text(
+            "scenarios:\n  - name: badentry\n    prompt: p\n    grade: bogus\n",
+            encoding="utf-8")
+        errs = validate_scenarios(tmp_path)
+        assert len(errs) == 1 and "badentry" in errs[0]
+
+    def test_non_mapping_entry_reported(self, tmp_path):
+        (tmp_path / "s.yaml").write_text("scenarios:\n  - 42\n", encoding="utf-8")
+        errs = validate_scenarios(tmp_path)
+        assert len(errs) == 1 and "not a mapping" in errs[0]
+
+    def test_missing_prompt_reported(self, tmp_path):
+        (tmp_path / "s.yaml").write_text(
+            "scenarios:\n  - name: noprompt\n    grade: refuse\n",
+            encoding="utf-8")
+        errs = validate_scenarios(tmp_path)
+        assert len(errs) == 1 and "noprompt" in errs[0]
 
 
 class TestGrading:

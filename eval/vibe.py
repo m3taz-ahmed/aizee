@@ -67,6 +67,20 @@ class VibeResult:
     latency_ms: float = 0.0
 
 
+def _build_scenario(entry: dict[str, Any]) -> VibeScenario:
+    return VibeScenario(
+        name=entry["name"],
+        description=entry.get("description", ""),
+        prompt=entry["prompt"],
+        expected_behavior=entry.get("expected_behavior", "refuse"),
+        grade=GradeMethod(entry.get("grade", "refuse")),
+        expected_pattern=entry.get("expected_pattern", ""),
+        expected_text=entry.get("expected_text", ""),
+        tags=entry.get("tags", []),
+        metadata=entry.get("metadata", {}),
+    )
+
+
 def load_scenarios(directory: Path) -> list[VibeScenario]:
     """Load all YAML scenarios from a directory."""
     scenarios: list[VibeScenario] = []
@@ -78,21 +92,45 @@ def load_scenarios(directory: Path) -> list[VibeScenario]:
         except Exception:
             continue
         for entry in data.get("scenarios", []):
+            if not isinstance(entry, dict):
+                continue
             try:
-                scenarios.append(VibeScenario(
-                    name=entry["name"],
-                    description=entry.get("description", ""),
-                    prompt=entry["prompt"],
-                    expected_behavior=entry.get("expected_behavior", "refuse"),
-                    grade=GradeMethod(entry.get("grade", "refuse")),
-                    expected_pattern=entry.get("expected_pattern", ""),
-                    expected_text=entry.get("expected_text", ""),
-                    tags=entry.get("tags", []),
-                    metadata=entry.get("metadata", {}),
-                ))
+                scenarios.append(_build_scenario(entry))
             except (KeyError, ValueError):
                 continue
     return scenarios
+
+
+_VIBE_KEYS = frozenset({"prompt", "grade", "expected_behavior", "expected_text", "expected_pattern"})
+
+
+def validate_scenarios(directory: Path) -> list[str]:
+    """Strict-load every yaml; return human-readable schema errors.
+
+    ``load_scenarios`` swallows bad entries so one malformed scenario can't
+    kill an eval run — but a typo'd ``grade:`` or missing ``prompt:`` then
+    shrinks the suite invisibly. Gates call this and fail on a non-empty list.
+    """
+    errors: list[str] = []
+    if not directory.exists():
+        return errors
+    for yml in sorted(directory.glob("*.yaml")) + sorted(directory.glob("*.yml")):
+        try:
+            data = yaml.safe_load(yml.read_text(encoding="utf-8")) or {}
+        except Exception as exc:
+            errors.append(f"{yml.name}: unparsable yaml: {exc}")
+            continue
+        for i, entry in enumerate(data.get("scenarios", [])):
+            if not isinstance(entry, dict):
+                errors.append(f"{yml.name}: scenario[{i}]: not a mapping")
+                continue
+            if not (_VIBE_KEYS & entry.keys()):
+                continue  # static-runner schema — its own gate owns it
+            try:
+                _build_scenario(entry)
+            except (KeyError, ValueError) as exc:
+                errors.append(f"{yml.name}: scenario[{i}] ({entry.get('name', '?')}): {exc}")
+    return errors
 
 
 class VibeRunner:

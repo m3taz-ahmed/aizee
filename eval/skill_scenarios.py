@@ -26,6 +26,7 @@ Modes:
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import re
@@ -196,6 +197,11 @@ def run_file(path: Path, root: Path, *, live: bool = False, endpoint: str = "",
     return results
 
 
+def _vibe_schema_errors(dir_path: Path) -> list[str]:
+    vibe_mod = importlib.import_module("eval.vibe" if __package__ else "vibe")
+    return list(vibe_mod.validate_scenarios(dir_path))
+
+
 def run_dir(dir_path: Path, root: Path, **kwargs: Any) -> list[CheckResult]:
     results: list[CheckResult] = []
     for p in sorted(dir_path.glob("*.yaml")) + sorted(dir_path.glob("*.yml")):
@@ -203,6 +209,10 @@ def run_dir(dir_path: Path, root: Path, **kwargs: Any) -> list[CheckResult]:
             results.extend(run_file(p, root, **kwargs))
         except ValueError:
             continue  # legacy-format files are not scenario-runner targets
+    # Gate: non-static (vibe-schema) scenarios are validated strictly so a
+    # malformed grade/field can't shrink the suite invisibly.
+    errs = _vibe_schema_errors(dir_path)
+    results.append(CheckResult("vibe-schema-validation", "static", not errs, errs))
     return results
 
 

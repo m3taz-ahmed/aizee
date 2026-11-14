@@ -89,12 +89,45 @@ def test_async_call_tool_returns_gated_decision(tmp_path: Path) -> None:
     assert r["ok"] is False and r["gate"] == "mcp_firewall"
 
 
-def test_enforce_call_degrades_when_kernel_fails(tmp_path: Path) -> None:
+def test_enforce_call_degrades_when_kernel_fails(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.delenv("AIZEE_ENFORCE_STRICT", raising=False)  # a real .env may set it
     bad_root = tmp_path / "a_file_root"
     bad_root.write_text("not a dir")
     client = McpClient("test", bad_root, enforce=True)
     client.config = {"command": "echo", "args": []}
     assert client._enforce_call("anything", {}) is None  # kernel None -> degrade
+
+
+def test_enforce_call_crash_denies_under_strict(tmp_path: Path, monkeypatch) -> None:
+    # AIZEE_ENFORCE_STRICT=1: an enforcement crash must deny, not degrade-allow.
+    from runtime import enforcement
+
+    monkeypatch.setenv("AIZEE_ENFORCE_STRICT", "1")
+    monkeypatch.setattr(
+        enforcement,
+        "enforce_tool_call_root",
+        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom")),
+    )
+    client = McpClient("test", _enforce_root(tmp_path), enforce=True)
+    d = client._enforce_call("anything", {})
+    assert d is not None and d["ok"] is False and d["decision"] == "deny"
+
+
+def test_enforce_call_crash_allows_when_not_strict(tmp_path: Path, monkeypatch) -> None:
+    from runtime import enforcement
+
+    monkeypatch.delenv("AIZEE_ENFORCE_STRICT", raising=False)
+    monkeypatch.setattr(
+        enforcement,
+        "enforce_tool_call_root",
+        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom")),
+    )
+    client = McpClient("test", _enforce_root(tmp_path), enforce=True)
+    assert client._enforce_call("anything", {}) is None
+
+
+def test_env_allowlist_permits_enforce_strict() -> None:
+    assert "AIZEE_ENFORCE_STRICT" in mcp_client._ENV_ALLOWLIST
 
 
 # -- result enforcement -------------------------------------------------------
