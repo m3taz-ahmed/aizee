@@ -49,7 +49,36 @@ def _root(args: argparse.Namespace) -> Path:
             f"--root {s} is drive-relative — the shell likely ate the "
             "backslashes; quote it or use forward slashes (E:/server/.ai)"
         )
+    if not args.root:
+        _warn_mirror_divergence(root)
     return root
+
+
+def _warn_mirror_divergence(root: Path) -> None:
+    """Warn when the resolved root diverges from a source-looking cwd.
+
+    The documented trap: AIZEE_ROOT points at the deployment mirror while the
+    user runs commands from the source repo — gates then validate stale
+    content silently. Warn only (mirrors legitimately lag); an explicit
+    ``--root`` suppresses this since the caller made an informed choice."""
+    try:
+        cwd = Path.cwd().resolve()
+        resolved = Path(root).resolve()
+    except OSError:
+        return
+    if resolved == cwd:
+        return
+    source_markers = all(
+        (cwd / marker).exists() for marker in ("AGENTS.md", "runtime", "aizee_cli.py")
+    )
+    if not source_markers:
+        return
+    print(
+        f"[aizee] warning: resolved root is {resolved} but cwd {cwd} looks "
+        "like the aiZee source repo — commands will run against the resolved "
+        "root. Pass --root to select a different root.",
+        file=sys.stderr,
+    )
 
 
 def _project_root(args: argparse.Namespace) -> Path:
@@ -454,6 +483,35 @@ def cmd_budget(args: argparse.Namespace) -> int:
         k.budget.set_budget(args.scope, budget)
         k.budget.save()
         console.print(f"[green]Budget '{args.scope}' updated[/green]")
+    elif args.subcommand in ("quote", "approve", "charge", "report"):
+        from runtime.budget import SpendLedger
+
+        ledger = SpendLedger(Path(_root(args)) / "state")
+        if args.subcommand == "quote":
+            if not args.provider or args.estimate is None:
+                console.print("[red]budget quote requires --provider and --estimate[/red]")
+                return 1
+            q = ledger.quote(args.provider, args.estimate, key=args.key, account=args.account)
+            k.audit.log(
+                "spend.quote",
+                {"key": q.key, "provider": q.provider, "estimate": q.estimate,
+                 "account": q.account, "currency": q.currency},
+            )
+            console.print(f"[green]quote {q.key}: {q.provider} est ${q.estimate:.4f} {q.currency}[/green]")
+        elif args.subcommand == "approve":
+            q = ledger.approve(args.key)
+            k.audit.log("spend.approve", {"key": q.key, "provider": q.provider})
+            console.print(f"[green]approved {q.key} (single-use)[/green]")
+        elif args.subcommand == "charge":
+            amount = ledger.charge(args.key, actual=args.actual)
+            k.audit.log("spend.charge", {"key": args.key, "actual": amount})
+            console.print(f"[green]charged {args.key}: ${amount:.4f}[/green]")
+        else:
+            report = ledger.report()
+            k.audit.log("spend.report", {"total": report["total"], "providers": list(report["providers"])})
+            console.print(f"Total charged: ${report['total']:.4f}")
+            for provider, e in report["providers"].items():
+                console.print(f"  {provider}: ${e['charged']:.4f} across {e['calls']} call(s) {e['accounts']}")
     return 0
 
 
@@ -615,6 +673,11 @@ def cmd_spec(args: argparse.Namespace) -> int:
             console.print(f"[red]Unknown template: {args.template}[/red]")
             return 1
         console.print(f"[green]Scaffolded {args.template}:[/green] {result}")
+    elif args.subcommand == "derive-checklist":
+        if not args.spec_id:
+            console.print("[red]spec_id required for derive-checklist[/red]")
+            return 1
+        print(json.dumps(engine.derive_checklist(args.spec_id), indent=2, default=str))
     elif args.subcommand == "advance":
         if not args.spec_id:
             console.print("[red]spec_id required for advance[/red]")
@@ -1568,6 +1631,23 @@ def cmd_skill(args: argparse.Namespace) -> int:
                 detail = lr.get("dest") or lr.get("error", "")
                 console.print(f"{mark} {lr['harness']}: {detail}")
         return 0 if all(lr["ok"] for lr in link_results) else 1
+    elif args.skill_subcommand == "index":
+        from runtime.harness_exporter import build_discovery_index
+
+        index = build_discovery_index(_root(args) / "skills")
+        if args.write:
+            index_path = _root(args) / "skill-index.json"
+            index_path.write_text(
+                json.dumps(index, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+        if args.json or not args.write:
+            print(json.dumps(index, indent=2, ensure_ascii=False))
+        else:
+            console.print(
+                f"[green]index written:[/green] {index_path} ({index['count']} skills)"
+            )
+        return 0
     elif args.skill_subcommand == "lint":
         from runtime.skill_lint import run_lint
 
@@ -2859,12 +2939,17 @@ def main(argv: list[str] | None = None) -> int:
     p_policy.add_argument("--path", default="", help="Policy file or directory (for 'lint')")
 
     p_budget = sub.add_parser("budget", help="Budget commands")
-    p_budget.add_argument("subcommand", choices=["list", "usage", "set"])
+    p_budget.add_argument("subcommand", choices=["list", "usage", "set", "quote", "approve", "charge", "report"])
     p_budget.add_argument("--scope", default="global")
     p_budget.add_argument("--max-tokens", type=int, default=None)
     p_budget.add_argument("--max-cost", type=float, default=None)
     p_budget.add_argument("--period", default="session", choices=["session", "hourly", "daily", "weekly", "monthly"])
     p_budget.add_argument("--on-exceed", default="block", choices=["warn", "fallback", "block"])
+    p_budget.add_argument("--provider", default="", help="Spend-ledger billing provider")
+    p_budget.add_argument("--account", default="", help="Spend-ledger billing account/workspace")
+    p_budget.add_argument("--estimate", type=float, default=None, help="Quoted cost for `budget quote`")
+    p_budget.add_argument("--actual", type=float, default=None, help="Actual cost for `budget charge`")
+    p_budget.add_argument("--key", default="", help="Spend quote key (dedupe/single-use)")
 
     p_project = sub.add_parser("project", help="Project commands")
     p_project.add_argument("subcommand", choices=["init"])
@@ -2967,7 +3052,7 @@ def main(argv: list[str] | None = None) -> int:
     sp_task.add_parser("context", help="Print the hook-injected contract block")
 
     p_spec = sub.add_parser("spec", help="Spec-driven development commands")
-    p_spec.add_argument("subcommand", choices=["list", "analyze", "converge", "scaffold", "advance", "propose", "changes", "archive", "review"])
+    p_spec.add_argument("subcommand", choices=["list", "analyze", "converge", "scaffold", "advance", "propose", "changes", "archive", "review", "derive-checklist"])
     p_spec.add_argument("spec_id", nargs="?", default="", help="Spec ID")
     p_spec.add_argument("--codebase", default="", help="Codebase dir for converge")
     p_spec.add_argument("--template", default="", help="Template type for scaffold (spec/plan/tasks)")
@@ -3209,6 +3294,9 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_link.add_argument("--harness", default="", help="cursor|claude|codex|opencode (default: all)")
     p_skill_link.add_argument("--pack", default="", help="Write an EGM-style multi-harness plugin bundle to this dir instead of linking")
     p_skill_link.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_index = sp_skill.add_parser("index", help="Content-addressed skill discovery index (sha256 = release identity)")
+    p_skill_index.add_argument("--write", action="store_true", help="Write <root>/skill-index.json")
+    p_skill_index.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_lint = sp_skill.add_parser("lint", help="Description lint + trigger-collision detection over all skills")
     p_skill_lint.add_argument("--write-index", action="store_true", help="Regenerate skills/index.json")
     p_skill_lint.add_argument("--json", action="store_true", help="Machine-readable output")

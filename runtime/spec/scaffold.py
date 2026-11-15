@@ -3,11 +3,20 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
 from runtime.spec.models import Spec
 from runtime.spec.templates import render_template, spec_context
+
+# Unresolved-clarification markers — boundary-aware so ordinary punctuation
+# ("what??", embedded "TBDX") does not false-flag a finished row.
+_UNRESOLVED_MARKERS = (
+    re.compile(r"\bNEEDS CLARIFICATION\b"),
+    re.compile(r"\bTBD\b"),
+    re.compile(r"(?<!\w)\?\?(?!\w)"),
+)
 
 
 class ScaffoldingMixin:
@@ -129,3 +138,39 @@ class ScaffoldingMixin:
                 results["failed"] += 1
                 results["failing_items"].append(name)
         return results
+
+    def derive_checklist(self, spec_id: str) -> dict[str, Any]:
+        """Derive verification items from spec requirement rows.
+
+        Adopted from reanimate's spec contract: every spec row becomes a
+        check. A row still carrying an unresolved marker
+        (``NEEDS CLARIFICATION``, ``TBD``, ``??``) means the reading is not
+        finished — the item is reported ``unresolved`` and excluded from
+        ``resolved`` rather than silently dropped (``[ARCH-08]``).
+        """
+        spec = self.load_spec(spec_id)
+        if spec is None:
+            return {"error": f"Spec not found: {spec_id}"}
+        items: list[dict[str, Any]] = []
+        for req in spec.requirements:
+            desc = (req.description or "").strip()
+            unresolved = any(m.search(desc) for m in _UNRESOLVED_MARKERS)
+            items.append(
+                {
+                    "id": req.id,
+                    "check": desc,
+                    "priority": req.priority,
+                    "user_story": req.user_story,
+                    "source": "requirement",
+                    "unresolved": unresolved,
+                }
+            )
+        unresolved_count = sum(1 for i in items if i["unresolved"])
+        return {
+            "spec_id": spec_id,
+            "total": len(items),
+            "resolved": len(items) - unresolved_count,
+            "unresolved": unresolved_count,
+            "complete": unresolved_count == 0 and len(items) > 0,
+            "items": items,
+        }

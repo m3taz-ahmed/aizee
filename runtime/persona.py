@@ -371,6 +371,11 @@ class PersonaDetector:
             return True
         return not self.skill_resolver.exists(name)
 
+    def _auto_loadable(self, name: str, context: dict[str, Any]) -> bool:
+        """Active AND auto-loadable — ``invoke:user`` skills load only on
+        explicit invocation, never via persona/trigger injection."""
+        return self._is_active_skill(name, context) and self.skill_resolver.invoke_for(name) != "user"
+
     def _keyword_match(self, text: str, keyword: str) -> bool:
         """Match a keyword as a whole word/phrase to avoid substring false positives."""
         norm_text = _normalize_arabic(text)
@@ -446,7 +451,7 @@ class PersonaDetector:
         seen_skills: set[str] = set()
         for p in selected:
             sk = self.skill_for(p)
-            if sk in seen_skills or not self._is_active_skill(sk, skill_context):
+            if sk in seen_skills or not self._auto_loadable(sk, skill_context):
                 continue
             seen_skills.add(sk)
             primary_skills.append(sk)
@@ -466,7 +471,7 @@ class PersonaDetector:
             (
                 (lord, score)
                 for lord, score in lord_scores.items()
-                if lord not in seen_skills and self._is_active_skill(lord, skill_context)
+                if lord not in seen_skills and self._auto_loadable(lord, skill_context)
             ),
             key=lambda x: (-x[1], x[0]),
         )
@@ -514,6 +519,8 @@ class PersonaDetector:
         for name in names:
             if name in seen or self.skill_resolver.resolve_with_frontmatter(name, active_context) is None:
                 continue
+            if self.skill_resolver.invoke_for(name) == "user":
+                continue  # invoke:user skills load only via explicit invocation
             seen.add(name)
             valid.append(name)
         return valid

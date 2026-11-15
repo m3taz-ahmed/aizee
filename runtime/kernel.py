@@ -396,6 +396,55 @@ def _run_policy_gate(
     return None
 
 
+def _run_paid_gate(
+    kernel: Kernel, action_type: str, action_data: dict[str, Any],
+) -> dict[str, Any] | None:
+    """MONEY-01: paid action types must carry an approved, unconsumed quote.
+
+    The gate *authorizes* — it never charges. Charging stays with
+    ``aizee budget charge`` at the spend moment, so ``aizee check`` can
+    validate a paid call without consuming its single-use approval.
+    """
+    from runtime.policy import _is_paid_action
+
+    if not _is_paid_action(action_type):
+        return None
+    from runtime.budget import SpendLedger
+
+    key = str(action_data.get("quote_key") or "")
+    quote = SpendLedger(kernel.root / "state").get(key) if key else None
+    if quote is None or quote.consumed or not quote.approved:
+        reason = (
+            "missing quote_key — run `aizee budget quote --provider X --estimate Y --key K` first"
+            if not key
+            else "no spend quote for this key — quote before calling"
+            if quote is None
+            else "quote already spent — approvals are single-use, quote again"
+            if quote.consumed
+            else "quote not approved — run `aizee budget approve --key K`"
+        )
+        kernel.audit.log(
+            "paid.denied",
+            {"action": action_type, "quote_key": key, "reason": reason},
+        )
+        kernel._actions_total.labels(action=action_type, decision="deny").inc()
+        return {
+            "ok": False,
+            "error": f"Paid action denied: {reason} (MONEY-01)",
+            "decision": {"rule": "money-gate", "reason": reason},
+        }
+    kernel.audit.log(
+        "paid.authorized",
+        {
+            "action": action_type,
+            "quote_key": key,
+            "provider": quote.provider,
+            "estimate": quote.estimate,
+        },
+    )
+    return None
+
+
 def _run_loop_detection(
     kernel: Kernel, action_type: str, action_data: dict[str, Any], dry_run: bool,
 ) -> dict[str, Any] | None:
@@ -1025,6 +1074,9 @@ class Kernel:
         policy_result = _run_policy_gate(self, action_type, action_data, kwargs, decision, dry_run)
         if policy_result is not None:
             return policy_result
+        paid_result = _run_paid_gate(self, action_type, action_data)
+        if paid_result is not None:
+            return paid_result
         loop_result = _run_loop_detection(self, action_type, action_data, dry_run)
         if loop_result is not None:
             return loop_result

@@ -11,11 +11,13 @@ Supported harnesses:
     opencode    ~/.config/opencode/skills/<name>/
     project     ./.agents/skills/<name>/    (per-repo, read natively by Amp et al.)
     devin       ./.devin/skills/<name>/     (per-repo, read natively by Devin)
+    windsurf    ./.windsurf/skills/<name>/  (per-repo, read natively by Windsurf)
     path        arbitrary --dest directory
 """
 
 from __future__ import annotations
 
+import hashlib
 import shutil
 import sys
 from dataclasses import dataclass, field
@@ -67,6 +69,7 @@ def harnesses() -> dict[str, str]:
 _PROJECT_DIRS = {
     "project": ".agents/skills",
     "devin": ".devin/skills",
+    "windsurf": ".windsurf/skills",
 }
 
 
@@ -181,6 +184,42 @@ def main(argv: list[str] | None = None) -> int:
     )
     print(json.dumps(r.to_dict(), indent=2))
     return 0 if r.ok else 1
+
+
+def build_discovery_index(skills_root: Path, *, kind: str = "skill") -> dict[str, Any]:
+    """Content-addressed discovery index over a skills directory.
+
+    Adopted from vercel-labs/agent-skills' immutable release + discovery
+    index: every entry carries a sha256 of its source file, so the hash is
+    the release identity — any edit changes it, and consumers can detect
+    drift or pin a skill without a version field (skills-lock.json parity).
+    Metadata comes from ``build_catalog_from_directory`` so the index and
+    the catalog never disagree on names, triggers, or invoke class.
+    """
+    from runtime.service_catalog import build_catalog_from_directory
+
+    root = Path(skills_root)
+    catalog = build_catalog_from_directory(root, kind=kind)
+    entries: dict[str, Any] = {}
+    for desc in sorted(catalog.all(), key=lambda d: d.name):
+        path = Path(desc.file_path)
+        try:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        except OSError:
+            digest = ""
+        rel = (
+            path.name
+            if path.parent == root
+            else f"{path.parent.name}/{path.name}"
+        )
+        entries[desc.name] = {
+            "file": rel,
+            "description": desc.description,
+            "invoke": desc.invoke,
+            "triggers": sorted(desc.triggers),
+            "sha256": digest,
+        }
+    return {"kind": kind, "count": len(entries), "skills": entries}
 
 
 if __name__ == "__main__":

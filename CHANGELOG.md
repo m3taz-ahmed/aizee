@@ -7,11 +7,22 @@
 
 ## [Unreleased]
 
+- `rules/`: +8 adopted ecosystem rules — `BEH-05` (re-verify all governing rules + works-for-any-user), `DET-01` (seeded determinism), `TASK-11` (numbers-not-impressions evidence), `UNT-07` (reference-media IP discipline), `ARCH-08` (no silent threshold lowering), `LOOP-01` (bounded correction loops ≤5 then escalate), `EVAL-01` (identical-rig comparisons), `MONEY-01` (quote→approve→spend-report). Source: `docs/studies/study-animate-skill-ecosystem-2026-11-15.md`.
+- `workflows/67-intake-glossary.md`: intake→shared-language glossary+ADR protocol (adapted from mattpocock grill-with-docs + animate intake).
+- `workflows/68-preview-gates.md`: cheap→expensive HITL gate ordering for costly runs — anchor/draft artifacts on the real pipeline, one stated spend estimate, single-item re-roll granularity (adapted from animate + scroll-world).
+- `workflows/69-parallel-fanout-review.md`: parallel dispatch protocol — frozen shared contract, exclusive file ownership, explicit seams, measured per-step review, bounded repair (adapted from animate + superpowers + open-edit).
 - `runtime/routines.py`: declarative schedules are now live — `schedule:` frontmatter accepts `manual | every:<n><unit> | cron:<5-field> | at:<ISO>`; new `aizee routine due [--all] [--json]` lists routines past their fire instant (stdlib cron parser, correct DOW/OR semantics).
 - `memory/vector.py`: `Embedder` falls back to `fastembed` (ONNX, torch-free) when sentence-transformers is absent; `AIZEE_EMBEDDER=st|fastembed` forces a backend. New `pyproject` extra `vector-lite` (fastembed + sqlite-vec).
 - `runtime/harness_exporter.py`: new `devin` per-repo target (`./.devin/skills`) via `_PROJECT_DIRS`.
+- `runtime/measured_gate.py`: measured deliverable checks — metrics-returning checks (cut-error, SSIM, coverage) with rig fingerprinting for EVAL-01 identical-rig comparisons (`CheckResult`/`MeasuredGate`).
+- `runtime/rule_frontmatter.py` + `service_catalog.py`: `invoke: user|auto` skill taxonomy (mattpocock user-invoked vs auto-triggered) parsed into `RuleFrontmatter`, indexed via `ServiceCatalog.by_invoke()`; frontmatter `name`/`description` now honored in catalog metadata.
+- `runtime/spec/scaffold.py`: `derive_checklist()` — every spec requirement row becomes a verifiable check (`[ ] REQ-NN` → `[x]` when resolved); unresolved markers mean unfinished reading.
+- `runtime/budget.py`: `SpendLedger` — MONEY-01 paid-call governance. Quote (content-key dedupe) → single-use `approve` → `charge` → per-provider/account `report`; unapproved or consumed charges raise `PolicyDeniedError`. CLI: `aizee budget quote|approve|charge|report`.
+- `runtime/harness_exporter.py`: `build_discovery_index()` + `aizee skill index [--write]` — content-addressed skill index (name/file/description/invoke/triggers/sha256 = release identity, vercel immutable-release pattern). New `windsurf` per-repo target (`./.windsurf/skills`).
+- `skills/writing-skills.md`: behavior-shaping authoring rules — skills are behavior code, eval-gated wording edits, description-as-retrieval-surface, strength tags (superpowers + usethisskill patterns).
+- `skills/intake-grill.md`: intake→shared-language protocol surface — batched questions, glossary + ADR artifacts, spec cites glossary (mattpocock grill-with-docs port).
 - `deps.yaml`: +5 optional deps — fastembed, sqlite-vec, ast-grep, llama-swap, microsandbox.
-- Study: `docs/studies/study-agent-ecosystem-2026-11-14.md` (35-repo ecosystem wave).
+- Study: `docs/studies/study-agent-ecosystem-2026-11-14.md` (35-repo ecosystem wave) + `docs/studies/study-animate-skill-ecosystem-2026-11-15.md` (animate + agent-skills wave, 22-pattern adoption backlog).
 
 
 ## [6.10.5] - 2026-11-13 (fix Docker base-image digest; ship routines dir)

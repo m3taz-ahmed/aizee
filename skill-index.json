@@ -1,0 +1,4180 @@
+{
+  "kind": "skill",
+  "count": 248,
+  "skills": {
+    "README": {
+      "file": "README.md",
+      "description": "Objective.",
+      "invoke": "auto",
+      "triggers": [
+        "readme"
+      ],
+      "sha256": "a4c7088ad98634e75cea0d0acc6b92e6ce9b6c26cbeb0cd4d5756f09fdaa941d"
+    },
+    "ab-testing": {
+      "file": "ab-testing/SKILL.md",
+      "description": "When the user wants to plan, run, or read A/B tests, or asks a judgement call on one: is the result real, can we stop, which version won, is this worth testing at all: sample size, duration, significa",
+      "invoke": "auto",
+      "triggers": [
+        "a/b test",
+        "ab test",
+        "ab testing",
+        "ab-testing",
+        "call one",
+        "experiment",
+        "read tests",
+        "result real",
+        "run read",
+        "sample size",
+        "split test",
+        "version won",
+        "worth testing",
+        "اختبار"
+      ],
+      "sha256": "aad8b8a2c46493bd652dde90f24aab81d286f8d99db8c34b9c1d883e55b36cf2"
+    },
+    "accessibility-auditor": {
+      "file": "accessibility-auditor.md",
+      "description": "WCAG 2.2 AA Accessibility Auditor. 11 specialist agents covering every accessibility domain.",
+      "invoke": "auto",
+      "triggers": [
+        "accessibility auditor",
+        "wcag"
+      ],
+      "sha256": "f7418da9f459d9bd34085c730c66b2da869d9d4c827b544154a8fb32a5c3ffba"
+    },
+    "ad-creative": {
+      "file": "ad-creative/SKILL.md",
+      "description": "When the user wants to write or judge ad creative, or asks which ad, hook, or angle to run or kill: headlines, primary text, and variations for Google, Meta, LinkedIn, and TikTok, fresh angles when cr",
+      "invoke": "auto",
+      "triggers": [
+        "ad angle",
+        "ad copy",
+        "ad creative",
+        "ad hook",
+        "ad-creative",
+        "angle run",
+        "creative fatigue",
+        "headlines primary",
+        "hook angle",
+        "judge creative",
+        "kill headlines",
+        "meta linkedin",
+        "primary text",
+        "run kill",
+        "tiktok fresh",
+        "write judge"
+      ],
+      "sha256": "3ad5c8c70ef5b8f632e0cfcd65ef6c02a4b8679683c1edc1bc1cb023039b1d87"
+    },
+    "ads": {
+      "file": "ads/SKILL.md",
+      "description": "When the user wants to plan, run, or fix paid ads on Google, Meta, and LinkedIn, or asks a judgement call on them: are ads worth it, which channel or budget split, why CPA rose, kill or keep a campaig",
+      "invoke": "auto",
+      "triggers": [
+        "ads",
+        "ads google",
+        "ads worth",
+        "budget split",
+        "campaign budget",
+        "channel budget",
+        "cpa",
+        "fix paid",
+        "google ads",
+        "linkedin ads",
+        "meta ads",
+        "paid ads",
+        "run fix"
+      ],
+      "sha256": "2f943126c86d8cb5214c177650fa2541151204dd9d8b9edbf13e0765d93eb496"
+    },
+    "affiliate-manager": {
+      "file": "affiliate-manager/SKILL.md",
+      "description": "Affiliate manager — track links, commissions, payouts, and partner performance. Free-first self-hosted or platform-native programs.",
+      "invoke": "auto",
+      "triggers": [
+        "affiliate",
+        "affiliate manager",
+        "شراكة بالعمولة",
+        "عمولة",
+        "كسب من الروابط"
+      ],
+      "sha256": "38828f38d12ca0636f5f49ac9d979aa5947a0ca67997197199aa1ef034c28cff"
+    },
+    "agent-governance-lord": {
+      "file": "agent-governance-lord/SKILL.md",
+      "description": "Lord skill for governing AI coding agents at runtime — gateway interception, agent/flow/model allowlisting, and MCP-server-as-securable. The control layer between an agent's decision and its real-worl",
+      "invoke": "auto",
+      "triggers": [
+        "agent allowlist",
+        "agent gateway",
+        "agent governance",
+        "agent governance lord",
+        "mcp securable",
+        "runtime interception",
+        "بوابة الوكلاء",
+        "حوكمة الوكلاء"
+      ],
+      "sha256": "de0ed5d775ddcb9924569f267e49ceea409590a13eb6f0d4c2638fde8ca2bc9e"
+    },
+    "agent-orchestration-lord": {
+      "file": "agent-orchestration-lord/SKILL.md",
+      "description": "Lord skill for multi-agent orchestration — pattern selection (orchestrator-worker, supervisor-router, hierarchical, peer-to-peer), A2A communication, task decomposition, and failure handling.",
+      "invoke": "auto",
+      "triggers": [
+        "agent coordination",
+        "agent orchestration lord",
+        "multi-agent",
+        "orchestration",
+        "orchestrator worker",
+        "supervisor router",
+        "تنسيق الوكلاء",
+        "توجيه الوكلاء"
+      ],
+      "sha256": "bb0943975db0d37b923f0511aab6cb2f748d45b3affacc1f7a7a6f5848cf3399"
+    },
+    "ai-agents-architect": {
+      "file": "ai-agents-architect.md",
+      "description": "Elite AI Agent Systems Architect & Prompt Engineer.",
+      "invoke": "auto",
+      "triggers": [
+        "ai agents architect",
+        "systems"
+      ],
+      "sha256": "0fd191b1c181a31f9a067a65ad077ece88f0894038206caccdbe875af0e3bfca"
+    },
+    "ai-code-review-lord": {
+      "file": "ai-code-review-lord/SKILL.md",
+      "description": "Lord skill for AI-powered code review and security scanning — automated pre-PR review, diff-aware analysis, hallucination detection in AI-generated code, severity gating, and human escalation.",
+      "invoke": "auto",
+      "triggers": [
+        "ai code review",
+        "ai code review lord",
+        "automated review",
+        "bugbot",
+        "code scanning",
+        "security scanning",
+        "self-review",
+        "فحص أمني",
+        "مراجعة كود"
+      ],
+      "sha256": "037a9c69be452a938559c9585f1c31453ff9a1d352712d4b1e1ba6e4136dd9e7"
+    },
+    "ai-ml-lord": {
+      "file": "ai-ml-lord/SKILL.md",
+      "description": "Lord skill for applied ML/LLM engineering — model selection, RAG pipelines, fine-tuning, evals, and production inference patterns.",
+      "invoke": "auto",
+      "triggers": [
+        "ai ml lord"
+      ],
+      "sha256": "23547126f7f838d8fc9997314f1ec59027dd184b9f61a7e527430b8e50c6c556"
+    },
+    "ai-observability-lord": {
+      "file": "ai-observability-lord/SKILL.md",
+      "description": "Lord skill for AI observability and tracing — OpenTelemetry + OpenInference standards, span attributes, eval integration, cost/latency/error tracking, drift detection, and PII redaction.",
+      "invoke": "auto",
+      "triggers": [
+        "ai observability lord",
+        "arize",
+        "langfuse",
+        "langsmith",
+        "observability",
+        "openinference",
+        "otel",
+        "phoenix",
+        "tracing",
+        "مراقبة"
+      ],
+      "sha256": "602703860246c542ebdbe6f130398edc46fb867eae689a7332d3e014ba2a2746"
+    },
+    "ai-redteam-lord": {
+      "file": "ai-redteam-lord/SKILL.md",
+      "description": "Lord skill for CI-integrated AI red-teaming — adversarial testing across prompt injection, jailbreak, data leakage, bias, and tool abuse with measurable coverage and false-positive tracking.",
+      "invoke": "auto",
+      "triggers": [
+        "adversarial",
+        "ai redteam lord",
+        "detoxio",
+        "garak",
+        "jailbreak test",
+        "prompt injection test",
+        "promptfoo",
+        "red team",
+        "redteam",
+        "اختبار اختراق الذكاء الاصطناعي",
+        "فريق أحمر"
+      ],
+      "sha256": "67126b79e6f199a121cddb3999e3977e0d8ea0334e7f099594e1d2639ee70b68"
+    },
+    "ai-seo": {
+      "file": "ai-seo/SKILL.md",
+      "description": "When the user wants to get cited and recommended in AI answers (ChatGPT, Perplexity, AI Overviews), or asks why AI cites a competitor, which content gets cited, or whether llms.txt or a page format is",
+      "invoke": "auto",
+      "triggers": [
+        "aeo",
+        "ai citations",
+        "ai seo",
+        "ai visibility",
+        "ai-seo",
+        "answers chatgpt",
+        "chatgpt perplexity",
+        "chatgpt visibility",
+        "cited whether",
+        "cites competitor",
+        "content gets",
+        "geo",
+        "get cited",
+        "gets cited",
+        "llms.txt",
+        "perplexity overviews",
+        "recommended answers",
+        "whether llms",
+        "وكيل ذكاء اصطناعي"
+      ],
+      "sha256": "84599d3463c6a3e0762af105eb278f5e4d24fc277c99fa98060be041305d90d8"
+    },
+    "aizee-lite": {
+      "file": "aizee-lite/SKILL.md",
+      "description": "aiZee governance distilled into one portable skill for agents WITHOUT aiZee installed — ground-truth-first, task decomposition, evidence-before-done, untrusted-content doctrine. Skill-as-product: give",
+      "invoke": "auto",
+      "triggers": [
+        "agent discipline",
+        "aizee lite",
+        "aizee portable",
+        "governed agent",
+        "install aizee elsewhere"
+      ],
+      "sha256": "842e0fdf94d2665c571dbfaab6f7866e9b6326a8d1351dbe74067dec63ebbc9a"
+    },
+    "analytics": {
+      "file": "analytics/SKILL.md",
+      "description": "When the user wants to set up or audit analytics, or asks whether a metric or number is calculated right, what to track, or how to name events: tracking plans, GA4, GTM, Mixpanel, PostHog, UTMs. Rate ",
+      "invoke": "auto",
+      "triggers": [
+        "analytics",
+        "audit analytics",
+        "calculated right",
+        "events tracking",
+        "ga4",
+        "gtm",
+        "metric number",
+        "mixpanel",
+        "name events",
+        "number calculated",
+        "posthog",
+        "set audit",
+        "tracking plan",
+        "tracking plans",
+        "utm",
+        "whether metric",
+        "إسناد"
+      ],
+      "sha256": "ba06620fbccfd4bcda4d7a77e4c372fdea899231b61d913a93631e3eef899937"
+    },
+    "api-architect": {
+      "file": "api-architect.md",
+      "description": "API Architect & Integration Specialist — REST, GraphQL, microservices, and webhooks. Do not use for api versioning tasks — use `api-versioning` instead. Do not use for backend api expert tasks — use `",
+      "invoke": "auto",
+      "triggers": [
+        "api architect",
+        "integration"
+      ],
+      "sha256": "6882087085162c13d297178277c815e282c251e88f11009f62e94b14a7c24941"
+    },
+    "api-versioning": {
+      "file": "api-versioning.md",
+      "description": "API versioning strategies and lifecycle management for backward-compatible evolution",
+      "invoke": "auto",
+      "triggers": [
+        "api versioning",
+        "strategies",
+        "versioning"
+      ],
+      "sha256": "cf38a5194d96cabd3e0d1082473f06f5ef5eb3a8307d2a5083b774455b3b8096"
+    },
+    "arabic-dialect-lord": {
+      "file": "arabic-dialect-lord/SKILL.md",
+      "description": "Lord skill for Arabic dialect-aware AI coding governance. Bridges Modern Standard Arabic (MSA) with Gulf, Egyptian, and Levantine dialects to deliver contextually-appropriate Arabic output for MENA de",
+      "invoke": "auto",
+      "triggers": [
+        "arabic",
+        "arabic dialect",
+        "arabic dialect lord",
+        "localization",
+        "mena",
+        "ترجمة عربية",
+        "تعريب",
+        "خليجي",
+        "شامي",
+        "عربي",
+        "لهجة",
+        "مصري",
+        "مغربي"
+      ],
+      "sha256": "8fa99e636c61ca938efb67414d684b0e79a54d91d36c965a564505032b00d409"
+    },
+    "arabic-freelance": {
+      "file": "arabic-freelance/SKILL.md",
+      "description": "Arabic freelance marketplaces specialist — Mostaql, Khamsat, Nabbesh, Bawaba, Bayt. RTL proposals, local pricing, feed analysis.",
+      "invoke": "auto",
+      "triggers": [
+        "arabic freelance",
+        "bawaba",
+        "bayt",
+        "mostaql",
+        "nabbesh",
+        "خمسات",
+        "فري لانس عربي",
+        "مستقل عربي"
+      ],
+      "sha256": "28cf023c8a81417510b1132550dd34610023e15257ce094a956198f24603ba3c"
+    },
+    "archify": {
+      "file": "archify/SKILL.md",
+      "description": "Create validated architecture, workflow, sequence, data-flow, lifecycle/state, ERD, class, tree, timeline, and waterfall diagrams as explorable standalone HTML with dark/light themes, motion and image",
+      "invoke": "auto",
+      "triggers": [
+        "archify",
+        "architecture diagram",
+        "architecture workflow",
+        "class tree",
+        "create validated",
+        "data-flow lifecycle",
+        "diagram",
+        "erd",
+        "erd class",
+        "explainer page",
+        "lifecycle state",
+        "sequence data-flow",
+        "sequence diagram",
+        "state erd",
+        "tree timeline",
+        "validated architecture",
+        "visualize system",
+        "workflow sequence",
+        "مخطط",
+        "معمارية"
+      ],
+      "sha256": "2b6f1528d48f03bc193943c56239222bc3807226d649066cd17aef991117aa0e"
+    },
+    "aso": {
+      "file": "aso/SKILL.md",
+      "description": "When the user wants to audit or optimize an App Store or Google Play listing, or asks which title, keywords, or screenshots to pick or why downloads are low: subtitle, description, ratings, and compar",
+      "invoke": "auto",
+      "triggers": [
+        "app listing",
+        "app store",
+        "aso",
+        "audit optimize",
+        "description ratings",
+        "google play",
+        "keywords screenshots",
+        "low subtitle",
+        "optimize app",
+        "play listing",
+        "screenshots pick",
+        "store google",
+        "store listing",
+        "subtitle description",
+        "title keywords"
+      ],
+      "sha256": "6f52e17b5cc5b54b915deb906240b8dcc0f7200dbba2d0573a0813f19b9d1e3c"
+    },
+    "attribution": {
+      "file": "attribution/SKILL.md",
+      "description": "When the user wants to work out which marketing drives revenue, or asks whether a channel is really working, which numbers to trust, or how to credit podcasts and dark social: attribution models, plat",
+      "invoke": "auto",
+      "triggers": [
+        "attribution",
+        "channel really",
+        "dark social",
+        "drives revenue",
+        "incrementality",
+        "marketing drives",
+        "marketing mix",
+        "mmm",
+        "numbers trust",
+        "really working",
+        "whether channel",
+        "work out",
+        "إسناد"
+      ],
+      "sha256": "1996e24e73d093264e6fdcd96f68db4cafc68fc3df6f042d40e4f3d59da7b5d2"
+    },
+    "b2b-cold-outreach": {
+      "file": "b2b-cold-outreach/SKILL.md",
+      "description": "B2B cold outreach closer — enrich, sequence, and convert cold prospects via compliant email/LinkedIn. CAN-SPAM aligned. Do not use for lead generation crm tasks — use `lead-generation-crm` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "b2b cold outreach",
+        "cold email",
+        "prospecting",
+        "اكتساب عملاء",
+        "اوت ريتش",
+        "رسالة باردة"
+      ],
+      "sha256": "a94f49f706e031e150a850796952c181d238a422aebe46f046dae611072ede1f"
+    },
+    "backend-api-expert": {
+      "file": "backend-api-expert.md",
+      "description": "Backend & API Expert. Robust service architecture, data integrity, and advanced file handling across Node.js and Python.",
+      "invoke": "auto",
+      "triggers": [
+        "backend api expert"
+      ],
+      "sha256": "e1b133da9896e651fc6561721b159a935d306d2872818160924f958409009ce9"
+    },
+    "backend-design": {
+      "file": "backend-design.md",
+      "description": "Senior backend engineer reflexes — 13 disciplines covering think-before-coding, data modeling, migrations, queries, idempotency, errors, observability, security, auth, performance, debugging, testing,",
+      "invoke": "auto",
+      "triggers": [
+        "backend design"
+      ],
+      "sha256": "7971ff9b47477e250f68195f32a057cf606e3f46a849fb3ec733a79ad79d3a53"
+    },
+    "backend-frameworks-lord": {
+      "file": "backend-frameworks-lord/SKILL.md",
+      "description": "Architect-level command of Laravel, Filament, Nova, Django, Spring Boot, Express, NestJS, Rails, ASP.NET Core.",
+      "invoke": "auto",
+      "triggers": [
+        "backend frameworks lord",
+        "command"
+      ],
+      "sha256": "19d9a6ce42ec994832e08f59c847d0a1e227d711c83a105882307f38ea7e32eb"
+    },
+    "bmad": {
+      "file": "bmad/SKILL.md",
+      "description": "Answers BMad questions and recommends the next skill from what is installed. Use when the user asks bmad for help, what to do next or where to start; to set up, update, repair, doctor, migrate or chec",
+      "invoke": "auto",
+      "triggers": [
+        "bmad",
+        "bmad help",
+        "bmad setup",
+        "bmad status",
+        "bmad update",
+        "next skill",
+        "إعداد bmad"
+      ],
+      "sha256": "ceb45c41d63fe67b57d19c0e8edeb2d200f51fe87caa7042feb369d51126348c"
+    },
+    "bmad-advanced-elicitation": {
+      "file": "bmad-advanced-elicitation/SKILL.md",
+      "description": "Pushes a draft off its first answer with critique methods and proposes one revision. Use when the user or another skill names bmad-advanced-elicitation, or the user says \"advanced elicitation\". Not fo",
+      "invoke": "auto",
+      "triggers": [
+        "bmad",
+        "bmad advanced elicitation"
+      ],
+      "sha256": "d3076e4a7c012ce34a0e5a80d9465c95658b3c893a557f0ec680e257303837bc"
+    },
+    "bmad-agent-analyst": {
+      "file": "bmad-agent-analyst/SKILL.md",
+      "description": "Mary, the Business Analyst. Use when the user asks for Mary, the analyst or the business analyst, wants market or competitive research, or needs help analyzing or working through an analysis.",
+      "invoke": "auto",
+      "triggers": [
+        "bmad agent analyst",
+        "bmad-agent-analyst",
+        "brd",
+        "brief",
+        "business analyst",
+        "competitive research",
+        "market research",
+        "mary",
+        "prfaq",
+        "أبحاث سوق",
+        "بحث سوق",
+        "تحليل أعمال",
+        "تحليل منافسين",
+        "ماري",
+        "محلل أعمال",
+        "موجز"
+      ],
+      "sha256": "8597e7cb33bc9cbf932a95ff79e3f969ae54c9bbd31feaa807421992402e2bd1"
+    },
+    "bmad-agent-architect": {
+      "file": "bmad-agent-architect/SKILL.md",
+      "description": "System architect and technical design leader. Use when the user asks to talk to Winston or requests the architect",
+      "invoke": "auto",
+      "triggers": [
+        "architect",
+        "architecture decision",
+        "bmad agent architect",
+        "bmad-agent-architect",
+        "technical design",
+        "winston",
+        "قرار معماري",
+        "معمارية تقنية",
+        "مهندس معماري",
+        "وينستون"
+      ],
+      "sha256": "71ba01a8f017003fe78b779ca9aecb85e9a8cabc5e6e53cdc561246b456ef28a"
+    },
+    "bmad-agent-dev": {
+      "file": "bmad-agent-dev/SKILL.md",
+      "description": "Senior software engineer who implements stories and code changes. Use when the user asks to talk to Amelia or requests the developer agent",
+      "invoke": "auto",
+      "triggers": [
+        "amelia",
+        "bmad agent dev",
+        "bmad-agent-dev",
+        "developer",
+        "implement story",
+        "write code",
+        "أميليا",
+        "اكتب كود",
+        "تنفيذ قصة",
+        "مطورة"
+      ],
+      "sha256": "4b3b88b44cff8eed6cfbce98454aebe2704cb62cfcbc1c1e10a4ccc0274f46f0"
+    },
+    "bmad-agent-pm": {
+      "file": "bmad-agent-pm/SKILL.md",
+      "description": "John, the Product Manager. Use when the user asks for John, the PM or the product manager, wants a planning document written, updated or reviewed.",
+      "invoke": "auto",
+      "triggers": [
+        "bmad agent pm",
+        "bmad-agent-pm",
+        "john",
+        "planning document",
+        "prd",
+        "product manager",
+        "product plan",
+        "جون",
+        "خطة منتج",
+        "مدير منتج",
+        "وثيقة متطلبات"
+      ],
+      "sha256": "a01c829ba86dac4a1b243862ecc5929a885640c0f814933deb1d182a71b8d134"
+    },
+    "bmad-agent-po": {
+      "file": "bmad-agent-po/SKILL.md",
+      "description": "Sofia, the Product Owner: turns any input (an idea, brief, PRD, transcript, notes) into a ticket's requirements, slices initiatives into epics and epics into stories, writes and refines tickets, runs ",
+      "invoke": "auto",
+      "triggers": [
+        "bmad agent po",
+        "bmad-agent-po",
+        "epic",
+        "initiative",
+        "product owner",
+        "sofia",
+        "sprint",
+        "story",
+        "ticket",
+        "صوفيا",
+        "قصص مستخدم",
+        "مالك منتج",
+        "ملحمات"
+      ],
+      "sha256": "78567e8e759ae94ef8d74d37b252f11c9c99ec3104ac386cf617415c2e0e9311"
+    },
+    "bmad-agent-ux-designer": {
+      "file": "bmad-agent-ux-designer/SKILL.md",
+      "description": "UX designer and UI specialist. Use when the user asks to talk to Sally or requests the UX designer",
+      "invoke": "auto",
+      "triggers": [
+        "bmad agent ux designer",
+        "bmad-agent-ux-designer",
+        "design.md",
+        "experience.md",
+        "sally",
+        "ux designer",
+        "ux spec",
+        "تجربة مستخدم",
+        "تصميم ux",
+        "سالي",
+        "مصممة تجربة"
+      ],
+      "sha256": "a2a6b728fcd0e9f7eec6262b291574b1bd94325f9749a28758dbfebe5ff4dc49"
+    },
+    "bmad-architecture": {
+      "file": "bmad-architecture/SKILL.md",
+      "description": "Work out and record the architecture decisions that keep separately built parts of a system consistent, in a short architecture document. Creates, updates, or validates one; works from a ticket file, ",
+      "invoke": "auto",
+      "triggers": [
+        "adr",
+        "architecture doc",
+        "architecture spine",
+        "bmad architecture",
+        "bmad-architecture",
+        "solution design",
+        "قرار معماري adr",
+        "معمارية الحل",
+        "وثيقة معمارية"
+      ],
+      "sha256": "d16a1a5bffab12fe061bf60c5c439e92796f88acc674adb92e5d5b1d74a2931c"
+    },
+    "bmad-brainstorming": {
+      "file": "bmad-brainstorming/SKILL.md",
+      "description": "Facilitate a brainstorming session using diverse creative techniques. Use when the user says 'help me brainstorm' or 'help me ideate'",
+      "invoke": "auto",
+      "triggers": [
+        "bmad brainstorming",
+        "bmad-brainstorming",
+        "brainstorm",
+        "ideate",
+        "أفكار",
+        "توليد أفكار",
+        "عصف ذهني"
+      ],
+      "sha256": "622e995eaa776be4d6c888624e8206b3ea1da38716ea47cdfd45df7322a541be"
+    },
+    "bmad-build": {
+      "file": "bmad-build/SKILL.md",
+      "description": "Implements a story, feature, or bug fix end to end: plan, code, review, verify. Use when the user hands one over and leaves the edits to you; a bare ticket id or link counts. Skip obvious, low-risk me",
+      "invoke": "auto",
+      "triggers": [
+        "bmad build",
+        "bmad-build",
+        "build feature",
+        "implement story",
+        "plan code review verify",
+        "story implementation",
+        "ابني الميزة",
+        "تنفيذ متكامل",
+        "نفذ القصة"
+      ],
+      "sha256": "c2179d3d2a4d109f898eca34192b2bc4620f21764a6c4f48fc97242972075a6a"
+    },
+    "bmad-build-auto": {
+      "file": "bmad-build-auto/SKILL.md",
+      "description": "Implements one story, feature, or bug fix end to end without human interaction: plan, code, review, verify, report status. Use when invoked by name, usually by an orchestrator",
+      "invoke": "auto",
+      "triggers": [
+        "auto build",
+        "bmad build auto",
+        "bmad-build-auto",
+        "headless build",
+        "unattended implementation",
+        "بناء بدون إشراف",
+        "تنفيذ تلقائي"
+      ],
+      "sha256": "ac2683f94fd2044907c621e0308df1cbaaa585ee4f3d5842f4ad616dbca0f532"
+    },
+    "bmad-code-review": {
+      "file": "bmad-code-review/SKILL.md",
+      "description": "Review code changes with several independent reviewers in parallel, then triage and present the findings. Use when the user says \"run code review\" or \"review this code\"",
+      "invoke": "auto",
+      "triggers": [
+        "bmad code review",
+        "bmad-code-review",
+        "code review",
+        "multi-reviewer",
+        "review code",
+        "مراجعة pr",
+        "مراجعة كود",
+        "مراجعة متعددة"
+      ],
+      "sha256": "948e6f48d048f8978d6d78acb71d03feda87c1992a479b9ef403c696b739e056"
+    },
+    "bmad-customize": {
+      "file": "bmad-customize/SKILL.md",
+      "description": "Authors and updates customization overrides for installed BMad skills, and changes to the document templates their agents write from. Use when the user says 'customize bmad', 'override a skill', 'chan",
+      "invoke": "auto",
+      "triggers": [
+        "agent behavior",
+        "bmad customize",
+        "bmad-customize",
+        "customize bmad",
+        "customize.toml",
+        "override skill",
+        "تخصيص bmad",
+        "تعديل سلوك الوكيل"
+      ],
+      "sha256": "c3411ee2042a07cd2c4f2a0609defbde1b44bc56b4481eb66d30cf575e2b0d02"
+    },
+    "bmad-deep-recon": {
+      "file": "bmad-deep-recon/SKILL.md",
+      "description": "Decision-grade research on a topic or this repository. Use when the user says \"deep recon\", \"research this\", \"draft a research prompt\", \"process this research report\", \"market research\", \"domain resea",
+      "invoke": "auto",
+      "triggers": [
+        "bmad deep recon",
+        "bmad-deep-recon",
+        "deep recon",
+        "domain research",
+        "literature review",
+        "research this",
+        "technical research",
+        "استطلاع تقني",
+        "بحث دومين",
+        "بحث معمق",
+        "دراسة أدبيات"
+      ],
+      "sha256": "2714fb67c553975c453d029084613eea169cfecf145f8807e22ee8ddbfd5f7c9"
+    },
+    "bmad-eval": {
+      "file": "bmad-eval/SKILL.md",
+      "description": "Runs the evals of a BMad skill through the agent harness the user works in and reports what they show: baseline against the bare model, variant against a stripped or prior version, quality against a r",
+      "invoke": "auto",
+      "triggers": [
+        "benchmark skill",
+        "bmad eval",
+        "bmad-eval",
+        "eval skill",
+        "skill eval",
+        "trigger accuracy",
+        "تقييم مهارة",
+        "دقة التفعيل",
+        "معيار مهارة"
+      ],
+      "sha256": "b48c9cb09c402ad3a3c325bba2fd3403e111e40477994eba8d926e5765992e1d"
+    },
+    "bmad-facilitate": {
+      "file": "bmad-facilitate/SKILL.md",
+      "description": "Coaches the user through writing, updating or validating a document. Use when invoked by skill name only",
+      "invoke": "auto",
+      "triggers": [
+        "bmad facilitate",
+        "bmad-facilitate",
+        "create document",
+        "document engine",
+        "facilitate",
+        "validate document",
+        "إنشاء وثيقة",
+        "التحقق من وثيقة",
+        "تسهيل"
+      ],
+      "sha256": "4a9b1297146c765bec4f457a275e79bc13f824b278ad7a3a63ddcbdafd0443e9"
+    },
+    "bmad-forge-idea": {
+      "file": "bmad-forge-idea/SKILL.md",
+      "description": "Test a half-formed idea in a questioning conversation, with different personas probing its weak points, until the user can act on it or drop it with confidence. Optionally writes a short brief for pla",
+      "invoke": "auto",
+      "triggers": [
+        "bmad forge idea",
+        "bmad-forge-idea",
+        "forge idea",
+        "harden idea",
+        "pressure-test",
+        "stress-test idea",
+        "اختبار فكرة",
+        "تشكيل فكرة",
+        "تقوية فكرة"
+      ],
+      "sha256": "f042957445cfca8915c866a98d60230215c7b0063b55a0be7311d443e64844c3"
+    },
+    "bmad-ingest": {
+      "file": "bmad-ingest/SKILL.md",
+      "description": "Turns a transcript, thread, voice memo or long document into a cited note agents can act on. Use when the user says \"ingest this\", \"process this transcript\", \"make notes from this thread or recording\"",
+      "invoke": "auto",
+      "triggers": [
+        "bmad ingest",
+        "bmad-ingest",
+        "ingest transcript",
+        "meeting notes",
+        "process recording",
+        "voice memo",
+        "تفريغ اجتماع",
+        "تفريغ صوتي",
+        "ملاحظات اجتماع"
+      ],
+      "sha256": "d690f348561bedb3fcfd011c59b13ea085aa4cb796e1661a9ca2e62135045501"
+    },
+    "bmad-party-mode": {
+      "file": "bmad-party-mode/SKILL.md",
+      "description": "Orchestrates lively group discussions between installed BMAD agents or custom personas, and helps author custom parties. Use when the user requests party mode, a roundtable, or multiple agent perspect",
+      "invoke": "auto",
+      "triggers": [
+        "bmad party mode",
+        "bmad-party-mode",
+        "focus group",
+        "multi-agent",
+        "panel discussion",
+        "party mode",
+        "roundtable",
+        "تركيز جماعي",
+        "حلقة نقاش",
+        "مجلس",
+        "نقاش جماعي"
+      ],
+      "sha256": "9b6d108815c788573faa67401193ca7893ce1955e4ab0f71ce7dafa978bb3f03"
+    },
+    "bmad-project-context": {
+      "file": "bmad-project-context/SKILL.md",
+      "description": "Set up, adopt, refresh, or audit a repository's agent instructions (the AGENTS.md block) so AI agents work well in that repo. Also records observed agent mistakes as pitfalls. Use when invoked by name",
+      "invoke": "auto",
+      "triggers": [
+        "agent instructions",
+        "agents.md",
+        "bmad project context",
+        "bmad-project-context",
+        "pitfalls",
+        "project context",
+        "تعليمات الوكلاء",
+        "سياق المشروع"
+      ],
+      "sha256": "b22e542e42b5ae0735cd7f7d87556d6f25d9f5d4a4561f57f087a724b549b9ed"
+    },
+    "bmad-qa-generate-e2e-tests": {
+      "file": "bmad-qa-generate-e2e-tests/SKILL.md",
+      "description": "Add end-to-end and API tests for features that already work, following the project's existing test harness. Use when the user asks for e2e tests, API tests, or automated coverage of an existing featur",
+      "invoke": "auto",
+      "triggers": [
+        "api tests",
+        "automated coverage",
+        "bmad qa generate e2e tests",
+        "bmad-qa-generate-e2e-tests",
+        "e2e tests",
+        "اختبارات",
+        "اختبارات api",
+        "اختبارات نهاية إلى نهاية",
+        "تغطية آلية"
+      ],
+      "sha256": "34f7d6e8cc481503d6f484f14f64b8478efe0553589706bb8bdb70a518e298da"
+    },
+    "bmad-retrospective": {
+      "file": "bmad-retrospective/SKILL.md",
+      "description": "Review a finished epic folder in the ticket tree against the evidence it left behind — the epic file, each ticket's story file and plan, diffs, commits — and produce a retrospective with sourced findi",
+      "invoke": "auto",
+      "triggers": [
+        "bmad retrospective",
+        "bmad-retrospective",
+        "epic review",
+        "lessons learned",
+        "retro",
+        "retrospective",
+        "استرجاع",
+        "دروس مستفادة",
+        "مراجعة ملحمة"
+      ],
+      "sha256": "3804a37a9e8657715ed3dd4fa766888cb48a68ede7ad06a05847c6452827b993"
+    },
+    "bmad-review": {
+      "file": "bmad-review/SKILL.md",
+      "description": "Runs one or more installed review lenses — adversarial critique, edge cases, verification gaps, structure, prose — and reports triaged findings. Use when, and only when, the user asks you to review a ",
+      "invoke": "auto",
+      "triggers": [
+        "adversarial review",
+        "bmad review",
+        "bmad-review",
+        "review artifact",
+        "review diff",
+        "review pr",
+        "مراجعة diff",
+        "مراجعة عدائية",
+        "مراجعة معمارية"
+      ],
+      "sha256": "c38f5707d74ede20e7069c5bd9860be9b50738e628d6460b7da49613fe92bb6f"
+    },
+    "bmad-shard-pro": {
+      "file": "bmad-shard-pro/SKILL.md",
+      "description": "Makes long documents easy for agents to navigate. Use when the user says \"shard this document\", \"this file is too long for agents\", \"turn this document into a wiki\", \"add a table of contents so agents",
+      "invoke": "auto",
+      "triggers": [
+        "bmad shard pro",
+        "bmad-shard-pro",
+        "long document",
+        "shard document",
+        "table of contents",
+        "wiki document",
+        "تقسيم وثيقة",
+        "فهرس",
+        "وثيقة طويلة"
+      ],
+      "sha256": "b175c379b50e179b4105deda4e19845d81ec6e2de4d80a0c4c1aa4d1e77381c7"
+    },
+    "bmad-toolsmith": {
+      "file": "bmad-toolsmith/SKILL.md",
+      "description": "Smithy the Toolsmith builds and maintains BMad skills, agents and modules. Use when the user asks for Smithy or says \"build a skill\", \"make an agent\", \"scaffold a skill\", \"turn my session logs into a ",
+      "invoke": "auto",
+      "triggers": [
+        "bmad toolsmith",
+        "bmad-toolsmith",
+        "build skill",
+        "make agent",
+        "package module",
+        "scaffold skill",
+        "smithy",
+        "turn logs into skill",
+        "بناء وكيل",
+        "صناعة مهارة"
+      ],
+      "sha256": "c2f87450813f0b4516ca4b3453af51e197b24f136674c7dc958429a4a241afe3"
+    },
+    "bmad-ux": {
+      "file": "bmad-ux/SKILL.md",
+      "description": "Capture the user's UX vision in two documents: DESIGN.md for how the product looks and EXPERIENCE.md for how it behaves. Use when the user says \"lets create UX design\" or \"create UX specifications\" or",
+      "invoke": "auto",
+      "triggers": [
+        "bmad ux",
+        "bmad-ux",
+        "design.md",
+        "experience.md",
+        "ux design docs",
+        "ux vision",
+        "رؤية ux",
+        "وثائق تجربة المستخدم"
+      ],
+      "sha256": "c8f654b551cec4062b80c7d00e053b4531c7db396931acd5074953c87fcf958b"
+    },
+    "bmad-walkthrough": {
+      "file": "bmad-walkthrough/SKILL.md",
+      "description": "Guide a human review of a commit, PR, file, or directory. Use when invoked by name",
+      "invoke": "auto",
+      "triggers": [
+        "bmad walkthrough",
+        "bmad-walkthrough",
+        "guide review",
+        "human review",
+        "review commit",
+        "walkthrough",
+        "دليل مراجعة",
+        "مراجعة commit",
+        "مراجعة إرشادية"
+      ],
+      "sha256": "67f5d4ce748129b8820ba4ebc1e6fc921b4b1f8c2e6198eff11d3276340cce98"
+    },
+    "bmod-core-tools": {
+      "file": "bmod-core-tools/SKILL.md",
+      "description": "Required bmod metadata. Never invoke this skill.",
+      "invoke": "auto",
+      "triggers": [
+        "bmad",
+        "bmod core tools",
+        "bmod metadata",
+        "bmod-core-tools"
+      ],
+      "sha256": "dfc572f87e928d4d3082ebbb13aa517778b611b0c7cd753f2fca4ebc498d863b"
+    },
+    "bmod-founder": {
+      "file": "bmod-founder/SKILL.md",
+      "description": "Required bmod metadata. Never invoke this skill.",
+      "invoke": "auto",
+      "triggers": [
+        "bmad",
+        "bmod founder",
+        "bmod metadata",
+        "bmod-founder"
+      ],
+      "sha256": "d364b82708c838c6cf3d67a91dfabffc771a6ac203b4ed62f9304dd159c34d2c"
+    },
+    "bmod-method": {
+      "file": "bmod-method/SKILL.md",
+      "description": "Required bmod metadata. Never invoke this skill.",
+      "invoke": "auto",
+      "triggers": [
+        "bmad",
+        "bmod metadata",
+        "bmod method",
+        "bmod-method"
+      ],
+      "sha256": "cd973f6c36685d829a19cac13ed1f871982a2052822d63965601a671b291cbd5"
+    },
+    "bmod-toolsmith": {
+      "file": "bmod-toolsmith/SKILL.md",
+      "description": "Required bmod metadata. Never invoke this skill.",
+      "invoke": "auto",
+      "triggers": [
+        "bmad",
+        "bmod metadata",
+        "bmod toolsmith",
+        "bmod-toolsmith"
+      ],
+      "sha256": "3c2a524ef1cfe828dadf7992dc7385bd33d6c2d5c4743b1e84106004c2fdafcb"
+    },
+    "brainstorming": {
+      "file": "brainstorming.md",
+      "description": "Brainstorming and ideation skill.",
+      "invoke": "auto",
+      "triggers": [
+        "brainstorming",
+        "ideation"
+      ],
+      "sha256": "60cacf784e7118732bf85691fd71e612624c6000e4d9edf50cfbc16d92cf1ab2"
+    },
+    "brand-kit": {
+      "file": "brand-kit/SKILL.md",
+      "description": "Brand kit generator — visual identity, color, voice, logo, and templates. Lord-style orchestrator for consistent branding. Do not use for project voice tasks — use `project-voice` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "brand guideline",
+        "brand kit",
+        "brand voice",
+        "logo",
+        "دليل براند",
+        "شعار",
+        "هوية بصرية"
+      ],
+      "sha256": "7e92cb7c5a3a3c0d4d8b9d8e0804da0f776e87aebab6d6677f8d922598d25bfa"
+    },
+    "browser-automation": {
+      "file": "browser-automation/SKILL.md",
+      "description": "Drive the user's REAL logged-in browser via Tencent/BrowserSkill (bsk) — visible Agent Window, tab borrowing, screenshots, uploads/downloads, console+network debugging, JSON evidence. Use when a task ",
+      "invoke": "auto",
+      "triggers": [
+        "browser automation",
+        "logged-in session",
+        "open browser",
+        "take screenshot",
+        "test in browser",
+        "افتح المتصفح",
+        "سكرينشوت"
+      ],
+      "sha256": "19d20aedd802cdd967a65c88f3bd01f0c78cf952303390a56bdd8e0610a25645"
+    },
+    "browser-extension-builder": {
+      "file": "browser-extension-builder.md",
+      "description": "Expert in engineering secure, cross-browser Web Extensions (Chrome, Firefox, Edge).",
+      "invoke": "auto",
+      "triggers": [
+        "browser",
+        "browser extension builder",
+        "secure"
+      ],
+      "sha256": "49fa05fc1d580238a69c1e93c10bca1eb76fb2033a898780a1a2ad22b5034eed"
+    },
+    "churn-prevention": {
+      "file": "churn-prevention/SKILL.md",
+      "description": "When the user wants to reduce churn, or asks why customers cancel, whether to offer a discount or pause: cancellation flows, exit surveys, save offers, dunning and failed-payment recovery. For win-bac",
+      "invoke": "auto",
+      "triggers": [
+        "cancel",
+        "cancel whether",
+        "cancellation flows",
+        "churn",
+        "churn prevention",
+        "churn-prevention",
+        "customers cancel",
+        "discount pause",
+        "dunning",
+        "exit surveys",
+        "flows exit",
+        "offer discount",
+        "pause cancellation",
+        "reduce churn",
+        "save offer",
+        "whether offer",
+        "win-back",
+        "إلغاء",
+        "مدفوعات",
+        "مغادرة العملاء"
+      ],
+      "sha256": "a4c7bdcd2af8233337170cf3c305cbbbd093f6eb41cec700d6d3b1be081b7140"
+    },
+    "clean-code-guard": {
+      "file": "clean-code-guard.md",
+      "description": "Enforce clean code, SOLID, and DRY principles.",
+      "invoke": "auto",
+      "triggers": [
+        "clean",
+        "clean code guard",
+        "enforce"
+      ],
+      "sha256": "fc747289483d7dc6199a254ed74d811358b4b464863b56333c2592f1df5da53e"
+    },
+    "cli-first-access": {
+      "file": "cli-first-access.md",
+      "description": "Prefer native CLI tools over MCP servers for external platform access; doctor-probe before use (agent-reach pattern)",
+      "invoke": "auto",
+      "triggers": [
+        "cli",
+        "cli first access",
+        "native",
+        "prefer"
+      ],
+      "sha256": "7f8ac0dd1d5ad97aa4431f2d1cfc12fdb76d62d075cdda447f7b51a2b0501a45"
+    },
+    "client-onboarding": {
+      "file": "client-onboarding/SKILL.md",
+      "description": "Client onboarding orchestrator — intake form, contract, first invoice, delivery plan, client portal. Links contract-studio and invoice-manager.",
+      "invoke": "auto",
+      "triggers": [
+        "client intake",
+        "client onboarding",
+        "kickoff",
+        "onboarding",
+        "استقبال",
+        "استقبال عميل",
+        "بدء مشروع"
+      ],
+      "sha256": "9be277c09f7b1125ff65ba099f46c89020c678ac44432592a83133dba703ddb6"
+    },
+    "client-retention": {
+      "file": "client-retention/SKILL.md",
+      "description": "Client retention strategist — upsell, cross-sell, recurring check-ins, and referral programs. Grow lifetime value. Do not use for growth loops tasks — use `growth-loops` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "client retention",
+        "cross-sell",
+        "retention",
+        "upsell",
+        "احتفاظ"
+      ],
+      "sha256": "3ab4906767facfd414b8b38921fbbb4395b682e659ec12d230f600dcca26730d"
+    },
+    "cloud-platforms-lord": {
+      "file": "cloud-platforms-lord/SKILL.md",
+      "description": "Architect-level authority on AWS, Azure, and GCP landing zones, networking, compute, storage, serverless, security, identity, observability, and cost.",
+      "invoke": "auto",
+      "triggers": [
+        "cloud",
+        "cloud platforms lord"
+      ],
+      "sha256": "2f9bdc4f679ea93a7add12375d248175993d6cb274250a93dfdf6155b845aee2"
+    },
+    "co-marketing": {
+      "file": "co-marketing/SKILL.md",
+      "description": "When the user wants co-marketing partners or joint campaigns, or asks whether a partner fits, a size mismatch matters, or how to split work and leads: integration partners, cross-promotion, co-branded",
+      "invoke": "auto",
+      "triggers": [
+        "co marketing",
+        "co-marketing",
+        "co-marketing partners",
+        "cross-promotion",
+        "fits size",
+        "joint campaign",
+        "joint campaigns",
+        "mismatch matters",
+        "partner fits",
+        "partner marketing",
+        "partners joint",
+        "size mismatch",
+        "split work",
+        "whether partner"
+      ],
+      "sha256": "1dc48ac81ed692e3ba84d1e1cc061b843a462d4fe6de5505dab490f6b23c53fe"
+    },
+    "code-reviewer": {
+      "file": "code-reviewer.md",
+      "description": "Code review specialist enforcing security, performance, test coverage, and SOLID principles with timely constructive feedback Do not use for clean code guard tasks — use `clean-code-guard` instead. Do",
+      "invoke": "auto",
+      "triggers": [
+        "code reviewer"
+      ],
+      "sha256": "75710eb18be2579098b322128a67f3a7fe7dea25063574a921cac5ca0387caed"
+    },
+    "cold-email": {
+      "file": "cold-email/SKILL.md",
+      "description": "When the user wants to write or run B2B cold outbound, or asks whether an opener, reason to reach out, or email works or why nobody replies: cold emails, follow-ups, sending domains, deliverability, L",
+      "invoke": "auto",
+      "triggers": [
+        "b2b outbound",
+        "cadence",
+        "cold email",
+        "cold outbound",
+        "cold outreach",
+        "cold-email",
+        "email deliverability",
+        "email works",
+        "nobody replies",
+        "opener reason",
+        "out email",
+        "reach out",
+        "reason reach",
+        "whether opener",
+        "write run",
+        "استكشاف العملاء",
+        "بريد بارد"
+      ],
+      "sha256": "7cd819219f240c0c4d675b2973e7f1ad3dd7361e7dd42fa963d44927d531c01e"
+    },
+    "community-builder": {
+      "file": "community-builder/SKILL.md",
+      "description": "Community builder — launch and manage Discord, Telegram, groups, and forums. RTL-aware moderation and growth.",
+      "invoke": "auto",
+      "triggers": [
+        "community",
+        "community builder",
+        "group",
+        "تليجرام",
+        "ديسكورد"
+      ],
+      "sha256": "f38714abc2591070c880d7b78f516886752fbd5a488a4c73faf7856d2aeb3121"
+    },
+    "community-marketing": {
+      "file": "community-marketing/SKILL.md",
+      "description": "When the user wants to build or grow an online community, or asks whether a community is worth it, where to host it, or why members stay quiet: Discord, Slack, forums, participation, community-led gro",
+      "invoke": "auto",
+      "triggers": [
+        "build grow",
+        "community",
+        "community marketing",
+        "community worth",
+        "community-led",
+        "community-marketing",
+        "discord",
+        "grow online",
+        "online community",
+        "slack community",
+        "where host",
+        "whether community",
+        "worth where",
+        "تسويق المؤثرين",
+        "مجتمع",
+        "نمو"
+      ],
+      "sha256": "3f4a2ec5ebcfdd14e601505c213605c62abdb8dc0029fb4169c5e4394a24e689"
+    },
+    "competitor-profiling": {
+      "file": "competitor-profiling/SKILL.md",
+      "description": "When the user wants to research competitors into dated profiles, or asks what a rival charges, claims, or is doing, or whether a conclusion about them is fair: positioning, pricing, features, reviews,",
+      "invoke": "auto",
+      "triggers": [
+        "battle card",
+        "charges claims",
+        "claims doing",
+        "competitor profile",
+        "competitor profiling",
+        "competitor research",
+        "competitor-profiling",
+        "dated profiles",
+        "doing whether",
+        "research competitors",
+        "rival analysis",
+        "rival charges",
+        "whether conclusion",
+        "استكشاف العملاء"
+      ],
+      "sha256": "61ae4612d6757c38a76357f6bb3b06870ccdb97d076f747a47ccc70db9ea0bb6"
+    },
+    "competitors": {
+      "file": "competitors/SKILL.md",
+      "description": "When the user wants to create or audit comparison and alternative pages ('X vs Y', 'X alternative', 'best X alternatives'), or asks what a public page may say about a competitor: page formats, fair cl",
+      "invoke": "auto",
+      "triggers": [
+        "alternative best",
+        "alternative page",
+        "alternative pages",
+        "audit comparison",
+        "best alternatives",
+        "comparison page",
+        "competitor comparison",
+        "competitor page",
+        "competitors",
+        "create audit",
+        "may say",
+        "page formats",
+        "page may",
+        "pages alternative",
+        "public page",
+        "vs page",
+        "x vs y"
+      ],
+      "sha256": "1152b4ac4887c440438cfe47584fbc78009cf42a52c5c2dc1c0a375e1a997bb5"
+    },
+    "compliance-lord": {
+      "file": "compliance-lord/SKILL.md",
+      "description": "Lord skill for regulatory compliance mapping — EU AI Act, NIST AI RMF, ISO 42001. Translates regulatory requirements into enforceable aiZee policy rules. Do not use for legal compliance tasks — use `l",
+      "invoke": "auto",
+      "triggers": [
+        "compliance",
+        "compliance lord",
+        "eu ai act",
+        "iso 42001",
+        "nist ai rmf",
+        "regulatory",
+        "امتثال",
+        "تنظيم"
+      ],
+      "sha256": "3e43258a07c2d6313406e5a7e29132891bf7cd2fd60c3b2ee083f3d1ad481c83"
+    },
+    "content-marketing": {
+      "file": "content-marketing/SKILL.md",
+      "description": "Content marketing strategist — pillar content, editorial calendar, repurposing, distribution. Feeds social, SEO, and email engines. Do not use for social media marketing tasks — use `social-media-mark",
+      "invoke": "auto",
+      "triggers": [
+        "content calendar",
+        "content marketing",
+        "pillar content",
+        "repurpose",
+        "تسويق محتوى",
+        "تقويم محتوى"
+      ],
+      "sha256": "d161fb8cb2d966bbc1c21a54d588d4bc435594871d62e4212c863d254f135732"
+    },
+    "content-quality-lord": {
+      "file": "content-quality-lord/SKILL.md",
+      "description": "Detect and remove AI slop patterns from generated content. Use when the user asks to deslop, de-AI, audit content quality, or when aiZee itself generates content that must pass a quality gate.",
+      "invoke": "auto",
+      "triggers": [
+        "ai slop",
+        "audit writing",
+        "content quality",
+        "content quality lord",
+        "de-ai",
+        "deslop",
+        "make it sound human",
+        "remove ai patterns"
+      ],
+      "sha256": "3ab507c99d20ba70a926fdd441f4d77a1280d7e4626f1f4ddf56a8f444d066d4"
+    },
+    "content-strategy": {
+      "file": "content-strategy/SKILL.md",
+      "description": "When the user wants to plan content, or asks which topic or piece to prioritize, what to write about, or why posts bring no customers: topic clusters, editorial calendars, roadmaps tied to customers a",
+      "invoke": "auto",
+      "triggers": [
+        "bring customers",
+        "calendars roadmaps",
+        "clusters editorial",
+        "content plan",
+        "content strategy",
+        "content-strategy",
+        "customers topic",
+        "editorial calendar",
+        "editorial calendars",
+        "piece prioritize",
+        "plan content",
+        "posts bring",
+        "topic cluster",
+        "topic clusters",
+        "topic piece",
+        "استراتيجية محتوى"
+      ],
+      "sha256": "39b2bca049be3db27e44d98b65e7dce913e2dfd25d9cdbb878b1b82c173e021c"
+    },
+    "context-compressor": {
+      "file": "context-compressor.md",
+      "description": "Compress and manage context for LLM sessions.",
+      "invoke": "auto",
+      "triggers": [
+        "compress",
+        "context",
+        "context compressor",
+        "manage"
+      ],
+      "sha256": "51487aca9a8e6b13c11df107d8e1c0d9dc56687d0e56233627d554ad1f465889"
+    },
+    "contract-studio": {
+      "file": "contract-studio/SKILL.md",
+      "description": "Generate sign-ready freelance contracts (NDA/SOW/MSA/IP-transfer) from reusable bilingual clauses, then hand off to documenso for e-signature + audit. Free-first, RTL-aware, human legal review require",
+      "invoke": "auto",
+      "triggers": [
+        "contract",
+        "contract studio",
+        "ip transfer",
+        "اتفاقية"
+      ],
+      "sha256": "e8a9772a4894b9641f0782412733de9bb13742ce920721ee41c7cb4bbcda04a3"
+    },
+    "conversion-tracking": {
+      "file": "conversion-tracking/SKILL.md",
+      "description": "When the user wants to set up, audit, or fix conversion tracking to Google Ads, Meta, GA4, LinkedIn, and TikTok, or asks why conversions are missing or doubled: GTM, pixels, CAPI, Enhanced Conversions",
+      "invoke": "auto",
+      "triggers": [
+        "ads meta",
+        "audit fix",
+        "capi",
+        "conversion tracking",
+        "conversion-tracking",
+        "doubled gtm",
+        "fix conversion",
+        "google ads",
+        "gtm",
+        "missing doubled",
+        "pixel",
+        "set audit",
+        "track conversions",
+        "tracking google",
+        "إسناد"
+      ],
+      "sha256": "a0333e7d834369812e53761a5958c741491eecc1b2100d9d00c7f50f3a2df716"
+    },
+    "copy-editing": {
+      "file": "copy-editing/SKILL.md",
+      "description": "When the user wants to edit, tighten, proofread, or refresh existing copy, or asks whether to keep, cut, or change a line in it, without rewriting from scratch. Every edit removes AI tells: 'it's not ",
+      "invoke": "auto",
+      "triggers": [
+        "change line",
+        "copy editing",
+        "copy polish",
+        "copy-editing",
+        "cut change",
+        "edit copy",
+        "edit tighten",
+        "existing copy",
+        "keep cut",
+        "line without",
+        "proofread",
+        "proofread refresh",
+        "refresh existing",
+        "tighten copy",
+        "tighten proofread",
+        "whether keep",
+        "without rewriting",
+        "تحرير"
+      ],
+      "sha256": "6bf68d5f2e067b53118c9e2a9351235f6cbd60937686a2fbe7eac8ac70883f3d"
+    },
+    "copy-frameworks": {
+      "file": "copy-frameworks/SKILL.md",
+      "description": "Persuasive copywriting generator using AIDA, PAS, BAB, 4Ps, and StoryBrand frameworks. For ads, emails, landing pages, and proposals. Arabic-aware (RTL) output. Reusable inside proposal-writer and mar",
+      "invoke": "auto",
+      "triggers": [
+        "aida",
+        "copy",
+        "copy frameworks",
+        "copywriting",
+        "storybrand",
+        "صياغة إعلان",
+        "نص اقناعي"
+      ],
+      "sha256": "6f1bad8da30cb8599c2c2285ad3c842f46a3c0d46da6ce49c626d33e94af558b"
+    },
+    "copywriting": {
+      "file": "copywriting/SKILL.md",
+      "description": "When the user wants to write or rewrite page copy (homepage, landing, pricing, feature), or asks which headline, promise, or message to lead with. Diagnoses the input first (blank brief, real voice, o",
+      "invoke": "auto",
+      "triggers": [
+        "copy homepage",
+        "copywriting",
+        "headline",
+        "headline promise",
+        "homepage landing",
+        "landing page copy",
+        "landing pricing",
+        "message lead",
+        "page copy",
+        "pricing feature",
+        "promise message",
+        "rewrite page",
+        "write copy",
+        "write rewrite",
+        "كوبي",
+        "نص تسويقي"
+      ],
+      "sha256": "8aea2c84dc0b0eaba2aedec53d16f0fc2353cfe84a0939b51d374b6686bb8207"
+    },
+    "cro": {
+      "file": "cro/SKILL.md",
+      "description": "When the user wants more conversions from a page or form, or asks why a page isn't converting, what to change first, or whether to add or remove a field or element: landing and pricing pages, lead for",
+      "invoke": "auto",
+      "triggers": [
+        "add remove",
+        "change first",
+        "conversion rate",
+        "cro",
+        "first whether",
+        "form optimization",
+        "isn converting",
+        "landing page",
+        "more conversions",
+        "page form",
+        "page isn",
+        "whether add",
+        "تحويل",
+        "تسجيل"
+      ],
+      "sha256": "99cf51e8e051a58bc7208a7656730eb0b63c58c73787c3645dcfa5261f29b9c6"
+    },
+    "cro-optimization": {
+      "file": "cro-optimization/SKILL.md",
+      "description": "Conversion Rate Optimization lead — funnel audit, session replay, hypothesis, A/B and multivariate experimentation, statistical significance. Free-first tooling (PostHog, GrowthBook, Formbricks).",
+      "invoke": "auto",
+      "triggers": [
+        "a/b test",
+        "conversion",
+        "cro",
+        "cro optimization",
+        "experiment",
+        "heatmap",
+        "landing page",
+        "تجربة أ ب",
+        "تحويل",
+        "صفحة هبوط",
+        "معدل تحويل"
+      ],
+      "sha256": "9702d85882ba8aa53022b78ce90cdc61bf1d45a8a6684fa998c8f4d988c7a554"
+    },
+    "customer-research": {
+      "file": "customer-research/SKILL.md",
+      "description": "When the user wants to run or synthesize customer research, or asks what customer quotes, reviews, or feedback really mean, what is safe to conclude, and what to ask next: interviews, surveys, voice o",
+      "invoke": "auto",
+      "triggers": [
+        "customer quotes",
+        "customer research",
+        "customer-research",
+        "feedback really",
+        "jtbd",
+        "next interviews",
+        "quotes reviews",
+        "really mean",
+        "reviews feedback",
+        "run synthesize",
+        "safe conclude",
+        "survey synthesis",
+        "synthesize customer",
+        "user interviews",
+        "voice of customer",
+        "أبحاث عملاء"
+      ],
+      "sha256": "8af50804e8810056f07547e39b1369b80471ee61ae5db08e57c8edfaf30415c1"
+    },
+    "cv-writer": {
+      "file": "cv-writer/SKILL.md",
+      "description": "CV/Resume Specialist & Career Writer — ATS-optimized, bilingual Arabic/English resumes, cover letters, LinkedIn summaries, and portfolio copy.",
+      "invoke": "auto",
+      "triggers": [
+        "career",
+        "cv writer",
+        "resume"
+      ],
+      "sha256": "16bab6c3c60c46647927d6d8d3eba45be5fb9c9d9071930f9b8fbc95dd2f1eb5"
+    },
+    "data-engineer": {
+      "file": "data-engineer.md",
+      "description": "Data Engineer & DBA — ETL, analytics, data modeling, and database operations.",
+      "invoke": "auto",
+      "triggers": [
+        "data engineer"
+      ],
+      "sha256": "2f3a82541f1dec8aa5d18d7e54dd9e4182598477336762f3de9959c506e52922"
+    },
+    "database-lord": {
+      "file": "database-lord/SKILL.md",
+      "description": "Architect-level database mastery for PostgreSQL, MySQL, MariaDB, MongoDB, Redis, SQLite, SQL Server, Oracle, ClickHouse. Do not use for database migration lord tasks — use `database-migration-lord` in",
+      "invoke": "auto",
+      "triggers": [
+        "database",
+        "database lord"
+      ],
+      "sha256": "5e2402fa4023699be13f13be71215362d0b63d6fe10d372d1370d2aa18d40691"
+    },
+    "database-migration-lord": {
+      "file": "database-migration-lord/SKILL.md",
+      "description": "Lord skill for safe database migrations — Laravel migrations, schema design, zero-downtime deploys, MySQL/PostgreSQL/MariaDB compatibility.",
+      "invoke": "auto",
+      "triggers": [
+        "database migration",
+        "database migration lord",
+        "laravel migration",
+        "migration safety",
+        "schema design",
+        "schema migration",
+        "zero downtime migration",
+        "ترحيل قاعدة البيانات",
+        "هجرة database"
+      ],
+      "sha256": "bf59c1cee5dfddc4a2b65d4b4eebf2737560023f91e532c17ebb348a538aa7a4"
+    },
+    "design-innovation-lord": {
+      "file": "design-innovation-lord/SKILL.md",
+      "description": "Lord skill for innovative/generative design — creating NEW design directions (not just extracting references), signature moments, divergent-convergent exploration, award-tier quality bar, novelty scor",
+      "invoke": "auto",
+      "triggers": [
+        "award winning",
+        "awwwards",
+        "creative direction",
+        "design concept",
+        "design exploration",
+        "design innovation lord",
+        "experimental layout",
+        "innovative design",
+        "original design",
+        "signature design",
+        "standout design",
+        "unique design",
+        "ابداع تصميمي",
+        "تصميم جديد",
+        "تصميم فريد",
+        "تصميم مبتكر",
+        "تصميم مميز"
+      ],
+      "sha256": "1a441aed4d89e368347645d9fa273dbe264fda7e4d0843ae5d95011c6f6ee39b"
+    },
+    "design-md-lord": {
+      "file": "design-md-lord/SKILL.md",
+      "description": "Lord skill for DESIGN.md-driven UI work — pick, import, and apply real-world brand design references (Refero catalog, 2000+ DESIGN.md files) through aiZee's DesignLibrary. Use when a UI task needs a c",
+      "invoke": "auto",
+      "triggers": [
+        "brand design",
+        "dashboard design",
+        "design md lord",
+        "design system",
+        "design tokens",
+        "design.md",
+        "landing page design",
+        "pricing page",
+        "refero",
+        "ui style reference",
+        "هوية بصرية"
+      ],
+      "sha256": "528982813eed8de1d566903b8bc62b12917a8805779b21059991caebcd562ccd"
+    },
+    "design-research": {
+      "file": "design-research/SKILL.md",
+      "description": "Evidence-based design research via Refero + Mobbin MCP — search real shipped-product styles, screens, flows, and website sections BEFORE designing. Use for any UI design, redesign, landing page, dashb",
+      "invoke": "auto",
+      "triggers": [
+        "design references",
+        "design research",
+        "landing page design",
+        "mobbin",
+        "redesign",
+        "refero",
+        "ui inspiration",
+        "ui patterns",
+        "ابحث عن تصميم",
+        "الهام تصميم",
+        "مراجع تصميم"
+      ],
+      "sha256": "d2c256735e2d08c50405325e7c5c7ac41aa2844c4089833b280c01db3f5c45ad"
+    },
+    "design-taste": {
+      "file": "design-taste.md",
+      "description": "Design DNA extractor — reverse-engineer any website's design taste into structured tokens and Taste DNA trade-offs via Playwright",
+      "invoke": "auto",
+      "triggers": [
+        "design taste",
+        "extractor"
+      ],
+      "sha256": "794d4defcb2583678e215a06b2303876bf833930251731b15fb073194f9a8ccd"
+    },
+    "devops-engineer": {
+      "file": "devops-engineer.md",
+      "description": "DevOps & CI/CD Engineer — pipelines, containers, GitOps, and release automation. Do not use for devops lord tasks — use `devops-lord` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "devops",
+        "devops engineer",
+        "pipelines"
+      ],
+      "sha256": "88a85a4e4cc089dd36b4c16cfe73cca37e84416de7ba1d338bff1dac499a21bd"
+    },
+    "devops-lord": {
+      "file": "devops-lord/SKILL.md",
+      "description": "End-to-end authority on containers, Kubernetes, Podman, Helm, Terraform, Pulumi, Ansible, CI/CD, GitOps, observability.",
+      "invoke": "auto",
+      "triggers": [
+        "containers",
+        "devops",
+        "devops lord"
+      ],
+      "sha256": "e29ca78c2da068f42ba71339d8b04038586d77d4e7dbcfdfeb4a7f97db3702b1"
+    },
+    "directory-submissions": {
+      "file": "directory-submissions/SKILL.md",
+      "description": "When the user wants to list a product in startup, SaaS, AI, MCP, and review directories, or asks which directories are worth it or whether listings are working: Product Hunt, G2, Capterra, Alternative",
+      "invoke": "auto",
+      "triggers": [
+        "capterra",
+        "capterra alternativeto",
+        "directories",
+        "directory submission",
+        "directory submissions",
+        "directory-submissions",
+        "g2",
+        "hunt capterra",
+        "list product",
+        "product hunt",
+        "product startup",
+        "review directories",
+        "saas mcp",
+        "startup saas",
+        "whether listings",
+        "working product",
+        "worth whether",
+        "مجلدات"
+      ],
+      "sha256": "7a108dd04888780b3535075f6b428c5f4e678425fe4d559c955a149adf468102"
+    },
+    "dispute-resolution": {
+      "file": "dispute-resolution/SKILL.md",
+      "description": "Freelance dispute resolution — escrow, evidence, mediation, milestone release. Protects freelancer and client fairly.",
+      "invoke": "auto",
+      "triggers": [
+        "dispute",
+        "dispute resolution",
+        "milestone release",
+        "تحكيم",
+        "رفض تسليم",
+        "نزاع"
+      ],
+      "sha256": "e8b7cfac93c17acd7b170ee8f0f3f0dd2f46ee54a38701cf7ae826f749878398"
+    },
+    "docs-drift-check": {
+      "file": "docs-drift-check.md",
+      "description": "Source-grounded doc link verification. Use when editing or adding markdown docs, READMEs, or specs — validate wiki file#symbol refs so documentation never drifts from the code.",
+      "invoke": "auto",
+      "triggers": [
+        "dead links",
+        "doc links",
+        "docs",
+        "docs drift check",
+        "documentation",
+        "readme",
+        "spec drift"
+      ],
+      "sha256": "1b5c772c606ca0d73b70817483c3b1cfa51eb875e2307d6f19923f211b07bffb"
+    },
+    "docs-guard": {
+      "file": "docs-guard.md",
+      "description": "Guard documentation quality and completeness.",
+      "invoke": "auto",
+      "triggers": [
+        "docs",
+        "docs guard"
+      ],
+      "sha256": "3f6bcff293e260012fd9c6a61080131d4f39b62e1e64ef3f8e275c89294e11cd"
+    },
+    "docx": {
+      "file": "docx.md",
+      "description": "Read, create, or edit Microsoft Word .docx files — extract text and tables, generate reports/letters/memos with headings, tables, images, TOC and page numbers, or apply tracked changes and comments. U",
+      "invoke": "auto",
+      "triggers": [
+        ".docx",
+        "docx",
+        "microsoft word",
+        "redlines",
+        "tracked changes",
+        "word document"
+      ],
+      "sha256": "63cc424180e9344d562d9d34be325825b1ec37e242d5cde77843488ea9f695fb"
+    },
+    "durable-execution-lord": {
+      "file": "durable-execution-lord/SKILL.md",
+      "description": "Lord skill for crash-resilient agent workflows using durable execution frameworks — Temporal, Inngest, DBOS, Prefect, Restate — with idempotency, checkpoint/replay, and saga patterns.",
+      "invoke": "auto",
+      "triggers": [
+        "crash resilient",
+        "dbos",
+        "durable execution",
+        "durable execution lord",
+        "inngest",
+        "prefect",
+        "restate",
+        "temporal",
+        "workflow",
+        "تنفيذ دائم"
+      ],
+      "sha256": "a387b5aae7b0848e782bb9e2ff0dc4d1aafaf8361deccac7e2ec66cfde14cebb"
+    },
+    "email-marketing": {
+      "file": "email-marketing/SKILL.md",
+      "description": "Email marketing & automation specialist — build lists, segment, design campaigns and drip sequences, with RTL Arabic template guidance. Free-first (Brevo free + listmonk self-host). Context7 knadh/lis",
+      "invoke": "auto",
+      "triggers": [
+        "brevo",
+        "campaign",
+        "drip",
+        "email marketing",
+        "listmonk",
+        "mailchimp",
+        "newsletter",
+        "تسويق بريد",
+        "رسائل تلقائية",
+        "نشرة بريدية"
+      ],
+      "sha256": "773fa113b614c1dfc1972f99eee26b1e078cda79592ec5a6b99148282ce9eeb6"
+    },
+    "emails": {
+      "file": "emails/SKILL.md",
+      "description": "When the user wants to create or improve automated email sequences, or asks what to send, when, or whether an email or flow is working: welcome, onboarding, nurture, and win-back flows. No AI tells li",
+      "invoke": "auto",
+      "triggers": [
+        "automated email",
+        "drip campaign",
+        "email flow",
+        "email sequence",
+        "email sequences",
+        "emails",
+        "flow working",
+        "improve automated",
+        "nurture",
+        "onboarding nurture",
+        "welcome email",
+        "welcome onboarding",
+        "whether email",
+        "win-back",
+        "working welcome",
+        "إيميل",
+        "التواصل البارد",
+        "بريد إلكتروني"
+      ],
+      "sha256": "efc8d3a7b69222d8b189c80240f8e2663b3566c3f40c7a86e824db77e7f61524"
+    },
+    "eval-reliability-lord": {
+      "file": "eval-reliability-lord/SKILL.md",
+      "description": "Lord skill for reliability@k and security-adjusted reliability@k evaluation of AI coding agents. Replaces the misapplied pass@k metric with correct multi-rollout scoring.",
+      "invoke": "auto",
+      "triggers": [
+        "eval reliability lord",
+        "eval scoring",
+        "multi-rollout",
+        "reliability",
+        "reliability@k",
+        "security-adjusted",
+        "تقييم الوكلاء",
+        "موثوقية"
+      ],
+      "sha256": "0b634bf58ea37710744a861d492b37ac9b581d9dd8466de542b7f21557241255"
+    },
+    "events": {
+      "file": "events/SKILL.md",
+      "description": "When the user wants to plan, run, sponsor, or speak at events, or asks whether an event or booth is worth the money: webinars, conferences, booths, meetups, show-up rates, and follow-up into pipeline.",
+      "invoke": "auto",
+      "triggers": [
+        "booth worth",
+        "conference",
+        "event booth",
+        "event marketing",
+        "events",
+        "meetup",
+        "money webinars",
+        "run sponsor",
+        "speak events",
+        "sponsor speak",
+        "webinar",
+        "webinars conferences",
+        "whether event",
+        "فعاليات"
+      ],
+      "sha256": "076276ea7f9bc82e1658ddc3d0a08195e84ae5f52c0cd4a026884cb3b0491e35"
+    },
+    "filament-performance-lord": {
+      "file": "filament-performance-lord/SKILL.md",
+      "description": "Lord skill for Filament v5 performance optimization — deferred loading, query optimization, caching, Octane, and real-time patterns.",
+      "invoke": "auto",
+      "triggers": [
+        "filament cache",
+        "filament defer",
+        "filament octane",
+        "filament optimize",
+        "filament performance",
+        "filament performance lord",
+        "filament query",
+        "filament slow",
+        "أداء filament",
+        "تسريع filament"
+      ],
+      "sha256": "e7eebe81feccb13ece34d98045e9b6c772c76fc1d84078c6aeb5af3e6413f735"
+    },
+    "finops": {
+      "file": "finops.md",
+      "description": "Cloud Cost Optimization Engineer — cloud spend visibility, rightsizing, commitment discounts, and cost governance across AWS/GCP/Azure. Do not use for latency/throughput work — use `performance-engine",
+      "invoke": "auto",
+      "triggers": [
+        "billing",
+        "budget",
+        "cloud cost",
+        "cost allocation",
+        "cost anomaly",
+        "cost optimization",
+        "finops",
+        "reserved instances",
+        "savings plan",
+        "spot instances",
+        "utilization",
+        "تكاليف سحابية",
+        "خفض التكاليف",
+        "فاتورة سحابية"
+      ],
+      "sha256": "21a2045d9c895655699da1633916a90608946d7cd54bed2b77050256b55473e8"
+    },
+    "flutter-architect": {
+      "file": "flutter-architect/SKILL.md",
+      "description": "Principal Flutter Architect — full-stack design + develop. Dart 3.13, Flutter 3.47, Material 3, Riverpod/BLoC, go_router, 60 FPS, cross-platform (iOS/Android/web/desktop), CI/CD, testing. Do not use f",
+      "invoke": "auto",
+      "triggers": [
+        "flutter",
+        "flutter architect"
+      ],
+      "sha256": "c1e4de3396d28bb1a6d9f7e9e2af1e7f9a4373130647631ebafedf23573fab54"
+    },
+    "flutter-design": {
+      "file": "flutter-design/SKILL.md",
+      "description": "Principal Flutter UI/UX Designer — Material 3 design systems, theming, motion, responsive/adaptive layouts, accessibility, pixel-perfect Figma-to-Flutter, design tokens, dark mode, RTL. Do not use for",
+      "invoke": "auto",
+      "triggers": [
+        "flutter",
+        "flutter design"
+      ],
+      "sha256": "3da98c0648175ac6c568aafe8b3b9eba0ab62fe0e102fa9279a477ee689b1fba"
+    },
+    "flutter-developer": {
+      "file": "flutter-developer/SKILL.md",
+      "description": "Master Flutter Engineer — Dart 3.13, architecture (clean/feature-first), state (Riverpod/BLoC), networking, persistence, testing, CI/CD, performance, security, offline sync, platform channels.",
+      "invoke": "auto",
+      "triggers": [
+        "flutter",
+        "flutter developer"
+      ],
+      "sha256": "5ef3a3b5080f63306ba11a8b28daa31d9a5c072277f21b7688bd59f10ccb8dee"
+    },
+    "free-tools": {
+      "file": "free-tools/SKILL.md",
+      "description": "When the user wants to plan or build a free tool as marketing, or asks whether a tool idea is worth building or which one to pick: calculators, graders, generators, and other interactive tools for lea",
+      "invoke": "auto",
+      "triggers": [
+        "build free",
+        "calculator",
+        "free tool",
+        "free tools",
+        "free-tools",
+        "generator",
+        "idea worth",
+        "lead gen tool",
+        "marketing tool",
+        "one pick",
+        "plan build",
+        "tool idea",
+        "tool marketing",
+        "whether tool",
+        "worth building"
+      ],
+      "sha256": "a9b5026f093755a7782929c16a93a83e52ec5d0577cbd0ed6afdcd7859082711"
+    },
+    "freelance-financials": {
+      "file": "freelance-financials/SKILL.md",
+      "description": "Freelance financial planner — tax/VAT, cash flow, emergency fund, retirement from irregular income. Free-first ERPNext.",
+      "invoke": "auto",
+      "triggers": [
+        "cash flow",
+        "freelance financials",
+        "savings",
+        "تخطيط مالي",
+        "تدفق نقدي",
+        "تقاعد",
+        "ضريبة"
+      ],
+      "sha256": "3c8c489f208512939e5e07ad46a6055233c668a06fb2265468807484d026ad96"
+    },
+    "freelance-niche": {
+      "file": "freelance-niche/SKILL.md",
+      "description": "Freelance niche selector — pick a profitable specialization, build an ICP, and a authority plan. Foundation for pricing and branding.",
+      "invoke": "auto",
+      "triggers": [
+        "freelance niche",
+        "ideal client",
+        "niche",
+        "profitable niche",
+        "specialization",
+        "تخصص",
+        "تخصص مربح"
+      ],
+      "sha256": "5dc4370ab36cdf73dea1f8acbc73cf21515b1eebec54f67326287861ad0d1b90"
+    },
+    "freelance-platforms": {
+      "file": "freelance-platforms/SKILL.md",
+      "description": "Freelance marketplace strategist — global and Arabic platforms (Upwork, Fiverr, Freelancer.com, Mostaql, Khamsat, Nabbesh). Profile optimization, job scoring, proposals, bids, client communication, co",
+      "invoke": "auto",
+      "triggers": [
+        "freelance",
+        "freelance platforms",
+        "marketplace"
+      ],
+      "sha256": "8af29685c5f84e66239670e9a490dd9f62d97ccc219a5ba0e80808fabeaf126e"
+    },
+    "frontend-frameworks-lord": {
+      "file": "frontend-frameworks-lord/SKILL.md",
+      "description": "Deep mastery of React, Vue.js, Angular, and Svelte.",
+      "invoke": "auto",
+      "triggers": [
+        "frontend frameworks lord",
+        "react"
+      ],
+      "sha256": "4f76d6d4de3466527b5696caaed43073b56ecd022da7438942fead87bf5b09fe"
+    },
+    "frontend-ui-expert": {
+      "file": "frontend-ui-expert.md",
+      "description": "Frontend UI Expert. Master of DOM manipulation, styling, animation, and component-driven development.",
+      "invoke": "auto",
+      "triggers": [
+        "frontend ui expert"
+      ],
+      "sha256": "382c067754f9ec16e25cd8feee1c8e90f02ee35e0667c04bdc9c59eb66b36ba2"
+    },
+    "fullstack-optimizer": {
+      "file": "fullstack-optimizer.md",
+      "description": "Senior Full-Stack Architect. Focuses on total app performance, bundle reduction, and global i18n localization.",
+      "invoke": "auto",
+      "triggers": [
+        "full",
+        "fullstack",
+        "fullstack optimizer",
+        "stack"
+      ],
+      "sha256": "66ece891c61f2aa854a1a0f4b63b0af95ba1ece9aac96759e7c9da99b502f570"
+    },
+    "game-architect": {
+      "file": "game-architect/SKILL.md",
+      "description": "Principal Game Architect & JavaScript Engine Master — Babylon.js, Three.js, Capacitor, WebGL/WebGPU, 60 FPS game loops. Do not use for mobile game producer tasks — use `mobile-game-producer` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "game",
+        "game architect"
+      ],
+      "sha256": "47852c9311b17e2c4f5cd344f95ff4e7172d475c7cf6e06c898db3cec98891ad"
+    },
+    "game-design-lord": {
+      "file": "game-design-lord/SKILL.md",
+      "description": "Game Design Director — GDD authorship, MDA framework, design pillars, systems decomposition, balance review, design-change propagation. Use when writing or reviewing game design docs. Do not use for e",
+      "invoke": "auto",
+      "triggers": [
+        "balance check",
+        "brainstorm game",
+        "design system",
+        "game concept",
+        "game design",
+        "game design lord",
+        "gdd",
+        "systems map"
+      ],
+      "sha256": "89dfcb241a34c199afda3466ca34c6addac3b212b5ec504ce4643222d92fbb70"
+    },
+    "game-economy-lord": {
+      "file": "game-economy-lord/SKILL.md",
+      "description": "Economy & Systems Designer — sources/sinks, resource flows, progression curves, inflation control, economy modeling and simulation. Use for in-game economy design, loot tables, crafting, currencies, a",
+      "invoke": "auto",
+      "triggers": [
+        "balance spreadsheet",
+        "crafting system",
+        "currency design",
+        "economy design",
+        "game economy",
+        "game economy lord",
+        "loot table",
+        "progression curve",
+        "sources and sinks"
+      ],
+      "sha256": "c5f1b3c036132dcde9b14ef7f2f1364ad7819e99a88e6e1e74cec97a774e4acb"
+    },
+    "game-level-design-lord": {
+      "file": "game-level-design-lord/SKILL.md",
+      "description": "Level & World Designer — blockout-to-art-pass pipeline, pacing curves, spatial composition, player guidance, difficulty progression, world building. Use when designing levels, maps, encounters, or ope",
+      "invoke": "auto",
+      "triggers": [
+        "blockout",
+        "difficulty curve",
+        "encounter design",
+        "game level design lord",
+        "level design",
+        "level designer",
+        "level layout",
+        "map design",
+        "world builder",
+        "world building"
+      ],
+      "sha256": "88ddb721324263759b64f20f7170d66a6ae2e958ef3a69412b675263c3733df2"
+    },
+    "game-narrative-lord": {
+      "file": "game-narrative-lord/SKILL.md",
+      "description": "Narrative Director — lore bible, canon tiers, character voice, branching dialogue, narrative-gameplay consistency, localization-ready writing. Use for story, dialogue, quests, lore, and world fiction.",
+      "invoke": "auto",
+      "triggers": [
+        "canon",
+        "character voice",
+        "dialogue",
+        "game narrative lord",
+        "game story",
+        "game writing",
+        "lore",
+        "narrative design",
+        "quest design"
+      ],
+      "sha256": "8b14b8e3700e98e9a5275b233ec1ce72e5a4a81830bf80f7cd79eb43a99ae146"
+    },
+    "game-production-lord": {
+      "file": "game-production-lord/SKILL.md",
+      "description": "Game Producer — epics/stories/sprints, milestone gates, scope control, release checklists, certification, patch notes, hotfix protocol, cross-department change coordination. Use for game project plann",
+      "invoke": "auto",
+      "triggers": [
+        "certification",
+        "game producer",
+        "game production",
+        "game production lord",
+        "hotfix",
+        "milestone",
+        "patch notes",
+        "release checklist",
+        "scope check",
+        "sprint plan"
+      ],
+      "sha256": "850e13fe80c9e6818cc0f95e82959e297b74ecc9f459967c2f90b78731b8b664"
+    },
+    "game-qa-lord": {
+      "file": "game-qa-lord/SKILL.md",
+      "description": "Game QA Lead — test pyramids for games (logic/integration/visual/UI/config), evidence-driven story closure, soak/smoke/regression, flakiness triage, playtest protocol. Use for game test strategy, evid",
+      "invoke": "auto",
+      "triggers": [
+        "flakiness",
+        "game qa",
+        "game qa lord",
+        "playtest",
+        "qa plan",
+        "regression suite",
+        "smoke check",
+        "soak test",
+        "test evidence"
+      ],
+      "sha256": "4bf2c351c2113e9253d65acb2e2c93b5c80c91308c0e30082559be1772e73923"
+    },
+    "gitops-lord": {
+      "file": "gitops-lord/SKILL.md",
+      "description": "Lord skill for GitOps continuous delivery — ArgoCD 3.5, Helm 4, Flux, Argo Rollouts, progressive delivery, and multi-cluster management.",
+      "invoke": "auto",
+      "triggers": [
+        "argo rollouts",
+        "argocd",
+        "flux",
+        "gitops",
+        "gitops lord",
+        "gitops sync",
+        "helm",
+        "multi cluster",
+        "progressive delivery",
+        "جيت اوبس"
+      ],
+      "sha256": "3edcaf78f58fe0707e29114a635107a0e45480989d132cef22d94309d5ab47dc"
+    },
+    "google-play-warlord": {
+      "file": "google-play-warlord/SKILL.md",
+      "description": "Google Play Ecosystem Warlord & Android Publishing Expert — AAB, target API, ASO, ANR/crash, IAP.",
+      "invoke": "auto",
+      "triggers": [
+        "ecosystem",
+        "google",
+        "google play warlord",
+        "play"
+      ],
+      "sha256": "ecf9aa38a7efb5fc8e27ae1d1745117a1dde7e4797e06ed4b5610776896d597c"
+    },
+    "graphify": {
+      "file": "graphify.md",
+      "description": "Graphify knowledge graph integration for Windows.",
+      "invoke": "auto",
+      "triggers": [
+        "graph",
+        "graphify",
+        "knowledge"
+      ],
+      "sha256": "136c9673db723e49bdc5e23ba475303971a7e775af77e9f28a4734f3af36c0d7"
+    },
+    "growth-loops": {
+      "file": "growth-loops/SKILL.md",
+      "description": "Use ONLY for growth hacking, virality, referral loops, product-led growth (PLG), retention and share-to-earn tactics. Trigger on \"growth\", \"نمو\", \"growth hacking\", \"viral\", \"إحالة\", \"احتفاظ\", \"retenti",
+      "invoke": "auto",
+      "triggers": [
+        "growth hacking",
+        "growth loops",
+        "plg",
+        "product led growth",
+        "referral loop",
+        "retention",
+        "viral",
+        "إحالة",
+        "احتفاظ",
+        "انتشار",
+        "شارك المجانية",
+        "فيروسي",
+        "نمو"
+      ],
+      "sha256": "c930dcd5e6145476bef0486674e859e31b504e4e97342f991febb088a914b7d3"
+    },
+    "gsap-animated-frontend": {
+      "file": "gsap-animated-frontend/SKILL.md",
+      "description": "Persistent, recoverable GSAP workflow for coding agents. Use when the user wants to animate a new page or section, or improve an existing page/component with GSAP. Route new/greenfield work to gsap-ne",
+      "invoke": "auto",
+      "triggers": [
+        "gsap",
+        "gsap animated frontend",
+        "persistent",
+        "recoverable"
+      ],
+      "sha256": "0cdcdd67e9730d784bea81ebf58ad0bbfbaecac90b6a925e63b2e8b522b3319e"
+    },
+    "image": {
+      "file": "image/SKILL.md",
+      "description": "When the user wants to create, generate, edit, or optimize marketing images, or asks which approach to take (generate, design, or photograph): blog heroes, social graphics, product mockups, banners, O",
+      "invoke": "auto",
+      "triggers": [
+        "approach take",
+        "banner",
+        "create generate",
+        "design photograph",
+        "edit optimize",
+        "generate design",
+        "generate edit",
+        "image",
+        "marketing image",
+        "marketing images",
+        "mockup",
+        "og image",
+        "optimize marketing",
+        "social graphic",
+        "take generate",
+        "صورة تسويقية"
+      ],
+      "sha256": "c63783d27a77ecd3d50888374f750a427e049bf3ca1faebfa58916c8d3a0ea77"
+    },
+    "image-to-code": {
+      "file": "image-to-code.md",
+      "description": "Image-first website design-to-code workflow — generate design images first, analyze deeply, then implement pixel-faithful frontend",
+      "invoke": "auto",
+      "triggers": [
+        "first",
+        "image",
+        "image to code",
+        "website"
+      ],
+      "sha256": "b513860c689fd174ca30bb704b2db693e49a89616fdf615d1a870b3a1c7e8f36"
+    },
+    "incident-commander": {
+      "file": "incident-commander.md",
+      "description": "Incident response commander coordinating severity classification, war room, rollback, and blameless postmortems",
+      "invoke": "auto",
+      "triggers": [
+        "commander",
+        "incident",
+        "incident commander",
+        "response"
+      ],
+      "sha256": "b2a382e49afd937b873769866f8ef7762ec5ffe082ed61ae4d9f6a327ebfdbd9"
+    },
+    "inert-plan-runner": {
+      "file": "inert-plan-runner.md",
+      "description": "Inert JSON plan execution for multi-step tool orchestration. Use when coordinating several tool calls, fan-outs, approval-gated steps, or resumable runs — author a plan, never executable code.",
+      "invoke": "auto",
+      "triggers": [
+        "approval gate",
+        "batch tool calls",
+        "fan-out",
+        "fanout",
+        "inert plan runner",
+        "multi-step",
+        "orchestrate",
+        "plan",
+        "resumable"
+      ],
+      "sha256": "762d24c1ed9f6ae3890ee4bd73f82c25a8219285ba1c3b2bec5526663513e234"
+    },
+    "influencer-marketing": {
+      "file": "influencer-marketing/SKILL.md",
+      "description": "When the user wants creator, influencer, or ambassador partnerships, or asks which creators fit, what to pay, which rights to buy, or whether a sponsorship worked: vetting, contracts, briefs, UGC, new",
+      "invoke": "auto",
+      "triggers": [
+        "ambassador",
+        "ambassador partnerships",
+        "buy whether",
+        "creator influencer",
+        "creator partnership",
+        "creators fit",
+        "influencer",
+        "influencer ambassador",
+        "influencer marketing",
+        "influencer-marketing",
+        "rights buy",
+        "sponsorship",
+        "sponsorship worked",
+        "ugc",
+        "whether sponsorship",
+        "worked vetting",
+        "تسويق المؤثرين",
+        "مؤثرين"
+      ],
+      "sha256": "70364c47b7c2b2e884f387ec17bcf3d8dbf61691afb36d02a91c621017bfd83d"
+    },
+    "influencer-outreach": {
+      "file": "influencer-outreach/SKILL.md",
+      "description": "Influencer outreach strategist — discover creators, run campaigns, brief UGC. Free-first discovery and compliant partnerships.",
+      "invoke": "auto",
+      "triggers": [
+        "creator",
+        "influencer",
+        "influencer outreach",
+        "حملة مؤثرين",
+        "مؤثر"
+      ],
+      "sha256": "b424a9fc3dad7594d26ac3792ea0e5741ae48261885d719e8a666034c65307c0"
+    },
+    "intake-grill": {
+      "file": "intake-grill.md",
+      "description": "Requirements intake that produces a shared language — glossary + architecture decision records — before any implementation. Use at kickoff of ambiguous or cross-cutting work, before spec/plan.",
+      "invoke": "user",
+      "triggers": [
+        "adr",
+        "ambiguous requirements",
+        "glossary",
+        "grill",
+        "intake",
+        "intake grill",
+        "kickoff",
+        "requirements gathering",
+        "shared language"
+      ],
+      "sha256": "8f6d558f7452c45393d81643b9a31a9202acbfed544a03d41696baab918ffa63"
+    },
+    "invoice-manager": {
+      "file": "invoice-manager/SKILL.md",
+      "description": "Create quotes/invoices, track payments, and manage multi-currency billing for freelancers. Models the Client→Invoice→Payment lifecycle from invoiceninja. Free-first, RTL-aware.",
+      "invoke": "auto",
+      "triggers": [
+        "invoice",
+        "invoice manager",
+        "payment tracking",
+        "quotation",
+        "فاتورة"
+      ],
+      "sha256": "c384df4ed20148303d835865960104de34cac3f59494f25191c88ed3ff609899"
+    },
+    "language-lord": {
+      "file": "language-lord/SKILL.md",
+      "description": "Language-designer-level authority for Python, JavaScript, TypeScript, Java, C#, C++, Go, Rust, PHP, Ruby.",
+      "invoke": "auto",
+      "triggers": [
+        "language",
+        "language lord"
+      ],
+      "sha256": "64c80d066ef7bd977e8c350851a0adb8824baf02f6dbe42229936ebac7f944f6"
+    },
+    "laravel-ai-lord": {
+      "file": "laravel-ai-lord/SKILL.md",
+      "description": "Lord skill for Laravel AI SDK, Laravel MCP server, Laravel Boost, and AI agent integration in Laravel 12/13 apps. Do not use for laravel filament lord tasks — use `laravel-filament-lord` instead. Do n",
+      "invoke": "auto",
+      "triggers": [
+        "ai sdk",
+        "hitl",
+        "human in the loop",
+        "laravel agent",
+        "laravel ai",
+        "laravel ai lord",
+        "laravel boost",
+        "laravel llm",
+        "laravel mcp",
+        "ذكاء اصطناعي لارافيل"
+      ],
+      "sha256": "eb2d8139c3ea921ec353b536565d4ff9aba03a11151a199c19ac150717206cf4"
+    },
+    "laravel-filament-lord": {
+      "file": "laravel-filament-lord/SKILL.md",
+      "description": "Lord skill for Laravel 13 + Filament v5 full-stack mastery — admin panels, resources, API, database, and UI in one cohesive workflow.",
+      "invoke": "auto",
+      "triggers": [
+        "admin panel",
+        "filament laravel",
+        "filament resource",
+        "filament v5",
+        "fullstack laravel",
+        "laravel 13",
+        "laravel filament",
+        "laravel filament lord",
+        "laravel ui",
+        "لارافيل filament",
+        "لوحة تحكم لارافيل"
+      ],
+      "sha256": "4ca0c734a251b1e661ddf70f897dae5a757e7eda0568bf27fb73dfc8d0449c12"
+    },
+    "laravel-testing-lord": {
+      "file": "laravel-testing-lord/SKILL.md",
+      "description": "Lord skill for Laravel 13 + Filament v5 testing mastery — Pest 3+, feature tests, Filament resource tests, API tests, database tests, and CI/CD.",
+      "invoke": "auto",
+      "triggers": [
+        "api testing",
+        "database testing",
+        "filament testing",
+        "laravel test",
+        "laravel testing",
+        "laravel testing lord",
+        "pest php",
+        "php testing",
+        "اختبار laravel",
+        "تست filament"
+      ],
+      "sha256": "0071bb7514509777e9ba11285a6d7e4054e12981da6725f1e44522a5be006173"
+    },
+    "launch": {
+      "file": "launch/SKILL.md",
+      "description": "When the user wants to plan a product or feature launch, or asks whether it's ready, when to announce, or how to get noticed: Product Hunt, beta and early access, waitlists, release go-to-market, laun",
+      "invoke": "auto",
+      "triggers": [
+        "access waitlists",
+        "early access",
+        "feature launch",
+        "get noticed",
+        "go-to-market",
+        "hunt beta",
+        "launch",
+        "launch plan",
+        "noticed product",
+        "plan product",
+        "product feature",
+        "product hunt",
+        "product hunt launch",
+        "product launch",
+        "whether ready",
+        "إطلاق"
+      ],
+      "sha256": "ffe220c92dad2051e5c16deb838a78b1c494fbc0b7625d74441bedc50a854a1c"
+    },
+    "lead-generation-crm": {
+      "file": "lead-generation-crm/SKILL.md",
+      "description": "Lead generation and CRM orchestration — capture, enrich, score, and route leads into a pipeline. Free-first Twenty CRM; integrates with outreach and automation.",
+      "invoke": "auto",
+      "triggers": [
+        "crm",
+        "lead",
+        "lead gen",
+        "lead generation crm",
+        "pipeline",
+        "prospecting",
+        "اكتساب عملاء"
+      ],
+      "sha256": "a5488b1bcb75db3c82c81ddaa11b350dc85d6f89e5d1187c745d9369bae4df46"
+    },
+    "lead-magnets": {
+      "file": "lead-magnets/SKILL.md",
+      "description": "When the user wants to plan or improve a lead magnet, or asks what to give away for emails or how much to ask in return (gating, form fields): checklists, templates, ebooks, gated guides, content upgr",
+      "invoke": "auto",
+      "triggers": [
+        "checklist giveaway",
+        "checklists templates",
+        "ebook",
+        "ebooks gated",
+        "fields checklists",
+        "form fields",
+        "gated content",
+        "gating form",
+        "give away",
+        "improve lead",
+        "lead magnet",
+        "lead magnets",
+        "lead-magnets",
+        "opt-in",
+        "plan improve",
+        "return gating",
+        "templates ebooks"
+      ],
+      "sha256": "a9d96fa26ac08fdb4723f1738046aeccac074d5b37c9271d7555a7931eb4cf28"
+    },
+    "legal-compliance": {
+      "file": "legal-compliance.md",
+      "description": "Legal & Compliance Officer — privacy, licensing, audits, and regulatory alignment.",
+      "invoke": "auto",
+      "triggers": [
+        "compliance",
+        "legal",
+        "legal compliance",
+        "officer"
+      ],
+      "sha256": "e3e1b97105c7dd1a8ff84a8f1015bf4b0c87f46824693de0b839bfbdf5950dd9"
+    },
+    "link-building": {
+      "file": "link-building/SKILL.md",
+      "description": "When the user wants backlinks and mentions that lift rankings and AI citations, or asks how to get sites to link or whether a link tactic is safe: link gaps, unlinked mentions, broken links, guest pos",
+      "invoke": "auto",
+      "triggers": [
+        "backlinks",
+        "gaps unlinked",
+        "get sites",
+        "guest post",
+        "lift rankings",
+        "link building",
+        "link gaps",
+        "link tactic",
+        "link whether",
+        "link-building",
+        "safe link",
+        "sites link",
+        "tactic safe",
+        "unlinked mentions",
+        "whether link",
+        "روابط"
+      ],
+      "sha256": "d4837ef6589a1dc059a5e493398a7251093348bee8f0809922cfc315385898f9"
+    },
+    "linkedin-platform": {
+      "file": "linkedin-platform/SKILL.md",
+      "description": "LinkedIn content automation, profile optimization, and lead generation via the octopus-linkedin MCP server. Use when drafting, approving, scheduling, publishing, or analyzing LinkedIn posts — governed",
+      "invoke": "auto",
+      "triggers": [
+        "b2b outreach",
+        "linkedin",
+        "linkedin platform",
+        "linkedin post",
+        "profile optimization",
+        "بوست لينكدإن",
+        "لينكدإن"
+      ],
+      "sha256": "13d71003ba3344aa8b7f4b318315cae1612729c94e1b44751a0608d32e0411d6"
+    },
+    "linux-systems-lord": {
+      "file": "linux-systems-lord/SKILL.md",
+      "description": "Deep authority on Linux kernel, systemd, eBPF, networking, performance.",
+      "invoke": "auto",
+      "triggers": [
+        "linux",
+        "linux systems lord"
+      ],
+      "sha256": "d2a7676cfbaee960a47778ce809998cb5eff90bec307c3a6ae73b78ac5abf717"
+    },
+    "llm-evals-lord": {
+      "file": "llm-evals-lord/SKILL.md",
+      "description": "Lord skill for LLM evaluation — scoring, regression testing, prompt regression, agent evaluation, and production LLM quality monitoring.",
+      "invoke": "auto",
+      "triggers": [
+        "agent eval",
+        "eval harness",
+        "llm eval",
+        "llm evals lord",
+        "llm evaluation",
+        "llm quality",
+        "llm scoring",
+        "prompt regression",
+        "تقييم llm"
+      ],
+      "sha256": "5487e3e94c316f04d6c4a044f28539ae0f5e655c3b65bf2fdf67b27686584d70"
+    },
+    "local-ai-lord": {
+      "file": "local-ai-lord/SKILL.md",
+      "description": "Lord skill for local AI and edge deployment — runtime selection (Ollama, LM Studio, vLLM, llama.cpp, MLX), quantization, GPU acceleration, OpenAI-compatible APIs, and hybrid local+cloud patterns. Do n",
+      "invoke": "auto",
+      "triggers": [
+        "edge ai",
+        "llama.cpp",
+        "lm studio",
+        "local ai",
+        "local ai lord",
+        "localai",
+        "ollama",
+        "vllm",
+        "تشغيل محلي",
+        "ذكاء اصطناعي محلي"
+      ],
+      "sha256": "43d1d7abf6491d63ad46725ac804449d3b92c01aab72f7851b11bdcf8d5b4991"
+    },
+    "local-seo": {
+      "file": "local-seo/SKILL.md",
+      "description": "Local SEO specialist — Google Business Profile, citations, reviews, and map pack. Extends seo-lord for location-based visibility.",
+      "invoke": "auto",
+      "triggers": [
+        "citation",
+        "google business profile",
+        "local seo",
+        "تحسين محلي",
+        "خرائط جوجل"
+      ],
+      "sha256": "c52e37cee90ffc8adf9293cb1b7ddfea56816d53753f0bacb5786ddd8ae3d890"
+    },
+    "mariadb-lord": {
+      "file": "mariadb-lord/SKILL.md",
+      "description": "Architect-level mastery for MariaDB — design, operations, Laravel/Filament/Nova integration, multi-tenancy, migration from MySQL, Galera Cluster, and performance.",
+      "invoke": "auto",
+      "triggers": [
+        "mariadb",
+        "mariadb lord"
+      ],
+      "sha256": "d2485302dd39211a0e8109e2f0e1b94fd9b49dcff8af0e9fc70a4c0ce87de642"
+    },
+    "marketing-analytics": {
+      "file": "marketing-analytics/SKILL.md",
+      "description": "Marketing analytics and attribution architect — GA4, Mixpanel, Plausible, Umami, Matomo. Collect, unify, attribute, and report CAC/LTV/ROAS.",
+      "invoke": "auto",
+      "triggers": [
+        "attribution",
+        "marketing analytics",
+        "mixpanel",
+        "تحليلات تسويق",
+        "قياس العائد"
+      ],
+      "sha256": "d3425e899592a92bb85c71eab49dbae1886631e2c83d057cec0151818ed20ed6"
+    },
+    "marketing-automation": {
+      "file": "marketing-automation/SKILL.md",
+      "description": "Marketing automation architect — build trigger→condition→action journeys, drip sequences, and lifecycle flows. Free-first n8n/Automatisch.",
+      "invoke": "auto",
+      "triggers": [
+        "journey",
+        "marketing automation",
+        "zapier",
+        "أتمتة تسويق",
+        "رحلة عميل"
+      ],
+      "sha256": "0af458f852a79b26439d6c9411b4336f2962cfb819c4c3be19139ec2861f7f2e"
+    },
+    "marketing-compliance": {
+      "file": "marketing-compliance/SKILL.md",
+      "description": "Marketing compliance gate — GDPR, CAN-SPAM, TCPA, consent, opt-in, unsubscribe. Mandatory pre-send checkpoint for every broadcast.",
+      "invoke": "auto",
+      "triggers": [
+        "can-spam",
+        "consent",
+        "gdpr",
+        "marketing compliance",
+        "unsubscribe",
+        "امتثال تسويقي",
+        "موافقة"
+      ],
+      "sha256": "f85239cbb069cc96b8ae248d16687581356068001804ecab49c39c8a1732c243"
+    },
+    "marketing-council": {
+      "file": "marketing-council/SKILL.md",
+      "description": "When the user wants several expert takes on a marketing decision, or asks what a famous marketer would say about it: a simulated board (Seth Godin, David Ogilvy, April Dunford, Byron Sharp, and more),",
+      "invoke": "auto",
+      "triggers": [
+        "board seth",
+        "david ogilvy",
+        "dunford",
+        "expert takes",
+        "famous marketer",
+        "godin",
+        "godin david",
+        "marketing council",
+        "marketing decision",
+        "marketing experts",
+        "marketing-council",
+        "ogilvy",
+        "ogilvy april",
+        "seth godin",
+        "several expert",
+        "simulated board",
+        "takes marketing",
+        "مجلس تسويق"
+      ],
+      "sha256": "9ac9766a4df803fb0c7b2fc3718046065b2c3726603e94d5b038ca9f05b8df2f"
+    },
+    "marketing-ideas": {
+      "file": "marketing-ideas/SKILL.md",
+      "description": "When the user wants marketing ideas or growth tactics for a software product, or asks what to try to get attention or the next customers with little time or budget, or after the obvious channels. Draw",
+      "invoke": "auto",
+      "triggers": [
+        "budget after",
+        "get attention",
+        "growth ideas",
+        "growth tactics",
+        "ideas growth",
+        "little time",
+        "marketing ideas",
+        "marketing-ideas",
+        "next customers",
+        "software product",
+        "time budget",
+        "try get",
+        "أفكار تسويق",
+        "أفكار نمو",
+        "نمو"
+      ],
+      "sha256": "c88c3d68d349d0ea0e0abdba2c52ac2ccf34c72319cdd68094060d82867741b1"
+    },
+    "marketing-loops": {
+      "file": "marketing-loops/SKILL.md",
+      "description": "When the user wants a recurring marketing job an AI agent runs on a cadence or trigger, or asks what a weekly or daily automated check should do, remember, and when it should stop: SEO and ads checks,",
+      "invoke": "auto",
+      "triggers": [
+        "agent runs",
+        "automated check",
+        "cadence",
+        "cadence trigger",
+        "daily automated",
+        "daily seo check",
+        "job agent",
+        "marketing job",
+        "marketing loop",
+        "marketing loops",
+        "marketing-loops",
+        "recurring marketing",
+        "runs cadence",
+        "weekly daily",
+        "مغادرة العملاء",
+        "وكيل ذكاء اصطناعي"
+      ],
+      "sha256": "6495ec1f71ec992cd67f518b52420cc1d958e1f25685665029f22a7a3f41fd6a"
+    },
+    "marketing-plan": {
+      "file": "marketing-plan/SKILL.md",
+      "description": "When the user wants a full marketing or go-to-market plan for a client, an advised company, or their own product, or asks how to sequence or prioritize several initiatives with a fixed team and budget",
+      "invoke": "auto",
+      "triggers": [
+        "advised company",
+        "budget channels",
+        "client advised",
+        "fixed team",
+        "full marketing",
+        "go-to-market plan",
+        "gtm plan",
+        "marketing go-to-market",
+        "marketing plan",
+        "marketing strategy",
+        "marketing-plan",
+        "own product",
+        "prioritize several",
+        "sequence prioritize",
+        "several initiatives",
+        "خطة تسويق"
+      ],
+      "sha256": "4f9a1e53aae3c082d329e60e5e52cba1afaa25b1a0ad973d153a27ca4da870c4"
+    },
+    "marketing-psychology": {
+      "file": "marketing-psychology/SKILL.md",
+      "description": "When the user wants to apply psychology to marketing, or asks why buyers behave or value things as they do, or whether a persuasion tactic is honest: biases, mental models, anchoring, social proof, sc",
+      "invoke": "auto",
+      "triggers": [
+        "apply psychology",
+        "behave value",
+        "buyers behave",
+        "cognitive bias",
+        "marketing psychology",
+        "marketing-psychology",
+        "persuasion",
+        "persuasion tactic",
+        "psychology marketing",
+        "scarcity",
+        "social proof",
+        "tactic honest",
+        "value things",
+        "whether persuasion",
+        "نفسية تسويقية"
+      ],
+      "sha256": "4655496ab080c44db9a6c7c2c13461660720d3cbbac1ecc0045a08cbf69f2cff"
+    },
+    "marketing-strategy": {
+      "file": "marketing-strategy/SKILL.md",
+      "description": "Digital marketing strategist — build a full marketing plan (goals → audience → channels → budget → metrics) with Arabic RTL parity. Free-first tooling. Cross-links to email-marketing, social-media-mar",
+      "invoke": "auto",
+      "triggers": [
+        "growth plan",
+        "marketing plan",
+        "marketing strategy",
+        "strategy",
+        "تسويق استراتيجي",
+        "خطة تسويق",
+        "خطة نمو"
+      ],
+      "sha256": "99ffc2808562e241eb7caaffaa5340866ad9c838558e7d29eaa5ed47ae1021ec"
+    },
+    "mcp-architect-lord": {
+      "file": "mcp-architect-lord/SKILL.md",
+      "description": "Lord skill for designing and securing MCP servers per the 2026-07-28 spec — stateless core, OAuth 2.1 Resource Server, tool-poisoning defense, and dual-era migration.",
+      "invoke": "auto",
+      "triggers": [
+        "mcp architect",
+        "mcp architect lord",
+        "mcp design",
+        "mcp protocol",
+        "mcp security",
+        "mcp server",
+        "oauth resource server",
+        "tool naming",
+        "خادم mcp"
+      ],
+      "sha256": "5cd29646066a7c55f221791eae93830c82cba6468842a51c1ea2aa27c5bc9984"
+    },
+    "mcp-surface-integrity": {
+      "file": "mcp-surface-integrity.md",
+      "description": "MCP tool-surface freeze and drift verification. Use when trusting, configuring, or updating an MCP server — lock its tool definitions and detect added/removed/changed tools before calling. Do not use ",
+      "invoke": "auto",
+      "triggers": [
+        "freeze",
+        "mcp config",
+        "mcp surface integrity",
+        "mcp tools",
+        "tool drift",
+        "tool surface"
+      ],
+      "sha256": "14f1dde50dbc53ee7230f74d030775e788425443f4cb73d9a664c65734a9024c"
+    },
+    "messaging-streaming-lord": {
+      "file": "messaging-streaming-lord/SKILL.md",
+      "description": "Authority on Kafka, RabbitMQ, NATS, and Redis Streams.",
+      "invoke": "auto",
+      "triggers": [
+        "kafka",
+        "messaging",
+        "messaging streaming lord",
+        "rabbitmq"
+      ],
+      "sha256": "0ddd08f25efff37e21980794e8a12a8d77f2bf0ec5093b79676c939475b99adb"
+    },
+    "migration-specialist": {
+      "file": "migration-specialist.md",
+      "description": "Data migration specialist executing zero-downtime, backup-first, validated, idempotent schema and data migrations Do not use for database migration lord tasks — use `database-migration-lord` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "migration",
+        "migration specialist"
+      ],
+      "sha256": "90bf2d5976724075a9f3eb4457090059d2fa3743faa7812579e688884316640a"
+    },
+    "ml-engineer": {
+      "file": "ml-engineer.md",
+      "description": "Machine Learning Engineer — training, inference, MLOps, and LLM integrations. Do not use for ai ml lord tasks — use `ai-ml-lord` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "learning",
+        "machine",
+        "ml engineer"
+      ],
+      "sha256": "77a912e30abf2ac960c09682cb7d8a47dabff66dbb787cf123be698c4f8ceb4b"
+    },
+    "mobile-architect": {
+      "file": "mobile-architect/SKILL.md",
+      "description": "Principal Mobile Architect — cross-platform mobile app architecture, Flutter + React Native/Expo, state management, offline-first, CI/CD, testing, security, observability. Synthesizes patterns from 8 ",
+      "invoke": "auto",
+      "triggers": [
+        "mobile",
+        "mobile architect"
+      ],
+      "sha256": "e9f20cc7373febb62b47824c401a757cf2ea9209167dc5a2097ee06e226e7409"
+    },
+    "mobile-game-producer": {
+      "file": "mobile-game-producer/SKILL.md",
+      "description": "Elite Mobile Game Producer & Full-Stack Innovator — cross-platform mobile games, retention/LTV, anti-cheat, backend, push, offline sync.",
+      "invoke": "auto",
+      "triggers": [
+        "game",
+        "mobile",
+        "mobile game producer"
+      ],
+      "sha256": "79fa9a8928e18f9ef6ca02337bba5a45236e75df490b930c6f77f05a08596cb5"
+    },
+    "motion-design": {
+      "file": "motion-design.md",
+      "description": "Motion Design Auditor — animation quality from 3 designer perspectives with severity-ranked findings.",
+      "invoke": "auto",
+      "triggers": [
+        "motion",
+        "motion design"
+      ],
+      "sha256": "9480791f22e99ea010d04cec740f61694bc426d008efd03de5a81797db77e8b4"
+    },
+    "offers": {
+      "file": "offers/SKILL.md",
+      "description": "When the user wants to design or improve the offer itself, or asks why it isn't selling or how to add urgency honestly: value stacking, bonuses, guarantees, scarcity, payment plans, upsells. Best for ",
+      "invoke": "auto",
+      "triggers": [
+        "add urgency",
+        "bonuses",
+        "design improve",
+        "guarantee",
+        "isn selling",
+        "offer design",
+        "offer itself",
+        "offers",
+        "upsell",
+        "urgency honestly",
+        "value stack",
+        "تذكرة",
+        "عرض",
+        "مدفوعات"
+      ],
+      "sha256": "63b8fc98340ebdcec81cd0212eb99b40f5b692cb72bc4fcb586ef3189e2c5fa7"
+    },
+    "onboarding": {
+      "file": "onboarding/SKILL.md",
+      "description": "When the user wants better onboarding and activation, or asks why new users don't stick or what the first session should do: first-run experience, aha moments, checklists, empty states, time to value.",
+      "invoke": "auto",
+      "triggers": [
+        "activation",
+        "aha moment",
+        "aha moments",
+        "better onboarding",
+        "checklists empty",
+        "don stick",
+        "empty states",
+        "experience aha",
+        "first run",
+        "first session",
+        "first-run experience",
+        "moments checklists",
+        "onboarding",
+        "states time",
+        "time to value",
+        "user onboarding",
+        "تأهيل",
+        "تسجيل"
+      ],
+      "sha256": "685fd9b218a955f78412cd94096cf35bfe51e48c131b2d2202cdfa8832113872"
+    },
+    "page-sections-lord": {
+      "file": "page-sections-lord/SKILL.md",
+      "description": "Design and build section-based landing and content pages with Filament Builder in Laravel.",
+      "invoke": "auto",
+      "triggers": [
+        "build",
+        "page",
+        "page sections lord",
+        "section"
+      ],
+      "sha256": "553b22b824f1fa1c77650a8f00b78fbb990aab737099f0d194b4b9aa45ade41b"
+    },
+    "paid-ads": {
+      "file": "paid-ads/SKILL.md",
+      "description": "Paid advertising strategist — Google, Meta, TikTok, LinkedIn Ads. Campaign setup, bidding, targeting, ROAS optimization. Free-first measurement.",
+      "invoke": "auto",
+      "triggers": [
+        "google ads",
+        "meta ads",
+        "paid ads",
+        "roas",
+        "tiktok ads",
+        "إعلانات",
+        "رعاية مدفوعة"
+      ],
+      "sha256": "8376d90db84d53de2a2d3cd67abe272a298c6b28d5c8e168ff026af3c420de34"
+    },
+    "paywalls": {
+      "file": "paywalls/SKILL.md",
+      "description": "When the user wants to create or improve in-app paywalls and upgrade moments, or asks when or how hard to ask free users to pay (after they've seen value): upgrade screens, upsell modals, feature gate",
+      "invoke": "auto",
+      "triggers": [
+        "feature gate",
+        "improve in-app",
+        "in-app paywalls",
+        "in-app purchase",
+        "pay after",
+        "paywall",
+        "paywalls",
+        "screens upsell",
+        "seen value",
+        "upgrade moments",
+        "upgrade screen",
+        "upgrade screens",
+        "value upgrade",
+        "اشتراك"
+      ],
+      "sha256": "084043cdb4c80f82535dd7f31cffa8cb89addcef9c604092e40492764d8d9656"
+    },
+    "pdf": {
+      "file": "pdf.md",
+      "description": "Read, extract, merge, split, or generate PDF files — text and table extraction, form filling, watermarking, metadata, OCR hand-off, and producing new PDFs programmatically. Use whenever the user has a",
+      "invoke": "auto",
+      "triggers": [
+        ".pdf",
+        "extract pdf",
+        "fill pdf form",
+        "merge pdf",
+        "pdf",
+        "split pdf"
+      ],
+      "sha256": "b93706c1056f657642e2b395e618cbdf722410c302bbf2ac0b6868c46a587393"
+    },
+    "performance-engineer": {
+      "file": "performance-engineer.md",
+      "description": "Performance Engineer — latency, throughput, profiling, and optimization. Do not use for filament performance lord tasks — use `filament-performance-lord` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "latency",
+        "performance",
+        "performance engineer"
+      ],
+      "sha256": "07427eda422da8e9552193eb3354297e1abf94a4d7d0bafef9db4583b6c7b3a9"
+    },
+    "personal-branding": {
+      "file": "personal-branding/SKILL.md",
+      "description": "Personal branding strategist — build authority across X, YouTube, blog, and speaking. Pillar content, thought leadership, and consistent voice.",
+      "invoke": "auto",
+      "triggers": [
+        "personal brand",
+        "personal branding",
+        "thought leadership",
+        "براند شخصي",
+        "بناء سمعة",
+        "سلطة"
+      ],
+      "sha256": "4297d822d6bc65ddd85571c69a54b215518b002d88c94105a818085f27e539ba"
+    },
+    "ponytail": {
+      "file": "ponytail/SKILL.md",
+      "description": "Forces the laziest solution that actually works, simplest, shortest, most minimal. Channels a senior dev who has seen everything: question whether the task needs to exist at all (YAGNI), reach for the",
+      "invoke": "auto",
+      "triggers": [
+        "lazy mode",
+        "minimal solution",
+        "ponytail",
+        "simplest solution",
+        "yagni"
+      ],
+      "sha256": "acf131aabfe6333e2ef7074f79c49119c9fc9f6bd32874c56a18f756bb181142"
+    },
+    "ponytail-audit": {
+      "file": "ponytail-audit/SKILL.md",
+      "description": "Whole-repo audit for over-engineering. Like ponytail-review, but scans the entire codebase instead of a diff: a ranked list of what to delete, simplify, or replace with stdlib/native equivalents. Use ",
+      "invoke": "auto",
+      "triggers": [
+        "ponytail",
+        "ponytail audit",
+        "repo",
+        "whole"
+      ],
+      "sha256": "f060413cf6bf2e16a82c139e286a81bbebf31a83a460ffd2c956d465e1d8ad5f"
+    },
+    "ponytail-debt": {
+      "file": "ponytail-debt/SKILL.md",
+      "description": "Harvest every `ponytail:` comment in the codebase into a debt ledger, so the deliberate shortcuts and deferrals ponytail leaves behind get tracked instead of rotting into \"later means never\". Use when",
+      "invoke": "auto",
+      "triggers": [
+        "every",
+        "harvest",
+        "ponytail",
+        "ponytail debt"
+      ],
+      "sha256": "7416ebfedee4f697808bb609c91e99b5116c29d49c259dea470a34ee2e2bd326"
+    },
+    "ponytail-gain": {
+      "file": "ponytail-gain/SKILL.md",
+      "description": "Show ponytail's measured impact as a compact scoreboard: less code, less cost, more speed, from the benchmark medians. One-shot display, not a persistent mode, and not a per-repo number. Trigger: /pon",
+      "invoke": "auto",
+      "triggers": [
+        "measured",
+        "ponytail",
+        "ponytail gain",
+        "show"
+      ],
+      "sha256": "062e0a9e273f9ca1c4dd14245711b7309525db68fcb2272b26ff30a6340f9c32"
+    },
+    "ponytail-help": {
+      "file": "ponytail-help/SKILL.md",
+      "description": "Quick-reference card for all ponytail modes, skills, and commands. One-shot display, not a persistent mode. Trigger: /ponytail-help, \"ponytail help\", \"what ponytail commands\", \"how do I use ponytail\".",
+      "invoke": "auto",
+      "triggers": [
+        "card",
+        "ponytail",
+        "ponytail help",
+        "quick",
+        "reference"
+      ],
+      "sha256": "176c7361e3141f7f4aa988ee9e0db75c35191c2556f3c04e1eb70d9fcd778f5d"
+    },
+    "ponytail-review": {
+      "file": "ponytail-review/SKILL.md",
+      "description": "Code review focused exclusively on over-engineering. Finds what to delete: reinvented standard library, unneeded dependencies, speculative abstractions, dead flexibility. One line per finding: locatio",
+      "invoke": "auto",
+      "triggers": [
+        "focused",
+        "ponytail",
+        "ponytail review"
+      ],
+      "sha256": "7505b5c89f22c4beb337f622905e635ad8ac3e9953cb5b4068c973ac2afc1a8f"
+    },
+    "popups": {
+      "file": "popups/SKILL.md",
+      "description": "When the user wants to create or improve popups, modals, slide-ins, sticky bars, and banners, or asks whether one will help or annoy and when to show it: exit intent, email capture, scroll and time tr",
+      "invoke": "auto",
+      "triggers": [
+        "email capture",
+        "exit intent",
+        "help annoy",
+        "improve popups",
+        "intent email",
+        "modal",
+        "modals slide-ins",
+        "popup",
+        "popups",
+        "popups modals",
+        "scroll trigger",
+        "show exit",
+        "slide-ins sticky",
+        "sticky bars",
+        "whether one",
+        "نافذة منبثقة"
+      ],
+      "sha256": "0dd9016b3778523dc2f17c8e0297a93d225c548ce804733cbb7ef8c767fc40d5"
+    },
+    "post-quantum-lord": {
+      "file": "post-quantum-lord/SKILL.md",
+      "description": "Lord skill for post-quantum cryptography migration — ML-DSA (FIPS 204), ML-KEM (FIPS 203), SLH-DSA (FIPS 205), hybrid schemes, and PQC readiness.",
+      "invoke": "auto",
+      "triggers": [
+        "crypto migration",
+        "cryptography",
+        "dilithium",
+        "kyber",
+        "ml-dsa",
+        "ml-kem",
+        "post quantum",
+        "post quantum lord",
+        "quantum safe",
+        "تشفير كمي"
+      ],
+      "sha256": "dc8414ed2fad0c2693da97438cf1bc24f700aed51c41461cbbf84cc5fcd84e75"
+    },
+    "pptx": {
+      "file": "pptx.md",
+      "description": "Read, create, or edit PowerPoint .pptx presentations — extract slide text and speaker notes, generate decks with layouts, titles, bullets, images, and tables, or apply template-driven edits. Use whene",
+      "invoke": "auto",
+      "triggers": [
+        ".pptx",
+        "powerpoint",
+        "pptx",
+        "presentation",
+        "slides deck"
+      ],
+      "sha256": "6aa377606296346655b72890b22954a0487522c1d1f7b1ed95e00d7469496905"
+    },
+    "pr-pitch": {
+      "file": "pr-pitch/SKILL.md",
+      "description": "PR and press pitch strategist — match journalist queries, craft pitches, run outreach. Free-first HARO/alternative sources.",
+      "invoke": "auto",
+      "triggers": [
+        "haro",
+        "pr",
+        "pr pitch",
+        "press release",
+        "بيان صحفي",
+        "علاقات صحفية"
+      ],
+      "sha256": "baafc71cdc426dfd29268b421864c91b2eb8c5eba6e778f728a5636b98bc16cc"
+    },
+    "pricing": {
+      "file": "pricing/SKILL.md",
+      "description": "When the user wants to set pricing and packaging, or asks what to charge, whether to raise prices, or how to move existing customers: tiers, value metrics, per-seat vs usage, freemium and trials, will",
+      "invoke": "auto",
+      "triggers": [
+        "charge whether",
+        "customers tiers",
+        "existing customers",
+        "freemium",
+        "metrics per-seat",
+        "move existing",
+        "packaging",
+        "pricing",
+        "pricing page",
+        "raise prices",
+        "set pricing",
+        "tiers",
+        "tiers value",
+        "value metrics",
+        "whether raise",
+        "willingness to pay",
+        "أسعار",
+        "تذكرة"
+      ],
+      "sha256": "996575ca6650857f165a7bb0a309329c2ef8c14861a8dacfd0d454079aa9bef3"
+    },
+    "pricing-strategy": {
+      "file": "pricing-strategy/SKILL.md",
+      "description": "Choose the right freelance pricing model (hourly/project/retainer/package/value-based) and generate a rate-increase email. Computes recommended rates via runtime/pricing_calculator.py. Free-first, bil",
+      "invoke": "auto",
+      "triggers": [
+        "pricing",
+        "pricing strategy",
+        "retainer",
+        "value-based"
+      ],
+      "sha256": "9ed622ef41fa0ebd6954245f196511fa6dca31ffc5657feca264585f15bdaacb"
+    },
+    "problem-solving-lord": {
+      "file": "problem-solving-lord/SKILL.md",
+      "description": "Lord skill for smart problem solving — first-principles decomposition, root cause, inversion, lateral/out-of-the-box solution generation, workaround ladders, hypothesis matrices, and solution scoring ",
+      "invoke": "auto",
+      "triggers": [
+        "alternative approach",
+        "another way",
+        "can't fix",
+        "creative solution",
+        "different approach",
+        "hard bug",
+        "impossible",
+        "out of the box",
+        "problem solving",
+        "problem solving lord",
+        "root cause",
+        "stuck",
+        "workaround",
+        "افكر بره الصندوق",
+        "حل بديل",
+        "حل ذكي",
+        "طريقة تانية",
+        "عالق",
+        "مشكلة مستعصية"
+      ],
+      "sha256": "6aa5c1da2a992f47f16f7f492a9915e0cb70d29fa36e27d8fc172543783e4ddf"
+    },
+    "product-manager": {
+      "file": "product-manager.md",
+      "description": "Product Manager — requirements, roadmaps, prioritization, and user outcomes.",
+      "invoke": "auto",
+      "triggers": [
+        "product",
+        "product manager",
+        "requirements"
+      ],
+      "sha256": "4ee993a844d9da7fc5d226db433109dbd1b29e59b707d5124f396efd1ce0a7ca"
+    },
+    "product-marketing": {
+      "file": "product-marketing/SKILL.md",
+      "description": "When the user wants to create or update the product marketing context doc (.agents/product-marketing.md), or asks what belongs in it or whether positioning or ICP is clear enough: product, ICP, positi",
+      "invoke": "auto",
+      "triggers": [
+        "agents product-marketing",
+        "belongs whether",
+        "context doc",
+        "create update",
+        "doc agents",
+        "icp",
+        "icp clear",
+        "marketing context",
+        "messaging",
+        "positioning",
+        "positioning icp",
+        "product marketing",
+        "product-marketing",
+        "product-marketing.md",
+        "whether positioning",
+        "هوية تجارية"
+      ],
+      "sha256": "6b267c00e2869f4fe89d3670fb257241124ab809dc01bd5cd21c8ba32c1e4dd5"
+    },
+    "production-readiness-lord": {
+      "file": "production-readiness-lord/SKILL.md",
+      "description": "Lord skill for evidence-based production-readiness audits — full-spectrum project review (architecture, security, data, testing, performance, observability, config, deployment, supply chain, docs, UX/",
+      "invoke": "auto",
+      "triggers": [
+        "audit project",
+        "before deploy",
+        "before launch",
+        "full project review",
+        "go live checklist",
+        "go-live",
+        "launch checklist",
+        "launch readiness",
+        "pre-launch audit",
+        "pre-launch review",
+        "production audit",
+        "production checklist",
+        "production readiness",
+        "production readiness lord",
+        "readiness review",
+        "ready for production",
+        "release readiness",
+        "ship it review",
+        "جاهز للانتاج",
+        "جاهزية الإنتاج",
+        "راجع المشروع",
+        "قبل النشر",
+        "مراجعة المشروع",
+        "مراجعة شاملة",
+        "مراجعة قبل الإطلاق"
+      ],
+      "sha256": "b11cc200e9b80558a5a5a4d9647e21dcb8d75d0d3eea34cc937d551120a62fcb"
+    },
+    "productized-service": {
+      "file": "productized-service/SKILL.md",
+      "description": "Productized service designer — turn custom work into fixed-scope, repeatable offers with landing, auto-sell, delivery, and referral.",
+      "invoke": "auto",
+      "triggers": [
+        "packaged service",
+        "productize",
+        "productized service",
+        "خدمة جاهزة",
+        "خدمة معلبة"
+      ],
+      "sha256": "a0feb10ccca3434c0979191c97a9bd46c2d8b6bf0bceae4eb906c0902ef3b8ce"
+    },
+    "programmatic-seo": {
+      "file": "programmatic-seo/SKILL.md",
+      "description": "When the user wants SEO pages at scale from templates and data, or asks whether a page set will rank or look thin: location, integration, comparison, directory, and '[X] for [Y]' pages, each useful ra",
+      "invoke": "auto",
+      "triggers": [
+        "comparison directory",
+        "integration comparison",
+        "location integration",
+        "location pages",
+        "look thin",
+        "page set",
+        "pages each",
+        "pages scale",
+        "programmatic seo",
+        "programmatic-seo",
+        "rank look",
+        "seo pages",
+        "seo pages at scale",
+        "template pages",
+        "thin location",
+        "whether page"
+      ],
+      "sha256": "249946af96ae9449fef32cd3a106b18702efd53e6a7946584f98b6609860f0cb"
+    },
+    "project-voice": {
+      "file": "project-voice/SKILL.md",
+      "description": "Build the project's voice foundation — about-me.md + voice.md in .ai/ — that every content skill reads before personalized work. Foundation pattern adapted from charlie947/social-media-skills voice-bu",
+      "invoke": "auto",
+      "triggers": [
+        "brand voice",
+        "build my voice",
+        "learn my voice",
+        "project voice",
+        "voice profile",
+        "اكتب بأسلوبي",
+        "بصمة الكتابة",
+        "صوتي"
+      ],
+      "sha256": "b54f0527e55bd0ab96272e28102f8f2ce20ad36fd218f2c13c57f236db8f7c35"
+    },
+    "prompt-engineer": {
+      "file": "prompt-engineer.md",
+      "description": "LLM prompt engineering covering system design, few-shot, chain-of-thought, structured output, and evaluation Do not use for prompt master patterns tasks — use `prompt-master-patterns` instead. Do not ",
+      "invoke": "auto",
+      "triggers": [
+        "prompt",
+        "prompt engineer"
+      ],
+      "sha256": "c991f2b1843fe82bdff119e16b885d1eb455eb37570c67c26182bff98c3a44ef"
+    },
+    "prompt-master-patterns": {
+      "file": "prompt-master-patterns.md",
+      "description": "Prompt engineering patterns and best practices. Do not use for prompt master templates tasks — use `prompt-master-templates` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "patterns",
+        "prompt",
+        "prompt master patterns"
+      ],
+      "sha256": "4807899f9fe0e1b86064cb7bb79aecbb58899b510809037e144bbb72c512ca0b"
+    },
+    "prompt-master-templates": {
+      "file": "prompt-master-templates.md",
+      "description": "Prompt engineering templates for common tasks.",
+      "invoke": "auto",
+      "triggers": [
+        "prompt",
+        "prompt master templates",
+        "templates"
+      ],
+      "sha256": "6befb061441f480856f63355a11e035371a2ec04c0a48e2ab539b9bef84cac3c"
+    },
+    "proposal-writer": {
+      "file": "proposal-writer/SKILL.md",
+      "description": "Proposal Specialist & Bid Strategist — bilingual Arabic/English website and digital service proposals, scope, pricing, timeline, terms.",
+      "invoke": "auto",
+      "triggers": [
+        "proposal",
+        "proposal writer"
+      ],
+      "sha256": "16d724e7016e4fead46c02dc0b6ce1ab75880172208de06b80fd41329e175286"
+    },
+    "prospecting": {
+      "file": "prospecting/SKILL.md",
+      "description": "When the user wants to find and qualify prospects for outbound, or asks who to target first, which signal to prioritize, or where to spot buyers with the problem: buying signals, enrichment, verificat",
+      "invoke": "auto",
+      "triggers": [
+        "account research",
+        "buying signals",
+        "enrichment verification",
+        "find prospects",
+        "prioritize where",
+        "problem buying",
+        "prospecting",
+        "qualify leads",
+        "qualify prospects",
+        "signal prioritize",
+        "signals enrichment",
+        "spot buyers",
+        "target first",
+        "verification account",
+        "where spot",
+        "عملاء محتملين"
+      ],
+      "sha256": "60b860af9c9c9bab8097605e1abc03cde510faf48a7bf94b6f82d07f208f2517"
+    },
+    "public-relations": {
+      "file": "public-relations/SKILL.md",
+      "description": "When the user wants press and media coverage, or asks what to say to a reporter, whether a story is newsworthy, or how to handle a crisis: pitches, press releases, media lists, HARO, op-eds, podcast g",
+      "invoke": "auto",
+      "triggers": [
+        "crisis pitches",
+        "handle crisis",
+        "haro",
+        "media coverage",
+        "media pitch",
+        "pitches press",
+        "pr",
+        "press coverage",
+        "press release",
+        "press releases",
+        "public relations",
+        "public-relations",
+        "reporter whether",
+        "say reporter",
+        "story newsworthy",
+        "whether story",
+        "التواصل البارد",
+        "علاقات عامة",
+        "قصة مستخدم"
+      ],
+      "sha256": "7cf48e7cc52236ec28d82e1635c00cc8cb1fa624b7dfb6c601818a3348270edc"
+    },
+    "python-ui-lord": {
+      "file": "python-ui-lord/SKILL.md",
+      "description": "Lord skill for Python UI design mastery — PySide6/Qt6 desktop apps, Textual 8 TUI, Flet 1.0 cross-platform, Reflex 0.9 / NiceGUI 3 / FastAPI+htmx web apps, design tokens, states, a11y, and packaging.",
+      "invoke": "auto",
+      "triggers": [
+        "customtkinter",
+        "desktop ui",
+        "flet app",
+        "kivy app",
+        "nicegui",
+        "pyqt",
+        "pyqt6",
+        "pyside",
+        "pyside6",
+        "python dashboard",
+        "python desktop app",
+        "python gui",
+        "python ui lord",
+        "python web ui",
+        "pywebview",
+        "qt app",
+        "qt designer",
+        "reflex app",
+        "terminal ui",
+        "textual app",
+        "tkinter ui",
+        "tui app",
+        "بايثون واجهة",
+        "برنامج سطح المكتب",
+        "تطبيق ديسكتوب",
+        "واجهة رسومية"
+      ],
+      "sha256": "3040e4b277cbcf5e2a583e350c30d306ccb2490dc9a149c31d912a3e4e7ec08a"
+    },
+    "qa-automation": {
+      "file": "qa-automation.md",
+      "description": "QA Automation Engineer — 6 specialized E2E agents with Playwright, profile-based auth, and manifest-driven dispatch.",
+      "invoke": "auto",
+      "triggers": [
+        "qa automation",
+        "specialized"
+      ],
+      "sha256": "d71e2f50fafcc3c9a97c8f8397f7afcf8fbbb8453f6b8171bf3ed91338a1d2ef"
+    },
+    "qa-debugger": {
+      "file": "qa-debugger.md",
+      "description": "Systematic QA Engineer & Bug Hunter. Code reviewer and automated test healer.",
+      "invoke": "auto",
+      "triggers": [
+        "qa debugger",
+        "systematic"
+      ],
+      "sha256": "9c5f936a3fa6a3e211e5ad0e7c6419bef9772e41c47feb71c0495d7d381e703d"
+    },
+    "referrals": {
+      "file": "referrals/SKILL.md",
+      "description": "When the user wants referral and affiliate programs or word of mouth, or asks what to reward, how much to pay, or which loop to start with: refer-a-friend incentives, commissions and payouts, partner ",
+      "invoke": "auto",
+      "triggers": [
+        "affiliate program",
+        "affiliate programs",
+        "incentives commissions",
+        "loop start",
+        "much pay",
+        "payouts partner",
+        "programs word",
+        "refer-a-friend",
+        "refer-a-friend incentives",
+        "referral program",
+        "referrals",
+        "word mouth",
+        "word of mouth",
+        "تسويق المؤثرين",
+        "عمولات"
+      ],
+      "sha256": "46931ffc6576493c3c8be03a0056c03574f36fa278b5d1fa5ba320b96db90908"
+    },
+    "reverse-engineer-anything": {
+      "file": "reverse-engineer-anything/SKILL.md",
+      "description": "Reverse engineer native, managed, Electron/JavaScript, packaged, firmware, and browser targets with REA. Use shipped-artifact or requested runtime evidence to explain features, compare versions, decom",
+      "invoke": "auto",
+      "triggers": [
+        "binary analysis",
+        "browser targets",
+        "decompile",
+        "electron app",
+        "electron javascript",
+        "engineer native",
+        "firmware",
+        "javascript packaged",
+        "managed electron",
+        "native managed",
+        "packaged firmware",
+        "rea",
+        "requested runtime",
+        "reverse engineer",
+        "reverse engineer anything",
+        "reverse-engineer-anything",
+        "shipped-artifact requested",
+        "معمارية",
+        "هندسة عكسية"
+      ],
+      "sha256": "439644155702c5eac6137ef82adb9041bdb16c8a4a83946cd822907682255c36"
+    },
+    "reverse-engineer-marketing": {
+      "file": "reverse-engineer-marketing/SKILL.md",
+      "description": "When the user wants to know how another company grew and what to copy, or asks what a competitor did and when: a dated log of their moves against their traffic from public data, archives, job posts, r",
+      "invoke": "auto",
+      "triggers": [
+        "another company",
+        "archives job",
+        "company grew",
+        "competitor growth",
+        "data archives",
+        "data ending",
+        "dated log",
+        "ending plays",
+        "funnel compared",
+        "growth teardown",
+        "how they grew",
+        "job posts",
+        "moves against",
+        "posts reviews",
+        "public data",
+        "reverse engineer marketing",
+        "reverse-engineer-marketing"
+      ],
+      "sha256": "3b6ad0069b56baa57e05ab5acec376cd597a20282f5f26a046fb2d3b181f2132"
+    },
+    "reverse-engineering-lord": {
+      "file": "reverse-engineering-lord/SKILL.md",
+      "description": "Lord skill for reverse engineering shipped artifacts — native binaries, Electron/JavaScript apps, .NET assemblies, APKs, firmware, packages — via REA (rea-agents) CLI/MCP. Evidence-tiered analysis (ob",
+      "invoke": "auto",
+      "triggers": [
+        "apktool",
+        "asar",
+        "binary analysis",
+        "binary diff",
+        "decompile",
+        "disassemble",
+        "disassembly",
+        "electron app",
+        "firmware",
+        "frida",
+        "ghidra",
+        "hopper",
+        "ida pro",
+        "il2cpp",
+        "jadx",
+        "obfuscated",
+        "pyinstaller",
+        "reverse engineer",
+        "reverse engineering",
+        "reverse engineering lord",
+        "تحليل ثنائي",
+        "ديكومبايل",
+        "عكس هندسي",
+        "فك تجميع",
+        "ملف تنفيذي",
+        "هندسة عكسية"
+      ],
+      "sha256": "0e567206e51431787206d6f76d15be3be82be053269f4ce1f1e33974919072c7"
+    },
+    "revops": {
+      "file": "revops/SKILL.md",
+      "description": "When the user wants to design revenue operations, or asks when a lead is ready for sales or why sales and marketing disagree on lead quality: lifecycle stages, MQL and SQL, scoring, routing, handoff, ",
+      "invoke": "auto",
+      "triggers": [
+        "crm automation",
+        "design revenue",
+        "disagree lead",
+        "lead quality",
+        "lead ready",
+        "lead scoring",
+        "lifecycle stages",
+        "marketing disagree",
+        "mql",
+        "pipeline",
+        "quality lifecycle",
+        "revenue operations",
+        "revops",
+        "sql"
+      ],
+      "sha256": "4ddcf3ee0e18da434d18ccfabc9f5b9e4555fc5d9b7e0d5c74e550d61e8fb5b0"
+    },
+    "sales-enablement": {
+      "file": "sales-enablement/SKILL.md",
+      "description": "When the user wants sales collateral, or asks what to give a champion or rep, or how to answer an objection or make the case: decks, one-pagers, objection handling, demo scripts, talk tracks, battle c",
+      "invoke": "auto",
+      "triggers": [
+        "answer objection",
+        "battle card",
+        "case decks",
+        "champion rep",
+        "decks one-pagers",
+        "demo script",
+        "give champion",
+        "handling demo",
+        "objection handling",
+        "objection make",
+        "one-pager",
+        "one-pagers objection",
+        "sales collateral",
+        "sales enablement",
+        "sales-enablement",
+        "تأهيل مبيعات"
+      ],
+      "sha256": "fe3a74d9b0a66e83a6efcd1b1b07f941d2a7a5ea8e2f5b5fdcf509bb356c6ab3"
+    },
+    "schema": {
+      "file": "schema/SKILL.md",
+      "description": "When the user wants to add, fix, or validate schema markup (JSON-LD), or asks which type fits a page or whether some markup is allowed: product, review, recipe, FAQ, rich result eligibility (FAQ no lo",
+      "invoke": "auto",
+      "triggers": [
+        "add fix",
+        "faq schema",
+        "fits page",
+        "fix validate",
+        "json-ld",
+        "markup allowed",
+        "markup json-ld",
+        "page whether",
+        "rich results",
+        "schema",
+        "schema markup",
+        "some markup",
+        "structured data",
+        "type fits",
+        "validate schema",
+        "whether some"
+      ],
+      "sha256": "e3f30157a5e7c26441f70395a32250a1626e13a445940a975a927f4a415178fd"
+    },
+    "search-vector-lord": {
+      "file": "search-vector-lord/SKILL.md",
+      "description": "Lord of search and vector databases.",
+      "invoke": "auto",
+      "triggers": [
+        "search",
+        "search vector lord",
+        "vector"
+      ],
+      "sha256": "c511371b953fcab32376b000cb0bb224eefc6cbe759adb194a57e332789192b8"
+    },
+    "security-auditor": {
+      "file": "security-auditor.md",
+      "description": "Elite Cyber-Security Auditor. DevSecOps, Pen Testing, and OWASP Top 10 mitigation. Do not use for security lord tasks — use `security-lord` instead. Do not use for web security checklist tasks — use `",
+      "invoke": "auto",
+      "triggers": [
+        "cyber",
+        "security auditor"
+      ],
+      "sha256": "92a7f2d8df32d3384df71798db23b0988726136058d36a2fa2147b8a946b424d"
+    },
+    "security-lord": {
+      "file": "security-lord/SKILL.md",
+      "description": "Security architect: OWASP, crypto, TLS, PKI, zero-trust, MCP security, agent SRE governance. Do not use for quick web security checklists — use `web-security-checklist` instead. Do not use for designi",
+      "invoke": "auto",
+      "triggers": [
+        "mcp security",
+        "owasp",
+        "security lord",
+        "zero trust"
+      ],
+      "sha256": "01427e043ab96450c9e12df7545dc82df71f671587c211ff460750af936e547c"
+    },
+    "seo-audit": {
+      "file": "seo-audit/SKILL.md",
+      "description": "When the user wants to audit or diagnose SEO, or asks why traffic dropped, a page won't rank, or whether a setup like canonicals, hreflang, or redirects is right: technical SEO, indexing, Google updat",
+      "invoke": "auto",
+      "triggers": [
+        "audit diagnose",
+        "canonicals hreflang",
+        "core web vitals",
+        "diagnose seo",
+        "dropped page",
+        "like canonicals",
+        "on-page seo",
+        "page won",
+        "rank whether",
+        "seo",
+        "seo audit",
+        "seo-audit",
+        "setup like",
+        "technical seo",
+        "traffic dropped",
+        "whether setup",
+        "won rank",
+        "تحسين محركات"
+      ],
+      "sha256": "59a67271b993b673191ee4dc77529760a84381e088c08e140751773d8148f187"
+    },
+    "seo-lord": {
+      "file": "seo-lord/SKILL.md",
+      "description": "Lord skill for comprehensive SEO — technical SEO, E-E-A-T content, Schema.org, GEO/AEO, Core Web Vitals, crawl budget, and 251-rule audit scoring. Do not use for local seo tasks — use `local-seo` inst",
+      "invoke": "auto",
+      "triggers": [
+        "comprehensive",
+        "seo",
+        "seo lord"
+      ],
+      "sha256": "400648e866d3f71723dfc71cc01874cd17a4ac1b3d950724894739d396e5b909"
+    },
+    "server-ops-lord": {
+      "file": "server-ops-lord/SKILL.md",
+      "description": "Lord skill for server administration mastery — SSH hardening, firewalls, reverse proxies + TLS, monitoring, logs, backups/DR, container hosts, self-hosted panels (Coolify/Dokploy/Portainer), Proxmox, ",
+      "invoke": "auto",
+      "triggers": [
+        "backup",
+        "bare metal",
+        "caddy",
+        "certbot",
+        "cockpit",
+        "coolify",
+        "dedicated server",
+        "docker host",
+        "dokploy",
+        "fail2ban",
+        "firewall",
+        "hardening",
+        "lets encrypt",
+        "logrotate",
+        "monitoring server",
+        "nginx",
+        "portainer",
+        "proxmox",
+        "restore",
+        "reverse proxy",
+        "server",
+        "server hardening",
+        "server ops lord",
+        "shared hosting",
+        "systemd service",
+        "tailscale",
+        "uptime",
+        "wireguard",
+        "استضافة",
+        "خادم",
+        "سيرفر",
+        "سيرفرات"
+      ],
+      "sha256": "42d1f5ac074e6a0cd97fe469e05835b54671968e7ca1340b3a2e202db3445585"
+    },
+    "signup": {
+      "file": "signup/SKILL.md",
+      "description": "When the user wants better signup, registration, and trial start flows, or asks which fields or steps to cut or whether to require a card: SSO and drop-off before an account exists. For what happens a",
+      "invoke": "auto",
+      "triggers": [
+        "better signup",
+        "cut whether",
+        "fields steps",
+        "registration",
+        "sign up",
+        "signup",
+        "signup flow",
+        "signup registration",
+        "start flows",
+        "steps cut",
+        "trial signup",
+        "trial start",
+        "whether require",
+        "التسجيل",
+        "تسجيل"
+      ],
+      "sha256": "2b64647d1001a5b8e5aa4abff2bd5c96c4d3abd6d4b40e40d942641c17000970"
+    },
+    "site-architecture": {
+      "file": "site-architecture/SKILL.md",
+      "description": "When the user wants to plan or restructure a website, or asks which pages they need or where something belongs: hierarchy, navigation, URL structure, internal linking, website builders and migrations.",
+      "invoke": "auto",
+      "triggers": [
+        "belongs hierarchy",
+        "hierarchy navigation",
+        "information architecture",
+        "internal linking",
+        "navigation",
+        "navigation url",
+        "need where",
+        "plan restructure",
+        "restructure website",
+        "site architecture",
+        "site-architecture",
+        "something belongs",
+        "structure internal",
+        "url structure",
+        "website structure",
+        "where something",
+        "هيكلة موقع"
+      ],
+      "sha256": "28ceb45067fab949f168d5f5cf34019981973779ae388ac92ec1f8a853fca36c"
+    },
+    "skill-finder": {
+      "file": "skill-finder/SKILL.md",
+      "description": "Discover and evaluate external agent skills from the skills.sh ecosystem (Vercel skills registry). Use when a task needs a capability aiZee does not already ship — find community skills, vet them, and",
+      "invoke": "auto",
+      "triggers": [
+        "external skill",
+        "find skill",
+        "install skill",
+        "missing capability",
+        "npx skills",
+        "skill discovery",
+        "skill finder",
+        "skill registry",
+        "skill خارجية",
+        "skills.sh",
+        "دوّر على skill"
+      ],
+      "sha256": "73c91b5decf8703623f9db28544a7ba8d0190522b0a68c27a4e3692f9d53cd43"
+    },
+    "skill-lock-integrity": {
+      "file": "skill-lock-integrity.md",
+      "description": "Installed-skill integrity via skills-lock.json folder hashes. Use when installing, updating, or auditing skills — verify drift before trusting a skill's content.",
+      "invoke": "auto",
+      "triggers": [
+        "skill drift",
+        "skill install",
+        "skill integrity",
+        "skill lock integrity",
+        "skill update",
+        "skills-lock"
+      ],
+      "sha256": "69ff1e2e345b108c18b418f898d010a6cbc2176df2b48194f50b352f574ad6d5"
+    },
+    "sms": {
+      "file": "sms/SKILL.md",
+      "description": "When the user wants SMS, MMS, or WhatsApp marketing, or asks whether texting is worth it or a message is allowed: abandoned cart, win-back, and promo texts, WhatsApp templates and windows, TCPA and A2",
+      "invoke": "auto",
+      "triggers": [
+        "abandoned cart",
+        "allowed abandoned",
+        "cart win-back",
+        "message allowed",
+        "mms",
+        "mms whatsapp",
+        "promo texts",
+        "sms",
+        "sms marketing",
+        "sms mms",
+        "tcpa",
+        "text message",
+        "texting worth",
+        "whatsapp",
+        "whatsapp marketing",
+        "whether texting",
+        "worth message",
+        "رسائل نصية"
+      ],
+      "sha256": "56979428c8dbc0bf6c49f1df203075c2e8dc03e66e5ce342998523ef52544fc6"
+    },
+    "social": {
+      "file": "social/SKILL.md",
+      "description": "When the user wants organic social content for LinkedIn, X, Instagram, TikTok, or Facebook, or asks what to post, which format to favor, or from which account: posts, threads, carousels, short-form vi",
+      "invoke": "auto",
+      "triggers": [
+        "account posts",
+        "carousels short-form",
+        "content calendar",
+        "format favor",
+        "instagram",
+        "instagram tiktok",
+        "linkedin instagram",
+        "linkedin post",
+        "organic social",
+        "posts threads",
+        "short-form video",
+        "social",
+        "social content",
+        "social media",
+        "threads carousels",
+        "tiktok",
+        "tiktok facebook",
+        "twitter thread",
+        "سوشيال",
+        "سوشيال ميديا"
+      ],
+      "sha256": "1950317989929686e69125bda398572225c3afb0fdf861246531d5d0d30252e4"
+    },
+    "social-media-marketing": {
+      "file": "social-media-marketing/SKILL.md",
+      "description": "Multi-channel social media manager — X/Twitter, Instagram, YouTube, TikTok, Facebook, LinkedIn. Draft→review→schedule→publish→measure with free-first tools and Arabic/RTL support.",
+      "invoke": "auto",
+      "triggers": [
+        "content calendar",
+        "facebook",
+        "instagram",
+        "social media",
+        "social media marketing",
+        "tiktok",
+        "x platform",
+        "تواصل اجتماعي",
+        "تويتر",
+        "جدولة منشورات",
+        "وسائل التواصل",
+        "يوتيوب"
+      ],
+      "sha256": "62d5bbb6711fea7e33a12458df68257447eca1044f33d1a51ef18b42bd949aca"
+    },
+    "sre": {
+      "file": "sre.md",
+      "description": "God-Tier SRE & Cloud Dictator — reliability, observability, chaos engineering, and landing zones.",
+      "invoke": "auto",
+      "triggers": [
+        "sre",
+        "tier"
+      ],
+      "sha256": "d31338ab75a861edfe6661bde6fda534af04b70a95becf1be2ab57aaf2d11b04"
+    },
+    "subagent-driven-development": {
+      "file": "subagent-driven-development.md",
+      "description": "Subagent-driven development workflow.",
+      "invoke": "auto",
+      "triggers": [
+        "driven",
+        "subagent",
+        "subagent driven development"
+      ],
+      "sha256": "17ed86c52aa4873aec23eae999eb3b35297a3b01d1c2835897c719ef1e95bbba"
+    },
+    "supply-chain-lord": {
+      "file": "supply-chain-lord/SKILL.md",
+      "description": "Lord skill for software supply-chain security in AI-generated code — dependency guarding, SBOM, Cosign signing, and lockfile integrity.",
+      "invoke": "auto",
+      "triggers": [
+        "cosign",
+        "dependency guard",
+        "lockfile",
+        "sbom",
+        "supply chain",
+        "supply chain lord",
+        "تبعيات",
+        "سلسلة التوريد"
+      ],
+      "sha256": "fe482219a8cb360ddd6dad48c48303bfe861d7ab3c317dd653205fa8f18eef3d"
+    },
+    "technical-writer": {
+      "file": "technical-writer.md",
+      "description": "Technical Writer & Documentation Lead — READMEs, API docs, runbooks, and changelogs.",
+      "invoke": "auto",
+      "triggers": [
+        "technical",
+        "technical writer"
+      ],
+      "sha256": "43857b2d40bae5664ffcc22c926954286537238973b4a614d5c4651af0bea483"
+    },
+    "test-driven-development": {
+      "file": "test-driven-development.md",
+      "description": "Test-driven development methodology. Do not use for test guard tasks — use `test-guard` instead.",
+      "invoke": "auto",
+      "triggers": [
+        "driven",
+        "test",
+        "test driven development"
+      ],
+      "sha256": "bc6bf623789928a67f366930749b4aeae381b09fdc0b7393ba8efd71e5864360"
+    },
+    "test-guard": {
+      "file": "test-guard.md",
+      "description": "Guard test quality and coverage.",
+      "invoke": "auto",
+      "triggers": [
+        "test",
+        "test guard"
+      ],
+      "sha256": "2db6b362a7ac066d3b017bee180a78eb341a0e00b9df909e3117a358277af82a"
+    },
+    "ui-design-lord": {
+      "file": "ui-design-lord/SKILL.md",
+      "description": "Lord skill for UI/UX design mastery — HTML, CSS, Tailwind v4.3, Filament v5 UI components, responsive design, RTL/Arabic, accessibility, and design systems. Do not use for frontend ui expert tasks — u",
+      "invoke": "auto",
+      "triggers": [
+        "arabic ui",
+        "css design",
+        "filament ui",
+        "html design",
+        "responsive design",
+        "rtl design",
+        "tailwind design",
+        "ui design",
+        "ui design lord",
+        "تصميم ui",
+        "تصميم واجهات",
+        "واجهة مستخدم"
+      ],
+      "sha256": "51139a2a37efb5845826f611009d93a34be92525d9c59a4e41ef597b27059d6e"
+    },
+    "vector-db-lord": {
+      "file": "vector-db-lord/SKILL.md",
+      "description": "Lord skill for vector databases and RAG — DB selection, hybrid search, quantization, reranking, knowledge graphs for agentic RAG, index selection, and evaluation metrics.",
+      "invoke": "auto",
+      "triggers": [
+        "chroma",
+        "hybrid search",
+        "milvus",
+        "pgvector",
+        "pinecone",
+        "qdrant",
+        "vector database",
+        "vector db",
+        "vector db lord",
+        "weaviate",
+        "بحث متجهي",
+        "قاعدة بيانات متجهية"
+      ],
+      "sha256": "2f60d3e19eb5488c7eead672414d1d108150325391b12850193c54e0a052c906"
+    },
+    "video": {
+      "file": "video/SKILL.md",
+      "description": "When the user wants to create video with AI tools or code, or asks which approach to use (screen recording, AI avatar, generated, or templated) or how to make videos repeatably: product demos, AI gene",
+      "invoke": "auto",
+      "triggers": [
+        "avatar generated",
+        "create video",
+        "demos generation",
+        "generated templated",
+        "make videos",
+        "marketing video",
+        "product demo video",
+        "product demos",
+        "recording avatar",
+        "repeatably product",
+        "screen recording",
+        "tools code",
+        "video",
+        "video marketing",
+        "video script",
+        "videos repeatably",
+        "فيديو تسويقي"
+      ],
+      "sha256": "e0bab16daf34cb82454681b28f367da75d4dc301bb0b09596d7cb5fccf732ebd"
+    },
+    "video-produce": {
+      "file": "video-produce/SKILL.md",
+      "description": "End-to-end video production — turns a brief into a delivered MP4 (or an approved prompt) across every available path. Routes to generative models, coded-film kits (cinecode, bang-motion, motion-graphi",
+      "invoke": "auto",
+      "triggers": [
+        "bang-motion",
+        "cinecode",
+        "hyperframes",
+        "make a video",
+        "motion graphics",
+        "produce video",
+        "render video",
+        "video produce",
+        "video production",
+        "اصنع فيديو",
+        "اعمل فيديو",
+        "رندر فيديو",
+        "كراكتر في الفيديو",
+        "موشن جرافيك",
+        "نفس الكاركتر"
+      ],
+      "sha256": "eacf11af502b298d5b63524131330020c947a87a515404a71930421132c239ca"
+    },
+    "video-prompt": {
+      "file": "video-prompt/SKILL.md",
+      "description": "AI video generation prompt engineering. Guided interview -> cinematic prompt. Use when the user asks for a video prompt, AI video, motion graphics, or names a video model (Veo, Kling, Runway, Seedance",
+      "invoke": "auto",
+      "triggers": [
+        "ai video",
+        "bang-motion",
+        "cinecode",
+        "hailuo",
+        "kling",
+        "luma",
+        "motion graphics",
+        "runway",
+        "seedance",
+        "sora",
+        "veo",
+        "video prompt",
+        "wan ai",
+        "برومبت فيديو",
+        "جنرييت فيديو",
+        "موشن جرافيك"
+      ],
+      "sha256": "c96e1ce524aed607cd37d6418d567ac575bb26277d941dafb26270a5cadf4512"
+    },
+    "web-design-guidelines": {
+      "file": "web-design-guidelines.md",
+      "description": "Vercel web interface guidelines — 100+ rules for accessibility, forms, dark mode, typography, animation, images, performance, navigation, touch, and i18n",
+      "invoke": "auto",
+      "triggers": [
+        "interface",
+        "vercel",
+        "web design guidelines"
+      ],
+      "sha256": "5de9ac6bb4561727e8796f3f016cc229332276ed8637bbeb52f64afc3e997840"
+    },
+    "web-quality": {
+      "file": "web-quality.md",
+      "description": "Web Quality Engineer — Lighthouse, Core Web Vitals, and holistic performance optimization.",
+      "invoke": "auto",
+      "triggers": [
+        "web quality"
+      ],
+      "sha256": "0c2740265378fd8b425c5989f6064b5225d1b3efb38cf979b4f931c6df87f52c"
+    },
+    "web-security-checklist": {
+      "file": "web-security-checklist/SKILL.md",
+      "description": "Practical web-application security checklist — SSRF bypass variants, file upload magic bytes, XXE, JWT pitfalls, mass assignment, GraphQL hardening, input validation, output encoding. Complements aiZe",
+      "invoke": "auto",
+      "triggers": [
+        "clickjacking",
+        "command injection",
+        "csrf",
+        "file upload",
+        "graphql security",
+        "input validation",
+        "jwt security",
+        "mass assignment",
+        "open redirect",
+        "output encoding",
+        "owasp",
+        "owasp 2025",
+        "prototype pollution",
+        "redos",
+        "ssrf",
+        "ssti",
+        "template injection",
+        "web security",
+        "web security checklist",
+        "web vulnerability",
+        "أمن الويب",
+        "ثغرات"
+      ],
+      "sha256": "73ea9652025ab380d9740139a54995fa6844977fe57cb6a8be9bc136b35d3181"
+    },
+    "whatsapp-sms": {
+      "file": "whatsapp-sms/SKILL.md",
+      "description": "WhatsApp and SMS campaign strategist — opt-in compliant broadcasts, templates, and automation. RTL-aware for Arabic audiences.",
+      "invoke": "auto",
+      "triggers": [
+        "broadcast",
+        "sms",
+        "whatsapp",
+        "whatsapp marketing",
+        "whatsapp sms",
+        "حملة رسائل",
+        "رسائل واتساب"
+      ],
+      "sha256": "8a348be84a0397d6691ddda0ada70ddc395e5c1995324749aa0827ee6dbf1519"
+    },
+    "wordpress-expert": {
+      "file": "wordpress-expert.md",
+      "description": "WordPress Elite Developer. Theme/Plugin dev from scratch, WooCommerce optimization, and WP-specific Pen Testing.",
+      "invoke": "auto",
+      "triggers": [
+        "wordpress",
+        "wordpress expert"
+      ],
+      "sha256": "22584a142fe050ecff05e8b80d0532baea5e259e618b1f7e326a534740ed9839"
+    },
+    "writing-plans": {
+      "file": "writing-plans.md",
+      "description": "Write structured plans for complex tasks.",
+      "invoke": "auto",
+      "triggers": [
+        "plans",
+        "structured",
+        "write",
+        "writing",
+        "writing plans"
+      ],
+      "sha256": "7421278faa3b8f39e6cb10ed8172f5a042d800096aadfdb9e89159936feff491"
+    },
+    "writing-skills": {
+      "file": "writing-skills.md",
+      "description": "Behavior-shaping authoring rules for SKILL.md files. Use when creating or editing any skill — skills are behavior code, not prose, and text changes are gated by eval evidence.",
+      "invoke": "auto",
+      "triggers": [
+        "edit a skill",
+        "new skill",
+        "skill authoring",
+        "skill wording",
+        "skill.md",
+        "write a skill",
+        "writing skills"
+      ],
+      "sha256": "c43951fa13771edc866d4621e51cc3e8843d40ea339ecb702b1d6a27fcb58e94"
+    },
+    "xlsx": {
+      "file": "xlsx.md",
+      "description": "Read, create, or edit Excel .xlsx workbooks — read sheets to dataframes, generate workbooks with formulas, styles, charts, and conditional formatting, or update existing files cell-by-cell while prese",
+      "invoke": "auto",
+      "triggers": [
+        ".xlsx",
+        "excel",
+        "spreadsheet",
+        "workbook",
+        "xlsx"
+      ],
+      "sha256": "19ddaeb95aae7bc0692572a712f582a394594c41807de848ad747f334ed5cb93"
+    }
+  }
+}

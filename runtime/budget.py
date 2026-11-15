@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
+import hmac
 import json
 import logging
 import os
@@ -798,3 +800,245 @@ class BudgetManager:
             if eff_tokens is not None and (u["tokens"] + estimated_tokens) >= eff_tokens:
                 return True
             return bool(eff_cost is not None and (u["cost"] + estimated_cost) >= eff_cost)
+
+
+# ---------------------------------------------------------------------------
+# Spend ledger (MONEY-01): quote -> single-use approve -> charge -> report.
+# Adopted from open-edit's queue-ledger: an identical request is never bought
+# twice; approval authorizes exactly one charge; delivery reports the spend.
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SpendQuote:
+    """A priced call awaiting/remembering single-use approval."""
+
+    key: str          # dedupe key — identical requests share one quote
+    provider: str     # who bills it (fal, veed, elevenlabs, ...)
+    estimate: float   # quoted cost in `currency`
+    currency: str = "USD"
+    account: str = ""  # which account/workspace bills it
+    approved: bool = False
+    consumed: bool = False  # approval spent — never reusable
+    actual: float | None = None  # recorded charge once consumed
+    created_at: str = ""
+
+
+_GENESIS_HASH = "0" * 64
+
+
+def _chain_hash(record: dict[str, Any]) -> str:
+    """HMAC-SHA-256 of the canonical record (excludes ``hash``) — keyed like
+    the audit log so spend-ledger tampering is detectable (OBS-04 parity)."""
+    from runtime.audit import _get_audit_key  # lazy: avoids an import cycle
+
+    canonical = json.dumps(
+        {k: v for k, v in record.items() if k != "hash"},
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hmac.new(_get_audit_key(), canonical.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+class SpendLedger:
+    """JSONL ledger enforcing the money gate.
+
+    - ``quote()`` registers an estimate; an identical unconsumed key returns
+      the existing quote (identical request is never bought twice).
+    - ``approve()`` marks a quote approved exactly once.
+    - ``charge()`` consumes the approval once and records actual spend —
+      unapproved or already-consumed keys raise ``PolicyDeniedError``.
+    - ``report()`` totals charged spend per provider for delivery.
+    """
+
+    def __init__(self, root: Path | str) -> None:
+        self._path = Path(root) / "spend_ledger.jsonl"
+        self._lock = threading.Lock()
+        self._corrupt = 0    # torn-tail lines skipped on the last read
+        self._repaired = 0   # torn-tail bytes truncated by _append repairs
+        self._tail_hash = _GENESIS_HASH  # last record's hash — chain head
+
+    def _records(self) -> list[dict[str, Any]]:
+        """Replay the JSONL ledger. A truncated final line is an incomplete
+        append (never durable) and is skipped; a malformed non-final line is
+        real corruption and fails closed — money records are never masked."""
+        from runtime.schemas import StorageError  # lazy: schemas imports budget
+
+        if not self._path.exists():
+            return []
+        raw = self._path.read_text(encoding="utf-8")
+        lines = raw.splitlines()
+        records: list[dict[str, Any]] = []
+        self._corrupt = 0
+        for i, line in enumerate(lines):
+            if not line.strip():
+                continue
+            try:
+                records.append(json.loads(line))
+            except json.JSONDecodeError as exc:
+                if i == len(lines) - 1 and not raw.endswith("\n"):
+                    self._corrupt += 1
+                    _logger.warning(
+                        "spend ledger: ignoring torn tail line %d (incomplete append)",
+                        i + 1,
+                    )
+                    continue
+                raise StorageError(
+                    f"spend ledger corrupt at line {i + 1} — manual repair required",
+                    context={"path": str(self._path), "line": i + 1},
+                ) from exc
+        # HMAC chain: every committed record links to its predecessor.
+        # A missing/mismatched hash = tampering — fail closed like corruption.
+        prev = _GENESIS_HASH
+        for i, rec in enumerate(records):
+            rec_hash = rec.get("hash")
+            if (
+                not isinstance(rec_hash, str)
+                or rec.get("prev_hash") != prev
+                or _chain_hash(rec) != rec_hash
+            ):
+                raise StorageError(
+                    f"spend ledger hash chain broken at record {i + 1} — "
+                    "manual repair required",
+                    context={"path": str(self._path), "record": i + 1},
+                )
+            prev = rec_hash
+        self._tail_hash = prev
+        return records
+
+    def _append(self, record: dict[str, Any]) -> None:
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+        # Repair a torn tail before appending: bytes after the last newline
+        # were never a committed record — truncate them so records stay
+        # one-per-line instead of merging with the fragment.
+        if self._path.exists():
+            raw = self._path.read_bytes()
+            if raw and not raw.endswith(b"\n"):
+                nl = raw.rfind(b"\n")
+                self._path.write_bytes(raw[: nl + 1] if nl >= 0 else b"")
+                self._repaired += 1
+                _logger.warning("spend ledger: truncated torn tail before append")
+        record["prev_hash"] = self._tail_hash
+        record["hash"] = _chain_hash(record)
+        with self._path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record, sort_keys=True) + "\n")
+            fh.flush()
+            os.fsync(fh.fileno())  # narrow the torn-tail window to the write itself
+        self._tail_hash = record["hash"]
+
+    def _latest(self) -> dict[str, SpendQuote]:
+        latest: dict[str, SpendQuote] = {}
+        for rec in self._records():
+            latest[rec["key"]] = SpendQuote(**{k: v for k, v in rec.items() if k in SpendQuote.__dataclass_fields__})
+        return latest
+
+    def get(self, key: str) -> SpendQuote | None:
+        """Latest quote state for a key, or None when unknown."""
+        return self._latest().get(key)
+
+    def quote(
+        self,
+        provider: str,
+        estimate: float,
+        key: str = "",
+        account: str = "",
+        currency: str = "USD",
+    ) -> SpendQuote:
+        """Register a priced call. Identical open keys dedupe to one quote.
+
+        When no explicit key is given the key defaults to a content hash of
+        (provider, estimate, account, currency) — same request re-quoted
+        returns the same open quote instead of minting duplicates."""
+        if not key:
+            digest = hashlib.sha256(
+                f"{provider}|{estimate}|{account}|{currency}".encode()
+            ).hexdigest()
+            key = f"q{digest[:12]}"
+        with self._lock:
+            existing = self._latest().get(key)
+            if existing is not None and not existing.consumed:
+                return existing
+            q = SpendQuote(
+                key=key,
+                provider=provider,
+                estimate=float(estimate),
+                currency=currency,
+                account=account,
+                created_at=datetime.now(timezone.utc).isoformat(),
+            )
+            self._append({"event": "quote", **asdict(q)})
+            return q
+
+    def approve(self, key: str) -> SpendQuote:
+        """Single-use approval of one quote — does not generalize."""
+        from runtime.schemas import PolicyDeniedError  # lazy: schemas imports budget
+
+        with self._lock:
+            q = self._latest().get(key)
+            if q is None:
+                raise PolicyDeniedError(
+                    f"no spend quote for key {key!r}",
+                    context={"code": "SPEND_QUOTE_MISSING", "key": key},
+                )
+            if q.consumed:
+                raise PolicyDeniedError(
+                    f"quote {key!r} already consumed",
+                    context={"code": "SPEND_CONSUMED", "key": key},
+                )
+            q.approved = True
+            self._append({"event": "approve", **asdict(q)})
+            return q
+
+    def charge(self, key: str, actual: float | None = None) -> float:
+        """Consume the approval once, record actual spend, return amount."""
+        from runtime.schemas import PolicyDeniedError  # lazy: schemas imports budget
+
+        with self._lock:
+            q = self._latest().get(key)
+            if q is None:
+                raise PolicyDeniedError(
+                    f"no spend quote for key {key!r}",
+                    context={"code": "SPEND_QUOTE_MISSING", "key": key},
+                )
+            if not q.approved:
+                raise PolicyDeniedError(
+                    f"quote {key!r} not approved — state quote+get approval first (MONEY-01)",
+                    context={"code": "SPEND_UNAPPROVED", "key": key},
+                )
+            if q.consumed:
+                raise PolicyDeniedError(
+                    f"approval {key!r} already spent — single-use, quote again",
+                    context={"code": "SPEND_CONSUMED", "key": key},
+                )
+            q.consumed = True
+            q.actual = q.estimate if actual is None else float(actual)
+            self._append({"event": "charge", **asdict(q)})
+            return q.actual
+
+    def report(self) -> dict[str, Any]:
+        """Delivery spend report: charged totals per provider/account."""
+        by_provider: dict[str, dict[str, Any]] = {}
+        total = 0.0
+        for q in self._latest().values():
+            if not q.consumed or q.actual is None:
+                continue
+            entry = by_provider.setdefault(
+                q.provider, {"charged": 0.0, "calls": 0, "accounts": set()}
+            )
+            entry["charged"] += q.actual
+            entry["calls"] += 1
+            if q.account:
+                entry["accounts"].add(q.account)
+            total += q.actual
+        return {
+            "total": total,
+            # corrupt = unreadable lines skipped on read; repaired = torn
+            # tails truncated before an append (bytes were never committed).
+            "corrupt_lines": self._corrupt + self._repaired,
+            # Reaching report() means _records() verified the HMAC chain.
+            "chain_verified": True,
+            "providers": {
+                p: {**e, "accounts": sorted(e["accounts"])}
+                for p, e in sorted(by_provider.items())
+            },
+        }

@@ -83,6 +83,12 @@ class SkillResolver:
             return candidate, frontmatter, body
         return None
 
+    def invoke_for(self, name: str) -> str:
+        """Return the skill's ``invoke:`` mode — ``auto`` (trigger-fired) or
+        ``user`` (explicit invocation only). ``auto`` when unresolvable."""
+        loaded = self._load_skill(name)
+        return loaded[1].invoke if loaded is not None else "auto"
+
     def resolve_with_frontmatter(
         self, name: str, context: dict[str, Any] | None = None
     ) -> Path | None:

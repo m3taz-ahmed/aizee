@@ -222,6 +222,10 @@ def format_results(results: list[CheckResult]) -> dict[str, Any]:
     return {
         "total": len(results), "passed": passed, "failed": len(results) - passed - skipped,
         "skipped": skipped,
+        # Unavoidable offline skips (LLM-graded scenarios) must be visible at
+        # summary level — a green run with 9 silent skips is not full coverage.
+        "skipped_detail": [{"id": r.scenario_id, "reason": r.reason}
+                           for r in results if r.skipped],
         "results": [{"id": r.scenario_id, "type": r.eval_type, "passed": r.passed,
                      "skipped": r.skipped, "failures": r.failures, "reason": r.reason}
                     for r in results],

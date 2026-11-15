@@ -7,14 +7,14 @@
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI status"></a>
     <img src="https://img.shields.io/badge/Version-6.11.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.11.0">
-    <img src="https://img.shields.io/badge/Tests-7969%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 7969 passed">
+    <img src="https://img.shields.io/badge/Tests-8014%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8014 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-245-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="245 Skills">
-    <img src="https://img.shields.io/badge/Workflows-67-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="67 Workflows">
+    <img src="https://img.shields.io/badge/Skills-247-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="247 Skills">
+    <img src="https://img.shields.io/badge/Workflows-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 Tech-Stack refs">
   </p>
 </div>
@@ -385,7 +385,7 @@ one command that fixes it.
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 152 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 153 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -396,11 +396,11 @@ one command that fixes it.
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
 ├── aizee_mcp/               # MCP server (46 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
-├── skills/                  # 245 persona + lord + BMAD + marketing skills
+├── skills/                  # 247 persona + lord + BMAD + marketing skills
 ├── _bmad/                   # BMAD runtime (config/scripts — gitignored)
 ├── .agents/skills           # Junction distribution for agent harnesses
 ├── deps.yaml                # External dependency manifest (check/install)
-├── workflows/               # 67 trigger-based execution protocols
+├── workflows/               # 70 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # 271 version-locked stack references
 ├── dashboard/               # Web dashboard (Python stdlib HTTP)
@@ -585,7 +585,7 @@ aiZee is not a skills collection or a process framework — it is the **policy l
 | :--- | :--- | :--- | :--- | :--- |
 | **Category** | Governance + agent OS | Agile-ai process | Spec-driven toolkit | Skill library |
 | **Enforcement** | Runtime gates on every action | Process conventions | Spec templates | None (content only) |
-| **Skills** | 245 vendored, hash-locked | ~34 `bmad-*` | Templates | 410+ |
+| **Skills** | 247 vendored, hash-locked | ~34 `bmad-*` | Templates | 410+ |
 | **Personas** | 29 auto-detected + lifecycle-aware | 6 named agents | — | — |
 | **Memory** | Hybrid SQLite + vectors, bi-temporal | `persistent_facts` files | — | — |
 | **MCP** | Server (46 tools) + client firewall | — | — | — |

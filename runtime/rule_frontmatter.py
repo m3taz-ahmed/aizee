@@ -17,23 +17,41 @@ _FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*(?:\n|$)", re.DOTALL)
 class RuleFrontmatter:
     """Conditional loading metadata for a rule or skill."""
 
+    name: str = ""
+    description: str = ""
     paths: list[str] | None = None
     personas: list[str] | None = None
     stack: list[str] | None = None
     triggers: list[str] | None = None
     tech_stack: list[str] | None = None
     always: bool = False
+    invoke: str = "auto"  # "auto" (trigger-fired) | "user" (explicit call only)
 
     def to_dict(self) -> dict[str, Any]:
         """Return a plain dict for serialization."""
         return {
+            "name": self.name,
+            "description": self.description,
             "paths": self.paths,
             "personas": self.personas,
             "stack": self.stack,
             "triggers": self.triggers,
             "tech_stack": self.tech_stack,
             "always": self.always,
+            "invoke": self.invoke,
         }
+
+
+def _as_invoke(value: Any) -> str:
+    """Normalize a YAML ``invoke:`` value to ``user`` or ``auto``.
+
+    Adopted from mattpocock/skills' user-invoked vs auto-triggered split:
+    ``user`` skills run only when explicitly called (``/name``); ``auto``
+    skills may fire on triggers. Unknown values fall back to ``auto``.
+    """
+    if isinstance(value, str) and value.strip().lower() in ("user", "auto"):
+        return value.strip().lower()
+    return "auto"
 
 
 def _as_str_list(value: Any) -> list[str] | None:
@@ -67,12 +85,15 @@ def parse_frontmatter(text: str) -> tuple[RuleFrontmatter, str]:
     if not isinstance(data, dict):
         data = {}
     return RuleFrontmatter(
+        name=str(data.get("name") or ""),
+        description=str(data.get("description") or ""),
         paths=_as_str_list(data.get("paths")),
         personas=_as_str_list(data.get("personas")),
         stack=_as_str_list(data.get("stack")),
         triggers=_as_str_list(data.get("triggers")),
         tech_stack=_as_str_list(data.get("tech_stack")),
         always=bool(data.get("always", False)),
+        invoke=_as_invoke(data.get("invoke")),
     ), body
 
 

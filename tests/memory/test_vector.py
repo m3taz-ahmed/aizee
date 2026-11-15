@@ -543,6 +543,14 @@ class TestCoverageRestore:
             vector_module._resolve_sentence_transformer()
             assert vector_module.SentenceTransformer is None
 
+    def test_resolve_fastembed_import_failure(self):
+        with (
+            patch.object(vector_module, "FastTextEmbedding", vector_module._ST_UNSET),
+            patch("importlib.import_module", side_effect=ImportError("no fe")),
+        ):
+            vector_module._resolve_fastembed()
+            assert vector_module.FastTextEmbedding is None
+
     def test_corrupt_id_map_starts_empty(self):
         tmp = _tmp()
         try:

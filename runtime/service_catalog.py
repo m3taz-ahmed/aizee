@@ -53,6 +53,7 @@ class ServiceDescriptor:
     description: str = ""
     context7_id: str = ""
     lords: frozenset[str] = field(default_factory=frozenset)
+    invoke: str = "auto"  # "auto" (trigger-fired) | "user" (explicit call only)
 
     def supports_persona(self, persona: str) -> bool:
         """True if this descriptor serves the given persona."""
@@ -86,6 +87,7 @@ class ServiceCatalog:
         self._by_trigger: dict[str, list[ServiceDescriptor]] = {}
         self._by_tech: dict[str, list[ServiceDescriptor]] = {}
         self._by_lord: dict[str, list[ServiceDescriptor]] = {}
+        self._by_invoke: dict[str, list[ServiceDescriptor]] = {}
         self._status_descriptors: list[ServiceDescriptor] = []
         self._build_indexes()
 
@@ -105,6 +107,9 @@ class ServiceCatalog:
             for trigger in desc.triggers:
                 key = trigger.lower()
                 self._by_trigger.setdefault(key, []).append(desc)
+
+            # by_invoke (user-invoked vs auto-triggered taxonomy)
+            self._by_invoke.setdefault(desc.invoke, []).append(desc)
 
             # by_tech_stack
             for tech in desc.tech_stack:
@@ -130,6 +135,10 @@ class ServiceCatalog:
     def by_persona(self, persona: str) -> list[ServiceDescriptor]:
         """Lookup by persona name (e.g., 'ARCH', 'QA', 'DEV')."""
         return list(self._by_persona.get(persona, []))
+
+    def by_invoke(self, invoke: str) -> list[ServiceDescriptor]:
+        """Return descriptors for an invocation class (``user`` or ``auto``)."""
+        return list(self._by_invoke.get(invoke.lower(), []))
 
     def by_trigger(self, trigger: str) -> list[ServiceDescriptor]:
         """Lookup by exact trigger keyword (case-insensitive)."""
@@ -211,7 +220,9 @@ class ServiceCatalog:
         }
 
 
-def _descriptor_meta(md_file: Path) -> tuple[set[str], set[str], set[str], str]:
+def _descriptor_meta(
+    md_file: Path,
+) -> tuple[set[str], set[str], set[str], str, str]:
     """Extract triggers, personas, tech-stack, and description from a doc.
 
     Reads YAML frontmatter (skills) plus the ``[TRIGGER]``/``[OBJ]``
@@ -222,13 +233,13 @@ def _descriptor_meta(md_file: Path) -> tuple[set[str], set[str], set[str], str]:
     try:
         text = md_file.read_text(encoding="utf-8")
     except OSError:
-        return set(), set(), set(), ""
+        return set(), set(), set(), "", "auto"
     head = "\n".join(text.splitlines()[:_META_SCAN_LINES])
     fm, body = parse_frontmatter(head)
     triggers = {t.strip().lower() for t in (fm.triggers or []) if t.strip()}
     personas = {p.strip() for p in (fm.personas or []) if p.strip()}
     tech = {t.strip() for t in (fm.tech_stack or []) if t.strip()}
-    description = ""
+    description = fm.description.strip()[:200]
     for line in body.splitlines():
         if tmatch := _TRIGGER_LINE_RE.match(line.strip()):
             triggers.update(
@@ -236,12 +247,12 @@ def _descriptor_meta(md_file: Path) -> tuple[set[str], set[str], set[str], str]:
             )
         if not description and (omatch := _OBJ_LINE_RE.match(line.strip())):
             description = omatch.group(1).strip()[:200]
-    return triggers, personas, tech, description
+    return triggers, personas, tech, description, fm.invoke
 
 
 def _file_descriptor(name: str, md_file: Path, kind: str) -> ServiceDescriptor:
     """Build a descriptor for one markdown file (flat or SKILL.md layout)."""
-    triggers, personas, tech, description = _descriptor_meta(md_file)
+    triggers, personas, tech, description, invoke = _descriptor_meta(md_file)
     triggers.add(name.lower().replace("-", " "))
     return ServiceDescriptor(
         name=name,
@@ -251,6 +262,7 @@ def _file_descriptor(name: str, md_file: Path, kind: str) -> ServiceDescriptor:
         tech_stack=frozenset(tech),
         file_path=str(md_file),
         description=description,
+        invoke=invoke,
     )
 
 

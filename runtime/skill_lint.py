@@ -335,7 +335,9 @@ def run_lint(root: Path, write: bool = False) -> dict[str, Any]:
     structure = lint_structure(root)
     index_path = str(write_index(root, metas)) if write else ""
     return {
-        "ok": not issue_map and not collisions and not structure,
+        # Collisions are informational (heuristic trigger-overlap warnings) —
+        # they surface in the report but do not fail the lint, matching docs.
+        "ok": not issue_map and not structure,
         "skills": len(metas),
         "issues": issue_map,
         "collisions": collisions,

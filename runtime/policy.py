@@ -43,6 +43,22 @@ _DESTRUCTIVE_ACTIONS: frozenset[str] = frozenset({
     "rm", "delete", "truncate", "drop", "destroy", "wipe", "purge",
     "kill", "terminate", "force",
 })
+# Monetary action tokens — anything costing money must never inherit a
+# permissive default (MONEY-01). Whole-token match only, same convention
+# as _DESTRUCTIVE_ACTIONS ("billing" matches, "billed_report" does not).
+_PAID_ACTIONS: frozenset[str] = frozenset({
+    "paid", "pay", "payment", "purchase", "spend", "bill", "billing",
+    "charge", "checkout", "invoice",
+})
+
+
+def _is_paid_action(action_type: str) -> bool:
+    """True when an action type denotes a monetary/paid operation."""
+    lowered = action_type.strip().lower()
+    if "paid_call" in lowered:  # canonical compound type, substring-safe
+        return True
+    tokens = set(re.split(r"[^a-z0-9_-]+", lowered))
+    return bool(tokens & _PAID_ACTIONS)
 
 
 def _classify_action(action_type: str) -> Action:
@@ -371,6 +387,10 @@ class PolicyEngine:
         # Otherwise, use the classified decision for known types, fall back to configured default.
         if self.default_action == "deny":
             fallback: Action = "deny"
+        elif _is_paid_action(action_type):
+            # MONEY-01: a monetary action is always "ask" at the policy
+            # boundary — it never inherits a permissive default_action.
+            fallback = "ask"
         elif classified != "ask":
             fallback = classified
         else:

@@ -248,3 +248,20 @@ def test_run_file_live_flag_forces_live(scen_root: Path, monkeypatch: pytest.Mon
         "turns": [{"user_input": "u", "assertions": [{"type": "required_pattern", "pattern": "ok"}]}]}]})
     (r,) = run_file(f, scen_root, live=True)
     assert r.eval_type == "live" and r.passed
+
+
+def test_format_results_exposes_skipped_detail() -> None:
+    """Skipped LLM-graded scenarios must surface at summary level (S4)."""
+    from eval.skill_scenarios import CheckResult, format_results
+
+    results = [
+        CheckResult("a", "static", True),
+        CheckResult("sec-1", "live", False, skipped=True, reason="needs --live"),
+        CheckResult("sec-2", "live", False, skipped=True, reason="needs --live"),
+    ]
+    rep = format_results(results)
+    assert rep["skipped"] == 2
+    assert rep["skipped_detail"] == [
+        {"id": "sec-1", "reason": "needs --live"},
+        {"id": "sec-2", "reason": "needs --live"},
+    ]

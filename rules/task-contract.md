@@ -11,3 +11,4 @@
 8. [REQ] Trivial Exemption: a prompt MAY skip the plan only after a recorded `trivial` classification with a real reason (typo, rename, comment, single localized fix). Record via `aizee task classify`.
 9. [CMD] Strict mode: `AIZEE_TASK_STRICT=1` makes out-of-scope edits raise `SCOPE_VIOLATION` instead of warn.
 10. [CMD] Hook surface: `aizee hook inject` prints the active contract (progress, active task, scope); `afterFileEdit` observe emits scope warnings.
+11. [REQ] `[TASK-11]` Numbers Not Impressions: completion reports cite measured output — command results, test counts, metric values (SSIM/LUFS/diff/coverage), and file paths to artifacts. "Looks right", "should work", and prose-only claims are NOT evidence; every verification is re-checkable by re-running the cited command.

@@ -292,7 +292,7 @@ IGNORED_FILE_REFS = {
     '09-ai-review.md', 'mobile-standards.md', 'gemini.md', 'workflows\\nn-name.md',
     'tech-stack\\xxx.md', 'verification-patterns.md', 'filename.md', 'bug_report.md',
     'feature_request.md', 'tech_stack_request.md', 'pull_request_template.md',
-    'active-context.md', 'skill.md', 'memory-archive.md',
+    'active-context.md', 'skill.md', 'memory-archive.md', 'intake.md',
     'rounded.md', 'spacing.md',
     # project-specific placeholder files (referenced conceptually, not tracked)
     'spec.md', 'plan.md', 'implementation_plan.md', 'tasks.md', 'pxx-name.md',
