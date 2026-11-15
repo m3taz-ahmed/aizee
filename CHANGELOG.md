@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [6.12.0] - 2026-11-15 (agent-skill-ecosystem adoption — measured gates + paid-spend governance)
+
+
+
 ## [6.11.0] - 2026-11-14 (agent-ecosystem wave)
 
 
