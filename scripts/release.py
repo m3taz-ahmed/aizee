@@ -125,6 +125,27 @@ def bump(old: str, new: str, title: str, today: str, dry_run: bool) -> list[str]
     return touched
 
 
+def _resolve_publish_token() -> str | None:
+    """Resolve the PyPI token — env first, then the repo's ``.env``.
+
+    ``.env`` is gitignored and holds ``UV_PUBLISH_TOKEN`` on this machine;
+    checking ``os.environ`` alone made every release ask for it again."""
+    import os
+
+    for var in ("UV_PUBLISH_TOKEN", "TWINE_PASSWORD"):
+        if os.environ.get(var):
+            return var
+    env_file = ROOT / ".env"
+    if env_file.is_file():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            key, sep, value = line.partition("=")
+            key = key.strip()
+            if sep and key in ("UV_PUBLISH_TOKEN", "TWINE_PASSWORD") and value.strip():
+                os.environ[key] = value.strip().strip('"').strip("'")
+                return key
+    return None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="aiZee release — bump, validate, tag, push, publish")
     ap.add_argument("--version", required=True, help="New version, e.g. 6.8.0")
@@ -186,9 +207,8 @@ def main() -> int:
     if not args.no_release:
         _run(["gh", "release", "create", f"v{new}", "--title", f"aiZee v{new}", "--generate-notes"])
     if args.publish_pypi:
-        import os
-        if not (os.environ.get("UV_PUBLISH_TOKEN") or os.environ.get("TWINE_PASSWORD")):
-            _err("--publish-pypi needs UV_PUBLISH_TOKEN (or TWINE_PASSWORD) in env")
+        if _resolve_publish_token() is None:
+            _err("--publish-pypi needs UV_PUBLISH_TOKEN (or TWINE_PASSWORD) in env or .env")
             return 1
         if _run(["uv", "build"], check=False).returncode != 0:
             _err("uv build failed — PyPI publish aborted")
