@@ -278,8 +278,8 @@ deps:
       windows: >-
         powershell -NoProfile -Command "Start-Process -FilePath litellm -ArgumentList '--config','{root}\plugins\code2video\litellm-c2v.yaml','--port','4010' -WindowStyle Hidden"
     guidance: >-
-      Proxy auto-starts at logon via Startup-folder VBS `aizee-nim-proxy.vbs`
-      (litellm --config plugins\code2video\litellm-c2v.yaml --port 4010).
+      Start on demand: `aizee deps ensure code2video-nim-proxy` (spawns litellm
+      --config plugins\code2video\litellm-c2v.yaml --port 4010, verifies health).
       Requires NVIDIA_API_KEY + LITELLM_MASTER_KEY (User-scope env).
 
   # ---------- GPU acceleration (NVIDIA) ----------
@@ -627,7 +627,23 @@ deps:
     severity: optional
     required_by: ["local LLM serving — run multiple models without VRAM stacking"]
     tags: [local-inference]
-    guidance: "Portable binary in ~/.local/bin (release: github.com/mostlygeek/llama-swap). Config at ~/.config/llama-swap/config.yaml — upstream llama-server (llama.cpp Vulkan build) in ~/.local/bin/llama.cpp; auto-starts at logon via Startup-folder VBS `aizee-llama-swap.vbs` bound to localhost:8080."
+    guidance: "Portable binary in ~/.local/bin (release: github.com/mostlygeek/llama-swap). Config at ~/.config/llama-swap/config.yaml — upstream llama-server (llama.cpp Vulkan build) in ~/.local/bin/llama.cpp. Start on demand: `aizee deps ensure llama-swap-server`."
+
+  - id: llama-swap-server
+    name: llama-swap router (port 8080)
+    kind: command
+    check_cmd:
+      all: ["curl", "-sf", "http://localhost:8080/v1/models"]
+    severity: optional
+    required_by:
+      - local LLM serving — OpenAI-compatible :8080; start on demand, not at boot
+    tags: [local-inference]
+    install:
+      windows: >-
+        powershell -NoProfile -Command "Start-Process -FilePath llama-swap -ArgumentList '-config','C:\Users\Moataz\.config\llama-swap\config.yaml','-listen','localhost:8080' -WindowStyle Hidden"
+    guidance: >-
+      Start on demand: `aizee deps ensure llama-swap-server` (spawns
+      llama-swap -config ~/.config/llama-swap/config.yaml -listen localhost:8080).
 
   - id: microsandbox
     name: microsandbox (microVM code-execution sandbox)

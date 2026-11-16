@@ -2062,8 +2062,11 @@ def cmd_deps(args: argparse.Namespace) -> int:
     from runtime.deps import check_all
 
     os_root = _root(args)
-    if getattr(args, "deps_subcommand", None) == "install":
+    deps_sub = getattr(args, "deps_subcommand", None)
+    if deps_sub == "install":
         return _deps_install(args, os_root, check_all)
+    if deps_sub == "ensure":
+        return _deps_ensure(args, os_root, check_all)
 
     tags = {args.tag} if getattr(args, "tag", "") else None
     statuses = check_all(os_root, tags=tags)
@@ -2125,6 +2128,53 @@ def _deps_install(args: argparse.Namespace, os_root: Path, check_all: Any) -> in
             return 1
 
     results = install_statuses(os_root, actionable, dry_run=args.dry_run)
+    if getattr(args, "json", False):
+        print(json.dumps([r.__dict__ for r in results], indent=2, ensure_ascii=False))
+    else:
+        for r in results:
+            color = "green" if r.ok else "red"
+            console.print(f"[{color}]{r.dep_id}[/{color}] {r.detail} [dim]{r.command}[/dim]")
+    return 0 if all(r.ok for r in results) else 1
+
+
+def _deps_ensure(args: argparse.Namespace, os_root: Path, check_all: Any) -> int:
+    """Ensure deps are satisfied — start/install only what's down, then verify.
+
+    On-demand convergence for agents and users: services (e.g. nim-proxy,
+    llama-swap-server) boot asynchronously, so the post-install recheck polls
+    until each dep verifies or the grace window ends.
+    """
+    import time
+
+    from runtime.deps import _Ctx, check_dep, install_statuses, load_manifest, media_dir
+
+    ids = set(args.ids or [])
+    statuses = check_all(os_root, ids=ids or None)
+    targets = [s for s in statuses if not s.ok]
+    if not targets:
+        console.print("[green]All requested deps already satisfied.[/green]")
+        return 0
+    actionable = [s for s in targets if s.can_install]
+    for s in targets:
+        if not s.can_install:
+            console.print(f"[yellow]{s.spec.id}[/yellow]: manual — {s.spec.guidance or s.detail}")
+    if not actionable:
+        return 1
+
+    results = install_statuses(os_root, actionable, dry_run=args.dry_run)
+    _, meta = load_manifest(os_root)
+    ctx = _Ctx(root=os_root, media=media_dir(meta))
+    spec_by_id = {s.spec.id: s.spec for s in actionable}
+    deadline = time.monotonic() + args.wait
+    for r in results:
+        if r.ok or args.dry_run:
+            continue
+        spec = spec_by_id[r.dep_id]
+        while time.monotonic() < deadline:
+            if check_dep(spec, ctx).ok:
+                r.ok, r.detail = True, "verified after start"
+                break
+            time.sleep(2)
     if getattr(args, "json", False):
         print(json.dumps([r.__dict__ for r in results], indent=2, ensure_ascii=False))
     else:
@@ -3318,6 +3368,11 @@ def main(argv: list[str] | None = None) -> int:
     p_deps_install.add_argument("--yes", "-y", action="store_true", help="Skip confirmation")
     p_deps_install.add_argument("--dry-run", action="store_true", help="Print commands without running")
     p_deps_install.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_deps_ensure = sp_deps.add_parser("ensure", help="Ensure deps are up: start/install only what's down, verify it came up (on-demand services)")
+    p_deps_ensure.add_argument("ids", nargs="*", help="Dep ids (default: all unsatisfied)")
+    p_deps_ensure.add_argument("--wait", type=int, default=60, help="Seconds to wait for a started dep to verify (default: 60)")
+    p_deps_ensure.add_argument("--dry-run", action="store_true", help="Print commands without running")
+    p_deps_ensure.add_argument("--json", action="store_true", help="Machine-readable output")
 
     # --- hooks ---
     p_hooks = sub.add_parser("hooks", help="Agent-harness hooks: install | status | fire")

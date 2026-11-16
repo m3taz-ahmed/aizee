@@ -358,7 +358,9 @@ def _check_command(spec: DepSpec, ctx: _Ctx) -> tuple[State, str, str]:
         )
     except (OSError, subprocess.TimeoutExpired):
         return State.MISSING, "", "check command failed to run"
-    if proc.returncode == 0 and re.search(spec.expect_regex or ".", proc.stdout + proc.stderr):
+    if proc.returncode == 0 and (
+        not spec.expect_regex or re.search(spec.expect_regex, proc.stdout + proc.stderr)
+    ):
         return State.OK, "", ""
     return State.MISSING, "", "check output did not match expected capability"
 
