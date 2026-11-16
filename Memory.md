@@ -374,3 +374,12 @@ untime/dns_wire.py + `runtime/domain_intel.py`): clean-room (no AGPL vendoring) 
 - **PyPI token lives in `.env` at the repo root** (`UV_PUBLISH_TOKEN` — gitignored, not in process env). `env | grep` never finds it; this is why every release re-asked. `release.py` now resolves env→`.env` automatically (`_resolve_publish_token`). Mirror resynced via `scripts/update_aizee.bat`.
 - **CI failures on the release commit, fixed in `7d5ef76`:** (1) `aiZee Security`/gitleaks — default shallow checkout (fetch-depth 1) cannot resolve `before^` when a push carries >1 commit → `fetch-depth: 0` added, matching supply-chain.yml; (2) `validate`/Docs-sync — README test-count badges were stale (8014 vs actual 8064) → `python scripts/sync_docs.py` regenerates before pushing. Lesson: run sync_docs after any test-count-changing wave, before release.
 - Release workflow for v6.12.0 completed green: Validate Release, Build & Push Docker, Generate & Sign SBOM, Create GitHub Release — all success.
+
+## 2026-11-16 — all 48 external deps green; local services made persistent
+
+- **deps: 48/48 ok** (was 5 missing). docker-daemon ok once Docker Desktop started; docker-image-code2video was already pulled (daemon was hiding it).
+- **NIM proxy (`code2video-nim-proxy`)**: litellm on :4010 live (`health/liveliness` → alive). Keys DO exist at User scope (`NVIDIA_API_KEY`, `LITELLM_MASTER_KEY`, `CODE2VIDEO_CLAUDE_API_KEY`/`_BASE_URL`) — user's "no keys" meant no *paid* provider keys; the free NIM route is fully wired.
+- **llama-swap v273**: config `~/.config/llama-swap/config.yaml` (model `qwen2.5-coder-7b` → LM Studio .gguf, upstream = llama.cpp **Vulkan** build b12431 at `~/.local/bin/llama.cpp/`). Verified end-to-end: `:8080/v1/chat/completions` returned a real completion. **Bind `localhost:8080`, never `-listen :8080`** (llama-swap binds 0.0.0.0 by default and warns).
+- **microsandbox v0.7.15**: needs `libkrunfw.dll` BESIDE `msb.exe` (release asset `libkrunfw-windows-x86_64.dll` renamed) — `msb doctor` green. **No `msb server` in v0.7.x** — runs per-command (`msb run`/`create`); deps.yaml guidance was stale, fixed.
+- **Persistence (no admin → Task Scheduler denied)**: Startup-folder VBS wrappers `aizee-nim-proxy.vbs` + `aizee-llama-swap.vbs` in `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` — hidden, run at logon, see User-scope env.
+- **Agent convention (user directive)**: when a task needs a local service (msb sandbox, llama-swap, nim-proxy), the agent starts/uses it itself — don't ask the user to run things.

@@ -278,8 +278,9 @@ deps:
       windows: >-
         powershell -NoProfile -Command "Start-Process -FilePath litellm -ArgumentList '--config','{root}\plugins\code2video\litellm-c2v.yaml','--port','4010' -WindowStyle Hidden"
     guidance: >-
-      Start the proxy: litellm --config {root}\plugins\code2video\litellm-c2v.yaml
-      --port 4010. Requires NVIDIA_API_KEY (env) with NIM inference access.
+      Proxy auto-starts at logon via Startup-folder VBS `aizee-nim-proxy.vbs`
+      (litellm --config plugins\code2video\litellm-c2v.yaml --port 4010).
+      Requires NVIDIA_API_KEY + LITELLM_MASTER_KEY (User-scope env).
 
   # ---------- GPU acceleration (NVIDIA) ----------
   - id: ffmpeg-nvenc
@@ -626,7 +627,7 @@ deps:
     severity: optional
     required_by: ["local LLM serving — run multiple models without VRAM stacking"]
     tags: [local-inference]
-    guidance: "Download release binary: https://github.com/mostlygeek/llama-swap/releases — proxies :8080, unloads idle models; ideal for the 6 GB RTX 4050."
+    guidance: "Portable binary in ~/.local/bin (release: github.com/mostlygeek/llama-swap). Config at ~/.config/llama-swap/config.yaml — upstream llama-server (llama.cpp Vulkan build) in ~/.local/bin/llama.cpp; auto-starts at logon via Startup-folder VBS `aizee-llama-swap.vbs` bound to localhost:8080."
 
   - id: microsandbox
     name: microsandbox (microVM code-execution sandbox)
@@ -636,4 +637,4 @@ deps:
     severity: optional
     required_by: ["isolated execution for untrusted agent code (security boundary)"]
     tags: [security, sandbox]
-    guidance: "Install: https://github.com/superradcompany/microsandbox — Windows installer in releases; `msb server start`, MCP-ready."
+    guidance: "msb.exe + libkrunfw.dll beside it in ~/.local/bin (release assets msb-windows-x86_64.exe + libkrunfw-windows-x86_64.dll, renamed). Runs per-command — `msb run`/`msb create`, no daemon; agent may use it on demand. Verify host readiness: `msb doctor` (requires Windows Hypervisor Platform)."
