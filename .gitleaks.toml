@@ -9,6 +9,8 @@ description = "Test fixtures, eval prompts, and doc prose — never real credent
 regexTarget = "line"
 paths = [
     '''^tests/''',
+    '''^runtime/tests/''',
+    '''^rules/''',
     '''^skills/''',
     '''^CHANGELOG\.md$''',
 ]
