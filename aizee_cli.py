@@ -2144,6 +2144,7 @@ def _deps_ensure(args: argparse.Namespace, os_root: Path, check_all: Any) -> int
     llama-swap-server) boot asynchronously, so the post-install recheck polls
     until each dep verifies or the grace window ends.
     """
+    import dataclasses
     import time
 
     from runtime.deps import _Ctx, check_dep, install_statuses, load_manifest, media_dir
@@ -2166,13 +2167,13 @@ def _deps_ensure(args: argparse.Namespace, os_root: Path, check_all: Any) -> int
     ctx = _Ctx(root=os_root, media=media_dir(meta))
     spec_by_id = {s.spec.id: s.spec for s in actionable}
     deadline = time.monotonic() + args.wait
-    for r in results:
+    for i, r in enumerate(results):
         if r.ok or args.dry_run:
             continue
         spec = spec_by_id[r.dep_id]
         while time.monotonic() < deadline:
             if check_dep(spec, ctx).ok:
-                r.ok, r.detail = True, "verified after start"
+                results[i] = dataclasses.replace(r, ok=True, detail="verified after start")
                 break
             time.sleep(2)
     if getattr(args, "json", False):
