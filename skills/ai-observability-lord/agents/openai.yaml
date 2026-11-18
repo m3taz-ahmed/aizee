@@ -1,0 +1,5 @@
+interface:
+  display_name: Ai Observability Lord
+  short_description: Lord skill for AI observability and tracing — OpenTelemetry +
+    OpenInference standards, span attributes, eval integration, cost/latency/error
+  default_prompt: Use $ai-observability-lord to help with this task.

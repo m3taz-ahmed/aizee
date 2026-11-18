@@ -75,7 +75,7 @@ class PlanError(Exception):
 
 
 # ---------------------------------------------------------------------------
-# Expression engine — a tiny safe DSL, never eval().
+# Expression engine — a tiny safe DSL, never eval().  # aizee-scan: ignore
 # Grammar: or -> and -> not -> cmp -> add -> mul -> unary -> postfix -> atom
 # ---------------------------------------------------------------------------
 

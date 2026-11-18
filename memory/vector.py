@@ -74,12 +74,21 @@ def _resolve_fastembed() -> None:
 
 
 def _embed_backend() -> str:
-    """Embedder backend: env override or auto (sentence-transformers first)."""
+    """Embedder backend: env override, driver patch, or auto (st first)."""
     choice = os.environ.get("AIZEE_EMBEDDER", "auto").strip().lower()
     if choice in ("sentence-transformers", "st", "sentence"):
         return "st"
     if choice in ("fastembed", "fe"):
         return "fastembed"
+    # Declarative machine-fingerprint override (drivers/*.json) — env wins.
+    try:
+        from runtime.drivers import embedder_preference
+
+        pref = embedder_preference(config.discover_root() / "drivers")
+        if pref:
+            return pref
+    except Exception as exc:  # drivers are best-effort, never block startup
+        logger.debug("driver embedder preference unavailable: %s", exc)
     return "auto"
 
 
@@ -129,7 +138,15 @@ class Embedder:
                 if Embedder._singleton is not None and Embedder._singleton_model_name == self.model_name:
                     self.model = Embedder._singleton
                 else:
-                    self.model = SentenceTransformer(self.model_name)
+                    kwargs: dict[str, Any] = {}
+                    try:
+                        from runtime.drivers import gpu_enabled
+
+                        if gpu_enabled(config.discover_root() / "drivers") is False:
+                            kwargs["device"] = "cpu"
+                    except Exception as exc:
+                        logger.debug("driver gpu_enabled check unavailable: %s", exc)
+                    self.model = SentenceTransformer(self.model_name, **kwargs)
                     Embedder._singleton = self.model
                     Embedder._singleton_model_name = self.model_name
                 self.backend = "st"

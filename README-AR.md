@@ -6,13 +6,13 @@
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="حالة CI"></a>
     <img src="https://img.shields.io/badge/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-6.12.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="الإصدار 6.12.0">
-    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-8068%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="8068 اختبار ناجح">
+    <img src="https://img.shields.io/badge/%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%D8%A7%D8%AA-8132%20%D9%86%D8%A7%D8%AC%D8%AD-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="8132 اختبار ناجح">
     <img src="https://img.shields.io/badge/%D8%AA%D8%BA%D8%B7%D9%8A%D8%A9-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="تغطية 100%">
     <img src="https://img.shields.io/badge/%D8%A7%D9%84%D8%B1%D8%AE%D8%B5%D8%A9-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="الرخصة: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/%D8%B4%D8%AE%D8%B5%D9%8A%D8%A7%D8%AA-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 شخصية">
-    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-247-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="247 مهارة">
+    <img src="https://img.shields.io/badge/%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-248-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="248 مهارة">
     <img src="https://img.shields.io/badge/%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 سير عمل">
     <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 مرجع تقنية">
   </p>
@@ -62,6 +62,38 @@ $ aizee doctor --json | jq .verdict
 
 ---
 
+## الجديد في v6.13.0 — درايفرات متكيفة مع الجهاز وضمان الإصدار
+
+موجة تبنّي من تقرير الدراسة (`docs/studies/study-stickman-apkstart-2026-11-18.md`):
+
+- **باتشات الدرايفر** (`runtime/drivers.py`) — ملفات `aizee-driver/1` JSON بتتطابق مع بصمة الجهاز وتطبّق تأثيرات whitelist (`embedder`، `xdist_workers`، `gpu_enabled`)؛ المفاتيح المجهولة بتفشل closed. موصولة فعليًا بـ vector backend و `aizee test`. أمر `aizee drivers` بيعرض اللي بينطبق.
+- **تنبيه-مرة لنتائج doctor** (`runtime/doctor_findings.py`) — `aizee doctor` بيحفظ الفحوصات الفاشلة، بينبّه عند أول ظهور بس، وبيعلّم التحسّن resolved؛ والفرق بيطلع في `--json` لحلقات المراقبة.
+- **تصدير OpenAI** — `aizee skill emit-openai <name>` بيكتب `agents/openai.yaml` جوه مجلدات المهارات.
+- **بوابة تطابق الـ README المترجم** — `aizee check-docs` بقى يتحقق إن تسلسل العناوين والشارات والجداول والـ fences متطابقة عبر كل `README*.md`.
+- **مهارة `directing-stickman-videos`** vendored بنسخة media-light؛ واتصلّح bypass في فحص ذيل المدخلات بـ injection-detector تحت ضغط الـ deadline.
+
+## الجديد في v6.12.0 — بوابات مقاسة وحوكمة الصرف المدفوع
+
+الموجة الثانية من تبنّي النظام البيئي (التقرير: `docs/studies/study-animate-skill-ecosystem-2026-11-15.md`):
+
+- **8 قواعد حاكمة متبناة** — `BEH-05` إعادة التحقق، `DET-01` حتمية، `EVAL-01` مقارنات على نفس المنصة، `MONEY-01` عرض سعر ← موافقة ← تقرير صرف، وأربع قواعد إضافية.
+- **`SpendLedger`** (`runtime/budget.py`) — كل استدعاء مدفوع يحتاج عرض سعر مكرر-الفحص بالمحتوى، وموافقة تُستخدم مرة واحدة، ثم سجل خصم موقّع. الصرف غير المعتمد يرفع `PolicyDeniedError`.
+- **بوابات مقاسة** (`runtime/measured_gate.py`) — فحوص التسليم ترجع مقاييس حقيقية (cut-error وSSIM والتغطية) مع بصمات منصة للمقارنات المتماثلة.
+- **تصنيف الاستدعاء** — المهارات تعلن `invoke: user|auto`؛ الفهرس يصنفها منفصلة فالمهارات المستدعاة يدويًا لا تعمل تلقائيًا أبدًا.
+- **فهرس مهارات عنون-بالمحتوى** — `aizee skill index` يطلع هويات إصدار sha256 (نمط vercel للإصدارات غير القابلة للتغيير)؛ هدف harness جديد `windsurf`.
+
+## الجديد في v6.11.0 — موجة النظام البيئي الوكيلي
+
+- **جداول روتينية تصريحية** — واجهة `schedule:` (`manual | every:<n> | cron:<5-field> | at:<ISO>`) مع `aizee routine due`.
+- **احتياطي fastembed** — `Embedder` يتحول إلى ONNX fastembed عند غياب sentence-transformers (بدون torch، يناسب VRAM بسعة 6 جيجا)؛ `AIZEE_EMBEDDER` يفرض باك إند.
+- **هدف `devin`** — `aizee skill install --harness devin` ← `./.devin/skills`.
+
+## الجديد في v6.10.x — روتينات متكررة
+
+- **الروتينات** (`runtime/routines.py`) — سير عمل شخصي مسمّى قابل للاستدعاء مع حالة دائمة عبر الجلسات: ملف تعريفي markdown + حالة JSON (كتابة ذرّية، استئذان-قبل-البدء، إلغاء تكرار run-id). `aizee routine list|match|begin|done|seen`.
+- **استعلامات `find`/`goal` عربية** — تجزئة أحرف يونيكود، فـ `aizee find "وظايف"` يطابق.
+- **تصليب CI/الإصدار** — مهلات لكل فحص في `aizee ci`، وإصلاح `NameError` في بوابة الإصدار، وإصلاح حافة المسافات في مفاتيح HMAC.
+
 ## الجديد في v6.9.0 — تبنّي أدوات الإبداع
 
 عشرة أنماط معمارية متبنّاة (إعادة تنفيذ نظيفة) من دراسة عشر أدوات إبداعية
@@ -98,13 +130,13 @@ Theatre.js وPencil2D وOpenVDB وSVG.js وNatron — للمبرمجين *و* ا
 
 ## الجديد — مكتبة مهارات موحدة + بيئة BMAD (v6.8.0+)
 
-سطح المهارات كبر من 155 لـ**245 مهارة** — منظومة agent-skills كاملة بقت مدمجة جوه الريبو، مربوطة بالشخصيات، والتريجرز مترجمة (EN+AR)، والنزاهة مقفولة بالـlock:
+سطح المهارات كبر من 155 لـ**248 مهارة** — منظومة agent-skills كاملة بقت مدمجة جوه الريبو، مربوطة بالشخصيات، والتريجرز مترجمة (EN+AR)، والنزاهة مقفولة بالـlock:
 
 - **BMAD-METHOD مدمج بالكامل** — كل مهارات BMAD (~34: `bmad-*`، `bmod-*`) عايشة في `skills/` مع بيئة `_bmad/` المحلية (config + scripts + شجرة التذاكر). الوكلاء: **Mary** (محللة)، **John** (PM)، **Winston** (مهندس معماري)، **Sally** (UX)، **Sofia** (PO)، **Amelia** (مطورة) — بيناديهم بلغة طبيعية، من غير تثبيت global.
 - **حزمة تسويق/نمو** — ~55 مهارة (seo-audit، ai-seo، cro، ads، cold-email، launch، pricing، paywalls، onboarding، referrals، revops…) بتريجرز ثنائية اللغة.
 - **توجيه شخصيات واعٍ بدورة الحياة** — `runtime/lifecycle.py` بيقرا الـinitiative النشطة في BMAD (`_bmad/config.toml` + artifacts في `_bmad-output/`) وبيميل اختيار الشخصية للمرحلة الحالية (discovery → PRD → breakdown → architecture → UX → implementation → review → retro). المشاريع بدون BMAD مش بتتأثر.
 - **تلميحات التسليم** — `detect_multiple` بيرجّع `next_persona_hint`: أقوى شخصية خارج المختارين، بتتحقن في السياق عشان المهام متعددة المجالات تنتقل بسلاسة.
-- **توزيع المهارات لكل مشروع** — `scripts/distribute-agent-skills.py` بيعمل junctions/hardlinks لكل الـ245 مهارة في `.agents/skills` (كل agent harness: Devin، Claude، Cursor، Codex…) + `.claude/skills` + `.devin/skills` — مفيش حاجة بتفضل global فالجلسات التانية تفضل خفيفة.
+- **توزيع المهارات لكل مشروع** — `scripts/distribute-agent-skills.py` بيعمل junctions/hardlinks لكل الـ248 مهارة في `.agents/skills` (كل agent harness: Devin، Claude، Cursor، Codex…) + `.claude/skills` + `.devin/skills` — مفيش حاجة بتفضل global فالجلسات التانية تفضل خفيفة.
 - **إثراء التريجرز + lint** — المهارات المستوردة خدّت تريجرز عربية؛ السكريبتات `enrich-imported-triggers.py` / `enrich-bmad-triggers.py` قابلة لإعادة التشغيل بعد تحديثات upstream.
 - **شخصية FINOPS اتصلحت** — مهارة `finops` مخصصة جديدة بدل الربط الغلط بـ`performance-engineer`.
 - **مانيفست الاعتماديات الخارجية** — `deps.yaml` بيعلن كل أداة محتاجاها aiZee (binaries، pip، git-repos، docker، env)؛ `aizee deps check|install` بيتحقق ويوفّرها (شوف [الأدوات الخارجية](#الأدوات-الخارجية--التوفير-التلقائي)).
@@ -141,7 +173,7 @@ Theatre.js وPencil2D وOpenVDB وSVG.js وNatron — للمبرمجين *و* ا
 ### افتراضيات أخف
 
 - **3 خوادم MCP افتراضيًا** — `aizee` (الحوكمة)، `graphify`، `context7`. خوادم التسويق/السوشيال/الفريلانس اختفت من كل الإعدادات المشحونة.
-- **46 أداة MCP مفعّلة** — 7 وحدات أدوات تسويقية (ads, analytics, CRO, email, freelance, SEO, social) لا تزال مشحونة لكنها معطّلة عبر `disabledToolModules` في `aizee_mcp/config.json`. أزل الاسم لإعادة تفعيلها.
+- **53 أداة MCP مفعّلة** — 7 وحدات أدوات تسويقية (ads, analytics, CRO, email, freelance, SEO, social) لا تزال مشحونة لكنها معطّلة عبر `disabledToolModules` في `aizee_mcp/config.json`. أزل الاسم لإعادة تفعيلها.
 - **31 إضافة معطّلة** — `plugins.yaml` يشحنها `enabled: false`؛ والصندوق الرملي يحجب الباقي. `code2video` و`graphify` و`context7` يبقون.
 - **كود ميت أُزيل** — وحدات runtime غير مستخدمة (`a2a_server`, `semantic_search`, `provider_registry`, `sql_injection_guard`, `plugin_system`, …) وتيستاتها حُذفت.
 
@@ -232,14 +264,31 @@ aizee bootstrap --target ~/.aizee --yes   # بناء جذر OS أدنى
 export AIZEE_ROOT=~/.aizee
 ```
 
+**pip (من GitHub، أحدث نسخة):**
+```bash
+pip install "git+https://github.com/m3taz-ahmed/aizee.git"
+```
+
 > إضافات اختيارية: `[dev]` (أدوات اختبار/فحص)، `[graphify]` (رسم بياني للكود)،
 > `[vector]` (تضمينات sentence-transformers — تتطلب torch)، `[vector-lite]`
 > (تضمينات fastembed/ONNX — بدون torch، تناسب VRAM بسعة 6 جيجا أو CPU فقط).
 
+**خريطة المثبّتات** — ملفات `.bat` مجرد مشغّلات رفيعة، مش مثبّتات منفصلة:
+
+| نقطة الدخول | التنفيذ الحقيقي | بيحافظ على `state/`/`brain/` |
+| :--- | :--- | :--- |
+| `install.ps1` / `install.sh` | المثبّتات الفعلية (وضعا النسخ وin-place) | أيوه |
+| `install.bat` | ← `installer/gui_installer.ps1` | أيوه |
+| `update.bat` | ← `scripts/update.py` (git pull + post-install) | أيوه |
+| `uninstall.bat` | ← `runtime/uninstaller_gui.py` (احتياطي: `aizee uninstall`) | مش منطبق |
+| `backup.bat` / `restore.bat` | ← `scripts/backup_brain.py` / `restore_brain.py` | مش منطبق |
+
+التثبيت والتحديث بيشغّلوا قائمة التقاعد `scripts/stale_files.txt`، فالملفات اللي اتشالت من الريبو بتتمسح من التثبيتات الموجودة كمان.
+
 ### التحقق
 
 ```bash
-aizee doctor    # فحص صحة (46 فحصًا)
+aizee doctor    # فحص صحة (90 فحصًا)
 aizee heal      # تشخيص + إصلاح آمن (dry-run؛ --apply للتنفيذ)
 aizee status    # الشخصية، المهارات، الميزانية
 aizee deps install   # توفير الأدوات الخارجية المعلنة في deps.yaml
@@ -302,9 +351,9 @@ aizee doctor                 # حكم deps داخل تقرير الصحة
 │   ├── codemode/            # تنفيذ code-mode معزول فوق أدوات MCP
 │   └── policies/            # YAMLs: default/guardian/probity/mcp_firewall
 ├── memory/                  # SQLite + FTS5 + vector، استعلامات ثنائية الزمن
-├── aizee_mcp/               # خادم MCP (46 أداة مفعّلة، 3 موارد)
+├── aizee_mcp/               # خادم MCP (53 أداة مفعّلة، 3 موارد)
 ├── eval/                    # معايير، فوضى، موثوقية، بوابة إصدار
-├── skills/                  # 247 مهارة (شخصيات + lords + BMAD + تسويق)
+├── skills/                  # 248 مهارة (شخصيات + lords + BMAD + تسويق)
 ├── _bmad/                   # بيئة BMAD التشغيلية (config/scripts — gitignored)
 ├── .agents/skills           # توزيع junctions لمحفّزات الوكلاء
 ├── deps.yaml                # ماني فيست الاعتماديات الخارجية (check/install)
@@ -437,7 +486,9 @@ python dashboard/server.py 8080
 | `aizee deps check\|install [ids]` | التحقق/توفير الاعتماديات الخارجية (deps.yaml) |
 | `aizee skill lock-check\|lock-update` | نزاهة المهارات: كشف الانحراف / إعادة القفل |
 | `aizee mcp freeze <srv> [--check]` | قفل لقطة سطح أدوات MCP |
-| `aizee check-docs` | التحقق من مراجع `[[file#symbol]]` في الدوكس |
+| `aizee check-docs` | التحقق من مراجع `[[file#symbol]]` في الدوكس + تطابق الـ README المترجم |
+| `aizee drivers [--json]` | بصمة الجهاز + أي باتشات driver بتتطبق |
+| `aizee skill emit-openai <name>` | كتابة manifest `agents/openai.yaml` جوه مجلد المهارة |
 | `aizee spec review <spec>` | خطة pipeline مراجع Goldfish |
 | `aizee intel <domain>` | استطلاع DNS/WHOIS/certs/subdomains |
 | `aizee eval` | فحوص سلوكية لسيناريوهات المهارات |
@@ -473,7 +524,7 @@ python dashboard/server.py 8080
 
 - **النواة:** Python خالص 3.10+ (لا حاجة لـ Node.js لنواة OS)
 - **الذاكرة:** SQLite + FTS5 + vectors اختيارية بـ SentenceTransformers
-- **MCP:** خادم FastMCP — 46 أداة مفعّلة افتراضيًا (7 وحدات تسويقية مشحونة لكن معطّلة عبر `disabledToolModules`)
+- **MCP:** خادم FastMCP — 53 أداة مفعّلة افتراضيًا (7 وحدات تسويقية مشحونة لكن معطّلة عبر `disabledToolModules`)
 - **لوحة القيادة:** خادم HTTP من stdlib + SQLite
 - **رسم المعرفة:** graphify (اختياري)
 - **التبعيات:** pyyaml، pydantic، rich، cryptography، numpy، turbovec
@@ -488,10 +539,10 @@ aiZee مش مكتبة مهارات ولا إطار عملية — هو **طبق�
 | :--- | :--- | :--- | :--- | :--- |
 | **الفئة** | حوكمة + نظام تشغيل وكلاء | عملية agile-ai | عدّة spec-driven | مكتبة مهارات |
 | **الإنفاذ** | بوابات runtime على كل إجراء | اتفاقيات عملية | قوالب مواصفات | مفيش (محتوى بس) |
-| **المهارات** | 247 مدمجة ومقفولة بالبصمة | ~34 `bmad-*` | قوالب | 410+ |
+| **المهارات** | 248 مدمجة ومقفولة بالبصمة | ~34 `bmad-*` | قوالب | 410+ |
 | **الشخصيات** | 29 تلقائية + واعية بدورة الحياة | 6 وكلاء مسمّين | — | — |
 | **الذاكرة** | SQLite + vectors هجين، ثنائية الزمن | ملفات `persistent_facts` | — | — |
-| **MCP** | خادم (46 أداة) + جدار للعميل | — | — | — |
+| **MCP** | خادم (53 أداة) + جدار للعميل | — | — | — |
 | **التثبيت** | `pip install aizee` | `npx skills add` | `uvx specify` | `npx skills add` |
 | **الأنسب لـ** | الحكم على إيه اللي الوكلاء *يقدروا* يعملوه | إدارة دورة حياة agile-ai | سير عمل موجّه بالمواصفات | مهارات plug-and-play |
 

@@ -7,13 +7,13 @@
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI status"></a>
     <img src="https://img.shields.io/badge/Version-6.12.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.12.0">
-    <img src="https://img.shields.io/badge/Tests-8068%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8068 passed">
+    <img src="https://img.shields.io/badge/Tests-8132%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8132 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-247-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="247 Skills">
+    <img src="https://img.shields.io/badge/Skills-248-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="248 Skills">
     <img src="https://img.shields.io/badge/Workflows-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 Tech-Stack refs">
   </p>
@@ -63,6 +63,38 @@ A **zero-compromise, version-controlled operating system** that sits between you
 
 ---
 
+## What's New in v6.13.0 — Machine-Adaptive Drivers & Release Assurance
+
+Study-driven adoption wave (report: `docs/studies/study-stickman-apkstart-2026-11-18.md`):
+
+- **Driver patches** (`runtime/drivers.py`) — declarative `aizee-driver/1` JSON matched against the machine fingerprint applies whitelisted effects (`embedder`, `xdist_workers`, `gpu_enabled`); unknown keys fail closed. Wired into the vector backend and `aizee test`. `aizee drivers` shows what fires.
+- **Notify-once doctor findings** (`runtime/doctor_findings.py`) — `aizee doctor` persists failing checks, pings only on first sight, marks recoveries resolved; the delta ships in `--json` for monitoring loops.
+- **OpenAI harness export** — `aizee skill emit-openai <name>` writes `agents/openai.yaml` into directory skills.
+- **Localized-README parity gate** — `aizee check-docs` now verifies heading sequence, badges, tables, and fences match across `README*.md`.
+- **`directing-stickman-videos` skill** vendored media-light; injection-detector tail-scan bypass under deadline pressure fixed.
+
+## What's New in v6.12.0 — Measured Gates & Paid-Spend Governance
+
+Second ecosystem-adoption wave (report: `docs/studies/study-animate-skill-ecosystem-2026-11-15.md`):
+
+- **8 adopted governing rules** — `BEH-05` re-verify, `DET-01` determinism, `EVAL-01` identical-rig, `MONEY-01` quote→approve→spend, and four more.
+- **`SpendLedger`** (`runtime/budget.py`) — every paid call needs a content-deduped quote, a single-use approval, then a signed charge record. Unapproved spend raises `PolicyDeniedError`.
+- **Measured gates** (`runtime/measured_gate.py`) — deliverable checks return real metrics (cut-error, SSIM, coverage) with rig fingerprints for identical-rig comparisons.
+- **Invoke taxonomy** — skills declare `invoke: user|auto`; the catalog indexes them separately so user-invoked skills never auto-fire.
+- **Content-addressed skill index** — `aizee skill index` emits sha256 release identities (vercel immutable-release pattern); new `windsurf` harness target.
+
+## What's New in v6.11.0 — Agent-Ecosystem Wave
+
+- **Declarative routine schedules** — `schedule:` frontmatter (`manual | every:<n> | cron:<5-field> | at:<ISO>`) with `aizee routine due`.
+- **fastembed fallback** — `Embedder` degrades to ONNX fastembed when sentence-transformers is absent (torch-free, fits 6 GB VRAM); `AIZEE_EMBEDDER` forces a backend.
+- **`devin` harness target** — `aizee skill install --harness devin` → `./.devin/skills`.
+
+## What's New in v6.10.x — Recurring Routines
+
+- **Routines** (`runtime/routines.py`) — named, invocable personal workflows with durable cross-session state: markdown dossier + JSON state (atomic writes, claim-before-start, run-id dedup). `aizee routine list|match|begin|done|seen`.
+- **Arabic `find`/`goal` queries** — unicode-letter tokenization, so `aizee find "وظايف"` matches.
+- **CI/release hardening** — per-check timeouts in `aizee ci`, release-gate `NameError` fix, HMAC key whitespace-edge fix.
+
 ## What's New in v6.9.0 — Creative-Tools Adoption Pass
 
 Ten architectural patterns adopted (clean-room reimplementations) from a
@@ -104,7 +136,7 @@ programmers *and* designers (report: `docs/studies/study-creative-animation-tool
 
 ## What's New — Unified Skill Library & BMAD Runtime (v6.8.0+)
 
-The skill surface grew from 155 to **245 skills** — the entire agent-skills
+The skill surface grew from 155 to **248 skills** — the entire agent-skills
 ecosystem is now vendored, persona-mapped, trigger-enriched (EN+AR), and
 integrity-locked inside the repo:
 
@@ -323,7 +355,7 @@ Both install and update run the `scripts/stale_files.txt` retirement list, so fi
 ### Verify
 
 ```bash
-aizee doctor    # Health check (46 checks)
+aizee doctor    # Health check (90 checks)
 aizee heal      # Diagnose + safe autofixes (dry-run; --apply to fix)
 aizee status    # Current persona, skills, budget
 aizee deps install   # Provision external tools declared in deps.yaml
@@ -385,7 +417,7 @@ one command that fixes it.
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 153 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 157 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -394,9 +426,9 @@ one command that fixes it.
 │   ├── codemode/            # Sandboxed code-mode tool execution
 │   └── policies/            # default/guardian/probity/mcp_firewall YAMLs
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
-├── aizee_mcp/               # MCP server (46 tools enabled, 3 resources)
+├── aizee_mcp/               # MCP server (53 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
-├── skills/                  # 247 persona + lord + BMAD + marketing skills
+├── skills/                  # 248 persona + lord + BMAD + marketing skills
 ├── _bmad/                   # BMAD runtime (config/scripts — gitignored)
 ├── .agents/skills           # Junction distribution for agent harnesses
 ├── deps.yaml                # External dependency manifest (check/install)
@@ -534,7 +566,9 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 | `aizee deps check\|install [ids]` | Verify/provision external deps (deps.yaml) |
 | `aizee skill lock-check\|lock-update` | Skill integrity: drift detection / re-lock |
 | `aizee mcp freeze <srv> [--check]` | Snapshot-lock MCP tool surface |
-| `aizee check-docs` | Validate `[[file#symbol]]` doc references |
+| `aizee check-docs` | Validate `[[file#symbol]]` doc references + localized-README parity |
+| `aizee drivers [--json]` | Machine profile + which driver patches apply |
+| `aizee skill emit-openai <name>` | Write `agents/openai.yaml` manifest into a skill dir |
 | `aizee spec review <spec>` | Goldfish reviewer-pipeline plan |
 | `aizee intel <domain>` | DNS/WHOIS/certs/subdomain recon |
 | `aizee eval` | Behavioral skill-scenario checks |
@@ -570,7 +604,7 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 
 - **Core:** Pure Python 3.10+ (no Node.js required for core OS)
 - **Memory:** SQLite + FTS5 + optional SentenceTransformers vectors
-- **MCP:** FastMCP server, 46 tools enabled by default (7 marketing tool modules ship gated via `disabledToolModules`)
+- **MCP:** FastMCP server, 53 tools enabled by default (7 marketing tool modules ship gated via `disabledToolModules`)
 - **Dashboard:** Python stdlib HTTP server + SQLite
 - **Knowledge graph:** graphify (optional)
 - **Dependencies:** pyyaml, pydantic, rich, cryptography, numpy, turbovec
@@ -585,10 +619,10 @@ aiZee is not a skills collection or a process framework — it is the **policy l
 | :--- | :--- | :--- | :--- | :--- |
 | **Category** | Governance + agent OS | Agile-ai process | Spec-driven toolkit | Skill library |
 | **Enforcement** | Runtime gates on every action | Process conventions | Spec templates | None (content only) |
-| **Skills** | 247 vendored, hash-locked | ~34 `bmad-*` | Templates | 410+ |
+| **Skills** | 248 vendored, hash-locked | ~34 `bmad-*` | Templates | 410+ |
 | **Personas** | 29 auto-detected + lifecycle-aware | 6 named agents | — | — |
 | **Memory** | Hybrid SQLite + vectors, bi-temporal | `persistent_facts` files | — | — |
-| **MCP** | Server (46 tools) + client firewall | — | — | — |
+| **MCP** | Server (53 tools) + client firewall | — | — | — |
 | **Install** | `pip install aizee` | `npx skills add` | `uvx specify` | `npx skills add` |
 | **Best for** | Governing what agents *may do* | Running the agile-ai lifecycle | Spec-driven workflows | Plug-and-play skills |
 

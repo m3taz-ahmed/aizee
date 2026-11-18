@@ -116,3 +116,91 @@ def test_main_installs_skill(
 def test_resolve_devin_project_dir(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.chdir(tmp_path)
     assert resolve_harness_dir("devin") == tmp_path / ".devin" / "skills"
+
+
+def _skill_with_fm(root: Path, name: str, desc: str) -> Path:
+    d = root / name
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "SKILL.md").write_text(
+        f"---\nname: {name}\ndescription: {desc}\n---\nbody", encoding="utf-8"
+    )
+    return d
+
+
+class TestOpenAIBinding:
+    def test_payload_shape(self) -> None:
+        from runtime.harness_exporter import openai_binding
+
+        b = openai_binding("my-cool_skill", "Does things.  Lots of them.")
+        i = b["interface"]
+        assert i["display_name"] == "My Cool Skill"
+        assert i["default_prompt"] == "Use $my-cool_skill to help with this task."
+        assert i["short_description"] == "Does things. Lots of them."
+
+    def test_special_characters_yaml_safe(self) -> None:
+        import yaml
+
+        from runtime.harness_exporter import openai_binding
+
+        desc = 'quotes "inside" & ampersand: colon — 100% legit <tag>'
+        b = openai_binding("s", desc)
+        dumped = yaml.safe_dump(b, sort_keys=False, allow_unicode=True)
+        assert yaml.safe_load(dumped) == b
+
+    def test_emit_writes_manifest(self, skills_root: Path) -> None:
+        import yaml
+
+        from runtime.harness_exporter import emit_openai_binding
+
+        _skill_with_fm(skills_root, "vids", "Make videos fast")
+        r = emit_openai_binding(skills_root, "vids")
+        assert r.ok
+        target = skills_root / "vids" / "agents" / "openai.yaml"
+        data = yaml.safe_load(target.read_text(encoding="utf-8"))
+        assert data["interface"]["display_name"] == "Vids"
+        assert "$vids" in data["interface"]["default_prompt"]
+
+    def test_emit_flat_skill_errors(self, skills_root: Path) -> None:
+        from runtime.harness_exporter import emit_openai_binding
+
+        r = emit_openai_binding(skills_root, "flatskill")
+        assert not r.ok and "flat" in r.error
+
+    def test_emit_missing_skill_errors(self, skills_root: Path) -> None:
+        from runtime.harness_exporter import emit_openai_binding
+
+        r = emit_openai_binding(skills_root, "ghost")
+        assert not r.ok
+
+    def test_emit_existing_requires_force(self, skills_root: Path) -> None:
+        from runtime.harness_exporter import emit_openai_binding
+
+        _skill_with_fm(skills_root, "vids", "d")
+        emit_openai_binding(skills_root, "vids")
+        r = emit_openai_binding(skills_root, "vids")
+        assert not r.ok and "force" in r.error
+        r2 = emit_openai_binding(skills_root, "vids", force=True)
+        assert r2.ok and r2.overwritten
+
+    def test_emit_deterministic(self, skills_root: Path) -> None:
+        from runtime.harness_exporter import emit_openai_binding
+
+        _skill_with_fm(skills_root, "vids", "Same desc")
+        emit_openai_binding(skills_root, "vids")
+        first = (skills_root / "vids" / "agents" / "openai.yaml").read_bytes()
+        emit_openai_binding(skills_root, "vids", force=True)
+        second = (skills_root / "vids" / "agents" / "openai.yaml").read_bytes()
+        assert first == second
+
+
+def test_emit_openai_no_frontmatter_description(skills_root: Path) -> None:
+    from runtime.harness_exporter import emit_openai_binding
+
+    r = emit_openai_binding(skills_root, "dirskill")  # fixture has no description
+    assert r.ok
+    target = skills_root / "dirskill" / "agents" / "openai.yaml"
+    import yaml
+
+    data = yaml.safe_load(target.read_text(encoding="utf-8"))
+    assert data["interface"]["display_name"] == "Dirskill"
+    assert data["interface"]["short_description"] == ""

@@ -647,12 +647,6 @@ class InjectionDetector:
         if not text or not text.strip():
             return InjectionVerdict(text=text)
 
-        # Per-call wall-time guard: stop scanning after ~2s (ReDoS safety).
-        deadline = time.monotonic() + 2.0
-
-        def _expired() -> bool:
-            return time.monotonic() > deadline
-
         # Bound input length to prevent ReDoS on pathological inputs.
         # M9: scan BOTH head and tail so a payload placed at the end of a long
         # input is not silently ignored. We scan the first MAX_TEXT_LENGTH
@@ -667,10 +661,22 @@ class InjectionDetector:
         signals: list[InjectionSignal] = []
         seen: set[str] = set()  # dedup by (pattern_id, layer, absolute-offset)
 
-        # Layer 1: scan raw text (head)
+        # Layer 1: scan raw text (head + tail). These run unconditionally —
+        # gating the tail scan on the deadline would let a busy machine
+        # silently re-introduce the exact tail-payload bypass M9 closed.
+        # The wall-time guard below covers only the optional extra layers
+        # (unicode-normalize, encoding decoders, semantic) — best-effort
+        # enrichment, never a correctness dependency.
         self._scan_text(bounded, signals, seen, dedup_space="orig", base_offset=0)
-        if tail and not _expired():
+        if tail:
             self._scan_text(tail, signals, seen, source_label="tail", dedup_space="orig", base_offset=tail_offset)
+
+        # Per-call wall-time guard: stop optional scanning after ~2s (ReDoS
+        # safety). Starts after the mandatory L1 scans.
+        deadline = time.monotonic() + 2.0
+
+        def _expired() -> bool:
+            return time.monotonic() > deadline
 
         # Layer 2: normalize Unicode and re-scan (catches homoglyphs)
         normalized = _normalize_unicode(bounded)

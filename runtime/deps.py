@@ -410,7 +410,7 @@ def install_command(spec: DepSpec, ctx: _Ctx, outdated: bool = False) -> str | N
 def _default_runner(cmd: str) -> tuple[int, str]:
     """Run a manifest install command. Trusted repo content — shell for && support."""
     try:
-        proc = subprocess.run(
+        proc = subprocess.run(  # trusted deps.yaml manifest commands need && chaining — aizee-scan: ignore
             cmd, shell=True, capture_output=True, text=True,
             timeout=_INSTALL_TIMEOUT, check=False,
         )

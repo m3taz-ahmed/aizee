@@ -73,11 +73,16 @@ Every built-in capability below is installed and verified. Prefer the matching c
 | `aizee intel <domain>` | Domain intelligence: DNS/WHOIS/certs/subdomains/IP |
 | `aizee eval` | Behavioral skill-scenario checks after changing skills/workflows |
 | `aizee skill link --pack <dir>` | Packaging skills for other agent harnesses (claude/codex/cursor/opencode) |
+| `aizee skill index [--out <file>]` | Regenerating `skill-index.json` — sha256-locked discovery index for harnesses |
+| `aizee budget quote\|approve\|charge\|report` | Paid-action spend governance — quote → single-use approve → charge → report (MONEY-01) |
+| `aizee spec derive-checklist <id>` | Deriving a verification checklist from spec requirement rows |
 | `aizee find <q>` / `aizee goal <obj>` | Discovering the right skill/workflow for a task |
+| `aizee routine <list\|match\|begin\|seen\|done>` | Recurring personal routines: named dossiers + durable cross-session state (see `workflows/66-routine-runner.md`) |
 
 **Event-triggered rules (fire without being asked):**
 
-- When a task's domain matches none of the loaded persona skills → run `aizee find <task description>` before implementing; 155 skills + 80 workflows are indexed (name + triggers + description) even when not persona-mapped.
+- When a task's domain matches none of the loaded persona skills → run `aizee find <task description>` before implementing; 248 skills + 70 workflows are indexed (name + triggers + description) even when not persona-mapped.
+- When the user references a standing/recurring task ("تابع X", "check X again", "follow up", a named routine) → run `aizee routine match "<message>"` before asking for context; ambiguous → present candidates, never guess.
 - After adding/installing a skill → run `aizee skill lock-update`, then `aizee skill lock-check`.
 - After changing an MCP server config → run `aizee mcp freeze <server> --check`.
 - After editing `*.md` docs → run `aizee check-docs`.
@@ -102,9 +107,9 @@ Before declaring done, run from the OS root:
 
 - `ruff check .`
 
-- `mypy` (strict, 195 files)
+- `mypy` (strict, 233 files — run with the CI target list from `.github/workflows/validate.yml`; bare `mypy` has no default target)
 
-- `aizee test --full` (full suite with coverage, parallel by default — ~180s, 7653 tests, 100% cov)
+- `aizee test --full` (full suite with coverage, parallel by default — ~180s, ~8,000 tests, 100% cov)
 
 - `python eval/harness.py` (read-only: ruff + mypy + pytest + validate-globals)
 
@@ -172,9 +177,9 @@ aiZee follows a layered design:
 
 - **Managers** — `runtime/managers/` (PolicyManager, WorkflowManager, AgentManager, ChatManager).
 
-- **Runtime Modules** — 137 governance modules in `runtime/`.
+- **Runtime Modules** — 157 governance modules in `runtime/`.
 
-- **MCP Server** — `aizee_mcp/` exposes 46 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
+- **MCP Server** — `aizee_mcp/` exposes 53 tools via FastMCP (marketing tool modules gated via `disabledToolModules`).
 
 - **Memory** — `memory/` SQLite + FTS5 + vector store.
 
@@ -223,19 +228,19 @@ aiZee follows a layered design:
 aizee/                         # Sovereign root (AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel + 137 governance modules
+├── runtime/                   # Kernel + 157 governance modules
 │   ├── kernel.py              # Facade
 │   ├── managers/              # Policy/Workflow/Agent/Chat managers
 │   ├── storage_backend.py     # StorageBackend protocol + factory
 │   ├── service_catalog.py     # ServiceDescriptor + multi-index catalog
 │   ├── schemas.py             # Pydantic + exceptions + pagination
-│   └── ...                    # 137 governance modules
-├── aizee_mcp/                 # MCP server (46 tools enabled)
+│   └── ...                    # 157 governance modules
+├── aizee_mcp/                 # MCP server (53 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
-├── skills/                    # 155 persona + lord skills
-├── workflows/                 # 66 trigger-based execution protocols
+├── skills/                    # 248 persona + lord skills
+├── workflows/                 # 70 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
-├── tech-stack/                # 269 version-locked stack references
+├── tech-stack/                # 271 version-locked stack references
 │   └── spec-driven-templates/ # SDD templates (spec/plan/tasks/constitution/checklist)
 └── eval/                      # Agent benchmark harness
 

@@ -668,3 +668,59 @@ class TestEmbedderFastEmbed:
             emb = Embedder()
             emb.embed(["x"])
             assert emb.dim == 384  # unchanged — result was 1-D
+
+
+class TestDriverEmbedderOverrides:
+    """drivers/*.json machine-profile effects on embedder selection."""
+
+    def test_driver_pref_forces_backend(self, monkeypatch):
+        import runtime.drivers
+
+        monkeypatch.delenv("AIZEE_EMBEDDER", raising=False)
+        monkeypatch.setattr(
+            runtime.drivers, "embedder_preference", lambda *_a, **_k: "fastembed"
+        )
+        assert vector_module._embed_backend() == "fastembed"
+
+    def test_driver_pref_exception_falls_back_auto(self, monkeypatch):
+        import runtime.drivers
+
+        monkeypatch.delenv("AIZEE_EMBEDDER", raising=False)
+
+        def _boom(*_a, **_k):
+            raise RuntimeError("drivers dir corrupt")
+
+        monkeypatch.setattr(runtime.drivers, "embedder_preference", _boom)
+        assert vector_module._embed_backend() == "auto"
+
+    def test_driver_gpu_disabled_forces_cpu_device(self, monkeypatch):
+        import runtime.drivers
+
+        st_instance = _make_st_mock()
+        st_cls = MagicMock(return_value=st_instance)
+        monkeypatch.setattr(runtime.drivers, "gpu_enabled", lambda *_a, **_k: False)
+        monkeypatch.delenv("AIZEE_EMBEDDER", raising=False)
+        Embedder._reset_singleton()
+        with patch.object(vector_module, "SentenceTransformer", st_cls):
+            emb = Embedder()
+            emb.embed(["x"])
+        st_cls.assert_called_once_with("all-MiniLM-L6-v2", device="cpu")
+        Embedder._reset_singleton()
+
+    def test_driver_gpu_check_exception_uses_default_device(self, monkeypatch):
+        import runtime.drivers
+
+        st_instance = _make_st_mock()
+        st_cls = MagicMock(return_value=st_instance)
+
+        def _boom(*_a, **_k):
+            raise RuntimeError("drivers unreadable")
+
+        monkeypatch.setattr(runtime.drivers, "gpu_enabled", _boom)
+        monkeypatch.delenv("AIZEE_EMBEDDER", raising=False)
+        Embedder._reset_singleton()
+        with patch.object(vector_module, "SentenceTransformer", st_cls):
+            emb = Embedder()
+            emb.embed(["x"])
+        st_cls.assert_called_once_with("all-MiniLM-L6-v2")
+        Embedder._reset_singleton()

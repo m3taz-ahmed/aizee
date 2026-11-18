@@ -1,0 +1,19 @@
+{
+  "format": "aizee-driver/1",
+  "id": "constrained-ci-runner",
+  "name": "Constrained CI runner — cap parallelism",
+  "enabled": false,
+  "priority": 20,
+  "match": {
+    "platform": ["linux"],
+    "cpu_count_max": 4,
+    "ram_gb_max": 8
+  },
+  "effect": {
+    "xdist_workers": 2
+  },
+  "notes": [
+    "Example: shared/small CI runners where `cpu_count - 2` would still",
+    "oversubscribe. Copy into your own drivers/ entry and set enabled: true."
+  ]
+}

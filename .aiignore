@@ -11,3 +11,6 @@ MEMORY-archive.md
 brain/
 graphify-out/
 .agents/
+# Personal notes — plaintext credentials; never feed to LLM context scans
+temp/
+notes-*.md

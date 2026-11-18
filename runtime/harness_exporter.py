@@ -13,6 +13,11 @@ Supported harnesses:
     devin       ./.devin/skills/<name>/     (per-repo, read natively by Devin)
     windsurf    ./.windsurf/skills/<name>/  (per-repo, read natively by Windsurf)
     path        arbitrary --dest directory
+
+Skill packaging extras:
+    emit_openai_binding() — write ``agents/openai.yaml`` into a skill dir
+    (Stickman/OpenAI agent-manifest format, adopted from
+    kaomei/stickman-video-director).
 """
 
 from __future__ import annotations
@@ -184,6 +189,69 @@ def main(argv: list[str] | None = None) -> int:
     )
     print(json.dumps(r.to_dict(), indent=2))
     return 0 if r.ok else 1
+
+
+_OPENAI_MANIFEST = "agents/openai.yaml"
+
+
+def openai_binding(name: str, description: str) -> dict[str, Any]:
+    """Build the ``agents/openai.yaml`` manifest payload for one skill.
+
+    Adopted from stickman-video-director's ``agents/openai.yaml``: an
+    ``interface`` block naming the skill in the OpenAI agent surface and a
+    ``default_prompt`` that invokes it via the ``$<skill>`` convention.
+    """
+    display = name.replace("-", " ").replace("_", " ").title()
+    short = " ".join(description.split())[:140]
+    return {
+        "interface": {
+            "display_name": display,
+            "short_description": short,
+            "default_prompt": f"Use ${name} to help with this task.",
+        }
+    }
+
+
+def emit_openai_binding(
+    skills_root: Path, name: str, *, force: bool = False
+) -> InstallResult:
+    """Write ``agents/openai.yaml`` inside a skill's directory.
+
+    Only directory skills carry agent manifests; flat ``<name>.md`` skills
+    have no sibling space and return an error result.
+    """
+    import yaml
+
+    from runtime.rule_frontmatter import parse_frontmatter
+
+    result = InstallResult(skill=name, harness="openai")
+    try:
+        src = _find_skill_dir(Path(skills_root), name)
+        if not src.is_dir():
+            result.error = f"skill '{name}' is flat — openai.yaml needs a skill directory"
+            return result
+        target = src / _OPENAI_MANIFEST
+        if target.exists() and not force:
+            result.error = f"'{target}' exists — pass --force to overwrite"
+            result.dest = str(target)
+            return result
+        result.overwritten = target.exists()
+        text = (src / SKILL_FILENAME).read_text(encoding="utf-8", errors="replace")
+        meta, _body = parse_frontmatter(text)
+        description = meta.description.strip()
+        payload = openai_binding(name, description)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(
+            yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
+            encoding="utf-8",
+        )
+        result.dest = str(target)
+        result.files = [str(target.relative_to(src))]
+        result.ok = True
+        return result
+    except (FileNotFoundError, OSError) as exc:
+        result.error = str(exc)
+        return result
 
 
 def build_discovery_index(skills_root: Path, *, kind: str = "skill") -> dict[str, Any]:

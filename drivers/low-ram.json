@@ -1,0 +1,20 @@
+{
+  "format": "aizee-driver/1",
+  "id": "low-ram-embedder",
+  "name": "Low-RAM box — torch-free embedder + capped test workers",
+  "enabled": false,
+  "priority": 10,
+  "match": {
+    "ram_gb_max": 8,
+    "gpu": "none"
+  },
+  "effect": {
+    "embedder": "fastembed",
+    "xdist_workers": 4
+  },
+  "notes": [
+    "Enable on boxes under ~8 GB RAM without a GPU: keeps embeddings on the",
+    "ONNX/fastembed path (no ~2 GB torch footprint) and caps pytest-xdist",
+    "workers so the suite doesn't starve the OS."
+  ]
+}

@@ -510,6 +510,19 @@ IGNORED_FILE_REFS.update({
     'zoominfo.md',
     # path-qualified README refs (basename readme.md stays resolvable)
     'snippets/README.md',
+    # directing-stickman-videos (vendored skill): upstream root README
+    # editions cited by name in getting-started.md, plus project-local
+    # artifacts the skill tells the agent to CREATE (never tracked inputs).
+    'music-credits.md',
+    'publishing/metadata.md',
+    'readme.en.md',
+    'readme.fr.md',
+    'readme.id.md',
+    'readme.ja.md',
+    'readme.ko.md',
+    'readme.pt-br.md',
+    'readme.tr.md',
+    'readme.zh-cn.md',
 })
 
 _IGNORED_FILE_REFS_NORM = {x.replace("\\", "/").lower() for x in IGNORED_FILE_REFS}

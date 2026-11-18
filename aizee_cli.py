@@ -1444,13 +1444,19 @@ def cmd_tour(args: argparse.Namespace) -> int:
 
 
 def cmd_check_docs(args: argparse.Namespace) -> int:
-    """Validate [[file#symbol]] links across markdown docs (lat.md-style)."""
+    """Validate [[file#symbol]] links + localized-README parity."""
     from runtime.doc_links import check_links
+    from runtime.readme_parity import check_readme_parity
 
-    report = check_links(_root(args))
+    root = _root(args)
+    report = check_links(root)
+    parity = check_readme_parity(root)
     if args.json:
-        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
-        return 0 if report.ok else 1
+        print(json.dumps(
+            {"links": report.to_dict(), "readme_parity": parity.to_dict()},
+            indent=2, ensure_ascii=False,
+        ))
+        return 0 if (report.ok and parity.ok) else 1
     console.print(
         f"{report.files} docs, {report.links} links — "
         f"[{'green' if report.ok else 'red'}]{len(report.issues)} broken[/]"
@@ -1462,7 +1468,16 @@ def cmd_check_docs(args: argparse.Namespace) -> int:
         )
     for issue in report.issues[:50]:
         console.print(f"  [red]{issue.source}[/red] → {issue.target}: {issue.reason}")
-    return 0 if report.ok else 1
+    console.print(
+        f"README parity: {parity.compared} localized file(s) — "
+        f"[{'green' if parity.ok else 'red'}]{len(parity.issues)} issue(s)[/]"
+    )
+    for p_issue in parity.issues[:50]:
+        console.print(
+            f"  [red]{p_issue.file}[/red] {p_issue.check}: "
+            f"expected {p_issue.expected}, found {p_issue.found}"
+        )
+    return 0 if (report.ok and parity.ok) else 1
 
 
 def cmd_chat(args: argparse.Namespace) -> int:
@@ -1592,6 +1607,17 @@ def cmd_skill(args: argparse.Namespace) -> int:
             print(json.dumps(r.to_dict(), indent=2, ensure_ascii=False))
         elif r.ok:
             console.print(f"[green]Installed[/green] {r.skill} -> {r.dest} ({len(r.files)} files)")
+        else:
+            console.print(f"[red]Failed[/red] {r.skill}: {r.error}")
+        return 0 if r.ok else 1
+    elif args.skill_subcommand == "emit-openai":
+        from runtime.harness_exporter import emit_openai_binding
+
+        r = emit_openai_binding(k.root / "skills", args.name, force=args.force)
+        if args.json:
+            print(json.dumps(r.to_dict(), indent=2, ensure_ascii=False))
+        elif r.ok:
+            console.print(f"[green]Wrote[/green] {r.dest}")
         else:
             console.print(f"[red]Failed[/red] {r.skill}: {r.error}")
         return 0 if r.ok else 1
@@ -1956,6 +1982,52 @@ def cmd_agents(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_drivers(args: argparse.Namespace) -> int:
+    """Driver patches — show the machine profile and which patches apply.
+
+    Adopted from ApkStart's driver system: JSON files under ``drivers/``
+    declaratively adapt config to the machine fingerprint.
+    """
+    from runtime.drivers import active_effects, load_drivers, matches
+    from runtime.machine_profile import detect
+
+    root = _root(args)
+    profile = detect()
+    patches = load_drivers(root / "drivers")
+    if args.json:
+        print(json.dumps({
+            "profile": profile.to_dict(),
+            "effects": active_effects(root / "drivers", profile),
+            "patches": [
+                {
+                    "id": d.id,
+                    "enabled": d.enabled,
+                    "matches": d.enabled and matches(d, profile),
+                    "match": d.match,
+                    "effect": d.effect,
+                    "path": d.path,
+                }
+                for d in patches
+            ],
+        }, indent=2, ensure_ascii=False))
+        return 0
+    console.print(
+        f"[cyan]profile[/cyan] {profile.platform} · "
+        f"{profile.ram_gb} GB RAM · {profile.cpu_count} cores · "
+        f"gpu={profile.gpu} · py{profile.python}"
+    )
+    if not patches:
+        console.print("[dim]no driver patches under drivers/[/dim]")
+        return 0
+    for d in patches:
+        hit = d.enabled and matches(d, profile)
+        state = "[green]active[/green]" if hit else (
+            "[dim]disabled[/dim]" if not d.enabled else "[dim]no match[/dim]"
+        )
+        console.print(f"  {state} {d.id} (prio {d.priority}) → {d.effect}")
+    return 0
+
+
 def cmd_doctor(args: argparse.Namespace) -> int:
     os_root = _root(args)
     project_root = _project_root(args)
@@ -1963,8 +2035,25 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     from runtime.doctor import run_doctor
 
     report = run_doctor(os_root, project_root)
+
+    # Notify-once findings store (ApkStart autodebug doctrine): a failed
+    # check pings the first time it is seen, stays silent on repeats, and
+    # is marked resolved when it recovers. State: state/doctor-findings.json.
+    # Records on every output mode (human, --json) so monitoring loops
+    # running --json still feed the store.
+    from runtime.doctor_findings import FindingsDiff, diff_and_record, open_store
+
+    try:
+        _factory, _backend = open_store(os_root / "state")
+        _diff = diff_and_record(_backend, report.checks)
+        _factory.shutdown_all()
+    except OSError:
+        _diff = FindingsDiff(new=[], persisting=[], resolved=[])
+
     if getattr(args, "json", False):
-        print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        payload = report.to_dict()
+        payload["findings"] = _diff.to_dict()
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
         return 0 if report.verdict != "blocked" else 1
 
     table = Table(title=f"aiZee Doctor [{report.verdict.upper()}]")
@@ -1974,6 +2063,17 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         status = "ok" if c.ok else ("missing" if c.severity == "required" else c.severity)
         table.add_row(c.name, status)
     console.print(table)
+
+    if _diff.new:
+        console.print(
+            f"[yellow]{len(_diff.new)} new finding(s)[/yellow] — "
+            + ", ".join(f.check for f in _diff.new[:8])
+        )
+    if _diff.resolved:
+        console.print(
+            f"[green]{len(_diff.resolved)} resolved[/green] — "
+            + ", ".join(f.check for f in _diff.resolved[:8])
+        )
 
     if report.next_steps:
         console.print("[cyan]Next steps:[/cyan]")
@@ -2403,6 +2503,12 @@ def cmd_test(args: argparse.Namespace) -> int:
         # Use every core except two — leave the machine just enough to breathe
         # (per user policy: full-test runs max out the box). Floor at 2.
         workers = max(2, (os.cpu_count() or 4) - 2)
+        # Declarative driver patches may cap workers on constrained boxes.
+        from runtime.drivers import xdist_workers_cap
+
+        cap = xdist_workers_cap(_root(args) / "drivers")
+        if cap is not None:
+            workers = min(workers, cap)
         pytest_args.extend(["-n", str(workers)])
 
     result = subprocess.run(pytest_args, cwd=str(test_cwd))
@@ -2907,6 +3013,8 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("graphify", help="Update graphify graph")
     sub.add_parser("version", help="Show version")
     p_doctor = sub.add_parser("doctor", help="Check environment health")
+    p_drivers = sub.add_parser("drivers", help="Driver patches: machine profile + matching config effects")
+    p_drivers.add_argument("--json", action="store_true", help="Machine-readable output")
     p_doctor.add_argument("--json", action="store_true", help="Machine-readable report (verdict + next_steps)")
 
     p_check = sub.add_parser("check", help="Check policy for action")
@@ -3345,6 +3453,10 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_link.add_argument("--harness", default="", help="cursor|claude|codex|opencode (default: all)")
     p_skill_link.add_argument("--pack", default="", help="Write an EGM-style multi-harness plugin bundle to this dir instead of linking")
     p_skill_link.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_oa = sp_skill.add_parser("emit-openai", help="Write agents/openai.yaml manifest inside a skill dir")
+    p_skill_oa.add_argument("name", help="Skill name (directory skills only)")
+    p_skill_oa.add_argument("--force", action="store_true", help="Overwrite existing manifest")
+    p_skill_oa.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_index = sp_skill.add_parser("index", help="Content-addressed skill discovery index (sha256 = release identity)")
     p_skill_index.add_argument("--write", action="store_true", help="Write <root>/skill-index.json")
     p_skill_index.add_argument("--json", action="store_true", help="Machine-readable output")
@@ -3504,6 +3616,7 @@ def main(argv: list[str] | None = None) -> int:
         "graphify": cmd_graphify,
         "version": cmd_version,
         "doctor": cmd_doctor,
+        "drivers": cmd_drivers,
         "deps": cmd_deps,
         "heal": cmd_heal,
         "codemode": cmd_codemode,

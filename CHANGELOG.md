@@ -1,23 +1,25 @@
 # Changelog
 
 
+## [6.13.0] - 2026-11-18 (machine-adaptive drivers + release assurance)
+
+- `runtime/machine_profile.py` + `runtime/drivers.py` + `drivers/`: declarative driver patches (`aizee-driver/1`) — JSON `match` on the machine fingerprint (platform/RAM/CPU/GPU/python) applies whitelisted `effect`s (`embedder`, `xdist_workers`, `gpu_enabled`); unknown keys fail closed. Wired into `memory/vector.py` (embedder choice + `device="cpu"`) and `aizee test` (xdist worker cap). New `aizee drivers [--json]` shows the profile and which patches fire. Adopted from ApkStart's driver system.
+- `runtime/doctor_findings.py`: notify-once findings store — `aizee doctor` persists failing checks to `state/doctor-findings.json`, pings only on first sight, marks recoveries `resolved_at`, and includes the delta in `--json` output (additive `findings` key). Adopted from ApkStart's autodebug doctrine.
+- `runtime/harness_exporter.py`: `emit_openai_binding()` + `aizee skill emit-openai <name>` — writes `agents/openai.yaml` (`interface.display_name`/`short_description`/`default_prompt` with `$skill` invoke) into directory skills. Adopted from stickman-video-director.
+- `runtime/readme_parity.py`: localized-README parity gate folded into `aizee check-docs` — compares heading-level sequence, badge numbers, table rows, and fence counts between `README.md` and every `README-*.md`. Immediately caught real README-AR drift (missing installer-map table + `git+` install block; stale "46 checks" in README.md).
+- `skills/directing-stickman-videos/`: vendored media-light (code + 76 contract docs + 57 scripts + fonts + manifests; ~497 MB of A/V media omitted, re-vendor on demand per `AIZEE.md`).
+- `runtime/injection_detector.py` fix: the 2s deadline previously skipped the mandatory tail scan under load — payload-at-tail on long input could pass silently. L1 head+tail scan now completes before the deadline applies to optional layers.
+- `runtime/security_scanner.py` usage note: text after `aizee-scan: ignore` is a rule-ID list — markers must end the line. Honest suppressions added for the two explainable HIGHs (`deps.py` trusted-manifest shell, `call_plan.py` eval-in-comment false positive).
+- `.aiignore`: `temp/` + `notes-*.md` — personal notes (incl. plaintext-credential files) excluded from LLM context scans.
+- Study: `docs/studies/study-stickman-apkstart-2026-11-18.md` (acceptance-gate contracts, baseline-evidence manifests, driver patches, autodebug doctrine).
+
+
 ## [6.12.0] - 2026-11-15 (agent-skill-ecosystem adoption — measured gates + paid-spend governance)
-
-
-
-## [6.11.0] - 2026-11-14 (agent-ecosystem wave)
-
-
-
-## [Unreleased]
 
 - `rules/`: +8 adopted ecosystem rules — `BEH-05` (re-verify all governing rules + works-for-any-user), `DET-01` (seeded determinism), `TASK-11` (numbers-not-impressions evidence), `UNT-07` (reference-media IP discipline), `ARCH-08` (no silent threshold lowering), `LOOP-01` (bounded correction loops ≤5 then escalate), `EVAL-01` (identical-rig comparisons), `MONEY-01` (quote→approve→spend-report). Source: `docs/studies/study-animate-skill-ecosystem-2026-11-15.md`.
 - `workflows/67-intake-glossary.md`: intake→shared-language glossary+ADR protocol (adapted from mattpocock grill-with-docs + animate intake).
 - `workflows/68-preview-gates.md`: cheap→expensive HITL gate ordering for costly runs — anchor/draft artifacts on the real pipeline, one stated spend estimate, single-item re-roll granularity (adapted from animate + scroll-world).
 - `workflows/69-parallel-fanout-review.md`: parallel dispatch protocol — frozen shared contract, exclusive file ownership, explicit seams, measured per-step review, bounded repair (adapted from animate + superpowers + open-edit).
-- `runtime/routines.py`: declarative schedules are now live — `schedule:` frontmatter accepts `manual | every:<n><unit> | cron:<5-field> | at:<ISO>`; new `aizee routine due [--all] [--json]` lists routines past their fire instant (stdlib cron parser, correct DOW/OR semantics).
-- `memory/vector.py`: `Embedder` falls back to `fastembed` (ONNX, torch-free) when sentence-transformers is absent; `AIZEE_EMBEDDER=st|fastembed` forces a backend. New `pyproject` extra `vector-lite` (fastembed + sqlite-vec).
-- `runtime/harness_exporter.py`: new `devin` per-repo target (`./.devin/skills`) via `_PROJECT_DIRS`.
 - `runtime/measured_gate.py`: measured deliverable checks — metrics-returning checks (cut-error, SSIM, coverage) with rig fingerprinting for EVAL-01 identical-rig comparisons (`CheckResult`/`MeasuredGate`).
 - `runtime/rule_frontmatter.py` + `service_catalog.py`: `invoke: user|auto` skill taxonomy (mattpocock user-invoked vs auto-triggered) parsed into `RuleFrontmatter`, indexed via `ServiceCatalog.by_invoke()`; frontmatter `name`/`description` now honored in catalog metadata.
 - `runtime/spec/scaffold.py`: `derive_checklist()` — every spec requirement row becomes a verifiable check (`[ ] REQ-NN` → `[x]` when resolved); unresolved markers mean unfinished reading.
@@ -25,6 +27,13 @@
 - `runtime/harness_exporter.py`: `build_discovery_index()` + `aizee skill index [--write]` — content-addressed skill index (name/file/description/invoke/triggers/sha256 = release identity, vercel immutable-release pattern). New `windsurf` per-repo target (`./.windsurf/skills`).
 - `skills/writing-skills.md`: behavior-shaping authoring rules — skills are behavior code, eval-gated wording edits, description-as-retrieval-surface, strength tags (superpowers + usethisskill patterns).
 - `skills/intake-grill.md`: intake→shared-language protocol surface — batched questions, glossary + ADR artifacts, spec cites glossary (mattpocock grill-with-docs port).
+
+
+## [6.11.0] - 2026-11-14 (agent-ecosystem wave)
+
+- `runtime/routines.py`: declarative schedules are now live — `schedule:` frontmatter accepts `manual | every:<n><unit> | cron:<5-field> | at:<ISO>`; new `aizee routine due [--all] [--json]` lists routines past their fire instant (stdlib cron parser, correct DOW/OR semantics).
+- `memory/vector.py`: `Embedder` falls back to `fastembed` (ONNX, torch-free) when sentence-transformers is absent; `AIZEE_EMBEDDER=st|fastembed` forces a backend. New `pyproject` extra `vector-lite` (fastembed + sqlite-vec).
+- `runtime/harness_exporter.py`: new `devin` per-repo target (`./.devin/skills`) via `_PROJECT_DIRS`.
 - `deps.yaml`: +5 optional deps — fastembed, sqlite-vec, ast-grep, llama-swap, microsandbox.
 - Study: `docs/studies/study-agent-ecosystem-2026-11-14.md` (35-repo ecosystem wave) + `docs/studies/study-animate-skill-ecosystem-2026-11-15.md` (animate + agent-skills wave, 22-pattern adoption backlog).
 
@@ -50,10 +59,6 @@
 
 
 ## [6.10.0] - 2026-11-13 (recurring routines: named dossiers with durable cross-session state)
-
-
-
-## [Unreleased]
 
 ### Added
 - **Recurring routines** (`runtime/routines.py`): named, invocable personal
