@@ -6,8 +6,16 @@ import io
 import tarfile
 from pathlib import Path
 
+import pytest
+
 import runtime.bootstrap as bs
 from runtime.bootstrap import bootstrap
+
+
+@pytest.fixture(autouse=True)
+def _isolated_root_pointer(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Redirect the root pointer file so tests never touch the real one."""
+    monkeypatch.setattr("config.root_pointer_file", lambda: tmp_path / "cfg" / "root.txt")
 
 
 def test_dry_run_writes_nothing(tmp_path: Path) -> None:
@@ -70,7 +78,8 @@ def test_result_to_dict(tmp_path: Path) -> None:
     assert d["ok"] is True and d["target"] == str(tmp_path / "r")
 
 
-def test_mcp_sync_script_missing(tmp_path: Path) -> None:
+def test_mcp_sync_script_missing(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", tmp_path / "none.tar.gz")  # isolate target/scripts
     src = tmp_path / "src"
     src.mkdir()
     res = bootstrap(tmp_path / "r", source_root=src, mcp_sync=True)
@@ -135,6 +144,7 @@ def test_mcp_sync_runs_script(tmp_path: Path, monkeypatch) -> None:
 
     import runtime.bootstrap as bs
 
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", tmp_path / "none.tar.gz")  # isolate target/scripts
     src = tmp_path / "src"
     (src / "scripts").mkdir(parents=True)
     (src / "scripts" / "mcp_global_sync.py").write_text("", encoding="utf-8")
@@ -145,6 +155,56 @@ def test_mcp_sync_runs_script(tmp_path: Path, monkeypatch) -> None:
     res2 = bootstrap(tmp_path / "r2", source_root=src, mcp_sync=True)
     assert not res2.mcp_synced
     assert any("mcp sync failed" in n for n in res2.notes)
+
+
+def test_mcp_sync_prefers_target_scripts(tmp_path: Path, monkeypatch) -> None:
+    """The bundle-extracted script outranks the source root's copy."""
+    from unittest.mock import MagicMock
+
+    bundle = tmp_path / "_osroot.tar.gz"
+    _make_bundle(bundle, {"scripts/mcp_global_sync.py": "# sync"})
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", bundle)
+    calls: list[list[str]] = []
+    monkeypatch.setattr(
+        bs.subprocess,
+        "run",
+        lambda cmd, **k: (calls.append(cmd), MagicMock(returncode=0, stderr=""))[1],
+    )
+    target = tmp_path / "root"
+    res = bootstrap(target, source_root=tmp_path / "empty-src", mcp_sync=True)
+    assert res.mcp_synced
+    assert calls[0][1] == str(target / "scripts" / "mcp_global_sync.py")
+
+
+def test_apply_writes_root_pointer(tmp_path: Path) -> None:
+    target = tmp_path / "root"
+    res = bootstrap(target, mcp_sync=False)
+    pointer = tmp_path / "cfg" / "root.txt"
+    assert pointer.read_text(encoding="utf-8").strip() == str(target)
+    assert any("root pointer" in n for n in res.notes)
+
+
+def test_mcp_sync_falls_back_to_install_root(tmp_path: Path, monkeypatch) -> None:
+    """source_root=None → the sync script resolves against the install dir."""
+    from unittest.mock import MagicMock
+
+    monkeypatch.setattr(bs, "_OSROOT_ARCHIVE", tmp_path / "none.tar.gz")
+    calls: list[list[str]] = []
+    monkeypatch.setattr(
+        bs.subprocess,
+        "run",
+        lambda cmd, **k: (calls.append(cmd), MagicMock(returncode=0, stderr=""))[1],
+    )
+    res = bootstrap(tmp_path / "r", mcp_sync=True)
+    # install dir is the source repo here — its scripts/ carries the sync script
+    assert res.mcp_synced
+    assert Path(calls[0][1]).name == "mcp_global_sync.py"
+
+
+def test_dry_run_writes_no_pointer(tmp_path: Path) -> None:
+    res = bootstrap(tmp_path / "root", dry_run=True, mcp_sync=False)
+    assert not (tmp_path / "cfg" / "root.txt").exists()
+    assert any("AIZEE_ROOT" in n for n in res.notes)
 
 def test_extract_skips_write_when_extractfile_none(tmp_path: Path, monkeypatch) -> None:
     """Member whose extractfile returns None is counted but not written (48->39)."""

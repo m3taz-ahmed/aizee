@@ -214,8 +214,15 @@ def bootstrap(
         result.notes.append("osroot bundle not found — minimal install (no skills/workflows)")
 
     if mcp_sync and not dry_run:
-        sync_script = (source_root or Path(__file__).resolve().parent.parent) / "scripts" / "mcp_global_sync.py"
-        if sync_script.exists():
+        # Prefer the script the bundle just extracted into the target — the
+        # source root may not carry scripts/ (wheel installs ship code only).
+        fallback_root = source_root or Path(__file__).resolve().parent.parent
+        candidates = [
+            target / "scripts" / "mcp_global_sync.py",
+            fallback_root / "scripts" / "mcp_global_sync.py",
+        ]
+        sync_script = next((c for c in candidates if c.exists()), None)
+        if sync_script is not None:
             proc = subprocess.run(
                 [sys.executable, str(sync_script)],
                 capture_output=True, text=True, timeout=120,
@@ -226,7 +233,11 @@ def bootstrap(
         else:
             result.notes.append("mcp_global_sync.py not found — skipped")
 
-    result.notes.append(f"set AIZEE_ROOT={target} to activate this OS root")
+    if not dry_run:
+        pointer = config.write_root_pointer(target)
+        result.notes.append(f"root pointer written to {pointer} (AIZEE_ROOT env overrides)")
+    else:
+        result.notes.append(f"set AIZEE_ROOT={target} to activate this OS root")
     return result
 
 

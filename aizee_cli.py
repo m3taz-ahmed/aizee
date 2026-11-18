@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -51,7 +52,56 @@ def _root(args: argparse.Namespace) -> Path:
         )
     if not args.root:
         _warn_mirror_divergence(root)
+        _warn_install_drift(root)
+        _hint_missing_os_root(root)
     return root
+
+
+_VERSION_RE = re.compile(r'^version\s*=\s*"([^"\n]+)"', re.MULTILINE)
+
+
+def _root_version(root: Path) -> str | None:
+    """Read the resolved root's declared version from its pyproject.toml."""
+    pyproject = root / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    try:
+        match = _VERSION_RE.search(pyproject.read_text(encoding="utf-8"))
+    except OSError:
+        return None
+    return match.group(1) if match else None
+
+
+def _warn_install_drift(root: Path) -> None:
+    """Warn when the running code's version lags the resolved root.
+
+    Wheels carry code only — a synced/released OS root at a newer version
+    keeps serving stale code paths until the package is reinstalled.
+    ``scripts/update_aizee.bat`` reinstalls automatically on sync; this
+    warning catches every other drift path."""
+    root_version = _root_version(root)
+    if root_version is None or root_version == config.VERSION:
+        return
+    print(
+        f"[aizee] warning: running code is v{config.VERSION} but root {root} "
+        f"is v{root_version} — reinstall to pick up new code: "
+        f'pip install --upgrade "{root}" (scripts\\update_aizee.bat does this on sync)',
+        file=sys.stderr,
+    )
+
+
+def _hint_missing_os_root(root: Path) -> None:
+    """Hint at bootstrap when the resolved root has no doctrine tree.
+
+    A fresh ``pip install aizee`` resolves the root to site-packages —
+    code imports fine but skills/workflows/… do not exist there yet."""
+    if (root / "skills").is_dir():
+        return
+    print(
+        f"[aizee] note: {root} has no skills/ — run 'aizee bootstrap --yes' "
+        "to materialize the OS root (pip installs ship code only)",
+        file=sys.stderr,
+    )
 
 
 def _warn_mirror_divergence(root: Path) -> None:
@@ -2347,7 +2397,12 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     """Materialize a minimal working aiZee OS root (post-`pip install aizee`)."""
     from runtime.bootstrap import bootstrap
 
-    target = Path(args.target).expanduser().resolve() if args.target else _root(args)
+    if args.target:
+        target = Path(args.target).expanduser().resolve()
+    elif args.root:
+        target = Path(args.root).expanduser().resolve()
+    else:
+        target = config.default_os_root()
     res = bootstrap(
         target,
         source_root=_root(args),

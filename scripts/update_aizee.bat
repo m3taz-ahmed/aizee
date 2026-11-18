@@ -80,6 +80,28 @@ echo === Sync Complete ===
 echo Verify with: cd %TARGET% ^&^& python eval\harness.py
 echo.
 
+REM --- Package reinstall: keep site-packages code in lockstep with the
+REM mirror. Wheels carry code only, so a sync that changed code leaves the
+REM installed CLI stale until pip rebuilds it. sync_installed_pkg.py only
+REM reinstalls on real drift (version or payload) — same-content runs are a
+REM strict no-op, and editable installs stay untouched.
+REM The interpreter MUST be the one beside aizee.exe (%~dp$PATH:I does the
+REM PATH lookup) — a bare "python" would install into the wrong env.
+set "AIZEE_PY="
+for %%I in (aizee.exe) do set "AIZEE_PY=%%~dp$PATH:I..\python.exe"
+if defined AIZEE_PY if exist "%AIZEE_PY%" (
+    echo === Package sync: "%AIZEE_PY%" "%~dp0sync_installed_pkg.py" "%TARGET%" ===
+    "%AIZEE_PY%" "%~dp0sync_installed_pkg.py" "%TARGET%"
+    if !ERRORLEVEL! NEQ 0 (
+        echo WARN: package reinstall failed - the CLI may keep running stale code.
+        echo Re-run manually: "%AIZEE_PY%" -m pip install --upgrade "%TARGET%"
+    )
+) else (
+    echo Package sync: no pip-installed aizee.exe on PATH - skipped
+    echo ^(editable/shim installs track the source tree - nothing to sync^)
+)
+echo.
+
 REM --- Advisory: external deps check (deps.yaml). Non-blocking. ---
 REM Features declare the software they need in deps.yaml; report what this
 REM machine is missing so synced features never fail silently.
