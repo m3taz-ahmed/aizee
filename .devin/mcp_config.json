@@ -14,7 +14,7 @@
     },
     "spec-workflow": {
       "command": "npx",
-      "args": ["-y", "@pimzino/spec-workflow-mcp@2.2.7"]
+      "args": ["-y", "@pimzino/spec-workflow-mcp@2.2.5"]
     }
   }
 }

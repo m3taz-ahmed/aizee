@@ -125,3 +125,4 @@ _bmad-output/
 !.devin/skills/graphify/
 
 runtime/_osroot.tar.gz
+.spec-workflow/

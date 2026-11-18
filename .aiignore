@@ -14,3 +14,4 @@ graphify-out/
 # Personal notes — plaintext credentials; never feed to LLM context scans
 temp/
 notes-*.md
+.spec-workflow/
