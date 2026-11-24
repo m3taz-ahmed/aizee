@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [Unreleased]
+## [6.14.0] - 2026-11-24 (persona semantic routing + doctrine expansion)
 
 - `runtime/persona.py` + `aizee_cli.py`: `low_confidence` flag on persona detection — `detect_multiple`/`detect` now emit `low_confidence: true` when no persona keyword scored, ending silent default-to-ARCH adoption; `inject_persona_context` propagates it. New `aizee persona catalog` CLI subcommand dumps the full catalog (code, name, skill, lords, keywords) as JSON — the semantic-selection surface for pip-installed agents that cannot read `runtime/personas.yaml` from the source tree.
 - `AGENTS.md` persona directive: two mandatory model-arbitration clauses — on `low_confidence` the agent must choose persona(s) semantically via `aizee persona catalog` and announce `detector fallback → semantic override`; on 2+ personas the agent must re-rank primary against the user's first/main ask and announce `order override`. All adapters resynced (cursor/windsurf/cline/CLAUDE.md/aider/copilot + global Devin rules).
