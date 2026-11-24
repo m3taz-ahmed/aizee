@@ -17,6 +17,7 @@
     <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 مرجع تقنية">
   </p>
   <p>
+    <a href="https://www.producthunt.com/products/aizee?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-aizee" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1328676&theme=light" alt="aizee - The policy layer that governs what AI coding agents may do | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
     <a href="https://glama.ai/mcp/servers/m3taz-ahmed/aizee"><img src="https://glama.ai/mcp/servers/m3taz-ahmed/aizee/badges/score.svg" alt="m3taz-ahmed/aizee MCP server"></a>
   </p>
 </div>
