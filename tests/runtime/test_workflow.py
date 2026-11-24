@@ -73,12 +73,14 @@ def test_workflow_run_detects_personas_from_message(tmp_path: Path) -> None:
         "personas": ["architect"],
         "skills": ["planning"],
         "lords": [],
+        "low_confidence": False,
     }
     runner.persona = mock_detector
     result = runner.run("persona", {"message": "build a web app"}, act=None)
     assert result["ok"]
     assert result["context"]["persona"] == "architect"
     assert result["context"]["personas"] == ["architect"]
+    assert result["context"]["low_confidence"] is False
     mock_detector.detect_multiple.assert_called_once_with("build a web app")
 
 

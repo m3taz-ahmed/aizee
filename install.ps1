@@ -829,6 +829,9 @@ if (-not $SkipMCP) {
         "$env:USERPROFILE\.devin\skills\global-os" = "$Root\.devin\skills\global-os"
         "$env:USERPROFILE\.windsurf\skills\global-os" = "$Root\.windsurf\skills\global-os"
         "$env:USERPROFILE\.aider.conf.yml" = "$Root\.aider.conf.yml"
+        "$env:USERPROFILE\.cursor\rules\aizee.mdc" = "$Root\.cursor\rules\aizee.mdc"
+        "$env:USERPROFILE\.codeium\windsurf\memories\global_rules.md" = "$Root\.windsurfrules"
+        "$env:USERPROFILE\.codex\AGENTS.md" = "$Root\AGENTS.md"
     }
 
     foreach ($Target in $Config.Keys) {
@@ -916,7 +919,6 @@ if (-not $SkipMCP) {
     # (literal) not -replace (regex) to avoid over-escaping.
     $AizeeWrapper = (Join-Path $Root 'scripts\aizee_mcp_wrapper.py').Replace('\', '\\')
     $GraphifyWrapper = (Join-Path $Root 'scripts\graphify_mcp_wrapper.py').Replace('\', '\\')
-    $EnvWrapper = (Join-Path $Root 'scripts\mcp_env_wrapper.py').Replace('\', '\\')
     # Absolute interpreter path + any prefix args (e.g. py -> py.exe -3) so MCP
     # servers spawn even when plain `python` is not on PATH.
     $PyExeAbs = (Get-Command $PyExe -ErrorAction SilentlyContinue).Source

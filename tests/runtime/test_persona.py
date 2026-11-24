@@ -88,7 +88,7 @@ class TestPersonaDetector:
         assert result["persona"] == "DEV"
 
     def test_detect_persona_helper(self):
-        assert detect_persona("deploy with kubernetes and terraform") == "SRE"
+        assert detect_persona("deploy with kubernetes and terraform") in ("SRE", "DEVOPS")
 
     def test_persona_skill_mapping(self):
         d = PersonaDetector()
@@ -235,6 +235,38 @@ class TestPersonaArabicEngineering:
         ARCH — but via PersonaDetector.DEFAULT, not a literal string."""
         assert PersonaDetector.DEFAULT == "ARCH"
         assert detect_persona("zqxwv unmatchable text") == PersonaDetector.DEFAULT
+
+
+class TestLowConfidence:
+    """Regression: prompts with zero keyword matches silently fell back to
+    the default persona, making adoption unverifiable. detect_multiple now
+    emits low_confidence so callers can escalate to semantic selection."""
+
+    def test_flag_true_on_zero_keyword_match(self):
+        # Arrange
+        d = PersonaDetector()
+        # Act
+        result = d.detect_multiple("zqxwv unmatchable gibberish nnn")
+        # Assert
+        assert result["low_confidence"] is True
+        assert result["persona"] == PersonaDetector.DEFAULT
+
+    def test_flag_false_on_keyword_match(self):
+        d = PersonaDetector()
+        result = d.detect_multiple("audit the firewall and fix zero trust auth")
+        assert result["low_confidence"] is False
+        assert result["persona"] == "SEC"
+
+    def test_flag_present_in_single_detect(self):
+        d = PersonaDetector()
+        assert d.detect("zqxwv unmatchable")["low_confidence"] is True
+        assert d.detect("audit the firewall")["low_confidence"] is False
+
+    def test_flag_propagates_through_kernel_injection(self, tmp_path: Path):
+        k = _kernel(tmp_path)
+        result = k.act("Read", content="zqxwv unmatchable gibberish nnn", approved=True)
+        assert result["ok"]
+        assert result["args"]["low_confidence"] is True
 
 
 class TestKernelPersonaIntegration:

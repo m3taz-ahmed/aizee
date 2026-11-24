@@ -263,7 +263,7 @@ def inject_persona_context(
     # "حملة تسويق", not on the command itself).
     detect_text = text
     if is_persona_reset_command(text):
-        for key in ("persona", "skill", "personas", "skills", "lords"):
+        for key in ("persona", "skill", "personas", "skills", "lords", "low_confidence"):
             context.pop(key, None)
         detect_text = _RESET_PATTERN.sub("", text, count=1).strip() or text
 
@@ -277,6 +277,7 @@ def inject_persona_context(
     context["personas"] = result["personas"]
     context["skills"] = result["skills"]
     context["lords"] = result["lords"]
+    context["low_confidence"] = result.get("low_confidence", False)
     if result.get("lifecycle_phase"):
         context["lifecycle_phase"] = result["lifecycle_phase"]
     if result.get("next_persona_hint"):
@@ -425,8 +426,14 @@ class PersonaDetector:
         - lords: additional domain skills triggered by the prompt or persona
         - scores: normalized score distribution across all personas
         - default: the default persona code
+        - low_confidence: True when NO persona keyword matched the text —
+          the selected persona comes from the default fallback (or lifecycle
+          bias), not from keyword evidence. Callers (CLI, command templates,
+          kernel injection) should escalate to semantic model selection
+          instead of silently adopting the default.
         """
         scores = self._score_personas(text)
+        low_confidence = not any(v > 0 for v in scores.values())
         phase = self._phase_detector()
         if phase is not None:
             for code, bonus in PHASE_PERSONA_BIAS.get(phase, {}).items():
@@ -489,6 +496,7 @@ class PersonaDetector:
             "teams": self.detect_teams(text),
             "scores": normalized,
             "default": self.default,
+            "low_confidence": low_confidence,
             "lifecycle_phase": phase.value if phase is not None else None,
             "next_persona_hint": next_persona_hint,
         }
@@ -501,6 +509,7 @@ class PersonaDetector:
             "skill": result["skill"],
             "scores": result["scores"],
             "default": result["default"],
+            "low_confidence": result["low_confidence"],
         }
 
     def resolve_skills(

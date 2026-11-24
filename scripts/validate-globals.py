@@ -314,6 +314,8 @@ IGNORED_FILE_REFS = {
     'lat.md',
     # MrLesk repo named literally "Backlog.md" (upstream repo ref, not a file)
     'backlog.md',
+    # Windsurf global rules live in the user home dir (~/.codeium/...), not the repo
+    'global_rules.md',
     # project-voice GENERATED artifacts (produced into the client project's
     # .ai/ dir by the skill at runtime — not tracked aiZee inputs)
     'about-me.md', 'voice.md', 'newsletter-voice.md',

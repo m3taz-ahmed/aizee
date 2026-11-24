@@ -1587,6 +1587,18 @@ def cmd_persona(args: argparse.Namespace) -> int:
     k = _kernel(args)
     if args.persona_action == "list":
         print(json.dumps(k.persona.list_personas(), indent=2))
+    elif args.persona_action == "catalog":
+        catalog = [
+            {
+                "code": code,
+                "name": info.get("name", code),
+                "skill": info.get("skill", ""),
+                "lords": info.get("lords", []),
+                "keywords": info.get("keywords", []),
+            }
+            for code, info in k.persona.PERSONAS.items()
+        ]
+        print(json.dumps(catalog, indent=2, ensure_ascii=False))
     elif args.persona_action == "detect":
         text = " ".join(args.text)
         if not text:
@@ -3471,6 +3483,12 @@ def main(argv: list[str] | None = None) -> int:
     sp_persona = p_persona.add_subparsers(dest="persona_action", required=True)
 
     sp_persona.add_parser("list", help="List available personas")
+
+    sp_persona.add_parser(
+        "catalog",
+        help="Dump the persona catalog (code, name, skill, lords, keywords) as JSON — "
+        "the semantic-selection surface for low-confidence overrides",
+    )
 
     p_persona_detect = sp_persona.add_parser("detect", help="Detect persona(s) from text")
     p_persona_detect.add_argument("text", nargs="+", help="Text to analyze")

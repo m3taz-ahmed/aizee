@@ -78,8 +78,13 @@ def _bump_changelog(path: Path, new: str, title: str, today: str, dry_run: bool)
     text = path.read_text(encoding="utf-8")
     if f"## [{new}]" in text:
         return False
-    entry = f"\n\n## [{new}] - {today} ({title})\n"
-    updated = text.replace("# Changelog\n", f"# Changelog\n{entry}\n", 1)
+    # An "## [Unreleased]" section carries entries written incrementally —
+    # promote it to the new version heading instead of inserting an empty one.
+    if "## [Unreleased]" in text:
+        updated = text.replace("## [Unreleased]", f"## [{new}] - {today} ({title})", 1)
+    else:
+        entry = f"\n\n## [{new}] - {today} ({title})\n"
+        updated = text.replace("# Changelog\n", f"# Changelog\n{entry}\n", 1)
     if updated == text:
         sys.exit("[release] ERROR: '# Changelog' header not found in CHANGELOG.md")
     if not dry_run:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import sys
@@ -1029,6 +1030,22 @@ class TestCliPersona:
             rc = main(["--root", str(tmp), "persona", "list"])
             capsys.readouterr()
             assert rc == 0
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_persona_catalog(self, capsys):
+        tmp = _tmp_root()
+        try:
+            rc = main(["--root", str(tmp), "persona", "catalog"])
+            out = capsys.readouterr().out
+            catalog = json.loads(out[out.index("["):])
+            assert rc == 0
+            assert len(catalog) >= 22
+            entry = next(c for c in catalog if c["code"] == "ARCH")
+            assert entry["name"]
+            assert entry["skill"]
+            assert isinstance(entry["lords"], list)
+            assert isinstance(entry["keywords"], list)
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 

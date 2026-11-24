@@ -30,3 +30,8 @@ temp
 .env
 .env.*
 *.md.bak
+# Runtime state never ships in images (memory/ is COPY'd wholesale)
+*.db
+launch
+docs/media/pin-*
+docs/media/post-*

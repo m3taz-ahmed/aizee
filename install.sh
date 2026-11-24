@@ -568,6 +568,7 @@ if ! $SKIP_MCP; then
             if ! $WHATIF; then rm -f "$dst"; fi
         fi
         if ! $WHATIF; then
+            mkdir -p "$(dirname "$dst")"
             ln -sf "$src" "$dst" 2>/dev/null || cp -R "$src" "$dst"
         fi
     }
@@ -579,6 +580,9 @@ if ! $SKIP_MCP; then
     link_or_copy "$ROOT/.devin/skills/global-os" "$HOME/.devin/skills/global-os"
     link_or_copy "$ROOT/.windsurf/skills/global-os" "$HOME/.windsurf/skills/global-os"
     link_or_copy "$ROOT/.aider.conf.yml" "$HOME/.aider.conf.yml"
+    link_or_copy "$ROOT/.cursor/rules/aizee.mdc" "$HOME/.cursor/rules/aizee.mdc"
+    link_or_copy "$ROOT/.windsurfrules" "$HOME/.codeium/windsurf/memories/global_rules.md"
+    link_or_copy "$ROOT/AGENTS.md" "$HOME/.codex/AGENTS.md"
 
     # ---------------------------------------------------------------------------
     # 10. Generate .claude/settings.json with absolute installed paths

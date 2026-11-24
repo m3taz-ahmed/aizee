@@ -85,10 +85,12 @@ REM mirror. Wheels carry code only, so a sync that changed code leaves the
 REM installed CLI stale until pip rebuilds it. sync_installed_pkg.py only
 REM reinstalls on real drift (version or payload) — same-content runs are a
 REM strict no-op, and editable installs stay untouched.
-REM The interpreter MUST be the one beside aizee.exe (%~dp$PATH:I does the
-REM PATH lookup) — a bare "python" would install into the wrong env.
+REM The interpreter MUST be the one beside aizee.exe — resolved via
+REM "where aizee.exe" below — a bare "python" would install into the wrong env.
 set "AIZEE_PY="
-for %%I in (aizee.exe) do set "AIZEE_PY=%%~dp$PATH:I..\python.exe"
+for /f "delims=" %%I in ('where aizee.exe 2^>nul') do (
+    if not defined AIZEE_PY set "AIZEE_PY=%%~dpI..\python.exe"
+)
 if defined AIZEE_PY if exist "%AIZEE_PY%" (
     echo === Package sync: "%AIZEE_PY%" "%~dp0sync_installed_pkg.py" "%TARGET%" ===
     "%AIZEE_PY%" "%~dp0sync_installed_pkg.py" "%TARGET%"

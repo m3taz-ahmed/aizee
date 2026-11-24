@@ -33,6 +33,7 @@ aizee.local.yaml
 
 # Local session-archive DB (large binary artifact, per-machine)
 memory/devin_sessions_archive.db
+memory/devin_sessions-*.db
 
 
 # Python
@@ -96,6 +97,7 @@ create-shortcuts.ps1
 build/
 # Personal social-post renders only — demo.gif/social-preview.png stay tracked
 docs/media/post-*
+docs/media/pin-*
 scripts/gen_post_assets.py
 /linkedin/
 

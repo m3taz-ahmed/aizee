@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [Unreleased]
+
+- `runtime/persona.py` + `aizee_cli.py`: `low_confidence` flag on persona detection — `detect_multiple`/`detect` now emit `low_confidence: true` when no persona keyword scored, ending silent default-to-ARCH adoption; `inject_persona_context` propagates it. New `aizee persona catalog` CLI subcommand dumps the full catalog (code, name, skill, lords, keywords) as JSON — the semantic-selection surface for pip-installed agents that cannot read `runtime/personas.yaml` from the source tree.
+- `AGENTS.md` persona directive: two mandatory model-arbitration clauses — on `low_confidence` the agent must choose persona(s) semantically via `aizee persona catalog` and announce `detector fallback → semantic override`; on 2+ personas the agent must re-rank primary against the user's first/main ask and announce `order override`. All adapters resynced (cursor/windsurf/cline/CLAUDE.md/aider/copilot + global Devin rules).
+- `runtime/personas.yaml`: keyword coverage ~795 → ~1,466 (+671 across all 29 personas, min/persona 15 → 34) — EN synonyms, Arabic MSA/dialect/transliteration, FR/ES/DE/TR/RU/ZH terms. Dialect prompts that scored 0.0 now resolve to the correct persona sets. New `scripts/enrich-persona-keywords.py`: idempotent text-based YAML keyword injector (comment-preserving, normalization-aware dedup).
+- `install.ps1` / `install.sh`: doctrine deploy now also targets Cursor global rules (`~/.cursor/rules/aizee.mdc`), Windsurf global rules (`~/.codeium/windsurf/memories/global_rules.md`), and Codex (`~/.codex/AGENTS.md`); `link_or_copy` creates missing parent dirs. Dead `$EnvWrapper` assignment removed.
+- `scripts/release.py`: `## [Unreleased]` CHANGELOG section is promoted to the new version heading on bump — entries can be written incrementally instead of at release time.
+- `scripts/update_aizee.bat`: replaced fragile `%~dp$PATH:I` expansion with a `where`-based interpreter lookup (batch parse failure under `cmd //c`).
+- `scripts/validate-globals.py`: `global_rules.md` added to `IGNORED_FILE_REFS` (user-home Windsurf path, not a repo ref).
+
+
 ## [6.13.0] - 2026-11-18 (machine-adaptive drivers + release assurance)
 
 - `runtime/machine_profile.py` + `runtime/drivers.py` + `drivers/`: declarative driver patches (`aizee-driver/1`) — JSON `match` on the machine fingerprint (platform/RAM/CPU/GPU/python) applies whitelisted `effect`s (`embedder`, `xdist_workers`, `gpu_enabled`); unknown keys fail closed. Wired into `memory/vector.py` (embedder choice + `device="cpu"`) and `aizee test` (xdist worker cap). New `aizee drivers [--json]` shows the profile and which patches fire. Adopted from ApkStart's driver system.
