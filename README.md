@@ -17,6 +17,9 @@
     <img src="https://img.shields.io/badge/Workflows-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 Tech-Stack refs">
   </p>
+  <p>
+    <a href="https://glama.ai/mcp/servers/m3taz-ahmed/aizee"><img src="https://glama.ai/mcp/servers/m3taz-ahmed/aizee/badges/score.svg" alt="m3taz-ahmed/aizee MCP server"></a>
+  </p>
 </div>
 
 ---

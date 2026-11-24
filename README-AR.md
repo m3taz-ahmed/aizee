@@ -16,6 +16,9 @@
     <img src="https://img.shields.io/badge/%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 سير عمل">
     <img src="https://img.shields.io/badge/%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 مرجع تقنية">
   </p>
+  <p>
+    <a href="https://glama.ai/mcp/servers/m3taz-ahmed/aizee"><img src="https://glama.ai/mcp/servers/m3taz-ahmed/aizee/badges/score.svg" alt="m3taz-ahmed/aizee MCP server"></a>
+  </p>
 </div>
 
 ---
