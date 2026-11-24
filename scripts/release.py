@@ -218,7 +218,13 @@ def main() -> int:
         if _run(["uv", "build"], check=False).returncode != 0:
             _err("uv build failed — PyPI publish aborted")
             return 1
-        if _run(["uv", "publish"], check=False).returncode != 0:
+        # Publish only this version's artifacts — a bare `uv publish` uploads
+        # every file in dist/ and dies on the first already-released duplicate.
+        dists = [str(p) for p in (ROOT / "dist").glob(f"aizee-{new}*")]
+        if not dists:
+            _err(f"no dist/aizee-{new}* artifacts after uv build")
+            return 1
+        if _run(["uv", "publish", *dists], check=False).returncode != 0:
             _err("uv publish failed — check token/scope")
             return 1
         print(f"[release] PyPI: https://pypi.org/project/aizee/{new}/")
