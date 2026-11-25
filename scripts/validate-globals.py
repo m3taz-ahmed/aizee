@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# aiZee Validation Script (Python) v6.15.0
+# aiZee Validation Script (Python) v6.15.1
 # Source of truth validator - PowerShell wrapper delegates to this script.
 
 import argparse
@@ -366,6 +366,14 @@ IGNORED_FILE_REFS = {
     # temp/ user-owned router notes — ephemeral working-tree file referenced
     # from Memory.md cleanup notes, never a tracked aiZee input
     'notes-hg8145v5-router.md',
+    # gitignored working-root research/prompt artifacts referenced from
+    # Memory.md and automotive tech-stack provenance notes. They are real on
+    # the maintainer machine but intentionally absent from clean clones.
+    'docs/prompts/deep-research-prompt.md',
+    'docs/prompts/comprehensive-review-prompt.md',
+    'refs/routines/comprehensive-review.md',
+    'temp/auto-research-2026-11-25/candidate-ledger.md',
+    'temp/auto-research-2026-11-25/claims-ledger.md',
 }
 IGNORED_FILE_REFS.update({
 
@@ -698,7 +706,7 @@ def run_pass1(rule_files: list[str], global_path: str, manifest: dict[str, str],
     return file_data
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="aiZee Validation v6.15.0")
+    p = argparse.ArgumentParser(description="aiZee Validation v6.15.1")
     p.add_argument("--dry-run",            action="store_true", help="Scan without writing")
     p.add_argument("--generate-manifest",  action="store_true", help="Force regenerate manifest")
     p.add_argument("--force",              action="store_true", help="Bypass manifest cache")
@@ -802,7 +810,7 @@ def main() -> None:
         cprint(f"MISCONFIG: rules/vocabulary.md not found at {vocab_path}", Colors.RED)
         sys.exit(2)
 
-    cprint(f"aiZee Validation v6.15.0 [Fix: {'ON' if args.fix else 'OFF'}]", Colors.CYAN)
+    cprint(f"aiZee Validation v6.15.1 [Fix: {'ON' if args.fix else 'OFF'}]", Colors.CYAN)
 
     rule_files = collect_rule_files(global_path)
     manifest_path = os.path.join(global_path, "integrity.manifest")

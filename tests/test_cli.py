@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from aizee_cli import main
+from aizee_cli import ci_failure_output, main
 from memory.store import MemoryStore
 from runtime.kernel import Kernel
 
@@ -958,6 +958,15 @@ class TestCliCi:
                 mock_pipeline.run.assert_called_once_with(skip_pytest=True)
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_ci_failure_output_preserves_error_lines_before_tail(self):
+        output = "ERROR: Broken file ref in Memory.md: 'x.md' not found\n" + ("pass\n" * 300)
+        rendered = ci_failure_output(output, limit=300)
+        assert rendered.startswith("ERROR: Broken file ref")
+        assert "--- output tail ---" in rendered
+
+    def test_ci_failure_output_short_output_unchanged(self):
+        assert ci_failure_output("ERROR: small\nrest", limit=300) == "ERROR: small\nrest"
 
 
 # ---------------------------------------------------------------------------

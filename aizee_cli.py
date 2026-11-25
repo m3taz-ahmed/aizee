@@ -1549,6 +1549,22 @@ def cmd_chat(args: argparse.Namespace) -> int:
     return 0
 
 
+def ci_failure_output(output: str, limit: int = 3000) -> str:
+    """Return failure output with leading ERROR lines preserved before the tail."""
+    if len(output) <= limit:
+        return output
+    errors = [line for line in output.splitlines() if "ERROR:" in line]
+    tail = output[-limit:]
+    if not errors or all(line in tail for line in errors):
+        return tail
+    shown = errors[:80]
+    omitted = len(errors) - len(shown)
+    header = "\n".join(shown)
+    if omitted:
+        header += f"\n... ({omitted} more ERROR lines)"
+    return f"{header}\n\n--- output tail ---\n{tail}"
+
+
 def cmd_ci(args: argparse.Namespace) -> int:
     from runtime.ci import CIPipeline
 
@@ -1560,8 +1576,7 @@ def cmd_ci(args: argparse.Namespace) -> int:
     for r in pipeline.results:
         if not r["ok"]:
             output = str(r.get("output") or "(no output)")
-            tail = output[-3000:] if len(output) > 3000 else output
-            console.print(f"[red]--- {r['name']} output ---[/]\n{tail}")
+            console.print(f"[red]--- {r['name']} output ---[/]\n{ci_failure_output(output)}")
     return rc
 
 

@@ -1,6 +1,11 @@
 # Changelog
 
 
+## [6.15.1] - 2026-11-25 (CI validation hotfix)
+
+- **CI validation hotfix** — `validate-globals` now treats gitignored maintainer-local prompt/routine/research ledgers as intentional external artifacts instead of broken clean-clone references, fixing the Linux CI false positive after v6.15.0. `aizee ci` failure diagnostics preserve leading `ERROR:` lines before the output tail so validator failures are visible instead of truncated away.
+
+
 ## [6.15.0] - 2026-11-25 (skill ecosystem expansion + review hardening)
 
 - `.gitignore`: media-light vendoring policy for the +100-skill expansion batch (stickman precedent) — `skills/**/*.{png,jpg,jpeg,webp,gif,avif,mp4,mov,wav,mp3,pdf}` and `skills/**/.github/` stay local-only; `theme-factory/theme-showcase.pdf` excepted (required by the skill's workflow step 1). 137 MB of functional-but-heavy raster/print media kept out of git while remaining fully usable on the source machine; vendored skills degrade gracefully for clones. Upstream repo metadata (`.github/` dirs) and a personal QR artifact pruned from `anatomy-illustration`/`novelist-longform`.

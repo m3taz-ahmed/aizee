@@ -111,3 +111,29 @@ class TestCheckRuntimeExports:
         ctx = _ctx(validator)
         validator.check_runtime_exports(str(tmp_path), ctx)
         assert ctx.error_count == 0
+
+
+class TestIgnoredFileRefs:
+    @pytest.mark.parametrize(
+        "ref",
+        [
+            "docs/prompts/deep-research-prompt.md",
+            "docs/prompts/comprehensive-review-prompt.md",
+            "refs/routines/comprehensive-review.md",
+            "temp/auto-research-2026-11-25/candidate-ledger.md",
+            "temp/auto-research-2026-11-25/claims-ledger.md",
+        ],
+    )
+    def test_gitignored_working_root_refs_are_ignored(self, validator, tmp_path: Path, ref: str):
+        ctx = _ctx(validator)
+        ctx.global_headers = {}
+        err = validator.check_file_references(f"see {ref}", "Memory.md", ctx, str(tmp_path))
+        assert err is False
+        assert ctx.error_count == 0
+
+    def test_unignored_missing_ref_still_errors(self, validator, tmp_path: Path):
+        ctx = _ctx(validator)
+        ctx.global_headers = {}
+        err = validator.check_file_references("see docs/prompts/not-local.md", "Memory.md", ctx, str(tmp_path))
+        assert err is True
+        assert ctx.error_count == 1
