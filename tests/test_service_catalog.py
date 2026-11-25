@@ -199,6 +199,15 @@ class TestBuildCatalogFromDirectory:
         assert catalog.by_name("skill1") is not None
         assert catalog.by_name("skill2") is not None
 
+    def test_readme_and_eval_are_not_services(self, tmp_path: Path) -> None:
+        (tmp_path / "README.md").write_text("# Docs", encoding="utf-8")
+        (tmp_path / "EVAL.md").write_text("# Eval", encoding="utf-8")
+        (tmp_path / "real-skill.md").write_text("# Real", encoding="utf-8")
+        catalog = build_catalog_from_directory(tmp_path)
+        assert catalog.count() == 1
+        assert catalog.by_name("real-skill") is not None
+        assert catalog.by_name("README") is None
+
     def test_directory_layout(self, tmp_path: Path) -> None:
         skill_dir = tmp_path / "my-skill"
         skill_dir.mkdir()

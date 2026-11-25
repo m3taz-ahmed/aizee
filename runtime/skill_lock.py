@@ -27,9 +27,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from runtime.skill_media import MEDIA_KEEP, MEDIA_SUFFIXES
+
 LOCK_VERSION = 1
 LOCK_FILENAME = "skills-lock.json"
 _SKIP_NAMES = {"index.json", ".ds_store", "thumbs.db"}
+
+
+def _is_light_media(f: Path) -> bool:
+    """Media-light vendored files are excluded from lock hashes — the lock
+    covers exactly what git covers, so clones (which lack the gitignored
+    media) don't report phantom drift. Committed exceptions stay hashed."""
+    return f.suffix.lower() in MEDIA_SUFFIXES and f.name not in MEDIA_KEEP
 
 
 def folder_hash(path: Path) -> str:
@@ -42,6 +51,8 @@ def folder_hash(path: Path) -> str:
         files = sorted(p for p in path.rglob("*") if p.is_file() and p.name.lower() not in _SKIP_NAMES)
         base = path
     for f in files:
+        if _is_light_media(f):
+            continue
         h.update(str(f.relative_to(base)).replace("\\", "/").encode())
         h.update(b"\0")
         h.update(f.read_bytes())

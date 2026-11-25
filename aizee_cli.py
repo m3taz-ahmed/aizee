@@ -1723,13 +1723,16 @@ def cmd_skill(args: argparse.Namespace) -> int:
         from runtime.harness_exporter import build_discovery_index
 
         index = build_discovery_index(_root(args) / "skills")
-        if args.write:
-            index_path = _root(args) / "skill-index.json"
+        write_index = args.write or bool(args.out)
+        if write_index:
+            index_path = Path(args.out) if args.out else _root(args) / "skill-index.json"
+            if not index_path.is_absolute():
+                index_path = _root(args) / index_path
             index_path.write_text(
                 json.dumps(index, indent=2, ensure_ascii=False) + "\n",
                 encoding="utf-8",
             )
-        if args.json or not args.write:
+        if args.json or not write_index:
             print(json.dumps(index, indent=2, ensure_ascii=False))
         else:
             console.print(
@@ -1797,6 +1800,96 @@ def cmd_skill(args: argparse.Namespace) -> int:
         locked_n = SkillLock(_root(args)).record_all_local()
         console.print(f"[green]skills-lock.json updated[/green] — {locked_n} skills locked")
         return 0
+    elif args.skill_subcommand == "media-fetch":
+        return _cmd_skill_media_fetch(args)
+    elif args.skill_subcommand == "efficacy":
+        return _cmd_skill_efficacy(k, args)
+    return 0
+
+
+def _cmd_skill_media_fetch(args: argparse.Namespace) -> int:
+    """aizee skill media-fetch — on-demand media-light packs from releases."""
+    from runtime.skill_media import fetch_many, status_report
+
+    root = _root(args)
+    if args.check or (not args.names and not args.all):
+        skills = args.names or None
+        report = status_report(root, skills)
+        if args.json:
+            print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        elif not report.ok:
+            console.print(f"[red]{report.error}[/red]")
+        else:
+            for pack in report.packs:
+                color = {"installed": "green", "partial": "yellow", "missing": "red"}[pack.status]
+                size = f"{pack.bytes / 1024 / 1024:.1f} MiB"
+                console.print(
+                    f"[{color}]{pack.status}[/{color}] {pack.skill} — "
+                    f"{pack.files_present}/{pack.files_expected} files ({size})"
+                )
+        return 0 if report.ok else 1
+    skills = ["__all__"] if args.all else list(args.names)
+    results = fetch_many(root, skills, config.VERSION)
+    if args.json:
+        print(json.dumps([r.to_dict() for r in results], indent=2, ensure_ascii=False))
+    else:
+        for r in results:
+            if r.ok:
+                size = f"{r.bytes_written / 1024 / 1024:.1f} MiB"
+                console.print(f"[green]fetched[/green] {r.skill} — {r.files} files ({size})")
+            else:
+                console.print(f"[red]failed[/red] {r.skill}: {r.error}")
+                if r.advice:
+                    console.print(f"  [dim]{r.advice}[/dim]")
+    return 0 if all(r.ok for r in results) else 1
+
+
+def _cmd_skill_efficacy(k: Any, args: argparse.Namespace) -> int:
+    """aizee skill efficacy — before/after evidence ledger and badges."""
+    from runtime.skill_efficacy import (
+        SkillEfficacyStore,
+        current_commit,
+        efficacy_report,
+        make_record,
+    )
+
+    store = SkillEfficacyStore(_root(args) / "state" / "skill-efficacy.jsonl")
+    if args.efficacy_action == "record":
+        try:
+            rec = make_record(
+                skill=args.name,
+                scenario=args.scenario,
+                verdict_with=args.verdict_with,
+                verdict_without=args.verdict_without,
+                model=args.model,
+                commit=args.commit or current_commit(_root(args)),
+                notes=args.notes,
+            )
+        except Exception as exc:
+            console.print(f"[red]Invalid record:[/red] {exc}")
+            return 1
+        store.append(rec)
+        if args.json:
+            print(json.dumps(rec.to_dict(), indent=2, ensure_ascii=False))
+        else:
+            console.print(
+                f"[green]recorded[/green] {rec.skill}/{rec.scenario} "
+                f"delta={rec.delta:+d} rig={rec.rig}"
+            )
+        return 0
+    report = efficacy_report(store, skill=args.name if args.efficacy_action == "report" else "")
+    if args.json or args.efficacy_action == "badges":
+        print(json.dumps(report, indent=2, ensure_ascii=False))
+        return 0
+    if not report["skills"]:
+        console.print("[dim]no efficacy records — every skill is unmeasured until proven[/dim]")
+        return 0
+    for name, info in report["skills"].items():
+        color = {"proven": "green", "flat": "yellow", "harmful": "red"}.get(info["badge"], "dim")
+        console.print(
+            f"[{color}]{info['badge']:10}[/{color}] {name} "
+            f"({info['records']} records, {info['helped']} helped, {info['regressions']} regressions)"
+        )
     return 0
 
 
@@ -3532,6 +3625,7 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_oa.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_index = sp_skill.add_parser("index", help="Content-addressed skill discovery index (sha256 = release identity)")
     p_skill_index.add_argument("--write", action="store_true", help="Write <root>/skill-index.json")
+    p_skill_index.add_argument("--out", default="", help="Write the index to a specific file (relative paths resolve under the aiZee root)")
     p_skill_index.add_argument("--json", action="store_true", help="Machine-readable output")
     p_skill_lint = sp_skill.add_parser("lint", help="Description lint + trigger-collision detection over all skills")
     p_skill_lint.add_argument("--write-index", action="store_true", help="Regenerate skills/index.json")
@@ -3541,6 +3635,21 @@ def main(argv: list[str] | None = None) -> int:
     p_skill_lcheck = sp_skill.add_parser("lock-check", help="Verify installed skills against skills-lock.json hashes")
     p_skill_lcheck.add_argument("--json", action="store_true", help="Machine-readable output")
     sp_skill.add_parser("lock-update", help="Rebuild skills-lock.json from on-disk skills")
+    p_skill_media = sp_skill.add_parser("media-fetch", help="Download media-light skill media packs from GitHub releases on demand")
+    p_skill_media.add_argument("names", nargs="*", help="Skill name(s) to fetch media for")
+    p_skill_media.add_argument("--all", action="store_true", help="Fetch every media pack in the manifest")
+    p_skill_media.add_argument("--check", action="store_true", help="Offline status only — no download")
+    p_skill_media.add_argument("--json", action="store_true", help="Machine-readable output")
+    p_skill_eff = sp_skill.add_parser("efficacy", help="Skill-efficacy evidence: record/report before/after A/B verdicts")
+    p_skill_eff.add_argument("efficacy_action", choices=["record", "report", "badges"], help="record a receipt or report badges")
+    p_skill_eff.add_argument("--name", default="", help="Skill name")
+    p_skill_eff.add_argument("--scenario", default="", help="Scenario/task identifier")
+    p_skill_eff.add_argument("--verdict-with", default="pass", choices=["pass", "fail", "skip"], help="Verdict with the skill loaded")
+    p_skill_eff.add_argument("--verdict-without", default="fail", choices=["pass", "fail", "skip"], help="Verdict without the skill")
+    p_skill_eff.add_argument("--model", default="", help="Model used for the A/B run")
+    p_skill_eff.add_argument("--commit", default="", help="Commit hash (default: current git HEAD)")
+    p_skill_eff.add_argument("--notes", default="", help="Free-form evidence notes")
+    p_skill_eff.add_argument("--json", action="store_true", help="Machine-readable output")
 
     # --- deps ---
     p_deps = sub.add_parser("deps", help="External dependencies: check/install software features need (deps.yaml)")

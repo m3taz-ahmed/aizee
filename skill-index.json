@@ -1,16 +1,7 @@
 {
   "kind": "skill",
-  "count": 248,
+  "count": 354,
   "skills": {
-    "README": {
-      "file": "README.md",
-      "description": "Objective.",
-      "invoke": "auto",
-      "triggers": [
-        "readme"
-      ],
-      "sha256": "a4c7088ad98634e75cea0d0acc6b92e6ce9b6c26cbeb0cd4d5756f09fdaa941d"
-    },
     "ab-testing": {
       "file": "ab-testing/SKILL.md",
       "description": "When the user wants to plan, run, or read A/B tests, or asks a judgement call on one: is the result real, can we stop, which version won, is this worth testing at all: sample size, duration, significa",
@@ -233,6 +224,32 @@
       ],
       "sha256": "84599d3463c6a3e0762af105eb278f5e4d24fc277c99fa98060be041305d90d8"
     },
+    "ai-writing-detector": {
+      "file": "ai-writing-detector/SKILL.md",
+      "description": "Use when the user asks to detect, scan, audit, score, or flag AI-writing patterns without rewriting the text, including requests for a deterministic local detector result when the host can execute Nod",
+      "invoke": "auto",
+      "triggers": [
+        "ai writing detector",
+        "ai-writing-detector",
+        "detector",
+        "writing"
+      ],
+      "sha256": "30df1020d5094f7225ea4757516e6532e13c7660b8d0a5f059ffa05302d903ac"
+    },
+    "ai-writing-false-positive-reviewer": {
+      "file": "ai-writing-false-positive-reviewer/SKILL.md",
+      "description": "Use when a user asks what AI-writing flags mean, whether detector output proves AI authorship, or wants a careful interpretation of possible false positives, especially for academic, hiring, publicati",
+      "invoke": "auto",
+      "triggers": [
+        "ai writing false positive reviewer",
+        "ai-writing-false-positive-reviewer",
+        "false",
+        "positive",
+        "reviewer",
+        "writing"
+      ],
+      "sha256": "03dd053d12eacf12075fc614406d5e0be43de8b35f13c7db690685b3294e0c70"
+    },
     "aizee-lite": {
       "file": "aizee-lite/SKILL.md",
       "description": "aiZee governance distilled into one portable skill for agents WITHOUT aiZee installed — ground-truth-first, task decomposition, evidence-before-done, untrusted-content doctrine. Skill-as-product: give",
@@ -245,6 +262,18 @@
         "install aizee elsewhere"
       ],
       "sha256": "842e0fdf94d2665c571dbfaab6f7866e9b6326a8d1351dbe74067dec63ebbc9a"
+    },
+    "algorithmic-art": {
+      "file": "algorithmic-art/SKILL.md",
+      "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or",
+      "invoke": "auto",
+      "triggers": [
+        "algorithmic",
+        "algorithmic art",
+        "algorithmic-art",
+        "art"
+      ],
+      "sha256": "98cca71d8aa9fc2ae4c43e8e1face75139496a7b0bd9dbff68c0ab224c889783"
     },
     "analytics": {
       "file": "analytics/SKILL.md",
@@ -270,6 +299,18 @@
         "إسناد"
       ],
       "sha256": "ba06620fbccfd4bcda4d7a77e4c372fdea899231b61d913a93631e3eef899937"
+    },
+    "anatomy-illustration": {
+      "file": "anatomy-illustration/SKILL.md",
+      "description": "Build crafted, highly detailed, interactive isometric SVG figures that explain a technical idea as a real physical object (a test rig, a dial gauge, a cabinet of drawers, a plotter, a lock), with many",
+      "invoke": "auto",
+      "triggers": [
+        "anatomy",
+        "anatomy illustration",
+        "anatomy-illustration",
+        "illustration"
+      ],
+      "sha256": "b3eac177f428309731177f2be99597168bd562f3ff892f2c03aceb2457218948"
     },
     "api-architect": {
       "file": "api-architect.md",
@@ -401,6 +442,83 @@
       ],
       "sha256": "1996e24e73d093264e6fdcd96f68db4cafc68fc3df6f042d40e4f3d59da7b5d2"
     },
+    "auto-domain-map": {
+      "file": "auto-domain-map.md",
+      "description": "Master index for automotive domain work — protocol families, tool landscape, era-decision tree, resource sites. Load first for any car/vehicle/OBD/VAG/CarPlay/ECU task.",
+      "invoke": "auto",
+      "triggers": [
+        "android auto",
+        "audi",
+        "auto domain map",
+        "automotive",
+        "car",
+        "carplay",
+        "diagnostic",
+        "dongle",
+        "ecu",
+        "engine",
+        "head unit",
+        "immobilizer",
+        "key programming",
+        "motor",
+        "obd",
+        "seat",
+        "skoda",
+        "tuning",
+        "vag",
+        "vehicle",
+        "vw"
+      ],
+      "sha256": "82f136ceecf17721d58767f51f0fa1a1d6ef9f8e67492eabdce8543269c866c5"
+    },
+    "auto-mechanics-engines": {
+      "file": "auto-mechanics-engines.md",
+      "description": "Engine types, architectures, fuel systems, hybrid/EV motors, engine management concepts, and open-source engine simulators. Load for engine/mechanics/motor/tuning-concept questions.",
+      "invoke": "auto",
+      "triggers": [
+        "auto mechanics engines",
+        "combustion",
+        "cylinder",
+        "diesel",
+        "ecu tuning concept",
+        "electric vehicle",
+        "engine",
+        "ev",
+        "fuel system",
+        "hybrid",
+        "injector",
+        "mechanics",
+        "motor",
+        "petrol",
+        "turbo"
+      ],
+      "sha256": "c641ee98258c4faa1668a0883c9503288bb6b33e7131e4547036d5142fceac8b"
+    },
+    "avoid-ai-writing": {
+      "file": "avoid-ai-writing/SKILL.md",
+      "description": "Audit and rewrite content to remove AI writing patterns (\"AI-isms\"). Use this skill when asked to \"remove AI-isms,\" \"clean up AI writing,\" \"edit writing for AI patterns,\" \"audit writing for AI tells,\"",
+      "invoke": "auto",
+      "triggers": [
+        "avoid",
+        "avoid ai writing",
+        "avoid-ai-writing",
+        "writing"
+      ],
+      "sha256": "5463e051a0b2c49cc33af23049bc332dcbc944b335dc9ce329bdfdb8b4cd90f0"
+    },
+    "avoid-ai-writing-router": {
+      "file": "avoid-ai-writing-router/SKILL.md",
+      "description": "Use when a request combines AI-writing audit, rewrite, file editing, voice preservation, false-positive interpretation, verification, or when the user invokes Avoid AI Writing without naming a mode.",
+      "invoke": "auto",
+      "triggers": [
+        "avoid",
+        "avoid ai writing router",
+        "avoid-ai-writing-router",
+        "router",
+        "writing"
+      ],
+      "sha256": "26f10f649e69f2b3c5605833635fbc641f2c6fe242a280f2c061489450876fd8"
+    },
     "b2b-cold-outreach": {
       "file": "b2b-cold-outreach/SKILL.md",
       "description": "B2B cold outreach closer — enrich, sequence, and convert cold prospects via compliant email/LinkedIn. CAN-SPAM aligned. Do not use for lead generation crm tasks — use `lead-generation-crm` instead.",
@@ -442,6 +560,107 @@
         "command"
       ],
       "sha256": "19d9a6ce42ec994832e08f59c847d0a1e227d711c83a105882307f38ea7e32eb"
+    },
+    "baoyu-article-illustrator": {
+      "file": "baoyu-article-illustrator/SKILL.md",
+      "description": "Analyzes article structure, identifies positions requiring visual aids, generates illustrations with Type × Style × Palette three-dimension approach. Use when user asks to \"illustrate article\", \"add i",
+      "invoke": "auto",
+      "triggers": [
+        "article",
+        "baoyu",
+        "baoyu article illustrator",
+        "baoyu-article-illustrator",
+        "illustrator"
+      ],
+      "sha256": "697de751a141f8837f4b54c86d736c8abfe1b7fa5d12c93c5481d8a886d333cb"
+    },
+    "baoyu-comic": {
+      "file": "baoyu-comic/SKILL.md",
+      "description": "Knowledge comic creator supporting multiple art styles and tones. Creates original educational comics with detailed panel layouts and batch-capable image generation. Use when user asks to create \"知识漫画",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu comic",
+        "baoyu-comic",
+        "comic"
+      ],
+      "sha256": "eac806fc7e3bbb8dcdb142dd6d599ef35ca518855f2e099d392e3b0da6feb232"
+    },
+    "baoyu-cover-image": {
+      "file": "baoyu-cover-image/SKILL.md",
+      "description": "Generates article cover images with 5 dimensions (type, palette, rendering, text, mood) combining 11 color palettes and 7 rendering styles. Supports cinematic (2.35:1), widescreen (16:9), and square (",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu cover image",
+        "baoyu-cover-image",
+        "cover",
+        "image"
+      ],
+      "sha256": "45b9519bad4a9d8b344dc3d2c4c7ded44a06bae9de2d8f03fa3aa5d3d8491775"
+    },
+    "baoyu-diagram": {
+      "file": "baoyu-diagram/SKILL.md",
+      "description": "Create professional diagrams with configurable dark/light theme via CSS custom properties. Use this skill whenever the user asks for any kind of technical or conceptual diagram, visualization of a sys",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu diagram",
+        "baoyu-diagram",
+        "diagram"
+      ],
+      "sha256": "164a9817d5f7a3b3ba9aad8496e0c346697e976cec6e14dac36dcb57bb87dac0"
+    },
+    "baoyu-image-gen": {
+      "file": "baoyu-image-gen/SKILL.md",
+      "description": "AI image generation with OpenAI GPT Image 2.5, Azure OpenAI, Google, OpenRouter, DashScope, Z.AI GLM-Image, MiniMax, Jimeng, Seedream, Replicate and Agnes APIs. Supports text-to-image, reference image",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu image gen",
+        "baoyu-image-gen",
+        "gen",
+        "image"
+      ],
+      "sha256": "0027a103e1f588f7635717cb6e2b32f8303eaf4d42ebb7c80c35b58f7f0cca82"
+    },
+    "baoyu-infographic": {
+      "file": "baoyu-infographic/SKILL.md",
+      "description": "Generate professional infographics with 21 layout types and 22 visual styles. Analyzes content, recommends layout×style combinations, and generates publication-ready infographics. Use when user asks t",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu infographic",
+        "baoyu-infographic",
+        "infographic"
+      ],
+      "sha256": "b5e3aa08d2030dea7d56484cd7079488b118ba210d3fbadae316bb0f9bc2565a"
+    },
+    "baoyu-slide-deck": {
+      "file": "baoyu-slide-deck/SKILL.md",
+      "description": "Generates professional slide deck images from content. Creates outlines with style instructions, then generates individual slide images. Use when user asks to \"create slides\", \"make a presentation\", \"",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu slide deck",
+        "baoyu-slide-deck",
+        "deck",
+        "slide"
+      ],
+      "sha256": "ed8c39b491d9160b6c979cb5ea333629fe57723d8c7a627209e23bfb8880e479"
+    },
+    "baoyu-xhs-images": {
+      "file": "baoyu-xhs-images/SKILL.md",
+      "description": "Generates infographic image card series with 12 visual styles, 8 layouts, and 3 color palettes. Breaks content into 1-10 cartoon-style image cards optimized for social media engagement. Use when user ",
+      "invoke": "auto",
+      "triggers": [
+        "baoyu",
+        "baoyu xhs images",
+        "baoyu-xhs-images",
+        "images",
+        "xhs"
+      ],
+      "sha256": "3a12be16865b0b3a2b3bce8f696924b8829b33f3788cd3353e536f30c8485aac"
     },
     "bmad": {
       "file": "bmad/SKILL.md",
@@ -982,6 +1201,18 @@
       ],
       "sha256": "60cacf784e7118732bf85691fd71e612624c6000e4d9edf50cfbc16d92cf1ab2"
     },
+    "brand-guidelines": {
+      "file": "brand-guidelines/SKILL.md",
+      "description": "Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style guidelines, visual formatting",
+      "invoke": "auto",
+      "triggers": [
+        "brand",
+        "brand guidelines",
+        "brand-guidelines",
+        "guidelines"
+      ],
+      "sha256": "ea984812b93d1ee754aea964df074721f67c112f28f9ca80b9b854e980802b15"
+    },
     "brand-kit": {
       "file": "brand-kit/SKILL.md",
       "description": "Brand kit generator — visual identity, color, voice, logo, and templates. Lord-style orchestrator for consistent branding. Do not use for project voice tasks — use `project-voice` instead.",
@@ -1022,6 +1253,47 @@
         "secure"
       ],
       "sha256": "49fa05fc1d580238a69c1e93c10bca1eb76fb2033a898780a1a2ad22b5034eed"
+    },
+    "canvas-design": {
+      "file": "canvas-design/SKILL.md",
+      "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create ori",
+      "invoke": "auto",
+      "triggers": [
+        "canvas",
+        "canvas design",
+        "canvas-design",
+        "design"
+      ],
+      "sha256": "1506b97edc34c988d3a791963de58c2968587f8a486d71e231285f05a0249b40"
+    },
+    "carplay-headunits": {
+      "file": "carplay-headunits.md",
+      "description": "CarPlay/Android Auto protocol stack, open-source receivers (3 generations), dongle RE/firmware, AWDL transport, brand-specific headunit enablers, MFi-identity reality. Load for CarPlay/AA/headunit/don",
+      "invoke": "auto",
+      "triggers": [
+        "aasdk",
+        "airplay",
+        "android auto",
+        "apple carplay",
+        "autobox",
+        "autoboy",
+        "awdl",
+        "byd dilink",
+        "carlinkit",
+        "carplay",
+        "carplay headunits",
+        "discover media",
+        "dongle",
+        "head unit",
+        "headunit",
+        "hmg",
+        "hu",
+        "iap2",
+        "mib",
+        "nbt",
+        "wireless carplay"
+      ],
+      "sha256": "344117eb1ea59ecc71c5b49bc0238297e54f2dd54271f22e6658b08f159fca52"
     },
     "churn-prevention": {
       "file": "churn-prevention/SKILL.md",
@@ -1167,6 +1439,19 @@
         "بريد بارد"
       ],
       "sha256": "7cd819219f240c0c4d675b2973e7f1ad3dd7361e7dd42fa963d44927d531c01e"
+    },
+    "coloring-book-generator": {
+      "file": "coloring-book-generator/SKILL.md",
+      "description": "Generate printable coloring pages for kids on demand. Age-calibrated line art (0-2, 3-5, 6+), themed generators (animals, family, learning, stories, holidays), PDF output, optional direct-to-printer. ",
+      "invoke": "auto",
+      "triggers": [
+        "book",
+        "coloring",
+        "coloring book generator",
+        "coloring-book-generator",
+        "generator"
+      ],
+      "sha256": "221abd297a310f595a0d5459cd34177730785d356be9fa8bc13d6ff84dc35398"
     },
     "community-builder": {
       "file": "community-builder/SKILL.md",
@@ -1641,6 +1926,26 @@
       ],
       "sha256": "e29ca78c2da068f42ba71339d8b04038586d77d4e7dbcfdfeb4a7f97db3702b1"
     },
+    "directing-stickman-videos": {
+      "file": "directing-stickman-videos/SKILL.md",
+      "description": "Turn topics, requirements, articles or scripts into stickman videos. Model Engine (A) delivers storyboards and standalone prompts, or uses available authorized tools to generate and finish videos; Aut",
+      "invoke": "auto",
+      "triggers": [
+        "ai video",
+        "animated explainer",
+        "directing stickman videos",
+        "faceless youtube",
+        "stickman",
+        "stickman animation",
+        "stickman video",
+        "text to video",
+        "video storyboard",
+        "فيديو ستيكمان",
+        "فيديو متحرك",
+        "يوتيوب بدون وجه"
+      ],
+      "sha256": "619d9683ea47c9c1fcf405cc668fb6524eb220637762460d20c6198ea2e51b7f"
+    },
     "directory-submissions": {
       "file": "directory-submissions/SKILL.md",
       "description": "When the user wants to list a product in startup, SaaS, AI, MCP, and review directories, or asks which directories are worth it or whether listings are working: Product Hunt, G2, Capterra, Alternative",
@@ -1737,6 +2042,37 @@
         "تنفيذ دائم"
       ],
       "sha256": "a387b5aae7b0848e782bb9e2ff0dc4d1aafaf8361deccac7e2ec66cfde14cebb"
+    },
+    "ecu-tuning": {
+      "file": "ecu-tuning.md",
+      "description": "Open engine-management firmware (rusEFI/Speeduino/HaniCore/hellen-one), tuning software (LibreTune/TunerStudio INI ecosystem), flasher hardware, locked-bootloader reality, and engine simulators. Load ",
+      "invoke": "auto",
+      "triggers": [
+        "afr",
+        "boost",
+        "chip tuning",
+        "ecu",
+        "ecu tuning",
+        "engine management",
+        "flash",
+        "fuel map",
+        "hani",
+        "hellen",
+        "ignition map",
+        "libretune",
+        "me7",
+        "med17",
+        "megasquirt",
+        "remap",
+        "rusefi",
+        "simos",
+        "speeduino",
+        "tuner",
+        "tunerstudio",
+        "tuning",
+        "wideband"
+      ],
+      "sha256": "d5d9ef735ac8a08ce4fbb3df7d8755bda6cb55bf1f6c5553a88386459834b212"
     },
     "email-marketing": {
       "file": "email-marketing/SKILL.md",
@@ -1837,6 +2173,20 @@
         "تسريع filament"
       ],
       "sha256": "e7eebe81feccb13ece34d98045e9b6c772c76fc1d84078c6aeb5af3e6413f735"
+    },
+    "file-edit-in-place": {
+      "file": "file-edit-in-place/SKILL.md",
+      "description": "Use when the user names a local file and explicitly asks to clean, rewrite, humanize, or remove AI-writing patterns in that file itself, with minimal targeted edits and post-edit verification.",
+      "invoke": "auto",
+      "triggers": [
+        "edit",
+        "file",
+        "file edit in place",
+        "file-edit-in-place",
+        "in",
+        "place"
+      ],
+      "sha256": "967199dd063ee8a57f0c670f3b59153bde1abb73b72756aaf1c06d348df2a29f"
     },
     "finops": {
       "file": "finops.md",
@@ -1953,6 +2303,18 @@
         "marketplace"
       ],
       "sha256": "8af29685c5f84e66239670e9a490dd9f62d97ccc219a5ba0e80808fabeaf126e"
+    },
+    "frontend-design": {
+      "file": "frontend-design/SKILL.md",
+      "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defau",
+      "invoke": "auto",
+      "triggers": [
+        "design",
+        "frontend",
+        "frontend design",
+        "frontend-design"
+      ],
+      "sha256": "b960b1590ce019e7246a00fdaf53597ec9a99125c1b9c8ab9d554c539a117e29"
     },
     "frontend-frameworks-lord": {
       "file": "frontend-frameworks-lord/SKILL.md",
@@ -2237,6 +2599,18 @@
       ],
       "sha256": "762d24c1ed9f6ae3890ee4bd73f82c25a8219285ba1c3b2bec5526663513e234"
     },
+    "inference-optimisation": {
+      "file": "inference-optimisation/SKILL.md",
+      "description": "Hill-climb the serving speed of a local LLM on any hardware (NVIDIA, AMD, Intel, Apple, unified-memory laptops, multi-GPU) and any quantization (GGUF, EXL2/EXL3, AWQ/GPTQ, FP8, MLX, BF16): single-user",
+      "invoke": "auto",
+      "triggers": [
+        "inference",
+        "inference optimisation",
+        "inference-optimisation",
+        "optimisation"
+      ],
+      "sha256": "07e047c43bae6a6fbc270075a89260620a7701d9b94a0929355bcff312de9803"
+    },
     "influencer-marketing": {
       "file": "influencer-marketing/SKILL.md",
       "description": "When the user wants creator, influencer, or ambassador partnerships, or asks which creators fit, what to pay, which rights to buy, or whether a sponsorship worked: vetting, contracts, briefs, UGC, new",
@@ -2305,6 +2679,106 @@
         "فاتورة"
       ],
       "sha256": "c384df4ed20148303d835865960104de34cac3f59494f25191c88ed3ff609899"
+    },
+    "kdp-book-production": {
+      "file": "kdp-book-production/SKILL.md",
+      "description": "Architect and produce a KDP book from a validated niche — reader pain-point discovery, title/subtitle generation, chapter-outline structures, section-by-section drafting standards, anti-AI-detection d",
+      "invoke": "auto",
+      "triggers": [
+        "book architect",
+        "kdp book outline",
+        "kdp book production",
+        "kdp cover",
+        "manuscript drafting",
+        "paperback cover",
+        "spine width",
+        "كتابة كتاب"
+      ],
+      "sha256": "6f0d2982289720baef54af5a1bdcb2ef0465237732411f6569439e6af2af943a"
+    },
+    "kdp-launch-marketing": {
+      "file": "kdp-launch-marketing/SKILL.md",
+      "description": "Plan and execute Amazon KDP book launches and post-launch marketing — phased 30-day launch sequencing, review collection ethics, promo sites, the Sponsored-Products advertising system with ACOS discip",
+      "invoke": "auto",
+      "triggers": [
+        "acos",
+        "amazon ads",
+        "book launch",
+        "book marketing",
+        "kdp launch",
+        "kdp launch marketing",
+        "sponsored products",
+        "إطلاق كتاب"
+      ],
+      "sha256": "18d19ff9db127eab574d457baa220e64cb6d812fdba2e9c5ca2c1547376bcf4b"
+    },
+    "kdp-listing-pricing": {
+      "file": "kdp-listing-pricing/SKILL.md",
+      "description": "Build the complete Amazon KDP listing and pricing package — 5-part HTML book descriptions, 7-slot backend keyword strategy, category selection screening, royalty bracket math, dead-zone avoidance, and",
+      "invoke": "auto",
+      "triggers": [
+        "amazon categories",
+        "book description",
+        "kdp keywords",
+        "kdp listing",
+        "kdp listing pricing",
+        "kdp pricing",
+        "royalty calculation"
+      ],
+      "sha256": "bb4853bb7853b81c6bf502ea043b76b1bb65021435cb063ba4910445bfd09d33"
+    },
+    "kdp-niche-research": {
+      "file": "kdp-niche-research/SKILL.md",
+      "description": "Validate Amazon KDP niches for profitability and timing before writing — BSR benchmark scoring, demand thresholds, competition signals, seasonal/hot/evergreen classification, and competitor-catalog mi",
+      "invoke": "auto",
+      "triggers": [
+        "book timing",
+        "bsr analysis",
+        "kdp niche",
+        "kdp niche research",
+        "niche research",
+        "niche validation",
+        "profitable niche",
+        "اختيار نيتش"
+      ],
+      "sha256": "9df6672088e24c3def337a9850e88f1503f48a4adcc825cb4535d595f16b6290"
+    },
+    "kdp-operations": {
+      "file": "kdp-operations/SKILL.md",
+      "description": "Operate an Amazon KDP publishing catalog safely — the three irreversible upload decisions (DRM, KDP Select, ISBN), format asset checklists, metadata audit/maintenance loops, royalty report analysis, a",
+      "invoke": "auto",
+      "triggers": [
+        "bookshelf audit",
+        "kdp automation",
+        "kdp metadata",
+        "kdp operations",
+        "kdp select",
+        "kdp upload",
+        "royalty report"
+      ],
+      "sha256": "08211c9a19b3e8b0d44574c4284db9396e04dd3c3913d800aaa10f697d1945b4"
+    },
+    "kindle-book-formatter": {
+      "file": "kindle-book-formatter/SKILL.md",
+      "description": "Convert markdown (.md) or plain text (.txt) files into Amazon KDP-ready book files: EPUB3 for Kindle digital publishing and a print-ready PDF for KDP paperback (6×9\", 5×8\", or custom trim). Use this s",
+      "invoke": "auto",
+      "triggers": [
+        "book",
+        "formatter",
+        "kindle",
+        "kindle book formatter",
+        "kindle-book-formatter"
+      ],
+      "sha256": "7106b5f733bd0d91d46412170efba60f15206a4b59ee30b01bbe0ea7cae9491e"
+    },
+    "kindlepub": {
+      "file": "kindlepub/SKILL.md",
+      "description": "End-to-end Amazon KDP self-publishing pipeline for a finished book manuscript. Builds the reflowable Kindle EPUB (epubcheck-clean), generates cover art with Gemini Nano Banana and assembles the cover ",
+      "invoke": "auto",
+      "triggers": [
+        "kindlepub"
+      ],
+      "sha256": "c135873b64b87b1986eeba5d45fed8d91932f67e578f8074dbb361758bf3a34f"
     },
     "language-lord": {
       "file": "language-lord/SKILL.md",
@@ -2543,6 +3017,19 @@
         "خرائط جوجل"
       ],
       "sha256": "c52e37cee90ffc8adf9293cb1b7ddfea56816d53753f0bacb5786ddd8ae3d890"
+    },
+    "manga-page-generator": {
+      "file": "manga-page-generator/SKILL.md",
+      "description": "Generate production-ready manga pages, chapter pages, covers, and panel sequences with strict recurring-character consistency. Use this when the user asks for a manga page, manga scene, chapter page, ",
+      "invoke": "auto",
+      "triggers": [
+        "generator",
+        "manga",
+        "manga page generator",
+        "manga-page-generator",
+        "page"
+      ],
+      "sha256": "268c448648d7615b708aa97c692ee7a5a308a08442df112ef6ee8375c6b66c3d"
     },
     "mariadb-lord": {
       "file": "mariadb-lord/SKILL.md",
@@ -2825,6 +3312,48 @@
       ],
       "sha256": "9480791f22e99ea010d04cec740f61694bc426d008efd03de5a81797db77e8b4"
     },
+    "novelist-longform": {
+      "file": "novelist-longform/SKILL.md",
+      "description": "当用户要求写小说、创作故事、分章节写作、连续剧情、长篇小说，或需要续写/校验未完成的小说项目时使用。支持悬疑/言情/奇幻/科幻/历史等全题材中文创作。",
+      "invoke": "auto",
+      "triggers": [
+        "longform",
+        "novelist",
+        "novelist longform",
+        "novelist-longform"
+      ],
+      "sha256": "453a3a20550499686178848f1e283de91bc701607e20c8ddc435e2b4bda53f55"
+    },
+    "obd-diagnostics": {
+      "file": "obd-diagnostics.md",
+      "description": "OBD-II modes/PIDs, UDS/ISO-TP/TP2.0/DoIP/KWP2000/KW1281/J1850 protocol stack, adapters, python-can/cantools/opendbc/caringcaribou/SavvyCAN/cabana toolchain, DTC practice. Load for diagnostics/scan-too",
+      "invoke": "auto",
+      "triggers": [
+        "cabana",
+        "cantools",
+        "caringcaribou",
+        "dbc",
+        "diagnostic",
+        "doip",
+        "dtc",
+        "elm327",
+        "fault code",
+        "iso-tp",
+        "isotp",
+        "j1850",
+        "kwp1281",
+        "kwp2000",
+        "obd",
+        "obd diagnostics",
+        "obd-ii",
+        "obd2",
+        "python-can",
+        "savvcan",
+        "scan tool",
+        "uds"
+      ],
+      "sha256": "1bb025600b4e43e0d4cb4ca506029797d56d2af6e583820af9f8195af4474b2e"
+    },
     "offers": {
       "file": "offers/SKILL.md",
       "description": "When the user wants to design or improve the offer itself, or asks why it isn't selling or how to add urgency honestly: value stacking, bonuses, guarantees, scarcity, payment plans, upsells. Best for ",
@@ -2846,6 +3375,18 @@
         "مدفوعات"
       ],
       "sha256": "63b8fc98340ebdcec81cd0212eb99b40f5b692cb72bc4fcb586ef3189e2c5fa7"
+    },
+    "office-academic": {
+      "file": "office-academic/SKILL.md",
+      "description": "Chinese-first academic Word and PowerPoint workflow for paper reading reports, thesis or group-meeting PPTs, editable DOCX/PPTX generation, Office file inspection, template matching, speaker notes, an",
+      "invoke": "auto",
+      "triggers": [
+        "academic",
+        "office",
+        "office academic",
+        "office-academic"
+      ],
+      "sha256": "571bc9cc6d507f4cb3df62ebfb9591b8ed6c9cb1273cf14a0d3ca2f8297def26"
     },
     "onboarding": {
       "file": "onboarding/SKILL.md",
@@ -2872,6 +3413,263 @@
         "تسجيل"
       ],
       "sha256": "685fd9b218a955f78412cd94096cf35bfe51e48c131b2d2202cdfa8832113872"
+    },
+    "oneirloom": {
+      "file": "oneirloom/SKILL.md",
+      "description": "Oneirloom (织梦师), also called 织梦师Skill or Oneirloom Skill. Explore visual directions across media, then turn visual requests and references into complete image prompts, graphic designs, craft construct",
+      "invoke": "auto",
+      "triggers": [
+        "oneirloom"
+      ],
+      "sha256": "8e043b5f4778665a7aa904498f90681314063d34ab6d26f2193559cbab5051c1"
+    },
+    "oneirloom-brand-identity": {
+      "file": "oneirloom-brand-identity/SKILL.md",
+      "description": "Design a coherent brand visual identity across marks, typography, color, graphic language, real applications, and a usable guideline book. Use for a full VI system or a defined identity extension; dis",
+      "invoke": "auto",
+      "triggers": [
+        "brand",
+        "identity",
+        "oneirloom",
+        "oneirloom brand identity",
+        "oneirloom-brand-identity"
+      ],
+      "sha256": "14ff8445b980c2aa826febb5908bca61915d80dcec2caca381a7b65e767084f2"
+    },
+    "oneirloom-camera-composition": {
+      "file": "oneirloom-camera-composition/SKILL.md",
+      "description": "将景别、机位、视角、透视、遮挡、裁切和运动意图写成明确的画面空间关系。用于摄影、电影感、广角仰拍、俯拍、主体布局和参考图构图复现。",
+      "invoke": "auto",
+      "triggers": [
+        "camera",
+        "composition",
+        "oneirloom",
+        "oneirloom camera composition",
+        "oneirloom-camera-composition"
+      ],
+      "sha256": "225cfe4934e6fc89711154bffceb31e0669aee1cb3e75e0d567a2f3db58a2ee8"
+    },
+    "oneirloom-character-sheet": {
+      "file": "oneirloom-character-sheet/SKILL.md",
+      "description": "Design character sheets, wardrobe sheets, multi-view identity anchors, and production or expression cards. Select indexed wardrobe, four-view plus four-expression, or three-view templates when their l",
+      "invoke": "auto",
+      "triggers": [
+        "character",
+        "oneirloom",
+        "oneirloom character sheet",
+        "oneirloom-character-sheet",
+        "sheet"
+      ],
+      "sha256": "4d41b031deb6508ce9b1331dd48edc08ae55a84177efb69afc1939bfef11c99b"
+    },
+    "oneirloom-color-light": {
+      "file": "oneirloom-color-light/SKILL.md",
+      "description": "把色彩、明度、对比、光向、材质受光和空气感转成区域明确的图像提示词。用于修正偏灰、偏冷、过曝、光色错位或“鲜活梦幻”等抽象氛围。",
+      "invoke": "auto",
+      "triggers": [
+        "color",
+        "light",
+        "oneirloom",
+        "oneirloom color light",
+        "oneirloom-color-light"
+      ],
+      "sha256": "51b0faef09ec686decd0f44b5d9421b1ca514deb9671bfffdd8aa60e61825aef"
+    },
+    "oneirloom-craft-construction": {
+      "file": "oneirloom-craft-construction/SKILL.md",
+      "description": "Turn a visual subject into a clear craft construction when units, joins, thickness, edges, or support define the result. Use for work such as fuse-bead art or layered paper relief.",
+      "invoke": "auto",
+      "triggers": [
+        "construction",
+        "craft",
+        "oneirloom",
+        "oneirloom craft construction",
+        "oneirloom-craft-construction"
+      ],
+      "sha256": "9f05a994a298db4cd384029d7429bba1b11c26cca7709293931b10130bd5a220"
+    },
+    "oneirloom-digital-form": {
+      "file": "oneirloom-digital-form/SKILL.md",
+      "description": "Shape or transform a digital visual subject when silhouette, volume, repetition, deformation, connections, or composite layers define the result. Use for digital-native forms and 3D concept renders.",
+      "invoke": "auto",
+      "triggers": [
+        "digital",
+        "form",
+        "oneirloom",
+        "oneirloom digital form",
+        "oneirloom-digital-form"
+      ],
+      "sha256": "7ebc2d75838a54db676322cc9eba77c58cd8dbc75c204191868f3ca8b7a3a4f2"
+    },
+    "oneirloom-dream-weaving": {
+      "file": "oneirloom-dream-weaving/SKILL.md",
+      "description": "Develop vague feelings, memories, fragmentary imagery, or an unsatisfying concept into a drawable visual scene through collaborative conversation. Preserve the initial feeling and user choices; hand c",
+      "invoke": "auto",
+      "triggers": [
+        "dream",
+        "oneirloom",
+        "oneirloom dream weaving",
+        "oneirloom-dream-weaving",
+        "weaving"
+      ],
+      "sha256": "22add5ca21a47dd6888dafb5b832556556a1f18d01e3f57ed42127e6d04a65f4"
+    },
+    "oneirloom-expression-stickers": {
+      "file": "oneirloom-expression-stickers/SKILL.md",
+      "description": "Design chat reaction stickers and emote packs with recognizable character identity, distinct communicative intent, gestures, and optional exact captions. Use for individual stickers or coordinated pac",
+      "invoke": "auto",
+      "triggers": [
+        "expression",
+        "oneirloom",
+        "oneirloom expression stickers",
+        "oneirloom-expression-stickers",
+        "stickers"
+      ],
+      "sha256": "27922b7e24cc5483dd5193bfc493667d61ca5935748a409cbc83e4b9f62fce37"
+    },
+    "oneirloom-figure-art": {
+      "file": "oneirloom-figure-art/SKILL.md",
+      "description": "Shape non-explicit artistic prompts for clearly adult unclothed figures, including requested concealment; coordinate visible anatomy and view-dependent coverage while leaving medium and style to their",
+      "invoke": "auto",
+      "triggers": [
+        "art",
+        "figure",
+        "oneirloom",
+        "oneirloom figure art",
+        "oneirloom-figure-art"
+      ],
+      "sha256": "aefcd29c7a9d1d1ce2180cd092517066790a63612d2692ee0fd78be35c4b65b8"
+    },
+    "oneirloom-icon-design": {
+      "file": "oneirloom-icon-design/SKILL.md",
+      "description": "Design coherent functional UI icon families and distinctive app or product symbols. Adapt existing icon languages, create editable vector assets or requested illustrative icon prompts, and inspect mea",
+      "invoke": "auto",
+      "triggers": [
+        "design",
+        "icon",
+        "oneirloom",
+        "oneirloom icon design",
+        "oneirloom-icon-design"
+      ],
+      "sha256": "0994dcb09a2b4c05085775821af79579952b104b72742dcc289f74f1dbc16c96"
+    },
+    "oneirloom-image-tutorial": {
+      "file": "oneirloom-image-tutorial/SKILL.md",
+      "description": "Write, expand, or polish illustrated image-generation tutorials with concrete prompt examples and inspected results. Use for teaching articles, section-by-section expansion, and tutorial copy editing;",
+      "invoke": "auto",
+      "triggers": [
+        "image",
+        "oneirloom",
+        "oneirloom image tutorial",
+        "oneirloom-image-tutorial",
+        "tutorial"
+      ],
+      "sha256": "5e486dbb1e18c8362db0ae3da04ef0dfaadedca188a8a5a6da2ba4c365d2f0d8"
+    },
+    "oneirloom-product-art-direction": {
+      "file": "oneirloom-product-art-direction/SKILL.md",
+      "description": "Inspect supplied product references and develop static ecommerce images, realistic product scenes, or creative advertisements. Resolve clear or vague briefs, preserve product facts through permitted t",
+      "invoke": "auto",
+      "triggers": [
+        "art",
+        "direction",
+        "oneirloom",
+        "oneirloom product art direction",
+        "oneirloom-product-art-direction",
+        "product"
+      ],
+      "sha256": "c4e96928945502633ea345bf617543b35eb317bee06b557671bedc4c6fa0c976"
+    },
+    "oneirloom-prompt-card": {
+      "file": "oneirloom-prompt-card/SKILL.md",
+      "description": "Create a 3:4 vertical card from an existing image and complete prompt. Crop the image to fill the upper third, and typeset the prompt in the lower two thirds. Use for image-and-prompt collages, prompt",
+      "invoke": "auto",
+      "triggers": [
+        "card",
+        "oneirloom",
+        "oneirloom prompt card",
+        "oneirloom-prompt-card",
+        "prompt"
+      ],
+      "sha256": "9914933a77db028c6ea863ca0ff7f521697ff7d89ee48e3fcb03a58738a99882"
+    },
+    "oneirloom-result-diagnosis": {
+      "file": "oneirloom-result-diagnosis/SKILL.md",
+      "description": "Compare an actual or user-reported result miss with the source, current intent, and submitted prompt. Separate source-to-prompt from prompt-to-result errors and return a complete correction that prese",
+      "invoke": "auto",
+      "triggers": [
+        "diagnosis",
+        "oneirloom",
+        "oneirloom result diagnosis",
+        "oneirloom-result-diagnosis",
+        "result"
+      ],
+      "sha256": "715b74af1d8f37094300b7471c58424d81495d4fa26e9016bcd6a9fde0986ac7"
+    },
+    "oneirloom-space-conception": {
+      "file": "oneirloom-space-conception/SKILL.md",
+      "description": "Organize a room, set, or environment when masses, enclosure, openings, adjacency, circulation, focus, scale, or depth define the visual result. Use before selecting a camera view.",
+      "invoke": "auto",
+      "triggers": [
+        "conception",
+        "oneirloom",
+        "oneirloom space conception",
+        "oneirloom-space-conception",
+        "space"
+      ],
+      "sha256": "044eeabeb5abdd158b091321d4808b8b750a592de86543ccfaf919dcf463b9fa"
+    },
+    "oneirloom-style-design": {
+      "file": "oneirloom-style-design/SKILL.md",
+      "description": "Understand visual intent and subject identity, observe references, and design composed graphics before choosing production. Write complete prompts or create requested posters, covers, editorial layout",
+      "invoke": "auto",
+      "triggers": [
+        "design",
+        "oneirloom",
+        "oneirloom style design",
+        "oneirloom-style-design",
+        "style"
+      ],
+      "sha256": "cc28277849e932785f885975aba5e69e6af4c1dd2b061fe4d92a55ccd6efb8ea"
+    },
+    "oneirloom-style-illustration": {
+      "file": "oneirloom-style-illustration/SKILL.md",
+      "description": "Compose watercolor, print, comic, animation, concept-art, folkloric narrative, and paper-collage prompts through visible linework, color layers, texture, and spatial structure. Select indexed presets ",
+      "invoke": "auto",
+      "triggers": [
+        "illustration",
+        "oneirloom",
+        "oneirloom style illustration",
+        "oneirloom-style-illustration",
+        "style"
+      ],
+      "sha256": "f941f96a73b01d0c18977a59ac3bf6d2ed77167f980772df15224ab98ab0ad00"
+    },
+    "oneirloom-style-photography": {
+      "file": "oneirloom-style-photography/SKILL.md",
+      "description": "Compose realistic photography, lifestyle and fashion portraits, product photographs, and film-still prompts. Select indexed scene templates for requests such as crouching selfies or indoor full-length",
+      "invoke": "auto",
+      "triggers": [
+        "oneirloom",
+        "oneirloom style photography",
+        "oneirloom-style-photography",
+        "photography",
+        "style"
+      ],
+      "sha256": "a2d1b99bf1f41730833c1cbaddcaede81bc3adeae8806308968acea3a9294f79"
+    },
+    "oneirloom-visual-analysis": {
+      "file": "oneirloom-visual-analysis/SKILL.md",
+      "description": "拆解参考图或已成形画面的模糊视觉需求，提取可检验的主体、空间、区域色彩和媒介锚点。用于参考图反推、图像复现、跨模型迁移与将“梦幻”“高级”等抽象词转成具体画面关系。",
+      "invoke": "auto",
+      "triggers": [
+        "analysis",
+        "oneirloom",
+        "oneirloom visual analysis",
+        "oneirloom-visual-analysis",
+        "visual"
+      ],
+      "sha256": "c09a626563828eb877fdfb984f64804e516367b715bb2cf932199d19714c25e5"
     },
     "page-sections-lord": {
       "file": "page-sections-lord/SKILL.md",
@@ -2960,6 +3758,32 @@
         "سلطة"
       ],
       "sha256": "4297d822d6bc65ddd85571c69a54b215518b002d88c94105a818085f27e539ba"
+    },
+    "photo-style-transfer": {
+      "file": "photo-style-transfer/SKILL.md",
+      "description": "Turn a photo into anime, manga, comic, cartoon, watercolor, clay, or 3D character art while the person, pet, or product stays recognisable. This AI photo restyler works as a photo-to-anime converter a",
+      "invoke": "auto",
+      "triggers": [
+        "photo",
+        "photo style transfer",
+        "photo-style-transfer",
+        "style",
+        "transfer"
+      ],
+      "sha256": "aa2a600584c420277ec7f65cf50b950748eeca2e15f3358d59b23e245baadeb9"
+    },
+    "pixel-art-studio": {
+      "file": "pixel-art-studio/SKILL.md",
+      "description": "Claude IS the pixel artist — designs and places every pixel directly via Python/Pillow (scripts/pixelstudio.py). No Aseprite, no MCP server. Creates sprites, characters, items, tiles/tilesets, animati",
+      "invoke": "auto",
+      "triggers": [
+        "art",
+        "pixel",
+        "pixel art studio",
+        "pixel-art-studio",
+        "studio"
+      ],
+      "sha256": "b7a04697e887186a07ebc7183badef6696b93dcc56156a03bb6f093e3d4438bc"
     },
     "ponytail": {
       "file": "ponytail/SKILL.md",
@@ -3102,6 +3926,18 @@
         "علاقات صحفية"
       ],
       "sha256": "baafc71cdc426dfd29268b421864c91b2eb8c5eba6e778f728a5636b98bc16cc"
+    },
+    "preservation-verifier": {
+      "file": "preservation-verifier/SKILL.md",
+      "description": "Use when the user provides an original and rewritten version, asks whether a rewrite preserved protected content, or wants a deterministic check for code, frontmatter, quotes, tables, links, paths, nu",
+      "invoke": "auto",
+      "triggers": [
+        "preservation",
+        "preservation verifier",
+        "preservation-verifier",
+        "verifier"
+      ],
+      "sha256": "bc48d43e1579e79426184057893ff80460a4a0b00b3614300ec95b87f8e930eb"
     },
     "pricing": {
       "file": "pricing/SKILL.md",
@@ -3459,6 +4295,31 @@
       ],
       "sha256": "46931ffc6576493c3c8be03a0056c03574f36fa278b5d1fa5ba320b96db90908"
     },
+    "research-paper-writing": {
+      "file": "research-paper-writing/SKILL.md",
+      "description": "Improve academic paper writing quality for ML/CV/NLP-style papers with clear section structure, paragraph flow, and reviewer-facing presentation. Use when drafting or revising Abstract, Introduction, ",
+      "invoke": "auto",
+      "triggers": [
+        "paper",
+        "research",
+        "research paper writing",
+        "research-paper-writing",
+        "writing"
+      ],
+      "sha256": "efabffdfd45cf4bfda98e57b51a49944d2e281909b7cbcd71ee0f890591ef191"
+    },
+    "research-writing": {
+      "file": "research-writing/SKILL.md",
+      "description": "Chinese-first research paper writing, revision, polishing, section drafting, rebuttal, peer-review response, thesis prose improvement, and manuscript argument planning. Use when the user asks to write",
+      "invoke": "auto",
+      "triggers": [
+        "research",
+        "research writing",
+        "research-writing",
+        "writing"
+      ],
+      "sha256": "079ed3aea6386803202210afde854c0f68febceea2034a13173d814a73eaf1bc"
+    },
     "reverse-engineer-anything": {
       "file": "reverse-engineer-anything/SKILL.md",
       "description": "Reverse engineer native, managed, Electron/JavaScript, packaged, firmware, and browser targets with REA. Use shipped-artifact or requested runtime evidence to explain features, compare versions, decom",
@@ -3567,6 +4428,19 @@
       ],
       "sha256": "4ddcf3ee0e18da434d18ccfabc9f5b9e4555fc5d9b7e0d5c74e550d61e8fb5b0"
     },
+    "rewrite-preservation-verifier": {
+      "file": "rewrite-preservation-verifier/SKILL.md",
+      "description": "Use when the user provides an original and rewritten version, asks whether a rewrite preserved protected content, or wants a deterministic check for code, frontmatter, quotes, tables, links, paths, nu",
+      "invoke": "auto",
+      "triggers": [
+        "preservation",
+        "rewrite",
+        "rewrite preservation verifier",
+        "rewrite-preservation-verifier",
+        "verifier"
+      ],
+      "sha256": "aa353c46710ec0d91830fc28388cc100b9da77241ff13e3742e7f334b82165cb"
+    },
     "sales-enablement": {
       "file": "sales-enablement/SKILL.md",
       "description": "When the user wants sales collateral, or asks what to give a champion or rep, or how to answer an objection or make the case: decks, one-pagers, objection handling, demo scripts, talk tracks, battle c",
@@ -3614,6 +4488,18 @@
         "whether some"
       ],
       "sha256": "e3f30157a5e7c26441f70395a32250a1626e13a445940a975a927f4a415178fd"
+    },
+    "scientific-toolkit": {
+      "file": "scientific-toolkit/SKILL.md",
+      "description": "Research computing toolkit for optoelectronic information science and engineering, MATLAB/Octave, Python scientific analysis, signal processing, image processing, statistics, simulation, optimization,",
+      "invoke": "auto",
+      "triggers": [
+        "scientific",
+        "scientific toolkit",
+        "scientific-toolkit",
+        "toolkit"
+      ],
+      "sha256": "4bd203a9ee4859b82b5949c888cafb7939e2fa4095d5bbd252a81378e0eef06e"
     },
     "search-vector-lord": {
       "file": "search-vector-lord/SKILL.md",
@@ -3684,6 +4570,72 @@
         "seo lord"
       ],
       "sha256": "400648e866d3f71723dfc71cc01874cd17a4ac1b3d950724894739d396e5b909"
+    },
+    "sepia-hemingway": {
+      "file": "sepia-hemingway/SKILL.md",
+      "description": "Use when a user asks to write or revise fiction in the Hemingway manner, or asks for strong de-AI on a story; applies Sepia's built-in Hemingway voice profile.",
+      "invoke": "auto",
+      "triggers": [
+        "hemingway",
+        "sepia hemingway",
+        "sepia-hemingway"
+      ],
+      "sha256": "77b16f9f6ca25194863a49c8b667cb7e6138d413e59f7ad369f419375ae26b3d"
+    },
+    "sepia-prose": {
+      "file": "sepia-prose/SKILL.md",
+      "description": "Make AI-generated writing read as human-written, in fiction and in professional prose. Repairs the narrative architecture of fiction and stories (based on StoryScope, arXiv:2604.03136); routes profess",
+      "invoke": "auto",
+      "triggers": [
+        "prose",
+        "sepia prose",
+        "sepia-prose"
+      ],
+      "sha256": "b7efadc71608af1ed93a3ab1f2c70ed55d65cfd3a7b0fd8667fcd1c69cabcdc5"
+    },
+    "sepia-recreate": {
+      "file": "sepia-recreate/SKILL.md",
+      "description": "Use when a user explicitly requests Sepia recreate for a full rewrite.",
+      "invoke": "auto",
+      "triggers": [
+        "recreate",
+        "sepia recreate",
+        "sepia-recreate"
+      ],
+      "sha256": "5c84808d2c59bfaaaed168e417e029bc42f8396a6964b4dfd3658633b44297f4"
+    },
+    "sepia-refactor": {
+      "file": "sepia-refactor/SKILL.md",
+      "description": "Use when a user explicitly requests Sepia refactor for minimal in-place prose revision.",
+      "invoke": "auto",
+      "triggers": [
+        "refactor",
+        "sepia refactor",
+        "sepia-refactor"
+      ],
+      "sha256": "cef25a1ea2b3b1f2b7bedb946eabe49bcd8cb58be114ff959e38eb348cb2e1f5"
+    },
+    "sepia-review": {
+      "file": "sepia-review/SKILL.md",
+      "description": "Use when a user explicitly requests Sepia review to diagnose prose without editing.",
+      "invoke": "auto",
+      "triggers": [
+        "review",
+        "sepia review",
+        "sepia-review"
+      ],
+      "sha256": "47243cd0e4ac3cd687e2bc892e64275122b3339d0f7bfa368e383d96b76a31ad"
+    },
+    "sepia-write": {
+      "file": "sepia-write/SKILL.md",
+      "description": "Use when a user explicitly requests Sepia write to create new prose.",
+      "invoke": "auto",
+      "triggers": [
+        "sepia write",
+        "sepia-write",
+        "write"
+      ],
+      "sha256": "bfdf7faac1b64504b6cbb47f3554e210dd414ac86333bdf77f893f0a9a60ed30"
     },
     "server-ops-lord": {
       "file": "server-ops-lord/SKILL.md",
@@ -3806,6 +4758,19 @@
       ],
       "sha256": "69ff1e2e345b108c18b418f898d010a6cbc2176df2b48194f50b352f574ad6d5"
     },
+    "slack-gif-creator": {
+      "file": "slack-gif-creator/SKILL.md",
+      "description": "Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when users request animated GIFs for Slack like \"make me a G",
+      "invoke": "auto",
+      "triggers": [
+        "creator",
+        "gif",
+        "slack",
+        "slack gif creator",
+        "slack-gif-creator"
+      ],
+      "sha256": "ad8a9a5ea53ac826ffd59aae3fc6b1974ef1a4804487bb8088fca0be896ee3c5"
+    },
     "sms": {
       "file": "sms/SKILL.md",
       "description": "When the user wants SMS, MMS, or WhatsApp marketing, or asks whether texting is worth it or a message is allowed: abandoned cart, win-back, and promo texts, WhatsApp templates and windows, TCPA and A2",
@@ -3880,6 +4845,151 @@
       ],
       "sha256": "62d5bbb6711fea7e33a12458df68257447eca1044f33d1a51ef18b42bd949aca"
     },
+    "sprite-stacking": {
+      "file": "sprite-stacking/SKILL.md",
+      "description": "Makes fake-3D rotatable pixel art with sprite stacking. Turns four orthographic views (top, side, front, back) into a visual-hull carved slice strip, checks it, and renders a crisp turntable for web C",
+      "invoke": "auto",
+      "triggers": [
+        "sprite",
+        "sprite stacking",
+        "sprite-stacking",
+        "stacking"
+      ],
+      "sha256": "11cb9a11d2fbdb00767df5c3fe41a457d2d58f73db442f1f7fd15a8c1c0fa4a5"
+    },
+    "spritecook-animate-assets": {
+      "file": "spritecook-animate-assets/SKILL.md",
+      "description": "Animation guide for SpriteCook. Use with spritecook-workflow-essentials when importing source images, writing stronger motion prompts, and animating existing assets.",
+      "invoke": "auto",
+      "triggers": [
+        "animate",
+        "assets",
+        "spritecook",
+        "spritecook animate assets",
+        "spritecook-animate-assets"
+      ],
+      "sha256": "394a3c035b402f089f5dfe46a5d1f7d8e97d989fabaf9d98734c4df58ad0f4de"
+    },
+    "spritecook-build-ui-kits": {
+      "file": "spritecook-build-ui-kits/SKILL.md",
+      "description": "Create or refine game UI kits with SpriteCook's concept, component-sheet, extraction, and finalization tools. Use for a requested screen or matching set of reusable controls, including work from an ex",
+      "invoke": "auto",
+      "triggers": [
+        "build",
+        "kits",
+        "spritecook",
+        "spritecook build ui kits",
+        "spritecook-build-ui-kits",
+        "ui"
+      ],
+      "sha256": "f24317f7f9ca41321b3c6c1731b5a85768f8fb1523f02e76f8cde5f96cf60c44"
+    },
+    "spritecook-generate-sprites": {
+      "file": "spritecook-generate-sprites/SKILL.md",
+      "description": "Still-image generation guide for SpriteCook. Use with spritecook-workflow-essentials when generating pixel art or detailed/HD assets, choosing models, and keeping style consistency with reference asse",
+      "invoke": "auto",
+      "triggers": [
+        "generate",
+        "spritecook",
+        "spritecook generate sprites",
+        "spritecook-generate-sprites",
+        "sprites"
+      ],
+      "sha256": "07046535b3a5ff92fd59131d4d1ab2249233fef9aa6ea225c84def280784d6c2"
+    },
+    "spritecook-generate-tilesets": {
+      "file": "spritecook-generate-tilesets/SKILL.md",
+      "description": "Tileset generation guide for SpriteCook. Use with spritecook-workflow-essentials when generating autotile tilesets through SpriteCook MCP tools, choosing tile sizes, using reference/edit/style asset I",
+      "invoke": "auto",
+      "triggers": [
+        "generate",
+        "spritecook",
+        "spritecook generate tilesets",
+        "spritecook-generate-tilesets",
+        "tilesets"
+      ],
+      "sha256": "fd4a9be61e45c5de523dce8a6f83a6de73c25205bb0e5420b7cf55676fe36764"
+    },
+    "spritecook-polish-sprites": {
+      "file": "spritecook-polish-sprites/SKILL.md",
+      "description": "Inspect and polish SpriteCook sprites after generation or background removal. Use for broken or faint outlines, missing edge pixels, halos, and background debris, and before slicing or animating asset",
+      "invoke": "auto",
+      "triggers": [
+        "polish",
+        "spritecook",
+        "spritecook polish sprites",
+        "spritecook-polish-sprites",
+        "sprites"
+      ],
+      "sha256": "b9379b3a24b55a9c5bd55d1f70b591469f9b821850f22b22c19e01d0f9af154a"
+    },
+    "spritecook-upload-assets": {
+      "file": "spritecook-upload-assets/SKILL.md",
+      "description": "Import an image the user selected for SpriteCook into their asset library through the MCP upload tools, for references, editing, animation, or reuse. Use when the requested SpriteCook workflow needs t",
+      "invoke": "auto",
+      "triggers": [
+        "assets",
+        "spritecook",
+        "spritecook upload assets",
+        "spritecook-upload-assets",
+        "upload"
+      ],
+      "sha256": "b4528603345c83b9eb94cff4a51b26200f0581b4fe7017a671e6ced8510e3552"
+    },
+    "spritecook-use-assets-in-godot": {
+      "file": "spritecook-use-assets-in-godot/SKILL.md",
+      "description": "Godot workflow for SpriteCook assets. Use when the user wants to turn SpriteCook spritesheet PNGs, animation assets, or character animation runs into Godot SpriteFrames resources and AnimatedSprite2D/",
+      "invoke": "auto",
+      "triggers": [
+        "assets",
+        "in",
+        "spritecook",
+        "spritecook use assets in godot",
+        "spritecook-use-assets-in-godot",
+        "use"
+      ],
+      "sha256": "7b1facb5feb1c79f773d26ef629b9d36ef401fb50fd9fe4c4e8dcefb35ce91c8"
+    },
+    "spritecook-use-dual-grid-tilesets": {
+      "file": "spritecook-use-dual-grid-tilesets/SKILL.md",
+      "description": "Implementation guide for using SpriteCook top-down 15-piece tilesets with a dual-grid autotile renderer. Use when explaining or coding how to map a 4x4 15-piece tileset image into terrain using Sprite",
+      "invoke": "auto",
+      "triggers": [
+        "dual",
+        "grid",
+        "spritecook",
+        "spritecook use dual grid tilesets",
+        "spritecook-use-dual-grid-tilesets",
+        "use"
+      ],
+      "sha256": "4a9f0ba607ee9e20c37f17504f3ac49a0eedc430089dcc603430733901aecdab"
+    },
+    "spritecook-use-presets": {
+      "file": "spritecook-use-presets/SKILL.md",
+      "description": "Use SpriteCook saved presets through MCP. Use when the user explicitly asks to use a preset, refers to one of their saved SpriteCook presets, asks for the same style/settings as a saved preset, or ask",
+      "invoke": "auto",
+      "triggers": [
+        "presets",
+        "spritecook",
+        "spritecook use presets",
+        "spritecook-use-presets",
+        "use"
+      ],
+      "sha256": "af4502f22b93a24be9f2ac87adb2d6c6aae517f204bf643470928b048674f946"
+    },
+    "spritecook-workflow-essentials": {
+      "file": "spritecook-workflow-essentials/SKILL.md",
+      "description": "Shared workflow rules for SpriteCook. Use together with SpriteCook generation, UI-kit building, animation, import, background-removal, and asset-organization workflows for credits, downloads, asset ma",
+      "invoke": "auto",
+      "triggers": [
+        "essentials",
+        "spritecook",
+        "spritecook workflow essentials",
+        "spritecook-workflow-essentials",
+        "workflow"
+      ],
+      "sha256": "2e9e8a7dcd655942d8b032a4c9bd1a70af61667bcdff3784d615fcfe616b26dc"
+    },
     "sre": {
       "file": "sre.md",
       "description": "God-Tier SRE & Cloud Dictator — reliability, observability, chaos engineering, and landing zones.",
@@ -3889,6 +4999,144 @@
         "tier"
       ],
       "sha256": "d31338ab75a861edfe6661bde6fda534af04b70a95becf1be2ab57aaf2d11b04"
+    },
+    "story-cover": {
+      "file": "story-cover/SKILL.md",
+      "description": "小说封面生成与提示词设计。根据书名、作者名和题材构建封面提示词；用户只要提示词时不生图，要求封面图时调用 GPT-Image-2，Codex CLI 优先使用内置 ImageGen。触发方式：/story-cover、/封面、「帮我做个封面」「生成封面图」「封面提示词」「封面设计」。",
+      "invoke": "auto",
+      "triggers": [
+        "cover",
+        "story cover",
+        "story-cover"
+      ],
+      "sha256": "69149cb95c0b3018a550688d031c150e7964d9a4877408069efd2220d4fea1ee"
+    },
+    "story-deslop": {
+      "file": "story-deslop/SKILL.md",
+      "description": "网文去AI味。从表达、叙事用笔、故事因果三层诊断并修复文本，保留作者文风与已定剧情。触发方式：/story-deslop、/去AI味、「去AI味」「这篇太AI了」「网文去AI味」。",
+      "invoke": "auto",
+      "triggers": [
+        "deslop",
+        "story deslop",
+        "story-deslop"
+      ],
+      "sha256": "fa93a610a762f96ca44b5b531b05f688078461a94477ab946180d0a73df96a5f"
+    },
+    "story-import": {
+      "file": "story-import/SKILL.md",
+      "description": "逆向导入已有小说。将已写好的小说（半成品或完本）反向解析为标准项目目录结构，兼容 story-long-write / story-short-write 后续写作流程；内部复用 story-long-analyze / story-short-analyze 的拆解管道，按篇幅自动分流。触发方式：/story-import、「导入小说」「反向解析」「导入」「把我的书导进来」。",
+      "invoke": "auto",
+      "triggers": [
+        "import",
+        "story import",
+        "story-import"
+      ],
+      "sha256": "0a064bb2c7541af39ab709d38467838bc0815c19c49daa96ebea48315911ce84"
+    },
+    "story-long-analyze": {
+      "file": "story-long-analyze/SKILL.md",
+      "description": "长篇网文拆文。保留黄金三章量化体检、逐章摘要、剧情、情绪模块、节奏、角色、设定和直注型文风语感切片接口，以连续章节块完成因果、信息差、关系与节奏分析；兼容旧成果直接使用、按需增强和断点续跑。触发方式：/story-long-analyze、/长篇拆文、「帮我拆这本书」「拆这本书」「分析黄金三章」「深度拆解」「完整拆解」或提供小说文本文件路径。",
+      "invoke": "auto",
+      "triggers": [
+        "analyze",
+        "long",
+        "story long analyze",
+        "story-long-analyze"
+      ],
+      "sha256": "6face2b61ca731aefbc506909a9d4a313933e272a5c6e77b5295198cfd6615af"
+    },
+    "story-long-scan": {
+      "file": "story-long-scan/SKILL.md",
+      "description": "长篇网文扫榜。分析起点、番茄、晋江、七猫等平台排行榜与新书数据，提炼市场趋势与热门题材。触发方式：/story-long-scan、/长篇扫榜、「长篇什么火」「起点排行」「扫七猫新书」。",
+      "invoke": "auto",
+      "triggers": [
+        "long",
+        "scan",
+        "story long scan",
+        "story-long-scan"
+      ],
+      "sha256": "9a149dd09bc10864d2d66fca4df7bef877d5c281b324afdcf7575f41610acfff"
+    },
+    "story-long-write": {
+      "file": "story-long-write/SKILL.md",
+      "description": "长篇网文规划与写作。支持只讨论结构、只写大纲或指定细纲，明确要求正文后再写章节。触发方式：/story-long-write、/写长篇、「帮我开书」「定设定」「出卷纲」「规划剧情」「写大纲」「补细纲」「日更」「续写」「继续写」「修改第X章」「回炉」「重写第X章」。",
+      "invoke": "auto",
+      "triggers": [
+        "long",
+        "story long write",
+        "story-long-write",
+        "write"
+      ],
+      "sha256": "b67b19b4b2707c97e7be13baf5ff0869e223c45e07484659fcfeafe82df49720"
+    },
+    "story-publish": {
+      "file": "story-publish/SKILL.md",
+      "description": "小说发布准备：调用即生成并保存发布资料，缺失字段留空；按平台整理书名、笔名、分类、标签及所需简介。触发方式：/story-publish、/发布资料、「填写平台建书资料」「建书表单」「起书名/写简介/选标签用于发布」；正文累计约 2 万字、准备上架时也适用。当前适配番茄长篇与短故事（短故事无需简介），不代替后台填表或实际发布。",
+      "invoke": "auto",
+      "triggers": [
+        "publish",
+        "story publish",
+        "story-publish"
+      ],
+      "sha256": "163ed3b9e31f90612f863c2f70b660ced479adece5ac30328a3552c6bb0f60aa"
+    },
+    "story-review": {
+      "file": "story-review/SKILL.md",
+      "description": "多视角对抗式审查。full/lean 模式在已部署 reviewer agents 时并行 spawn；缺失/异常 agents 或 spawn 失败时自动降级 solo，参考文件不可读时使用内置 rubric fallback。触发方式：/story-review、/审查、「审查一下」「帮我审一下」。",
+      "invoke": "auto",
+      "triggers": [
+        "review",
+        "story review",
+        "story-review"
+      ],
+      "sha256": "592420a7eeb336fbf67a0e949f4a372b5ae249c602a62f0dac01301596fbd314"
+    },
+    "story-short-analyze": {
+      "file": "story-short-analyze/SKILL.md",
+      "description": "短篇网文拆文。拆解爆款网络短篇小说（番茄短篇 / 知乎盐言 / 七猫 / 黑岩 / 点众小程序等平台的追妻、世情、豪门、重生、复仇、脑洞、男频反杀、悬疑等题材）的故事核、五段节奏、情绪爽虐、付费卡点、打脸清算与竖屏网感。单一全量拆解管道：跑完 Stage 2-6 产出完整拆文报告，保存到 拆文库/{书名}/，下游 story-short-write 同时读拆文报告 + 情节节点 + 写作手法（含量",
+      "invoke": "auto",
+      "triggers": [
+        "analyze",
+        "short",
+        "story short analyze",
+        "story-short-analyze"
+      ],
+      "sha256": "722d6f1dd2c36f5549a32c5a36d6dfeb668e5f82736c77835581c3db487e9529"
+    },
+    "story-short-scan": {
+      "file": "story-short-scan/SKILL.md",
+      "description": "短篇网文扫榜。分析知乎盐言、七猫、黑岩、点众等平台热门短篇数据，捕捉风口题材。触发方式：/story-short-scan、/短篇扫榜、「短篇什么火」「知乎故事排行」。",
+      "invoke": "auto",
+      "triggers": [
+        "scan",
+        "short",
+        "story short scan",
+        "story-short-scan"
+      ],
+      "sha256": "6736927101bc2e4263b4f9d9b1b9d01037ac4078db0f6ca94b00023f8b9a73db"
+    },
+    "story-short-write": {
+      "file": "story-short-write/SKILL.md",
+      "description": "短篇网文写作。面向知乎盐言、七猫、番茄短故事、黑岩、点众等平台的商业网络短篇创作，从选题导语到成稿清算一站完成，聚焦竖屏快节奏、强情绪拉扯与高密打脸爽点。触发方式：/story-short-write、/写短篇、「帮我写一篇短篇」「写个盐言故事」。",
+      "invoke": "auto",
+      "triggers": [
+        "short",
+        "story short write",
+        "story-short-write",
+        "write"
+      ],
+      "sha256": "90baca13d5ceba85b4b999f44268efc526aaef50b9f2d77bb9f1857791053e3f"
+    },
+    "story-toolbox": {
+      "file": "story-toolbox/SKILL.md",
+      "description": "网络小说工具箱主入口。根据用户需求自动路由到对应 skill，并可启动本地 Dashboard。触发方式：/story、$story、/story dashboard、/网文、「我想写小说」「记住我的写作习惯」「打开工作台」「检查更新」。",
+      "invoke": "auto",
+      "triggers": [
+        "story toolbox",
+        "story-toolbox",
+        "toolbox"
+      ],
+      "sha256": "d41869e2b989ba46b907352ac4b3a8c68bce99d2fae1bbc8c8565db1d93e3975"
     },
     "subagent-driven-development": {
       "file": "subagent-driven-development.md",
@@ -3916,6 +5164,132 @@
         "سلسلة التوريد"
       ],
       "sha256": "fe482219a8cb360ddd6dad48c48303bfe861d7ab3c317dd653205fa8f18eef3d"
+    },
+    "svg-assembly": {
+      "file": "svg-assembly/SKILL.md",
+      "description": "Make a web page that a crew of simulated hands builds in front of its reader: column guides pulled down, frames dragged out with their size badges, text typed key by key, headlines pulled up to size, ",
+      "invoke": "auto",
+      "triggers": [
+        "assembly",
+        "svg",
+        "svg assembly",
+        "svg-assembly"
+      ],
+      "sha256": "1685c415469a0c2786cec7f20a096972f3984b2ce24ef360dc5988e67a0a54d6"
+    },
+    "svg-climate-garden": {
+      "file": "svg-climate-garden/SKILL.md",
+      "description": "Make or change a garden on this project's Garden site (garden/): the plants of one real climate, drawn in code as watercolor-and-ink SVG that grows as the page scrolls, by day and by night. Use for a ",
+      "invoke": "auto",
+      "triggers": [
+        "climate",
+        "garden",
+        "svg",
+        "svg climate garden",
+        "svg-climate-garden"
+      ],
+      "sha256": "4a900ae9cb6f77925a60ac9ac3055cea021319ab9bb994657d6b157e64d8b616"
+    },
+    "svg-glyph-rain": {
+      "file": "svg-glyph-rain/SKILL.md",
+      "description": "Make or change Rain (rain/): a figure under an umbrella, cut dark out of a flat sky, dots of light flowing over their form, in a rain of written characters that trail rings, break on the canopy, run o",
+      "invoke": "auto",
+      "triggers": [
+        "glyph",
+        "rain",
+        "svg",
+        "svg glyph rain",
+        "svg-glyph-rain"
+      ],
+      "sha256": "d3870b5dcab6ce81a126df65b06c9b391ce8df9f888542debeaea075619c9544"
+    },
+    "svg-kinetic-cut": {
+      "file": "svg-kinetic-cut/SKILL.md",
+      "description": "Make or change Cut (cut/): a 24 fps browser-native motion-direction film engine in World 01 (Silver Gelatin & Cinnabar) built with zero runtime dependencies on multi-pass WebGL2 Leica cinema optics, 3",
+      "invoke": "auto",
+      "triggers": [
+        "cut",
+        "kinetic",
+        "svg",
+        "svg kinetic cut",
+        "svg-kinetic-cut"
+      ],
+      "sha256": "9027fd5ef7a54174e97279d91726c16b9840ce7d0116acec0b5ae8c378859077"
+    },
+    "svg-layered-svg": {
+      "file": "svg-layered-svg/SKILL.md",
+      "description": "Turn a raster picture (painting, illustration, portrait, poster) into a layered, animated vector SVG drawn in a style: cel color blocks, line engraving, woodcut, or whatever the reference speaks, with",
+      "invoke": "auto",
+      "triggers": [
+        "layered",
+        "svg",
+        "svg layered svg",
+        "svg-layered-svg"
+      ],
+      "sha256": "efc72df95f5727f0ae4ac2698b947016727cfe153af98d89a87aad11f90893a2"
+    },
+    "svg-monoline-geometric": {
+      "file": "svg-monoline-geometric/SKILL.md",
+      "description": "Draw flowers in glass in the monoline geometric style on this project's Monoline card (monoline/): one pen on three angles, broken stems, blocks cut in two, dots in clusters, glass drawn by formula. U",
+      "invoke": "auto",
+      "triggers": [
+        "geometric",
+        "monoline",
+        "svg",
+        "svg monoline geometric",
+        "svg-monoline-geometric"
+      ],
+      "sha256": "c966ab3633b6db460d65944bdfcf7b06208fd0d828e535af49556e87c2acbe0a"
+    },
+    "svg-optical-mesh": {
+      "file": "svg-optical-mesh/SKILL.md",
+      "description": "Make or change Mesh Gradient (mesh/): a pure 4-tile 8+4 asymmetric WebGL2 GLSL 300 es optical mesh Bento Grid with OKLab color science, unified Fontshare Cabinet Grotesk + IBM Plex Mono typography, au",
+      "invoke": "auto",
+      "triggers": [
+        "mesh",
+        "optical",
+        "svg",
+        "svg optical mesh",
+        "svg-optical-mesh"
+      ],
+      "sha256": "7590bb2fe162aa98c50e7438dcb08c25f9756225250eb8d0f0eb9f7ea8e53f99"
+    },
+    "svg-sdf-glass": {
+      "file": "svg-sdf-glass/SKILL.md",
+      "description": "Make or change Glass (glass/): a solid of clear glass that follows the reader's pointer over a page of words or a Garden drawing, refracting it, and melts from one shape into the next (ring, tetrahedr",
+      "invoke": "auto",
+      "triggers": [
+        "glass",
+        "sdf",
+        "svg",
+        "svg sdf glass",
+        "svg-sdf-glass"
+      ],
+      "sha256": "ef2508210adc68d80940b4bca44b4503f833adc5c1df0cebbf7881aedf057ab0"
+    },
+    "svg-ui-moments": {
+      "file": "svg-ui-moments/SKILL.md",
+      "description": "Make or change Moments (moments/): a monochrome specimen sheet of twenty tactile UI micro-interactions driven by real, interruptible nonlinear physics across five materials (rubber, viscous, mechanica",
+      "invoke": "auto",
+      "triggers": [
+        "moments",
+        "svg",
+        "svg ui moments",
+        "svg-ui-moments",
+        "ui"
+      ],
+      "sha256": "862289c17c6ce7c03cf326327c55dee384358df3f58a4ccea55306210704b3d7"
+    },
+    "taste-skill": {
+      "file": "taste-skill/SKILL.md",
+      "description": "tasteskill 2.5.1, the anti-slop frontend skill. Builds professional company websites at the level of figma.com and x.ai: plain copy in a voice of its own, one system, one section per screen, equal edg",
+      "invoke": "auto",
+      "triggers": [
+        "taste",
+        "taste skill",
+        "taste-skill"
+      ],
+      "sha256": "43cb7618b665f25c41a3c0a7a66e78abfe3dbc4861be5895811c0447ebace156"
     },
     "technical-writer": {
       "file": "technical-writer.md",
@@ -3948,6 +5322,18 @@
       ],
       "sha256": "2db6b362a7ac066d3b017bee180a78eb341a0e00b9df909e3117a358277af82a"
     },
+    "theme-factory": {
+      "file": "theme-factory/SKILL.md",
+      "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact t",
+      "invoke": "auto",
+      "triggers": [
+        "factory",
+        "theme",
+        "theme factory",
+        "theme-factory"
+      ],
+      "sha256": "d7d7d87b508f78c0c8d7f6411babae9c274ff8abb7d342d8059533a038f10559"
+    },
     "ui-design-lord": {
       "file": "ui-design-lord/SKILL.md",
       "description": "Lord skill for UI/UX design mastery — HTML, CSS, Tailwind v4.3, Filament v5 UI components, responsive design, RTL/Arabic, accessibility, and design systems. Do not use for frontend ui expert tasks — u",
@@ -3967,6 +5353,47 @@
         "واجهة مستخدم"
       ],
       "sha256": "51139a2a37efb5845826f611009d93a34be92525d9c59a4e41ef597b27059d6e"
+    },
+    "uml-drawing": {
+      "file": "uml-drawing/SKILL.md",
+      "description": "Put a correct UML class diagram — as an embeddable image — into your docs. Use this skill whenever the user wants to add, draw, embed, or export a UML class diagram for a README, design doc, wiki, sli",
+      "invoke": "auto",
+      "triggers": [
+        "drawing",
+        "uml",
+        "uml drawing",
+        "uml-drawing"
+      ],
+      "sha256": "3514ee222bca275737e385bc9ea18cf82c69bddd1f68a9de2c3771a32ed9a03d"
+    },
+    "vag-diagnostics": {
+      "file": "vag-diagnostics.md",
+      "description": "VAG (VW/Audi/Skoda/Seat) diagnostics, coding, adaptations, long-coding/UDS-DID, gateway J533, Component Protection, key programming, flashing landscape, and hidden-feature tricks. Load for any VAG-gro",
+      "invoke": "auto",
+      "triggers": [
+        "adaptation",
+        "audi",
+        "carista",
+        "component protection",
+        "immo",
+        "long coding",
+        "mib unit",
+        "mib2",
+        "mib3",
+        "mlb",
+        "mqb",
+        "obdeleven",
+        "odis",
+        "seat",
+        "skoda",
+        "vag",
+        "vag diagnostics",
+        "vcds",
+        "vcds coding",
+        "volkswagen",
+        "vw"
+      ],
+      "sha256": "ef7e1b30a269bc8414c685761ea0a0a91cdb16a7f1579a73fc584e97291620e9"
     },
     "vector-db-lord": {
       "file": "vector-db-lord/SKILL.md",
@@ -4059,6 +5486,19 @@
         "موشن جرافيك"
       ],
       "sha256": "c96e1ce524aed607cd37d6418d567ac575bb26277d941dafb26270a5cadf4512"
+    },
+    "voice-preserving-rewriter": {
+      "file": "voice-preserving-rewriter/SKILL.md",
+      "description": "Use when the user asks to rewrite, humanize, clean up, or remove AI-isms from text while preserving the writer's voice, facts, intent, structure, register, and protected material.",
+      "invoke": "auto",
+      "triggers": [
+        "preserving",
+        "rewriter",
+        "voice",
+        "voice preserving rewriter",
+        "voice-preserving-rewriter"
+      ],
+      "sha256": "3734b19891d2b227fef5b052c30e679733054f92b6543d41363d4dd432c0141b"
     },
     "web-design-guidelines": {
       "file": "web-design-guidelines.md",

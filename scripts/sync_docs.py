@@ -217,11 +217,18 @@ _BADGE_SUBS: list[tuple[re.Pattern[str], str]] = [
     # --- Workflows alt text (anchored to alt=") ---
     (re.compile(r'alt="(\d+) Workflows"'), 'alt="{numbered} Workflows"'),
     (re.compile(r'alt="(\d+) سير عمل"'), 'alt="{numbered} سير عمل"'),
-    # --- Skills badge URL (English; Arabic URL uses percent-encoded form) ---
+    # --- Skills badge URL (English + Arabic percent-encoded) ---
     (re.compile(r"Skills-(\d+)-"), "Skills-{skills}-"),
+    (re.compile(r"%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-(\d+)-"), "%D9%85%D9%87%D8%A7%D8%B1%D8%A7%D8%AA-{skills}-"),
     # --- Skills alt text (anchored to alt=") ---
     (re.compile(r'alt="(\d+) Skills"'), 'alt="{skills} Skills"'),
     (re.compile(r'alt="(\d+) مهارة"'), 'alt="{skills} مهارة"'),
+    # --- Tech-stack badge URLs (English + Arabic percent-encoded) ---
+    (re.compile(r"Tech--Stack-(\d+)-"), "Tech--Stack-{stack}-"),
+    (re.compile(r"%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-(\d+)-"), "%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-{stack}-"),
+    # --- Tech-stack alt text (anchored to alt=") ---
+    (re.compile(r'alt="(\d+) Tech-Stack refs"'), 'alt="{stack} Tech-Stack refs"'),
+    (re.compile(r'alt="(\d+) مرجع تقنية"'), 'alt="{stack} مرجع تقنية"'),
 ]
 
 _DOC_FILES = ("AGENTS.md", "spec.md")

@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import filecmp
 import os
+import runpy
 import shutil
 import sys
 from pathlib import Path
@@ -130,6 +131,19 @@ def mirror(src: Path, dst: Path, *, dry_run: bool, extra_files: set[str] | None 
     return stats
 
 
+def source_version(source: Path) -> str:
+    """Read VERSION from the source tree's config.py without importing it."""
+    return str(runpy.run_path(str(source / "config.py"))["VERSION"])
+
+
+def write_version_stamp(target: Path, version: str, *, dry_run: bool) -> bool:
+    """Refresh the deployment marker excluded from the file mirror."""
+    if dry_run:
+        return False
+    (target / ".aizee-version").write_text(version + "\n", encoding="utf-8")
+    return True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="aiZee source->mirror sync (portable)")
     ap.add_argument("--dry-run", action="store_true", help="report only, no writes")
@@ -162,6 +176,10 @@ def main() -> int:
                     extra_files=set(spec["exclude_files"]),
                     exclude_dirs=set(spec["exclude_dirs"]) | {".git"})
         print(f"{sub}: copied={st['copied']} removed={st['removed']} unchanged={st['skipped']}")
+
+    version = source_version(source)
+    stamped = write_version_stamp(target, version, dry_run=args.dry_run)
+    print(f"version: .aizee-version={version}" + (" (dry-run)" if not stamped else ""))
 
     print("=== Sync Complete ===" + (" (dry-run)" if args.dry_run else ""))
     return 0

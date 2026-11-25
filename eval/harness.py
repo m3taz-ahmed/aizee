@@ -122,6 +122,21 @@ class EvidenceGates:
         ]
 
 
+def xdist_workers(root: Path) -> int:
+    """Maximum permissible pytest-xdist workers for this machine.
+
+    TEST-11 maxes the box while leaving the OS two cores; declarative driver
+    patches may still cap workers on constrained machines.
+    """
+    workers = max(2, (os.cpu_count() or 4) - 2)
+    from runtime.drivers import xdist_workers_cap
+
+    cap = xdist_workers_cap(root / "drivers")
+    if cap is not None:
+        workers = min(workers, cap)
+    return workers
+
+
 class EvalHarness:
     """Run validation, lint, typecheck, tests and return score."""
 
@@ -192,7 +207,7 @@ class EvalHarness:
         # Parallel workers when pytest-xdist is installed; pytest-cov merges
         # per-worker coverage data automatically.
         if importlib.util.find_spec("xdist") is not None:
-            pytest_cmd += ["-n", str(max(2, min(os.cpu_count() or 4, 12)))]
+            pytest_cmd += ["-n", str(xdist_workers(self.root))]
         results["pytest"] = self._run("pytest", pytest_cmd)
         results["skill-scenarios"] = self._run(
             "skill-scenarios",

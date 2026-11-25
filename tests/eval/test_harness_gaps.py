@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from eval.harness import EvalHarness, EvidenceGates, GateName
+from eval.harness import EvalHarness, EvidenceGates, GateName, xdist_workers
 
 
 class TestEvidenceGates:
@@ -100,3 +100,24 @@ class TestXdistDetection:
         ):
             h.run()
         assert "-n" not in cmds["pytest"]
+
+    def test_xdist_workers_use_all_cores_minus_two(self, tmp_path):
+        with (
+            patch("eval.harness.os.cpu_count", return_value=16),
+            patch("runtime.drivers.xdist_workers_cap", return_value=None),
+        ):
+            assert xdist_workers(tmp_path) == 14
+
+    def test_xdist_workers_driver_cap_wins(self, tmp_path):
+        with (
+            patch("eval.harness.os.cpu_count", return_value=16),
+            patch("runtime.drivers.xdist_workers_cap", return_value=4),
+        ):
+            assert xdist_workers(tmp_path) == 4
+
+    def test_xdist_workers_floor_two(self, tmp_path):
+        with (
+            patch("eval.harness.os.cpu_count", return_value=None),
+            patch("runtime.drivers.xdist_workers_cap", return_value=None),
+        ):
+            assert xdist_workers(tmp_path) == 2

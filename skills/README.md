@@ -1,6 +1,6 @@
 # `skills/` — Persona & Lord Skills
 
-This directory contains **142 skills** (100 directory-based `SKILL.md` + 42 flat `.md` = 142 logical skills; `glob skills/**/*.md` returns ~300 files because directory skills have `references/` and `templates/`). Each skill is a compact rule set loaded lazily — only matching skills enter the AI's context window.
+This directory contains **354 skills** (295 directory-based `SKILL.md` + 59 flat `.md` = 354 logical skills; `glob skills/**/*.md` returns more files because directory skills have `references/` and `templates/`). Each skill is a compact rule set loaded lazily — only matching skills enter the AI's context window.
 
 ## New Skills (2026-08-28) — Imported from Claude Code Ecosystem
 
@@ -14,6 +14,19 @@ This directory contains **142 skills** (100 directory-based `SKILL.md` + 42 flat
 | `motion-design` | flat | UX | Animation audit from 3 designer perspectives + severity rankings |
 | `backend-design` | flat | DEV | 13 senior backend engineer reflexes |
 | `qa-automation` | flat | QA | 6 Playwright QA agents + 5-step workflow |
+
+## New Skills (2026-11-25) — Automotive Ecosystem (deep-research wave 2)
+
+| Skill | Type | Persona | Description |
+|-------|------|---------|-------------|
+| `auto-domain-map` | flat | DEV | Master index — protocol families, tool landscape, era-decision tree, resource sites |
+| `auto-mechanics-engines` | flat | DEV | Engine types/architectures, fuel systems, hybrids/EV motors, engine sims |
+| `obd-diagnostics` | flat | DEV | OBD-II/UDS/ISO-TP/KWP/DoIP stack, adapters, python-can/cantools/opendbc toolchain |
+| `vag-diagnostics` | flat | DEV | VAG eras, VCDS taxonomy, coding/adaptation/long-code, J533, CP/Immo, MIB tricks |
+| `carplay-headunits` | flat | DEV | CarPlay/AA protocol stack, 3 receiver generations, dongle RE/firmware, AWDL, brand enablers |
+| `ecu-tuning` | flat | DEV | Open EMS (rusEFI/Speeduino/HaniCore), LibreTune/INI ecosystem, flashers, locked-bootloader reality |
+
+Deep domain refs live in `tech-stack/automotive-*.md` (wave-1); these skills are the operational/repo layer. Study: `docs/studies/study-automotive-ecosystem-2026-11-25.md`.
 
 ## How It Works
 

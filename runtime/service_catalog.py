@@ -284,8 +284,10 @@ def build_catalog_from_directory(
     if not skills_path.is_dir():
         return ServiceCatalog(descriptors)
 
-    # Flat layout: {name}.md
+    # Flat layout: {name}.md — README/EVAL are documentation, not services.
     for md_file in skills_path.glob("*.md"):
+        if md_file.name.lower() in {"readme.md", "eval.md"}:
+            continue
         descriptors.append(_file_descriptor(md_file.stem, md_file, kind))
 
     # Directory layout: {name}/SKILL.md

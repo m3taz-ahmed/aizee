@@ -1,0 +1,130 @@
+[TECH] automotive-tricks
+[OBJ] The hidden-features / tweaks / modifications knowledge base ("tricks"): VAG+Opel coding tweaks with verified byte/bit entries, infotainment hidden menus, retrofit playbook, used-module reuse (virginize/clone/adapt), ECU/TCU tuning tweak features, mechanical+electrical workshop tricks. All owner/workshop-legitimate framing — no theft/odometer/emissions-defeat procedures.
+[SRC] Researched 2026-11-25 second pass. Sources: MK7HQ coding list, AutoInstruct, mibwiki.latealways.dev, mibvault.com, vwcoding.ru, stuartdalby.co.uk, coolshrimpmodz, op-com.co.uk, openecu.net, hidplanet.lv, autoecufile.com, tuningbot/fastcar/ecufiles tuning references.
+
+## 0. The tweak culture — how this knowledge works
+
+[RULES]
+1. [KNOW] Tweaks live in 3 layers: (a) long coding bits (module configuration), (b) adaptation channels/named IDE values, (c) security-access-gated hidden developer modes. Most published tweaks are byte/bit or named-channel entries tied to a specific module address + software version — they are NOT universal across part numbers.
+2. [REQ] The unbreakable discipline (every serious source repeats it verbatim): FULL backup before touching anything (OBDeleven backup / VCDS AutoScan + adaptation channel maps), record original values, one change at a time, ignition-on engine-off, battery maintainer for long sessions, clear temp faults after. Some codings only stick with bonnet open (service mode).
+3. [KNOW] Living references to consult per-model: mibwiki.latealways.dev + mibvault.com (MQB/MLB infotainment+coding wiki), vwcoding.ru (VAG platform coding wiki EN/RU), MK7HQ coding+retrofit lists, coolshrimpmodz OBDeleven guides, vag-extras.hu, seventuning.nl catalogs, XaGiCo dossiers (retrofit PDF guides), Ross-Tech wiki label files.
+4. [KNOW] Equipment caveat: a tweak failing ≠ wrong procedure — often the module hardware/software revision doesn't support the feature, or a prerequisite (PR code equipment) is missing. Diagnose capability first.
+5. [KNOW] Legal frame: lighting behavior, belt chimes, video-in-motion, noise/emissions-related changes are jurisdiction-regulated. Coding something ON may violate roadworthiness/insurance. Owner's responsibility — document this whenever applying.
+
+## 1. VAG instrument-cluster & display tricks (module 17)
+
+6. [KNOW] Needle sweep/staging (the classic first tweak, verified multi-source): module 17 long coding Byte 1 Bit 0 = 1, or adaptation "Staging/Indicator Celebration" → active. Does nothing on Virtual Cockpit (no needles).
+7. [KNOW] Lap timer activation: module 17 Byte 1 Bit 3. Oil temperature in cluster display + refuelled-quantity display: module 17 adaptations (equipment-dependent).
+8. [KNOW] Driving-profile reminder in MFD: module 19 (gateway) Byte 8 Bit 4 "Display for drive program functions in cluster". Auto summer-time (DST auto): module 5F adaptation "Summertime automatic" → Europe/region.
+9. [KNOW] HVAC fan-speed LEDs in Auto mode: module 08 Byte 11 Bit 6 "blower status display in auto-mode".
+10. [KNOW] Cluster adaptations worth knowing: service-interval reset/inspection reset, transport mode on/off (new cars stuck in it), needle/sweep variants on RS-style layouts, gear-display in cluster for DSG cars (mostly adaptation where hardware supports).
+
+## 2. VAG comfort/locking/lighting tweaks (mostly module 09 BCM + 46 + gateway 19)
+
+11. [KNOW] Comfort-blinker cycle count: module 09 adaptation "Komfortblinken Blinkzyklen" = 1–5 (default 3); needs security login 31347 on many BCMs.
+12. [KNOW] Acoustic lock/unlock confirmation (horn/beep): module 09 "Akustische Rueckmeldung" adaptation channels — several channels control lock/unlock/closure feedback; duration "kurz" (short) variants exist.
+13. [KNOW] Start-stop defeat tricks (verified): gateway 19 adaptation "Start/stop voltage limit" raised 7.6V → 12.0V makes start-stop never engage (system thinks battery too low) — reversible, no hardware. Memory modules (plug-in CAN devices) restore last user setting instead. No native "remember last" coding on MQB.
+14. [KNOW] Soundaktor (fake engine sound actuator) volume/kill: module A9 "structure-borne sound" — adaptation "volume of structure-borne noise actuator" → 0 (or reduce). Also physically a small speaker device on the firewall — unplugging works but logs faults on some; coding is cleaner.
+15. [KNOW] Heated-seat memory: module 08 HVAC adaptation "retention of seat heater level driver/passenger" → active. Air-recirculation memory: module 08 long coding "store recirculation air setting at terminal 15 off".
+16. [KNOW] Windows/sunroof global close from remote (hold lock), close-when-rains (needs rain sensor), passenger mirror dip in reverse (needs memory seats on many), lock with engine running, auto-lock at speed + auto-unlock variants — all module 09/46/52/42 adaptation or coding, equipment-gated.
+17. [KNOW] Lighting behaviors: DRL control menu enable in infotainment (light switch AUTO/OFF behavior), coming/leaving-home duration adaptation, cornering-light-with-indicator or with-steering variants, fog-with-highbeam variants, US-style sidemarker behavior, Scandinavian vs RoW DRL logic — byte/bit in module 09, light-type dependent.
+18. [KNOW] LED retrofit done right: BCM has per-lamp "lamp type" adaptations/long-coding on many MQB — set lamp type to LED instead of adding load resistors; resistors are the hack that melts wiring. Bulb-out errors come from cold/warm diagnosis measuring current — coding tells BCM what current to expect.
+19. [KNOW] Earlier Auto-Hold release, brake-light flash intensity variants, emergency braking flashers — module 09/03 adaptations, market-dependent.
+
+## 3. VAG infotainment hidden menus & hacks (module 5F)
+
+20. [KNOW] MIB2 Developer/Green Menu activation (verified 3-tool matrix): VCDS → 5F → security access S12345 → adaptation "Developer mode" → activated. OBDeleven → 5F → Change Service → Development mode → then adaptation developer mode activated. VCP → engineer session → SA 20103 → developer mode. Then reboot MMI (three-finger/press-hold power key combo per unit).
+21. [KNOW] Open the hidden menu: press+hold CAR (or NAV/MAP) then press RADIO ~5s (combo varies by unit generation; MIB1/2/3 differ). WARNING: the green menu can brick the unit — settings there are factory-level; on MIB2 VAG gutted most functions into adaptations instead.
+22. [KNOW] What dev mode actually unlocks: system info, internal logging, some hidden configuration. On MIB3/MEB infotainment the equivalent paths moved further behind SFD/online gates.
+23. [KNOW] Video-in-motion exists as a feature in green-menu/aftermarket-interface modules — heavily jurisdiction-restricted (driver distraction law); know it exists, check local law, no universal switch.
+24. [KNOW] Retrofit camera unlock on 5F (verified procedure chain from mibvault/vwcoding): module 19 installation list → 6C camera coded; 5F Byte 19 Bit 4 (Rear_View_Low) disable for HIGH camera / enable for chinese LOW camera; 5F adaptation Car_Function_List_BAP_Gen2 → VPS_0x0B activated + VPS_0x0B_msg_bus → comfort/infotainment bus; parktronic 10 (or legacy 76) Byte 2 Bits 4-5 camera type; then code camera module 6C itself bytes 0-3 (brand/class/body/region) + equipment bits.
+25. [KNOW] Units xxx035819/xxx035820 (Composition Media base) have NO video input — hardware gates the retrofit, no coding fixes it. Always verify head-unit part number before buying cameras.
+26. [KNOW] App-Connect/CarPlay activation on units shipped without it: often a feature-enable (FEC/SWaP license code) — officially a paid unlock tied to VIN; gray-market license generators exist in the wild (know they exist; legitimacy is dubious — the legitimate path is dealer/VW store).
+27. [KNOW] AUX/Bluetooth audio on pre-CAN-era VAG radios: CD-changer emulation trick (open-source vwcdpic/vwcdavr/vwcdstm32 hardware) — radio thinks a CD changer is connected, actually it's your phone. Steering-wheel buttons even work (tomaskovacik's VAGRadioRemote evidence).
+28. [KNOW] Cluster FIS display custom text/graphics: 3-line FIS protocol is reverse-engineered and documented (VAGFISWriter/Reader) — display anything (temps, boost, custom warnings) with a small MCU on the comfort bus.
+
+## 4. THE VAG retrofit master pattern (this one pattern unlocks everything)
+
+29. [REQ] Universal retrofit sequence: (1) physical install + wiring per OEM harness docs; (2) module 19 gateway → installation list → new module "coded/installed" (WITHOUT this the gateway won't route its messages = ghost "no communication" faults); (3) enable feature in dependent modules (cluster ticks, 5F ticks, BCM bits); (4) long-code the new module itself (brand/class/body/region bytes!); (5) basic-settings + calibration routine; (6) clear faults everywhere, verify.
+30. [KNOW] Verified example — ACC retrofit on MQB: radar physical install + correct harness → engine 01 coding tick ACC PR-code (8T3/8T8 DSG vs 8T5 manual) → ABS 03 long coding bit-24 nibble values per gearbox/lane-assist combo → gateway installation list add 13 Auto-Dist-Reg + steering-wheel-type adaptation → cluster 17 ticks Front Assist → 5F ticks → camera A5 presence → radar module 13 coding string (part-specific). Sources: mqb.pl ACC guide + XaGiCo dossier.
+31. [KNOW] Verified example — cruise control on base cars: often ONLY needs the stalk hardware + coding (engine module + slip ring/steering column module + gateway list) because the ECU firmware already contains CC logic — VW ships it dormant. Same pattern repeats across features: heated seats need hardware+wiring+coding; folding mirrors need mirror housings+door modules; but MANY features are software-only.
+32. [KNOW] PR codes (the equipment truth table): VAG build stickers (boot/service book) list 3-char PR codes — 8T-series=cruise variants, 8N6/8N8=interior lights, QV3/9WT=phone/radio prep. Retrofit feasibility = read PR codes first, compare against the PR requirement lists in retrofit guides.
+33. [KNOW] Used part + component protection reality: retrofitting a USED module (MIB unit, cluster, camera) often triggers CP — the module works degraded until paired. Legitimate paths: dealer online pairing (proof of ownership) or specialist CP-removal services that transfer/repair pairing data — a legitimate industry serving the used-parts ecosystem. Know it exists; it's workshop bread-and-butter, not a hack.
+34. [KNOW] Calibration-after-install is the step people skip: cameras (lane assist/RVC) need basic-settings calibration drives or alignment rigs; radar needs mechanical alignment + calibration; steering-angle sensor re-learn after any steering work. Skipping = permanent "no basic settings" faults.
+
+## 4b. PQ-era + Audi MMI 2G/3G tricks (pre-MQB — DIFFERENT mechanisms, verified)
+
+34a. [KNOW] Era split critical: PQ cars (Golf 5/6, A3 8P, Passat 3C) use Central Electronics module 09 long-coding byte/bits differently from MQB, and Audi MMI generations have totally different hidden-menu paths than MIB. Never apply MQB byte maps to PQ cars.
+34b. [KNOW] MMI 3G hidden menu (A4 B8/A5/Q5 era, verified): module 5F → adaptation channel 6 → 1. Access: hold CAR + SETUP together 5s. MMI 2G: module 07 Control Head → adaptation channel 8 → 1, same CAR+SETUP combo. WARNING repeated across all sources: stay away from the Bootloader section — wrong settings there brick the unit.
+34c. [KNOW] MK5/MK6 Central Electronics verified byte/bit tweaks (module 09): windows up/down with key remote = byte 3 bit 5 (+ bit 7 to work with ignition on; door-lock-switch control bits 3/4/7). Lock/unlock confirmations = byte 5: bit 0 turn-signal flash, bit 1 horn on lock, bit 4 horn on unlock. KESSY lock-while-engine-running = byte 4 bit 2.
+34d. [KNOW] MK6 lighting verified: fogs-as-DRL = byte 14 bit 1 ON plus byte 11 bit 2 OFF for xenon/main-beam setups (leave ON to run both) OR byte 15 bit 6 OFF for halogen/separate-DRL-bulb setups — equipment-dependent, byte 18 coding affects parking-light behavior. Fogs-independent-of-high-beam variant also documented. Verify per byte-18 variant before copying strings.
+34e. [KNOW] Audi A3 8P coding canon (codierschmiede.at — the German reference PDFs, verified list): RNS-E AUX-in activation, optical PDC display in RNS-E, startscreen customization, speed-warning chime in RNS-E, outside-temp display when no FIS, auto-lock at 15km/h + auto-unlock, heated-mirror retrofit activation, cornering light via fog lamps, Bose logo on Concert II, coming/leaving home, digital speed display in Concert/Chorus/Symphony II radios, alarm-arming horn confirmation, hill-hold assist activation, facelift-taillight retrofit adaptation to BCM, DRL menu in FIS, footwell lighting while driving, comfort-blinker 1-5, comfort menu (oil temp etc.) in FIS, MFSW enable, fog-as-DRL, rear-fog as reversing/brake/tail-light variants, emergency brake-force flashing.
+34f. [KNOW] License-plate-LED monitoring deactivation is the correct way to stop bulb-out warnings after LED plate-light retrofits on PQ cars — same "code it, don't resistor it" principle as MQB.
+34g. [KNOW] Reference canon to consult: codierschmiede.at PDFs (Audi + VW per-model coding lists, German — the most complete PQ documentation), speedlifemotorsport MK6 tweak list, vcds-expert.com per-model lists, motor-talk forum coding threads (the German community is the deepest primary source — translate and verify).
+
+## 5. Opel/GM tricks (OP-COM + Tech2/GDS2 era)
+
+35. [KNOW] THE Opel tweak mechanism: Program Variant Configuration — OP-COM/Tech2 expose per-module feature lists as Present/Not-Present dropdowns. Changes usually need the 4-digit CarPass security code. ALWAYS save VariantConfigurationData first (restores you back).
+36. [KNOW] Cruise control activation (verified multi-source — the canonical Opel trick): needs stalk + clutch/brake switches present (verify wiring first) → then enable in THREE modules in coordination: engine ECU (variant config → cruise control Present → Perform coding), IPC cluster (same, with security code), CIM steering column module (same + set country code). Verify with IPC output test "TelltaleCruiseControl" lamp. Partial activation (1 module) = dead function or warnings.
+37. [KNOW] Board-computer activation trick on Astra-H/Zafira-B (verified): connect to DIS (infotainment display module) → Programming → Program Code Index → select code index ONE HIGHER than current → enables the board computer functions. The display's behavior algorithm is index-selected.
+38. [KNOW] REC (Rear Electrical Center) variant-config features: window comfort-close via remote (key hold), DRL behavior variants, body type/driver-location settings, central-locking behavior — Body → REC → Programming → Program Variant Configuration with CarPass.
+39. [KNOW] Multi-module coordination is the Opel pattern (same lesson as VAG gateway): most features need the SAME option enabled consistently across ECU+IPC+CIM/+BCM — mismatched config = feature dead with no obvious error.
+40. [KNOW] Tech2Win/GDS2 era (Global A) feature enables: configuration via module setup/variant strings; BCM configurations programmable through GDS2 with security access; many "hidden" features (auto door lock, lighting, remote window) are simple config changes — aftermarket tools (OPCOM 1.7x+ partial) cover many.
+41. [KNOW] Insignia/Astra-J known tweak list: DRL full-time dim mode, mirror dip, door-lock behavior, IPC display variants, TPMS enable/disable after wheel swaps, steering-weight modes where equipped. Documented in owner forums per code index — verify per module software.
+42. [KNOW] Key/remote adaptation on GM-era Opels: with CarPass, OP-COM programs keys/remotes through immobilizer menu — legitimate owner service. All-keys-lost = locksmith territory (EEPROM-level work, proof of ownership).
+
+## 6. Used-module reuse playbook (legitimate right-to-repair)
+
+43. [KNOW] The 3-way taxonomy (verified — autoecufile + workshop services): (a) VIRGINIZE = reset module's immo/pairing area to blank factory state → module adapts to new car exactly like a new part (needs dealer tool or key programmer to finish); (b) CLONE = copy complete EEPROM+flash from old module into donor → works with zero adaptation when the original is readable (best for hardware-failure replacement); (c) direct ADAPTATION = pairing the used module with the car's existing immo chain using diagnostic tools (VAG: adapt ECU to immobilizer; PSA: telecoding; Ford: PATS parameter reset).
+44. [KNOW] Where the pairing data lives (verified): EDC17/MED17 → inside the EEPROM area; older ME7.5/EDC15 → separate serial EEPROM chip (95040/95080 class, socketed/clip-readable); BCM/cluster hold the other half on many platforms — sometimes the car-side module data is what you transfer instead.
+45. [KNOW] Virgin-file workflow: identify donor by hardware+software number (HW must match, SW compatible) → full bench/boot read (KEEP the original dump!) → write virgin image for that exact HW/SW → fit → run adaptation with dealer-level tool. Immutable original backups are non-negotiable.
+46. [KNOW] VIN mismatch consequences: immobilizer blocks start, permanent mismatch DTCs, ABS/airbag features can disable — modules share the car's electronic identity. VIN writing into used modules is a standard service operation.
+47. [KNOW] Tuner-protection unlock services exist for locked modern ECUs (TPROT removal) — legitimate industry for repair/tuning access; distinct from stolen-credential tools. Verify service reputation — the same market carries the malware-infested warez scene.
+48. [REQ] Legal/ethical frame: this playbook is for the owner's own vehicle or customer-authorized repair. Module identity operations on vehicles you don't own/aren't authorized for = no.
+
+## 7. ECU/TCU tuning tweak features (what the tuning scene actually sells)
+
+49. [KNOW] Launch control (ECU-implemented): holds RPM at a setpoint stationary so boost builds pre-launch; on DSG cars it's a TCU+ECU coordination (clutch dump strategy). Activation sometimes exists dormant in factory software (DSG cars often have it coded off) — tuners enable/calibrate it.
+50. [KNOW] NLS (no-lift shift): manual gearbox — throttle stays planted, ECU cuts torque briefly during the shift. Flat-foot shifting keeps boost up between gears. Stress note: synchro/clutch wear is real; it's a track feature.
+51. [KNOW] Pops/bangs/crackle mechanism (verified — tuner literature): overrun keeps injecting small fuel quantities + heavily retarded ignition → combustion happens partly in the exhaust → pops. Lean mixture limits heat; intensity scales with exhaust temp. Burble/popcorn/bang labels are informal, not standardized calibration levels.
+52. [KNOW] Crackle costs: catalyst/DPF thermal stress, turbo heat cycles, EGT limits, exhaust valve margin. Platform-specific implementation (overrun fuel cut reversal vs torque-model tricks vs throttle-opening) — there is NO universal recipe; ECU-specific calibration required. Anti-lag is the extreme extension (throttle open + fuel+spark retard on overrun to keep turbo spinning).
+53. [KNOW] Torque limiter/monitoring adjustments: ECU-internal torque ceilings raised; DSG TCU remaps raise clutch pressure + torque limits + shift speed (the single biggest drivability mod after the engine map, per tuners). KEY pairing rule: engine torque up without TCU limits up = gearbox slip/limp protection. Verified pain point: ECM2/3 monitoring checksums must be right or limp mode.
+54. [KNOW] Speed/rev limiter changes, VMAX removal (legality varies — Germany unlimited roads vs most markets), idle rpm changes, exhaust flap control coding (flaps open in more modes — valve-actuated exhausts are BCM/ECU controlled), sport-display enhancements.
+55. [KNOW] Realism check: most "feature" tunes are just calibration-table changes in the same flash — the car already contains the logic. The tuner's craft is knowing which tables + keeping the torque model consistent + correct checksums. Anything defeat-emissions (DPF/EGR/SCR off) = illegal for road use everywhere that matters (EU/US), inspection failure, fines — industry labels it "off-road/motorsport only" for a reason.
+
+## 8. Mechanical workshop tricks (the stuff manuals don't bold)
+
+56. [KNOW] EA888 Gen3 chain-stretch measurement WITHOUT disassembly (verified — the prime diagnostic trick): VCDS measuring block 93 / OBDeleven live data "camshaft adaptation intake bank 1, phase position" — beyond ±4° = chain+guides+tensioner replacement NOW. Stretch typically maxes 120-150k miles. Catches the killer before valve-piston contact.
+57. [KNOW] EA888 Gen1/2 tensioner tell: rattle 1-2s on cold start or clatter at shutdown = the timing-chain tensioner failing. It's at the flywheel end — gearbox or engine out. Never ignore; jumped tooth = bent valves.
+58. [KNOW] PCV diaphragm cascade (verified workshop wisdom): torn PCV diaphragm in valve cover → crankcase vacuum climbs → rough idle/whistle/lean faults → vacuum deforms rear main seal until it leaks. Fix the seal without fixing the PCV = you'll do the job twice. Order: diagnose vacuum first.
+59. [KNOW] Gen3 EA888 coolant losses with no visible puddle: integrated water-pump/thermostat module driven off balance shaft leaks internally — sweet smell, dropping level, no drips. Check weep path evidence before blaming head gasket.
+60. [KNOW] GDI carbon buildup: cold-start stumble + lazy response + misfires on direct-injection engines = walnut-shell blasting the intake valves is the only real fix (no fuel washes valves on GDI). Chemical/intake sprays = marginal. Preventive: quality oil, catch-can debates, occasional italian tune-up helps marginal.
+61. [KNOW] DSG wet-clutch service is 60k km fluid+filter NON-negotiable (verified): skipping → shudder from standstill → jerky low-speed → mechatronic bill. Fill procedure is temperature-dependent (level set at specific fluid temp via overflow) — eyeballing the level = wrong level. DQ200 dry has separate hydraulic fluid spec — different animal, different service.
+62. [KNOW] Haldex service trick (verified): fluid + filter ~60k km — the pre-filter clogs and kills the pump silently; AWD fades and owners never notice until pump death. Gen-dependent whether filter exists. Golf R/S3/Tiguan owners almost never know this service exists.
+63. [KNOW] Mechatronic failures: flashing PRNDS, harsh/delayed shifts, limp mode — sometimes repairable (electrical vs hydraulic fault split) rather than replace — specialists rebuild them. Diagnose properly before approving the big bill.
+64. [KNOW] Stuck/seized fasteners: heat + penetrant + time beats force; impact driver for rusty screws; double-nut for studs; anti-seize on hub faces prevents future stuck wheels; torque-to-yield bolts are ONE-TIME use (head bolts, suspension stretch bolts) — reusing them is how engines die twice.
+65. [KNOW] Belt-drive service wisdom: when the timing belt is off, water pump + tensioners + rollers go too (labor overlap economics) — pump impeller failure on plastic-impeller VW pumps is a known cascade into overheating.
+
+## 9. Electrical/service-procedure tricks
+
+66. [KNOW] Throttle adaptation after battery disconnect/intrusion (K-line era: basic settings 098/060; UDS era: adaptation routine) — idle instability after battery swap is usually un-adapted throttle, not a fault.
+67. [KNOW] Steering-angle-sensor re-zero after alignment/battery loss: basic setting or lock-to-lock drive procedure (varies by platform) — otherwise ESP/steering warnings persist.
+68. [KNOW] EPB service mode: rear brake pads on electronic-parking-brake cars need caliper retraction via scan tool (VAG: basic settings open/close) or you destroy the motor mechanism forcing pistons. Some models have manual hex retraction backup.
+69. [KNOW] Battery replacement on IBS cars: MUST register/adapt the new battery (capacity/type/serial) in energy management — skipped = wrong charge profile kills the new battery early and start-stop misbehaves.
+70. [KNOW] Diesel injector coding: replacement injectors carry correction codes (IMA/IQA/C2I) that must be written to the ECU — skipping = rough running, noise, excess wear. DPF forced-regen via scan tool exists but requires strict conditions (park/handbrake/temp) — it's a service procedure, not a fix for a broken system.
+71. [KNOW] Parasitic-drain hunting: measure mA in series after modules sleep (can take 20-40 min on modern cars!) — pulling fuses during sleep-wake cascades wakes everything and invalidates the test. Clamp-meter on battery negative avoids breaking the circuit entirely.
+72. [KNOW] CAN-bus fault isolation trick: measure 60Ω across pins 6/14 with battery disconnected (two 120Ω terminators in parallel) — 120Ω = one terminator offline, OL/∞ = bus wiring break. Module-by-module unplug isolates a shorted node pulling the bus down.
+73. [KNOW] Terminal discipline: terminal 30 = permanent+, 15 = ignition-switched, 30g/15r variants — tapping retrofits into the wrong rail causes drain or dead features. Retrofit wiring should use proper crimp+seal or OEM repair wires, never scotch-locks (corrosion time bombs).
+74. [KNOW] Ground-point corrosion is the #1 ghost-fault generator — under-load voltage-drop testing (>0.2V suspect) beats visual inspection every time.
+
+[COMPAT]
+- Platform/era identification: `automotive-vag.md` / `automotive-opel.md`; protocol details: `automotive-diagnostics.md`; firmware-level work: `automotive-ecu-internals.md`; legal-security frame: `automotive-security.md`.
+[REFS]
+- MIB coding wiki: https://mibwiki.latealways.dev / https://mibvault.com/wiki/
+- VAG platform coding: https://vwcoding.ru/en/MQB/addons/
+- MK7 coding+retrofit lists: https://mk7hq.co.uk/coding + /retrofits
+- ACC retrofit: https://mqb.pl/en/adaptive-cruise-control-retrofit-acc-on-mqb/
+- Opel OPCOM cruise/comfort: https://www.op-com.co.uk/wp-content/uploads/2021/02/Opcom-Cruise-Control.pdf + openecu.net
+- Virgin-file playbook: https://autoecufile.com/virgin-ecu-file-adapt-used-ecu/
+- EA888 maintenance truths: https://store.ngpracing.com/pages/audi-vw-2-0t-ea888-gen-3-tsi-ultimate-maintenance-guide
+- Pop/bang calibration reality: https://tuningbot.com/pop-and-bang-tuning/

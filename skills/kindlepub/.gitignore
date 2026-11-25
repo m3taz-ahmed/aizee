@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Build / book output artifacts (your manuscript and renders shouldn't be committed)
+*.epub
+*.pdf
+*.jpg
+*.jpeg
+*.png
+manuscript.docx
+art.*
+cover.*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+kindlepub.skill

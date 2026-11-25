@@ -75,6 +75,20 @@ if %RC1% GEQ 8 ( echo ERROR: main mirror failed ^(robocopy %RC1%^) & pause & exi
 if %RC2% GEQ 8 ( echo ERROR: .claude mirror failed ^(robocopy %RC2%^) & pause & exit /b %RC2% )
 if %RC3% GEQ 8 ( echo ERROR: .devin mirror failed ^(robocopy %RC3%^) & pause & exit /b %RC3% )
 
+REM --- Refresh deployment version stamp. .aizee-version is excluded from
+REM robocopy because it is per-install state, but it must still track the
+REM synced source version or doctor/update checks report a stale install.
+set "AIZEE_VERSION="
+for /f "usebackq tokens=2 delims== " %%V in (`findstr /R /C:"^version *=" "%SOURCE%\pyproject.toml"`) do (
+    if not defined AIZEE_VERSION set "AIZEE_VERSION=%%~V"
+)
+if defined AIZEE_VERSION (
+    >"%TARGET%\.aizee-version" echo %AIZEE_VERSION%
+    echo Version: %AIZEE_VERSION%
+) else (
+    echo WARN: could not read version from %SOURCE%\pyproject.toml - stamp unchanged
+)
+
 echo.
 echo === Sync Complete ===
 echo Verify with: cd %TARGET% ^&^& python eval\harness.py

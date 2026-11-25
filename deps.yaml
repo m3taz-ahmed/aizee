@@ -654,3 +654,126 @@ deps:
     required_by: ["isolated execution for untrusted agent code (security boundary)"]
     tags: [security, sandbox]
     guidance: "msb.exe + libkrunfw.dll beside it in ~/.local/bin (release assets msb-windows-x86_64.exe + libkrunfw-windows-x86_64.dll, renamed). Runs per-command — `msb run`/`msb create`, no daemon; agent may use it on demand. Verify host readiness: `msb doctor` (requires Windows Hypervisor Platform)."
+
+  # ---------- skill media packs (media-light vendoring — fetch on demand) ----------
+
+  - id: skill-media-anatomy-illustration
+    name: anatomy-illustration media pack
+    kind: any-path
+    paths: ["{root}/skills/anatomy-illustration/examples/arcade-cabinet/arcade-cabinet-detailed-a4.pdf"]
+    severity: optional
+    required_by: ["anatomy-illustration (A4 print PDFs of the example figures (regenerable via sheet.mjs)) — 14 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch anatomy-illustration
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-novelist-longform
+    name: novelist-longform media pack
+    kind: any-path
+    paths: ["{root}/skills/novelist-longform/assets/creation-flow-q.png"]
+    severity: optional
+    required_by: ["novelist-longform (workbench/phase screenshots used by the novelist workflow docs) — 1 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch novelist-longform
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-oneirloom-character-sheet
+    name: oneirloom-character-sheet media pack
+    kind: any-path
+    paths: ["{root}/skills/oneirloom-character-sheet/templates/wardrobe-sheet/images/reference-01.png"]
+    severity: optional
+    required_by: ["oneirloom-character-sheet (few-shot reference/result images for character-sheet recipes) — 7 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch oneirloom-character-sheet
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-oneirloom-craft-construction
+    name: oneirloom-craft-construction media pack
+    kind: any-path
+    paths: ["{root}/skills/oneirloom-craft-construction/templates/fuse-bead/images/result-01.png"]
+    severity: optional
+    required_by: ["oneirloom-craft-construction (few-shot reference/result images for craft recipes) — 7 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch oneirloom-craft-construction
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-oneirloom-product-art-direction
+    name: oneirloom-product-art-direction media pack
+    kind: any-path
+    paths: ["{root}/skills/oneirloom-product-art-direction/references/takeaway-food-town/images/accepted.png"]
+    severity: optional
+    required_by: ["oneirloom-product-art-direction (few-shot reference images for product art direction) — 8 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch oneirloom-product-art-direction
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-oneirloom-style-design
+    name: oneirloom-style-design media pack
+    kind: any-path
+    paths: ["{root}/skills/oneirloom-style-design/templates/experimental-editorial-posters/01-sculpture-tear/images/reference.png"]
+    severity: optional
+    required_by: ["oneirloom-style-design (few-shot reference/transfer images for editorial poster recipes) — 44 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch oneirloom-style-design
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-oneirloom-style-illustration
+    name: oneirloom-style-illustration media pack
+    kind: any-path
+    paths: ["{root}/skills/oneirloom-style-illustration/templates/dessert-storybook-flow/images/reference-01.png"]
+    severity: optional
+    required_by: ["oneirloom-style-illustration (few-shot reference images for illustration recipes) — 9 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch oneirloom-style-illustration
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-oneirloom-style-photography
+    name: oneirloom-style-photography media pack
+    kind: any-path
+    paths: ["{root}/skills/oneirloom-style-photography/templates/hotel-mirror-selfie/images/reference-01.png"]
+    severity: optional
+    required_by: ["oneirloom-style-photography (few-shot reference images for photography recipes) — 17 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch oneirloom-style-photography
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-pixel-art-studio
+    name: pixel-art-studio media pack
+    kind: any-path
+    paths: ["{root}/skills/pixel-art-studio/docs/assets/capy_sheet.png"]
+    severity: optional
+    required_by: ["pixel-art-studio (animated example sprites/sheets referenced by the docs) — 1 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch pixel-art-studio
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-scientific-toolkit
+    name: scientific-toolkit media pack
+    kind: any-path
+    paths: ["{root}/skills/scientific-toolkit/references/scientific-skills/timesfm-forecasting/examples/anomaly-detection/output/anomaly_detection.png"]
+    severity: optional
+    required_by: ["scientific-toolkit (timesfm example outputs (verification references)) — 2 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch scientific-toolkit
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."
+
+  - id: skill-media-taste-skill
+    name: taste-skill media pack
+    kind: any-path
+    paths: ["{root}/skills/taste-skill/assets/components/fx-photo/meeting-room.jpg"]
+    severity: optional
+    required_by: ["taste-skill (licensed stand-in photos, object renders, scene/moment demo media) — 26 MiB"]
+    tags: [skill-media]
+    install:
+      all: aizee skill media-fetch taste-skill
+    guidance: "Media-light vendoring: media ships outside git; fetch once per machine."

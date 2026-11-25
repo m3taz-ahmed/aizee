@@ -238,6 +238,26 @@ class TestDocLinks:
         txt = "real [[a/b.py]]\n```toml\n[[fake.table]]\n```\n`[[inline.x]]` end"
         assert extract_links(txt) == [("a/b.py", "")]
 
+    def test_nested_four_backtick_fence(self) -> None:
+        # A ````md outer fence wraps inner ``` blocks (vendored MATLAB ref hit
+        # this): the inner fences must not flip the outer one, or bash
+        # `[[ -n "$CMD" ]]` reads as a doc link.
+        txt = (
+            "````md\n"
+            "prose with [[inside/outer.py]]\n"
+            "```bash\n"
+            'if [[ -n "$CMD" ]]; then\n'
+            "  run it\n"
+            "fi\n"
+            "```\n"
+            "````\n"
+            "real [[real/target.py]]\n"
+            "```bash\n"
+            "[[ -f x ]] && echo hi\n"
+            "```\n"
+        )
+        assert extract_links(txt) == [("real/target.py", "")]
+
     def test_check_links(self, tmp_path: Path) -> None:
         src = tmp_path / "runtime"
         src.mkdir()

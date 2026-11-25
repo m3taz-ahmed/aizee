@@ -148,6 +148,18 @@ class TestBadgeSync:
         assert "%D8%B3%D9%8A%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%84-36-0EA5E9" in out
         assert 'alt="36 سير عمل"' in out
 
+    def test_updates_tech_stack_badges(self) -> None:
+        counts = {"runtime": 85, "skills": 72, "numbered": 36, "workflows_total": 50, "stack": 163, "tests": 3561}
+        text = (
+            'Tech--Stack-271-F59E0B" alt="271 Tech-Stack refs"> '
+            '%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-271-F59E0B" alt="271 مرجع تقنية">'
+        )
+        out = _substitute_counts(text, counts)
+        assert "Tech--Stack-163-F59E0B" in out
+        assert 'alt="163 Tech-Stack refs"' in out
+        assert "%D9%85%D8%B1%D8%A7%D8%AC%D8%B9_%D8%AA%D9%82%D9%86%D9%8A%D8%A9-163-F59E0B" in out
+        assert 'alt="163 مرجع تقنية"' in out
+
     def test_preserves_historical_prose_arabic(self) -> None:
         """Historical What's New prose must NOT be touched by badge sync."""
         counts = {"runtime": 85, "skills": 72, "numbered": 36, "workflows_total": 50, "stack": 163, "tests": 3561}

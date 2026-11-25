@@ -1,0 +1,185 @@
+%% print-template.tex — KDP Print Interior Template
+%% Used by build_kindle.py via pandoc + xelatex
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(classoption)$$classoption$,$endif$]{$if(documentclass)$$documentclass$$else$book$endif$}
+
+%% ── Font & Encoding ──────────────────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+%% Default to a clean serif font if available
+\IfFontExistsTF{EB Garamond}{
+  \setmainfont{EB Garamond}
+}{
+  \IfFontExistsTF{Georgia}{
+    \setmainfont{Georgia}
+  }{
+    \IfFontExistsTF{Liberation Serif}{
+      \setmainfont{Liberation Serif}
+    }{
+      \setmainfont{DejaVu Serif}
+    }
+  }
+}
+
+%% ── Page Layout ──────────────────────────────────────────────────────────────
+\usepackage{geometry}
+$if(geometry)$
+\geometry{$geometry$}
+$endif$
+
+%% ── Line Spacing ─────────────────────────────────────────────────────────────
+\usepackage{setspace}
+$if(linestretch)$
+\setstretch{$linestretch$}
+$endif$
+
+%% ── Headers & Footers ────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO]{\small\thepage}
+\fancyhead[LO]{\small\itshape $if(title)$$title$$endif$}
+\fancyhead[LE]{\small\thepage}
+\fancyhead[RE]{\small\itshape $if(author)$$author$$endif$}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+%% ── Paragraphs ───────────────────────────────────────────────────────────────
+\usepackage{parskip}
+\setlength{\parindent}{0.3in}
+\setlength{\parskip}{4pt}
+
+%% ── Hyperlinks (breaklinks=true for print URL wrapping) ─────────────────────
+\usepackage[unicode=true,colorlinks=true,linkcolor=black,urlcolor=black,citecolor=black,bookmarks=true,bookmarksnumbered=false,breaklinks=true]{hyperref}
+$if(title)$\hypersetup{pdftitle={$title$}}$endif$
+$if(author)$\hypersetup{pdfauthor={$author$}}$endif$
+
+%% ── URL Breaking (xurl breaks URLs at any char) ────────────────────────────
+\usepackage{xurl}
+
+%% ── Tables (with overflow prevention) ───────────────────────────────────────
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{calc}
+\makeatletter
+\let\oldlt\longtable
+\let\endoldlt\endlongtable
+\renewenvironment{longtable}[1][c]{%
+  \small\setlength{\LTleft}{0pt}\setlength{\LTright}{0pt}\begin{oldlt}[#1]%
+}{\end{oldlt}}
+\makeatother
+\renewcommand{\arraystretch}{1.3}
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft\hspace{0pt}}p{#1}}
+\newcolumntype{L}[1]{>{\PreserveBackslash\raggedright\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\PreserveBackslash\centering\hspace{0pt}}p{#1}}
+
+%% ── Graphics ─────────────────────────────────────────────────────────────────
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+%% ── Misc ─────────────────────────────────────────────────────────────────────
+\usepackage{microtype}
+\usepackage{csquotes}
+
+%% ── Global overflow prevention ──────────────────────────────────────────────
+\sloppy
+\emergencystretch=3em
+\setlength{\hfuzz}{2pt}
+
+%% Allow monospace (\texttt) to break at hyphens/slashes
+\makeatletter
+\renewcommand{\texttt}[1]{{\ttfamily\hyphenchar\font=45\relax\sloppy #1}}
+\makeatother
+
+%% ── Pandoc compatibility ────────────────────────────────────────────────────
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+%% Shaded environment for code blocks
+\usepackage{xcolor}
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{245,245,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.5,0.5,0.5}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.5,0.5,0}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0,0,0.8}{{#1}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0,0.5,0.5}{{#1}}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.5,0.5,0.5}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.5,0.5,0.5}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0,0,0}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0,0,0.8}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.5,0.5,0}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0,0,0.8}{{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.5,0.5,0.5}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0,0,0.8}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0,0,0.8}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.5,0.5,0.5}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0,0,0.8}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0,0,0}{{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0,0,0.8}{{#1}}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.5,0.5,0}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0,0.5,0.5}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0,0.5,0.5}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0,0.5,0.5}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0,0,0}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0,0.5,0.5}{{#1}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+%% Code highlighting with fvextra breaklines support
+\usepackage{fancyvrb}
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\scriptsize,breaklines=true,breakanywhere=true,breaksymbol={},breakautoindent=true}
+
+%% ── Title Page ───────────────────────────────────────────────────────────────
+$if(title)$\title{\Huge\bfseries $title$}$endif$
+$if(author)$\author{\Large $author$}$endif$
+$if(publisher)$\date{\normalsize $publisher$}$else$\date{}$endif$
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2in}
+  {\Huge\bfseries $if(title)$$title$$endif$\par}
+  \vspace{0.5in}
+  {\large $if(author)$$author$$endif$\par}
+  \vfill
+  {\normalsize $if(publisher)$$publisher$$endif$\par}
+\end{titlepage}
+
+\thispagestyle{empty}
+\vspace*{\fill}
+\noindent
+$if(rights)$$rights$$endif$\\[6pt]
+$if(description)$\textit{$description$}\\[6pt]$endif$
+All rights reserved. No part of this publication may be reproduced, distributed,
+or transmitted in any form or by any means without the prior written permission
+of the publisher.
+\vspace*{\fill}
+\newpage
+
+$if(toc)$
+{\hypersetup{linkcolor=black}\setcounter{tocdepth}{$toc-depth$}\tableofcontents\newpage}
+$endif$
+
+$body$
+
+\end{document}

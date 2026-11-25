@@ -58,12 +58,18 @@ def extract_links(text: str) -> list[tuple[str, str]]:
     """Return [(target_path, symbol_or_empty)] — fenced code blocks skipped
     (TOML ``[[table]]`` arrays and config snippets are not links)."""
     out: list[tuple[str, str]] = []
-    in_fence = False
+    fence_len = 0
     for line in text.splitlines():
-        if line.lstrip().startswith("```"):
-            in_fence = not in_fence
+        stripped = line.lstrip()
+        if stripped.startswith("```"):
+            backticks = len(stripped) - len(stripped.lstrip("`"))
+            if fence_len == 0:
+                fence_len = backticks
+            elif backticks >= fence_len and not stripped[backticks:].strip():
+                # CommonMark: a fence closes only on >= opening length, no info
+                fence_len = 0
             continue
-        if in_fence:
+        if fence_len:
             continue
         line = re.sub(r"`[^`]*`", "", line)  # inline code spans are not links
         for m in _LINK_RE.finditer(line):

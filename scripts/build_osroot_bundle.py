@@ -12,6 +12,7 @@ Usage: ``python scripts/build_osroot_bundle.py`` (run before ``uv build``).
 
 from __future__ import annotations
 
+import sys
 import tarfile
 from pathlib import Path
 
@@ -54,6 +55,25 @@ _FILES = [
 _SKIP_DIRS = {"__pycache__", ".git", "node_modules", "temp", "state", "brain", "memory", "refs", "graphify-out", "dist", "build", "_bmad", "_bmad-output", ".agents"}
 _SKIP_SUFFIX = {".pyc", ".pyo", ".log", ".db", ".sqlite", ".sqlite3"}
 
+# Media-light vendoring: raster/AV/print media under ``skills/`` never ships in
+# the wheel — it would blow past PyPI's 100 MB limit. Users fetch it on demand
+# via ``aizee skill media-fetch``. The suffix set lives canonically in
+# ``runtime/skill_media.py``; ``theme-showcase.pdf`` stays because the
+# theme-factory workflow requires it.
+sys.path.insert(0, str(ROOT))
+
+from runtime.skill_media import MEDIA_KEEP as _KEEP_NAMES  # noqa: E402
+from runtime.skill_media import MEDIA_SUFFIXES as _MEDIA_SUFFIXES  # noqa: E402
+
+
+def _is_media_excluded(p: Path) -> bool:
+    if p.suffix.lower() not in _MEDIA_SUFFIXES:
+        return False
+    rel = p.relative_to(ROOT).as_posix()
+    if not rel.startswith("skills/"):
+        return False
+    return p.name not in _KEEP_NAMES
+
 
 def _iter_files() -> list[Path]:
     files: list[Path] = []
@@ -67,6 +87,8 @@ def _iter_files() -> list[Path]:
             if any(part in _SKIP_DIRS for part in p.relative_to(ROOT).parts):
                 continue
             if p.suffix.lower() in _SKIP_SUFFIX:
+                continue
+            if _is_media_excluded(p):
                 continue
             files.append(p)
     for rel in _FILES:

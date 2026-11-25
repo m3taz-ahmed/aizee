@@ -8,6 +8,7 @@ skill without a version field.
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -49,6 +50,17 @@ def test_index_entries_carry_metadata(skills_root: Path) -> None:
     assert entry["description"] == "flat desc"
     assert entry["invoke"] == "user"
     assert "alpha" in entry["triggers"]
+
+
+def test_cli_index_out_writes_root_relative_file(skills_root: Path) -> None:
+    from aizee_cli import main
+
+    root = skills_root.parent
+    rc = main(["--root", str(root), "skill", "index", "--out", "custom-index.json"])
+    assert rc == 0
+    data = json.loads((root / "custom-index.json").read_text(encoding="utf-8"))
+    assert data["count"] == 2
+    assert data["skills"]["flat-skill"]["file"] == "flat-skill.md"
 
 
 def test_index_hash_is_release_identity(skills_root: Path) -> None:

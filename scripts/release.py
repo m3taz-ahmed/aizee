@@ -130,6 +130,16 @@ def bump(old: str, new: str, title: str, today: str, dry_run: bool) -> list[str]
     return touched
 
 
+def full_test_command() -> list[str]:
+    """Release-gate test command pinned to the source checkout.
+
+    Without ``--root .`` the CLI can resolve the deployment mirror through
+    ``AIZEE_ROOT`` and validate stale mirror code instead of the release
+    candidate in this source tree.
+    """
+    return [sys.executable, "aizee_cli.py", "--root", ".", "test", "--full"]
+
+
 def _resolve_publish_token() -> str | None:
     """Resolve the PyPI token — env first, then the repo's ``.env``.
 
@@ -192,7 +202,7 @@ def main() -> int:
     if _run([sys.executable, "scripts/validate-globals.py"], check=False).returncode != 0:
         _err("validate-globals failed — fix the reported files (likely a missed version) and rerun")
         return 1
-    if not args.skip_tests and _run([sys.executable, "aizee_cli.py", "test", "--full"], check=False).returncode != 0:
+    if not args.skip_tests and _run(full_test_command(), check=False).returncode != 0:
         _err("test suite failed — release aborted")
         return 1
 
@@ -201,7 +211,13 @@ def main() -> int:
         _err("osroot bundle rebuild failed — release aborted")
         return 1
 
-    _run(["git", "add", *touched])
+    # Build per-skill media packs from this source tree. Skill media is
+    # gitignored — only a media-bearing maintainer tree produces packs;
+    # media-less machines print a warning and the upload step is skipped.
+    # Runs BEFORE the commit so a refreshed skills/media-packs.json is included.
+    _run([sys.executable, "scripts/build_media_packs.py"], check=False)
+
+    _run(["git", "add", *touched, "skills/media-packs.json"])
     _run(["git", "commit", "-m", f"chore(release): bump version to {new} — {args.title}"])
     _run(["git", "tag", "-a", f"v{new}", "-m", f"v{new} — {args.title}"])
     if args.no_push:
@@ -211,6 +227,15 @@ def main() -> int:
     _run(["git", "push", "origin", f"v{new}"])
     if not args.no_release:
         _run(["gh", "release", "create", f"v{new}", "--title", f"aiZee v{new}", "--generate-notes"])
+        media_files = sorted((ROOT / "dist" / "media").glob("aizee-media-*.tar.gz"))
+        if media_files:
+            _run(
+                ["gh", "release", "upload", f"v{new}", *(str(p) for p in media_files), "--clobber"],
+                check=False,
+            )
+            print(f"[release] media packs: {len(media_files)} assets uploaded")
+        else:
+            print("[release] WARNING: no media packs found — release ships without media assets")
     if args.publish_pypi:
         if _resolve_publish_token() is None:
             _err("--publish-pypi needs UV_PUBLISH_TOKEN (or TWINE_PASSWORD) in env or .env")

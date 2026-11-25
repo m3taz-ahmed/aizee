@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# aiZee Validation Script (Python) v6.14.0
+# aiZee Validation Script (Python) v6.15.0
 # Source of truth validator - PowerShell wrapper delegates to this script.
 
 import argparse
@@ -363,6 +363,9 @@ IGNORED_FILE_REFS = {
     # archives/ is excluded from the deployment mirror (update_aizee.bat /XD)
     # — working-root-only session index referenced from Memory.md audit entries
     'devin-sessions-index.md',
+    # temp/ user-owned router notes — ephemeral working-tree file referenced
+    # from Memory.md cleanup notes, never a tracked aiZee input
+    'notes-hg8145v5-router.md',
 }
 IGNORED_FILE_REFS.update({
 
@@ -620,19 +623,51 @@ def check_version_consistency(global_path: str, ctx: ValidationContext) -> bool:
     cprint(f"Version: {next(iter(unique))} (all consistent)", Colors.GREEN)
     return True
 
+_VENDORED_SKILL_CACHE: dict[str, bool] = {}
+
+def is_vendored_skill_file(rel_name: str, global_path: str) -> bool:
+    """Vendored third-party skills (``vendored_from:`` in SKILL.md frontmatter)
+    are exempt from aiZee internal authoring gates — same convention as the
+    security sweep, which treats vendored assets as third-party content.
+    Secrets/encoding hygiene checks still apply; integrity is enforced by
+    ``aizee skill lock-check`` and ``aizee skill validate`` instead."""
+    parts = rel_name.replace("\\", "/").split("/")
+    if len(parts) < 3 or parts[0] != "skills":
+        return False
+    skill_dir = parts[1]
+    cached = _VENDORED_SKILL_CACHE.get(skill_dir)
+    if cached is not None:
+        return cached
+    vendored = False
+    skill_md = os.path.join(global_path, "skills", skill_dir, "SKILL.md")
+    if os.path.exists(skill_md):
+        try:
+            with open(skill_md, encoding="utf-8", errors="ignore") as fh:
+                head = fh.read(2000)
+            vendored = head.startswith("---") and "vendored_from:" in head
+        except OSError:
+            vendored = False
+    _VENDORED_SKILL_CACHE[skill_dir] = vendored
+    return vendored
+
 def validate_single_file(rel_name: str, data: dict[str, typing.Any], ctx: ValidationContext, global_path: str) -> tuple[str | None, bool]:
     content = data['content']
     ctx.scanned_count += 1
 
+    vendored          = is_vendored_skill_file(rel_name, global_path)
     content, le_mod   = check_line_endings(content, rel_name, ctx)
     content, bom_mod  = check_utf8_bom(content, data['full_path'], rel_name, ctx)
     sec_err            = check_secrets(content, rel_name, ctx)
-    title_err          = check_title(content, rel_name, ctx)
-    struct_err         = check_struct(content, rel_name, ctx)
-    content, ref_err, ref_mod = check_cross_references(content, rel_name, ctx)
-    fref_err           = check_file_references(content, rel_name, ctx, global_path)
-    moji_err           = check_mojibake(content, rel_name, ctx)
-    code_err           = check_symbolic_codes(content, rel_name, ctx)
+    if vendored:
+        title_err = struct_err = ref_err = fref_err = moji_err = code_err = False
+        ref_mod = False
+    else:
+        title_err          = check_title(content, rel_name, ctx)
+        struct_err         = check_struct(content, rel_name, ctx)
+        content, ref_err, ref_mod = check_cross_references(content, rel_name, ctx)
+        fref_err           = check_file_references(content, rel_name, ctx, global_path)
+        moji_err           = check_mojibake(content, rel_name, ctx)
+        code_err           = check_symbolic_codes(content, rel_name, ctx)
     content, nl_mod    = check_trailing_newlines(content, rel_name, ctx)
 
     error_found   = sec_err or title_err or struct_err or ref_err or fref_err or moji_err or code_err
@@ -663,7 +698,7 @@ def run_pass1(rule_files: list[str], global_path: str, manifest: dict[str, str],
     return file_data
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="aiZee Validation v6.14.0")
+    p = argparse.ArgumentParser(description="aiZee Validation v6.15.0")
     p.add_argument("--dry-run",            action="store_true", help="Scan without writing")
     p.add_argument("--generate-manifest",  action="store_true", help="Force regenerate manifest")
     p.add_argument("--force",              action="store_true", help="Bypass manifest cache")
@@ -767,7 +802,7 @@ def main() -> None:
         cprint(f"MISCONFIG: rules/vocabulary.md not found at {vocab_path}", Colors.RED)
         sys.exit(2)
 
-    cprint(f"aiZee Validation v6.14.0 [Fix: {'ON' if args.fix else 'OFF'}]", Colors.CYAN)
+    cprint(f"aiZee Validation v6.15.0 [Fix: {'ON' if args.fix else 'OFF'}]", Colors.CYAN)
 
     rule_files = collect_rule_files(global_path)
     manifest_path = os.path.join(global_path, "integrity.manifest")

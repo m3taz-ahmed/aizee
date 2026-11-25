@@ -128,3 +128,28 @@ _bmad-output/
 
 runtime/_osroot.tar.gz
 .spec-workflow/
+
+audit_signing.key
+_osroot.tar.gz
+
+# Media-light vendoring for skill packs (stickman precedent): heavy raster/AV/print
+# media stays local-only — vendored skills degrade gracefully for clones (disclosed
+# in each skill's vendoring note); regenerable outputs re-generate from bundled
+# scripts (e.g. anatomy-illustration `sheet.mjs` re-prints the A4 PDFs).
+skills/**/*.png
+skills/**/*.jpg
+skills/**/*.jpeg
+skills/**/*.webp
+skills/**/*.gif
+skills/**/*.avif
+skills/**/*.mp4
+skills/**/*.mov
+skills/**/*.wav
+skills/**/*.mp3
+skills/**/*.pdf
+# Upstream repo metadata vendored along with skill packs (issue/PR templates,
+# funding files, social previews) — never part of the skill itself
+skills/**/.github/
+# Exceptions — small and functionally required:
+# theme-factory SKILL.md workflow step 1 requires displaying this PDF
+!skills/theme-factory/theme-showcase.pdf

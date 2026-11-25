@@ -1,0 +1,1314 @@
+{
+  "generated": "2026-11-25T20:03:26+00:00",
+  "packs": {
+    "anatomy-illustration": {
+      "asset": "aizee-media-anatomy-illustration.tar.gz",
+      "bytes": 14978114,
+      "file_count": 9,
+      "files": {
+        "skills/anatomy-illustration/examples/arcade-cabinet/arcade-cabinet-detailed-a4.pdf": {
+          "bytes": 2355870,
+          "sha256": "592a5cd875f386cfc2bdd6f4b7ae6b1bba17677d79a4ce9074b5cc28620b70a3"
+        },
+        "skills/anatomy-illustration/examples/arcade-cabinet/arcade-cabinet-drawing-a4.pdf": {
+          "bytes": 1849170,
+          "sha256": "233092454ca079083346c3287bab477fcb3f1fd4805ceae8a037bdf7d04b8658"
+        },
+        "skills/anatomy-illustration/examples/arcade-cabinet/arcade-cabinet-poster-a4.pdf": {
+          "bytes": 726591,
+          "sha256": "2d45bd3bdf863bd908d19cd2c1304bdbceed117a7a817098af4e751d88f376e8"
+        },
+        "skills/anatomy-illustration/examples/push-button/push-button-detailed-a4.pdf": {
+          "bytes": 956064,
+          "sha256": "694380d98939910affe24844a39bbd8e52527f07c1754ba0d184a9e4a029789a"
+        },
+        "skills/anatomy-illustration/examples/push-button/push-button-drawing-a4.pdf": {
+          "bytes": 696985,
+          "sha256": "0e2f2a3b1aeaa1ba52ef6a8cfd65762f6b3227f04cfb3a8143b6f9394602c308"
+        },
+        "skills/anatomy-illustration/examples/push-button/push-button-poster-a4.pdf": {
+          "bytes": 463972,
+          "sha256": "c757010ee2c207724557da3dd6c0d4e760b4033ed126490f4c2fd350a2b4e98b"
+        },
+        "skills/anatomy-illustration/examples/raptor-engine/raptor-engine-detailed-a4.pdf": {
+          "bytes": 4350759,
+          "sha256": "8ea62e8fc0566dc54c54f3e58112cb7bf4d2a5ebb3666782d85bc4e8a3ef179e"
+        },
+        "skills/anatomy-illustration/examples/raptor-engine/raptor-engine-drawing-a4.pdf": {
+          "bytes": 2965335,
+          "sha256": "3a4de2fc7dd52dc9149dc9038996ce2da8b3dcce250be8bae42faeebb4cca698"
+        },
+        "skills/anatomy-illustration/examples/raptor-engine/raptor-engine-poster-a4.pdf": {
+          "bytes": 613368,
+          "sha256": "a3f3c40c5b9f916a0d457909d853f83e1aef61f2858f09632430a9065fe25756"
+        }
+      },
+      "sha256": "bd64b005f280fac87b0350734e7052120c3347d4a5c9fc10506c0f623a6aff71"
+    },
+    "novelist-longform": {
+      "asset": "aizee-media-novelist-longform.tar.gz",
+      "bytes": 1121279,
+      "file_count": 9,
+      "files": {
+        "skills/novelist-longform/assets/creation-flow-q.png": {
+          "bytes": 294246,
+          "sha256": "7b98a414888f96195f882f913746fdf5ab59d8c56d1586204cc11323dacdfaf9"
+        },
+        "skills/novelist-longform/assets/infistar-banner.png": {
+          "bytes": 49027,
+          "sha256": "e2946a7c561a36f135ef585f27706b496a7c123cd62971ae085847a4e3f6dda7"
+        },
+        "skills/novelist-longform/assets/memory-demo.png": {
+          "bytes": 93444,
+          "sha256": "6459a4297cca00e539886ebaa8dfda953b9ecaa13ced8481be8312c8687a6478"
+        },
+        "skills/novelist-longform/assets/phase1-qa.png": {
+          "bytes": 126659,
+          "sha256": "0ef21777aec541e434daca540b44016d5a835bcc53787ec765a58045d8dfefe5"
+        },
+        "skills/novelist-longform/assets/phase2-plan.png": {
+          "bytes": 115652,
+          "sha256": "629e34def401dab4abe2f5eb095183659ec095a2d6b8c6d856fd2203447a0fcd"
+        },
+        "skills/novelist-longform/assets/phase3-writing.png": {
+          "bytes": 61953,
+          "sha256": "a857a637180b475c8e58acc8200a11a55ab48cfd013669f66b177c0619dc7740"
+        },
+        "skills/novelist-longform/assets/phase4-done.png": {
+          "bytes": 283831,
+          "sha256": "9f2e80614e080afad0a862689ff2a7906e7c10a82ca7920a341cb639efdaff84"
+        },
+        "skills/novelist-longform/assets/workbench-report.png": {
+          "bytes": 50114,
+          "sha256": "c4030bf698f7e4c609c4003ed9a41753126585c39e3dc4b3b0d578b813f33649"
+        },
+        "skills/novelist-longform/assets/workbench-shelf.png": {
+          "bytes": 46353,
+          "sha256": "b97e871ab7c99b569b4d900b23e763819c95c99e30459be0464e38bde29aa01c"
+        }
+      },
+      "sha256": "664c0a741a3d7d629430c57449fa0eee8ba64ae4d0619917630b47c0a68f44b2"
+    },
+    "oneirloom-character-sheet": {
+      "asset": "aizee-media-oneirloom-character-sheet.tar.gz",
+      "bytes": 7458347,
+      "file_count": 4,
+      "files": {
+        "skills/oneirloom-character-sheet/templates/wardrobe-sheet/images/reference-01.png": {
+          "bytes": 1737106,
+          "sha256": "764aeaea7178ac3ddadfca5047716bb3f4828df5083c9d50d19ac7bac8235be8"
+        },
+        "skills/oneirloom-character-sheet/templates/wardrobe-sheet/images/reference-01.webp": {
+          "bytes": 1043966,
+          "sha256": "c79d5d331d0d568e7c4aa6ad54fbb62a7825f0481ad765ce6d351903790da6a9"
+        },
+        "skills/oneirloom-character-sheet/templates/wardrobe-sheet/images/result-01.png": {
+          "bytes": 2775271,
+          "sha256": "9e64e12a6b8249ffa5a09de9de3ca5143246c1f037131877f8bd3d2472c54dc2"
+        },
+        "skills/oneirloom-character-sheet/templates/wardrobe-sheet/images/result-01.webp": {
+          "bytes": 1902004,
+          "sha256": "82d100ba3cdd648f833b96a3b6434fadb30cddfea15e2e66450a5f56ce9b7c47"
+        }
+      },
+      "sha256": "030f7dc90ca86d7fef3bcba0d896b6a19d380a6cdf83fdb3ff50779b06b0ee75"
+    },
+    "oneirloom-craft-construction": {
+      "asset": "aizee-media-oneirloom-craft-construction.tar.gz",
+      "bytes": 7568222,
+      "file_count": 4,
+      "files": {
+        "skills/oneirloom-craft-construction/templates/fuse-bead/images/result-01.png": {
+          "bytes": 3024239,
+          "sha256": "9a872810ecd8964c85d892991d0ffae1848b3e06789d4bdbb5eeca0cd5034282"
+        },
+        "skills/oneirloom-craft-construction/templates/fuse-bead/images/result-01.webp": {
+          "bytes": 1590322,
+          "sha256": "70b13d0c310b79fd34ea0dce640619736201c0613e232725b2e10c39c15decc2"
+        },
+        "skills/oneirloom-craft-construction/templates/fuse-bead/images/source-01.png": {
+          "bytes": 1735041,
+          "sha256": "a343d18c955f1212aca444620a1324bb69dcdc51201bb34f09135d253dccf750"
+        },
+        "skills/oneirloom-craft-construction/templates/fuse-bead/images/source-01.webp": {
+          "bytes": 1218620,
+          "sha256": "00df33b13aa9ed48e7591f3850ccf407d7e6a7dc7ff4612fe7157967900b52d1"
+        }
+      },
+      "sha256": "711cefba2133b43fd20371325704328154a07dd4acca18beba1ba7e887c6c7e7"
+    },
+    "oneirloom-product-art-direction": {
+      "asset": "aizee-media-oneirloom-product-art-direction.tar.gz",
+      "bytes": 8238037,
+      "file_count": 4,
+      "files": {
+        "skills/oneirloom-product-art-direction/references/takeaway-food-town/images/accepted.png": {
+          "bytes": 2522472,
+          "sha256": "ac711aa18cad0556215cf597f38ede46d0fdcf9c13824e9bc7883fb8555f3607"
+        },
+        "skills/oneirloom-product-art-direction/references/takeaway-food-town/images/accepted.webp": {
+          "bytes": 1517236,
+          "sha256": "4b065b4870ca1f0533556e53644320e13f31c1b0b3720ab76974c14b5cdeaa62"
+        },
+        "skills/oneirloom-product-art-direction/references/takeaway-food-town/images/source.png": {
+          "bytes": 2423675,
+          "sha256": "c0bed162a70ed3a0279ba486b4b2a216f4c44a6459a7504305262ab620ab30ae"
+        },
+        "skills/oneirloom-product-art-direction/references/takeaway-food-town/images/source.webp": {
+          "bytes": 1774654,
+          "sha256": "1c23ad9eca26daa148b0a3bb1dd03d854d59e23b9f1c7b501e1fa3073789c8ec"
+        }
+      },
+      "sha256": "9bb1659681b2540eeb6da28b6c3c38d09489ab97112737389dc0f6546c45770b"
+    },
+    "oneirloom-style-design": {
+      "asset": "aizee-media-oneirloom-style-design.tar.gz",
+      "bytes": 46538353,
+      "file_count": 29,
+      "files": {
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/01-sculpture-tear/images/reference.png": {
+          "bytes": 48479,
+          "sha256": "c88fe3d2275317e73b0cb8396ac9cfb3743b3b5e592eb81dcfb38741853a3aee"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/01-sculpture-tear/images/transfer-01.png": {
+          "bytes": 2739487,
+          "sha256": "17d00ebdfd7d274d7129a675f7470bd392e106a255225d28e927dec3bfa96345"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/02-motion-blur/images/reference.png": {
+          "bytes": 33279,
+          "sha256": "4ed97be90c57e97077af960991a7c1aead3f3c75b117f0a59620276e8c1cdf04"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/02-motion-blur/images/transfer-01.png": {
+          "bytes": 2292583,
+          "sha256": "73cb0ade9499a61eaf9c00b69427a59dab8d60aee244880d8c20be99feab70ff"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/03-mirror-sphere/images/reference.png": {
+          "bytes": 44264,
+          "sha256": "7f98c97c1569d9440d0e779d9b04a70f55b893713ca48018dff9499b8d093168"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/03-mirror-sphere/images/transfer-01.png": {
+          "bytes": 2691003,
+          "sha256": "78cb9ea0501f54f04fa8280e20b327963386191d94473e70cc5afd3feb3f6bac"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/04-torn-landscape/images/reference.png": {
+          "bytes": 50783,
+          "sha256": "d99488f4559bb9a07835194a712eea598762040dffdb46fc9f4067c58da635b0"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/04-torn-landscape/images/transfer-01.png": {
+          "bytes": 3011823,
+          "sha256": "a33e062407c14dc500c00033032adb6f67f4fb1ce911341e2bb91faa4ea7d27e"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/05-botanical-engraving/images/reference.png": {
+          "bytes": 57173,
+          "sha256": "195cf2670fc57161ac76d91be674b24e875cc4dc4a8d93a2f31556afc1f14000"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/05-botanical-engraving/images/transfer-01.png": {
+          "bytes": 3266901,
+          "sha256": "fcb7ed543dfd866523920754164da5eab67b5c253338c1273506d586eada951d"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/06-swiss-sculpture/images/reference.png": {
+          "bytes": 50207,
+          "sha256": "f188a4960a6c841d1879a31b8e9c09b7a19ae3729a70331091f8a78a45aaeba6"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/06-swiss-sculpture/images/transfer-01.png": {
+          "bytes": 2657150,
+          "sha256": "517b38aa638d5791a3d8561464cffc883ce756c8b0353f05e34e11c1d53252f5"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/07-object-slices/images/reference.png": {
+          "bytes": 35525,
+          "sha256": "545e720d4fb3bd340b2882be1a2e4f487c3ea8ed7f63625bf8e7212ab8cc3375"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/07-object-slices/images/transfer-01.png": {
+          "bytes": 2462716,
+          "sha256": "134a54d1fb7de92a33d0bbbf40f763153e26d0242ce5b099e0461c16caff3631"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/08-zine-silhouette/images/reference.png": {
+          "bytes": 45180,
+          "sha256": "5a88d663ae5c2ceae05de269f9bd63837ad53c51f4e7561dc58fbb62f195638d"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/08-zine-silhouette/images/transfer-01.png": {
+          "bytes": 3104890,
+          "sha256": "733b76b7b7d7a9911f07401eacdb837b6616036e9f68202f61bf1fb58fff1034"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/08-zine-silhouette/images/transfer-02.png": {
+          "bytes": 3025196,
+          "sha256": "7f22e2a0acca1fdb8ad6304a9266724adfaa162e66f56c04c43fe7d09eab348f"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/09-geometric-architecture/images/reference.png": {
+          "bytes": 46207,
+          "sha256": "8076892a4c04d99a39cf416e07eb459a5bf388b18f750fc776150e318e0fa50d"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/09-geometric-architecture/images/transfer-01.png": {
+          "bytes": 2233524,
+          "sha256": "7b93b8ddfd1248366e47a478ad21c2680b52ede8b28145b5b696491fc91b5d50"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/10-paper-typography/images/reference.png": {
+          "bytes": 50000,
+          "sha256": "97c283995f2f10bfd08d82a384a98b7c162099a638bd6591db3f23f584dea7d9"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/10-paper-typography/images/transfer-01.png": {
+          "bytes": 2722405,
+          "sha256": "b8a50b6a9704fb72ca8cc9a3fa3044330bceb593a3928743195ed825aaafe806"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/11-transparent-botanical/images/reference.png": {
+          "bytes": 55302,
+          "sha256": "4ffed5118fd7c5df5cc6624c38b3520be966cd72c904c2a79e67c00b5a339431"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/11-transparent-botanical/images/transfer-01.png": {
+          "bytes": 2424413,
+          "sha256": "c20b13485644a8dd2452028dda47b749a1dad1843ca5e35a902e821aad3e5375"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/11-transparent-botanical/images/transfer-02.png": {
+          "bytes": 1937776,
+          "sha256": "60a98a0fff9cdef5a34601f6b0d0590ee4ed112cb96153d8104bb6135988b932"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/12-xerox-technical/images/reference.png": {
+          "bytes": 48655,
+          "sha256": "f488174c5e6797d9c54083cc5059435f4e92e19c5deb5886a07bdc734af5f0d7"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/12-xerox-technical/images/transfer-01.png": {
+          "bytes": 3303576,
+          "sha256": "8affdad31ba07287c00c3bf9c30bfd6fa8e5aeb73d2123cdcecee78404df2fca"
+        },
+        "skills/oneirloom-style-design/templates/experimental-editorial-posters/images/reference-sheet.png": {
+          "bytes": 595458,
+          "sha256": "795bbf8b88cac93d8cd88204ebe553324e8dca328f2d8cdd03d1021651258d31"
+        },
+        "skills/oneirloom-style-design/templates/product-origin-world/images/example-01.png": {
+          "bytes": 4806974,
+          "sha256": "81219b00a9fbaded674c77161b3f7b69a624e7548ced5012a691750890080734"
+        },
+        "skills/oneirloom-style-design/templates/product-origin-world/images/example-01.webp": {
+          "bytes": 2697424,
+          "sha256": "0c63357eb5dcc741d2368fdead1c2a4e630d0fb6d86d1b23f4b2d72f930e4359"
+        }
+      },
+      "sha256": "d6cc84ab056bc19b8c63735209b7471918588814db59036e7b080aefe77dc1c7"
+    },
+    "oneirloom-style-illustration": {
+      "asset": "aizee-media-oneirloom-style-illustration.tar.gz",
+      "bytes": 9701088,
+      "file_count": 4,
+      "files": {
+        "skills/oneirloom-style-illustration/templates/dessert-storybook-flow/images/reference-01.png": {
+          "bytes": 1318237,
+          "sha256": "4a3b0c86a3429c777febf60130473d7480b9d7a5ff85d7b6a05a1744c39a3435"
+        },
+        "skills/oneirloom-style-illustration/templates/dessert-storybook-flow/images/reference-01.webp": {
+          "bytes": 833838,
+          "sha256": "19d62f7d7a450bf919ac7803c52fceafd291793ab2141b1e7c4d5f0835c01cde"
+        },
+        "skills/oneirloom-style-illustration/templates/zhiguai-narrative/images/example-01.png": {
+          "bytes": 4760443,
+          "sha256": "d5877fafe7cab1c2d090fbfc34ab567efbf5ea5accf29710ac9396f2560c0977"
+        },
+        "skills/oneirloom-style-illustration/templates/zhiguai-narrative/images/example-01.webp": {
+          "bytes": 2788570,
+          "sha256": "b955f997d2c2964f9f47dd745c1694ffcc1f693d72955140f5da99b697d34584"
+        }
+      },
+      "sha256": "e6d0378504f47ff6fdf24b6ab4427e7579c9137cf18491f2415915d4e12aa6a3"
+    },
+    "oneirloom-style-photography": {
+      "asset": "aizee-media-oneirloom-style-photography.tar.gz",
+      "bytes": 17824743,
+      "file_count": 8,
+      "files": {
+        "skills/oneirloom-style-photography/templates/hotel-mirror-selfie/images/reference-01.png": {
+          "bytes": 1402732,
+          "sha256": "8ecc72d3bc22ef854468adb3af75fc148b8d231cb665443554f3b100eb172930"
+        },
+        "skills/oneirloom-style-photography/templates/hotel-mirror-selfie/images/reference-01.webp": {
+          "bytes": 993986,
+          "sha256": "fd9c1f348d3ce9cd12ee2839a7acf77488bb15829b3f803b41fbab347bf50e56"
+        },
+        "skills/oneirloom-style-photography/templates/indoor-full-length/images/result-01.png": {
+          "bytes": 1393954,
+          "sha256": "00efffa9fa79fed0f99ea74c79dd81044f8cc79216e2bf789fcbf8882cf14f3d"
+        },
+        "skills/oneirloom-style-photography/templates/indoor-full-length/images/result-01.webp": {
+          "bytes": 879650,
+          "sha256": "5defbc435e3cc88bc1437257de412a79a5dae961097de18a0219f5dd4e2a405d"
+        },
+        "skills/oneirloom-style-photography/templates/white-architecture-portrait-poses/images/result-01.png": {
+          "bytes": 3232976,
+          "sha256": "3ab2a52154acb88edaeaa065347200135d1d124da11ea5ddb083a59eaa14a4c3"
+        },
+        "skills/oneirloom-style-photography/templates/white-architecture-portrait-poses/images/result-02.png": {
+          "bytes": 3564374,
+          "sha256": "1a4c49923bf2dc862f785a353fdf22156508db626923ac130e7439e9596a4fe9"
+        },
+        "skills/oneirloom-style-photography/templates/white-architecture-portrait-poses/images/result-03.png": {
+          "bytes": 3040623,
+          "sha256": "3da88cff3c0334721c9b0fbc8378516dd88b82ee0ba25ca954f908be962215a7"
+        },
+        "skills/oneirloom-style-photography/templates/white-architecture-portrait-poses/images/result-04.png": {
+          "bytes": 3316448,
+          "sha256": "e214b2604ee270726de536a40f1f35d9e4161256b2ed5e54966d879c24bf3720"
+        }
+      },
+      "sha256": "da5fce0910ec4d4a7bef18f53b2aba029b2a8cf5934d3ae95cf47cea414fd34e"
+    },
+    "pixel-art-studio": {
+      "asset": "aizee-media-pixel-art-studio.tar.gz",
+      "bytes": 1197268,
+      "file_count": 79,
+      "files": {
+        "skills/pixel-art-studio/docs/assets/capy_sheet.png": {
+          "bytes": 8712,
+          "sha256": "c95b63c8205eae0c540ab83993fa93d6c55fc32c46ecc86c314531aa8a91b1a8"
+        },
+        "skills/pixel-art-studio/docs/assets/capy_walk_down.gif": {
+          "bytes": 10549,
+          "sha256": "3732c1821b262ae458a4cf9b95ac4b26194e2888b45babb3ce8da5eab08491f0"
+        },
+        "skills/pixel-art-studio/docs/assets/capy_walk_left.gif": {
+          "bytes": 11271,
+          "sha256": "b1c65d68619a589dbec40866a526fbc7c7889b9e0260d92fdea25a0fd754d6e0"
+        },
+        "skills/pixel-art-studio/docs/assets/capy_walk_right.gif": {
+          "bytes": 11247,
+          "sha256": "6167dd1ae2b07952c33621526060011b7ac4d723c3af08339dfd018bd22077da"
+        },
+        "skills/pixel-art-studio/docs/assets/capy_walk_up.gif": {
+          "bytes": 10259,
+          "sha256": "54766c5dd3ec0659b448c466a2bc3352195a5cf3a049bf283e367ea1b4bab6d7"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_bee.gif": {
+          "bytes": 6748,
+          "sha256": "db1f4b02d7d7c916dc18ee1ce51ca754c6aa1f145f23c32017e2346dac3113e5"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_catmage.gif": {
+          "bytes": 7563,
+          "sha256": "8ff5c95ca963be3141dd5c1d1b807b74f7a804ccc9d053c2911b80ef67be7449"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_flame.gif": {
+          "bytes": 6520,
+          "sha256": "184ce4205dd673e25e4200e520b6c5ec83b10bd83586bb733607e39526ec93a4"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_frog.gif": {
+          "bytes": 7174,
+          "sha256": "e63ac175303495e1f3baf0a13fea2360999da13f04350f32afd516034f5038a9"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_ghost.gif": {
+          "bytes": 6617,
+          "sha256": "9e7defc3770f00121f0d2dc8710ebfd19b5fef0456aaa753ef14a0b967976180"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_golem.gif": {
+          "bytes": 7024,
+          "sha256": "b33b9f2d5601ac31cf2e5306dba0872b7285318e81155bb4987a8049bc4f0ee2"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_mushroom.gif": {
+          "bytes": 7017,
+          "sha256": "b718b8a4d7419ad4a7a72558a02fb57a05c8d964564f314ef72f7f9cad4e0da8"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_penguin.gif": {
+          "bytes": 6962,
+          "sha256": "969f7ce47ac4958fbbe8e745b065fb4d3cd9b36ba07f9b7603c89ed4e9a9805e"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_robot.gif": {
+          "bytes": 6897,
+          "sha256": "9e0ed684c7c72643def8f087369477f42583eda8edcbd42ceb18bd3377ac3da3"
+        },
+        "skills/pixel-art-studio/docs/assets/cast_skeleton.gif": {
+          "bytes": 7363,
+          "sha256": "323ee4f95d2277610229aba7588bffd5bb12dd0296b308863f17c99ee863d526"
+        },
+        "skills/pixel-art-studio/docs/assets/catmage_slash_down.gif": {
+          "bytes": 7885,
+          "sha256": "8dd732ce120c82398b34551c352e74aa723e2a9157890fb82e077c5692dfee34"
+        },
+        "skills/pixel-art-studio/docs/assets/catmage_slash_right.gif": {
+          "bytes": 7932,
+          "sha256": "a464f168d73de8f836034bcb21a1c288ac875e90d18c652140f4817bcbca5680"
+        },
+        "skills/pixel-art-studio/docs/assets/catmage_walk_down.gif": {
+          "bytes": 9695,
+          "sha256": "38a7aa259df0b4eae7fc9e842b93add0e50c24ffaf4ae66ff846356b73d46c3f"
+        },
+        "skills/pixel-art-studio/docs/assets/catmage_walk_right.gif": {
+          "bytes": 9538,
+          "sha256": "22392a5f490dacde98cfb99b87d67aa135918d8a32bd804e966897a11e15552d"
+        },
+        "skills/pixel-art-studio/docs/assets/knight.png": {
+          "bytes": 9637,
+          "sha256": "05640e42e7635ee1dd98f9f2fde197e9f5ad5bc96b4efab744f1e76e89be0c5e"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_hybrid.png": {
+          "bytes": 260404,
+          "sha256": "d198cdb5407fb222f62a829dd74c5c8278f7ad4f63fd3c77ff0be21463cb1277"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_sheet.png": {
+          "bytes": 27757,
+          "sha256": "f083937c0870eaeb62288cddab71f0da183d67a61a177545726250e7539e3369"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_slash_down.gif": {
+          "bytes": 8626,
+          "sha256": "5fc20f8e55b8967449091f3cfb786b3a7c7c03358aee0821a1460ac238aa5676"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_slash_right.gif": {
+          "bytes": 7480,
+          "sha256": "ee9a2403a7e39d813b151de5cb42abbaf69444f0cecb600a014fa05ef2a31f61"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_walk.gif": {
+          "bytes": 62734,
+          "sha256": "222b4731fc21149214799ed27cbec47de8387eac9a10fb521462084d805c7174"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_walk_down.gif": {
+          "bytes": 7256,
+          "sha256": "c4ef0213a3a3e9c3a79fd5031d70907bbf8db99a2e845205454b028dc2f2082e"
+        },
+        "skills/pixel-art-studio/docs/assets/knight_walk_right.gif": {
+          "bytes": 10896,
+          "sha256": "45a49076b5e3fc617740fd35c1114ca94e53e1063168b5bf8362b5126715386d"
+        },
+        "skills/pixel-art-studio/docs/assets/slime.gif": {
+          "bytes": 26316,
+          "sha256": "0d5ed042d57afde87270840f421b45122294c842a05c3658f10bf4d23dc7216d"
+        },
+        "skills/pixel-art-studio/docs/assets/slime@8x.png": {
+          "bytes": 1076,
+          "sha256": "4a46d2db91e1205f621ad7edfd8097b7690d45dac54370afb3b22115d0a34387"
+        },
+        "skills/pixel-art-studio/docs/assets/tactical_oracle.png": {
+          "bytes": 3917,
+          "sha256": "ae0768847aa839cc5eee785968b8e30406a022f5b33164a5a0885dbbb9b6f701"
+        },
+        "skills/pixel-art-studio/docs/assets/tactical_oracle_idle.gif": {
+          "bytes": 50028,
+          "sha256": "572ac7778de832e9dab3e1d105895774b6f9507e92b1e416a1dec2356f92c90d"
+        },
+        "skills/pixel-art-studio/docs/assets/tactical_oracle_sheet.png": {
+          "bytes": 2218,
+          "sha256": "2a722dea49ddf12d5da1640a12a9b34acbeb4e25b9f6e33c3d416024b44b0bf5"
+        },
+        "skills/pixel-art-studio/docs/assets/tall_iron_man_repulsor.gif": {
+          "bytes": 38491,
+          "sha256": "c9fced7febc24e30fe0ba61f206a725ad34ca1ddcf0dfaa00476e7456a5d826b"
+        },
+        "skills/pixel-art-studio/docs/assets/tall_iron_man_repulsor.png": {
+          "bytes": 4783,
+          "sha256": "82edc884e756e0928d0520e343520e031cfe7d4cc4db431e0903cd9be389bfff"
+        },
+        "skills/pixel-art-studio/docs/assets/tall_iron_man_repulsor_sheet.png": {
+          "bytes": 3380,
+          "sha256": "abd459f24059ee5749afe138935810758feb6f841941d4f9e7cab62a0c30f773"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/bee.gif": {
+          "bytes": 6748,
+          "sha256": "db1f4b02d7d7c916dc18ee1ce51ca754c6aa1f145f23c32017e2346dac3113e5"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/cast_preview.png": {
+          "bytes": 9961,
+          "sha256": "0d34c11d3f1b3dccc43316fc3e64a91e588f0a9c6670a9505307e62e103a54d2"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/catmage.gif": {
+          "bytes": 7563,
+          "sha256": "8ff5c95ca963be3141dd5c1d1b807b74f7a804ccc9d053c2911b80ef67be7449"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/flame.gif": {
+          "bytes": 6520,
+          "sha256": "184ce4205dd673e25e4200e520b6c5ec83b10bd83586bb733607e39526ec93a4"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/frog.gif": {
+          "bytes": 7174,
+          "sha256": "e63ac175303495e1f3baf0a13fea2360999da13f04350f32afd516034f5038a9"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/ghost.gif": {
+          "bytes": 6617,
+          "sha256": "9e7defc3770f00121f0d2dc8710ebfd19b5fef0456aaa753ef14a0b967976180"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/golem.gif": {
+          "bytes": 7024,
+          "sha256": "b33b9f2d5601ac31cf2e5306dba0872b7285318e81155bb4987a8049bc4f0ee2"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/mushroom.gif": {
+          "bytes": 7017,
+          "sha256": "b718b8a4d7419ad4a7a72558a02fb57a05c8d964564f314ef72f7f9cad4e0da8"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/penguin.gif": {
+          "bytes": 6962,
+          "sha256": "969f7ce47ac4958fbbe8e745b065fb4d3cd9b36ba07f9b7603c89ed4e9a9805e"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/robot.gif": {
+          "bytes": 6897,
+          "sha256": "9e0ed684c7c72643def8f087369477f42583eda8edcbd42ceb18bd3377ac3da3"
+        },
+        "skills/pixel-art-studio/pixel-art/anime-cast/skeleton.gif": {
+          "bytes": 7363,
+          "sha256": "323ee4f95d2277610229aba7588bffd5bb12dd0296b308863f17c99ee863d526"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/capy_walk_down.gif": {
+          "bytes": 10549,
+          "sha256": "3732c1821b262ae458a4cf9b95ac4b26194e2888b45babb3ce8da5eab08491f0"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/capy_walk_left.gif": {
+          "bytes": 11271,
+          "sha256": "b1c65d68619a589dbec40866a526fbc7c7889b9e0260d92fdea25a0fd754d6e0"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/capy_walk_right.gif": {
+          "bytes": 11247,
+          "sha256": "6167dd1ae2b07952c33621526060011b7ac4d723c3af08339dfd018bd22077da"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/capy_walk_up.gif": {
+          "bytes": 10259,
+          "sha256": "54766c5dd3ec0659b448c466a2bc3352195a5cf3a049bf283e367ea1b4bab6d7"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/preview.png": {
+          "bytes": 8712,
+          "sha256": "c95b63c8205eae0c540ab83993fa93d6c55fc32c46ecc86c314531aa8a91b1a8"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/spritesheet.png": {
+          "bytes": 2769,
+          "sha256": "caf6907b1e2a8d7773bae848be5ac5a599c783a632caeca41e1f27a0ef9a2468"
+        },
+        "skills/pixel-art-studio/pixel-art/capybara-4dir/spritesheet@6x.png": {
+          "bytes": 8712,
+          "sha256": "c95b63c8205eae0c540ab83993fa93d6c55fc32c46ecc86c314531aa8a91b1a8"
+        },
+        "skills/pixel-art-studio/pixel-art/catmage-lpc/catmage_lpc.png": {
+          "bytes": 18985,
+          "sha256": "75dcd1b399fbb1ba3c95648e3e7ea9c40a41b254c29910f4ad2814dda060dbb8"
+        },
+        "skills/pixel-art-studio/pixel-art/catmage-lpc/catmage_slash_down.gif": {
+          "bytes": 7885,
+          "sha256": "8dd732ce120c82398b34551c352e74aa723e2a9157890fb82e077c5692dfee34"
+        },
+        "skills/pixel-art-studio/pixel-art/catmage-lpc/catmage_slash_right.gif": {
+          "bytes": 7932,
+          "sha256": "a464f168d73de8f836034bcb21a1c288ac875e90d18c652140f4817bcbca5680"
+        },
+        "skills/pixel-art-studio/pixel-art/catmage-lpc/catmage_walk_down.gif": {
+          "bytes": 9695,
+          "sha256": "38a7aa259df0b4eae7fc9e842b93add0e50c24ffaf4ae66ff846356b73d46c3f"
+        },
+        "skills/pixel-art-studio/pixel-art/catmage-lpc/catmage_walk_right.gif": {
+          "bytes": 9538,
+          "sha256": "22392a5f490dacde98cfb99b87d67aa135918d8a32bd804e966897a11e15552d"
+        },
+        "skills/pixel-art-studio/pixel-art/catmage-lpc/qa.png": {
+          "bytes": 22924,
+          "sha256": "4d557d36c947cd704d9db4bf2a3cbc93ee5c94af43ab14ef1ce9bce5a158e2c2"
+        },
+        "skills/pixel-art-studio/pixel-art/knight-spear-lpc/knight_slash_down.gif": {
+          "bytes": 8626,
+          "sha256": "5fc20f8e55b8967449091f3cfb786b3a7c7c03358aee0821a1460ac238aa5676"
+        },
+        "skills/pixel-art-studio/pixel-art/knight-spear-lpc/knight_slash_right.gif": {
+          "bytes": 7480,
+          "sha256": "ee9a2403a7e39d813b151de5cb42abbaf69444f0cecb600a014fa05ef2a31f61"
+        },
+        "skills/pixel-art-studio/pixel-art/knight-spear-lpc/knight_spear_lpc.png": {
+          "bytes": 17831,
+          "sha256": "b5c904f167001c3ff059377ce73035c347a73f3d63b642626c3553e2b59a5391"
+        },
+        "skills/pixel-art-studio/pixel-art/knight-spear-lpc/knight_walk_down.gif": {
+          "bytes": 7256,
+          "sha256": "c4ef0213a3a3e9c3a79fd5031d70907bbf8db99a2e845205454b028dc2f2082e"
+        },
+        "skills/pixel-art-studio/pixel-art/knight-spear-lpc/knight_walk_right.gif": {
+          "bytes": 10896,
+          "sha256": "45a49076b5e3fc617740fd35c1114ca94e53e1063168b5bf8362b5126715386d"
+        },
+        "skills/pixel-art-studio/pixel-art/knight-spear-lpc/qa.png": {
+          "bytes": 21486,
+          "sha256": "7ebf225d3df7320ab4b5f553b503c1c72e69cee778e09fb5fe86dc7f52278d81"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_display.png": {
+          "bytes": 3917,
+          "sha256": "ae0768847aa839cc5eee785968b8e30406a022f5b33164a5a0885dbbb9b6f701"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_idle.gif": {
+          "bytes": 47120,
+          "sha256": "512a4d57752de873f51840144e9885c19c9d73160dca635545111c5730c37e15"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_idle_display.gif": {
+          "bytes": 50028,
+          "sha256": "572ac7778de832e9dab3e1d105895774b6f9507e92b1e416a1dec2356f92c90d"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_master.png": {
+          "bytes": 1195,
+          "sha256": "977a422605d201fcb47f589e1778b0cc013fc7d5f8f71714701cada6964adbff"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_preview.png": {
+          "bytes": 12619,
+          "sha256": "7acf5b5051ab01fba61d652b97094a4ac9d92b8633cc77990edf7aae8e6b8d53"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_sheet.png": {
+          "bytes": 2218,
+          "sha256": "2a722dea49ddf12d5da1640a12a9b34acbeb4e25b9f6e33c3d416024b44b0bf5"
+        },
+        "skills/pixel-art-studio/pixel-art/tactical-verdant-oracle/tactical_oracle_silhouette.png": {
+          "bytes": 2053,
+          "sha256": "0ac9e74a3890da39666428989732023c5b18152a4c3c6d31b7c5d97956660d17"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_beam.gif": {
+          "bytes": 35453,
+          "sha256": "1373d93f7b626f89218f6c1e79f8f1f0ae4cfafe86bb5bc05e7058c98993d4ff"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_beam_display.gif": {
+          "bytes": 38491,
+          "sha256": "c9fced7febc24e30fe0ba61f206a725ad34ca1ddcf0dfaa00476e7456a5d826b"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_beam_preview.png": {
+          "bytes": 15244,
+          "sha256": "9b0310d8390be6f75490866fd141c012addb35198154192c39600ced37a6bcb3"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_beam_sheet.png": {
+          "bytes": 3380,
+          "sha256": "abd459f24059ee5749afe138935810758feb6f841941d4f9e7cab62a0c30f773"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_beam_silhouette.png": {
+          "bytes": 3439,
+          "sha256": "266d02deb943dc32dd0a3bc56bea6896c70228ba502ab7f0eea1348cb74f172d"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_display.png": {
+          "bytes": 4783,
+          "sha256": "82edc884e756e0928d0520e343520e031cfe7d4cc4db431e0903cd9be389bfff"
+        },
+        "skills/pixel-art-studio/pixel-art/tall-iron-man-repulsor/tall_iron_man_master.png": {
+          "bytes": 1457,
+          "sha256": "ba5b317234071b7af38e3c88a6db258995f14db25fe663e8531c773b14ce54c7"
+        }
+      },
+      "sha256": "c869c3352a05e2072d5ca312064157c62fbbefa4fcfa268964d3ad6c3838f9c7"
+    },
+    "scientific-toolkit": {
+      "asset": "aizee-media-scientific-toolkit.tar.gz",
+      "bytes": 1626323,
+      "file_count": 4,
+      "files": {
+        "skills/scientific-toolkit/references/scientific-skills/timesfm-forecasting/examples/anomaly-detection/output/anomaly_detection.png": {
+          "bytes": 217028,
+          "sha256": "c4b30e01bb01847c0eabf8367f28cd16368fd28e450c38c1cc089abb18672276"
+        },
+        "skills/scientific-toolkit/references/scientific-skills/timesfm-forecasting/examples/covariates-forecasting/output/covariates_data.png": {
+          "bytes": 458505,
+          "sha256": "24682a190ecae753d5531bce9841040709a64abb044bfb372bab34a6c7c17070"
+        },
+        "skills/scientific-toolkit/references/scientific-skills/timesfm-forecasting/examples/global-temperature/output/forecast_animation.gif": {
+          "bytes": 794231,
+          "sha256": "ca9bbbe3206a0c2c7da26e154a6a5661490f97a024ccb7a833f26fd96bd0e51b"
+        },
+        "skills/scientific-toolkit/references/scientific-skills/timesfm-forecasting/examples/global-temperature/output/forecast_visualization.png": {
+          "bytes": 156559,
+          "sha256": "d4b03c857b444842550fb711ee9951f0e5f159d52bbedebe4e8bbfe2d18bc2f5"
+        }
+      },
+      "sha256": "cf579f85a4faa5012ef47acd6178f224fd1c479491c1a04d74d10e6b7dd53340"
+    },
+    "taste-skill": {
+      "asset": "aizee-media-taste-skill.tar.gz",
+      "bytes": 27144954,
+      "file_count": 151,
+      "files": {
+        "skills/taste-skill/assets/components/fx-photo/meeting-room.jpg": {
+          "bytes": 203455,
+          "sha256": "57d3134650cb383238bc5f48b8a1e9292cb0607a901bb0499df90317f97541f4"
+        },
+        "skills/taste-skill/assets/layout/img/photo-1068.jpg": {
+          "bytes": 159463,
+          "sha256": "2456ed988c2799bc66f7bb9904949415fba52d44ed621d78b6e2784c18c71e8d"
+        },
+        "skills/taste-skill/assets/layout/img/photo-1081.jpg": {
+          "bytes": 219645,
+          "sha256": "3ca2a6949a7d01cfc2eb58efd6dbc846809712e7a64dc12dff2f758da2dbc632"
+        },
+        "skills/taste-skill/assets/layout/img/photo-465.jpg": {
+          "bytes": 95992,
+          "sha256": "fa08b3fafe24e1423392fa1fd31589d8d8f78df51c7244de9ae26fefeac085a0"
+        },
+        "skills/taste-skill/assets/layout/img/photo-559.jpg": {
+          "bytes": 340249,
+          "sha256": "cccc5d1036a93e2c2daa35efa6faa2bbaa9676d44f096a8cff7f4356e44d30a0"
+        },
+        "skills/taste-skill/assets/layout/img/photo-855.jpg": {
+          "bytes": 62206,
+          "sha256": "96b424292e69457980e378464e57474e5edd6904a6f4cb93dac4dfa52931f14b"
+        },
+        "skills/taste-skill/assets/layout/img/photo-887.jpg": {
+          "bytes": 148765,
+          "sha256": "decfa3666e934cea86105c1ee2dd33e7946fe12dd85347947ba6f0a453a2e6ef"
+        },
+        "skills/taste-skill/assets/layout/img/photo-949.jpg": {
+          "bytes": 141810,
+          "sha256": "7f8c5f5a8a34aae6a2ba26221b752845954d2a645d90ddb6c8363b142c9842a6"
+        },
+        "skills/taste-skill/assets/layout/img/photo-954.jpg": {
+          "bytes": 29012,
+          "sha256": "79e4b51610326c0c4a7815ffc9fc1535ac678bb26e899b784a8014e06ca891b9"
+        },
+        "skills/taste-skill/assets/layout/img/photo-beans-hand.jpg": {
+          "bytes": 76590,
+          "sha256": "2b71f9f715062e5b099fc328fcde581196c41d63f2bf977fad4dfc8e04af4892"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c166.jpg": {
+          "bytes": 307029,
+          "sha256": "2e2de2b28c1fa39ebe433b918b9cd775936fc52c7626b824fad8a43d31f3780a"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c400.jpg": {
+          "bytes": 438661,
+          "sha256": "48e57db8315ce7276db26c59a0c865d92bc9e320de706bbeaa47c8b9e1378900"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c7.jpg": {
+          "bytes": 164902,
+          "sha256": "f6e47992311e14ea7de8f83f15d6c47063adc61caf0902e033c4805f8f321d37"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c70.jpg": {
+          "bytes": 248908,
+          "sha256": "c5673af74a74a489c2b6606f8a6ed80f64e235a04cd9830877657d6134b76b2d"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c8.jpg": {
+          "bytes": 178191,
+          "sha256": "3485ec2ef58f4f5119742feece35df876ff4f842aeaa8ad665c20d092605ff44"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c823.jpg": {
+          "bytes": 388652,
+          "sha256": "6f810ec1f91505f522f880536704b85860f81b72ce79f7e190bebd836e32f0d5"
+        },
+        "skills/taste-skill/assets/layout/img/photo-c96.jpg": {
+          "bytes": 258281,
+          "sha256": "31737a53f30ee7c85243cfde7130fb115dc5b168c3bd3cddb42c60e685613f1a"
+        },
+        "skills/taste-skill/assets/layout/img/photo-d534.jpg": {
+          "bytes": 516491,
+          "sha256": "c02be5223c4426e832306364537fdee3c98cbbbaf3eb4e082f771587d2cf7996"
+        },
+        "skills/taste-skill/assets/layout/img/photo-d540.jpg": {
+          "bytes": 523701,
+          "sha256": "511c4307fd9f9136124e094dcc4a9c45b906d2c1601bb438a83af485396f82ef"
+        },
+        "skills/taste-skill/assets/layout/img/photo-d88.jpg": {
+          "bytes": 257459,
+          "sha256": "057c58ccc1fddd695a845ba875ed5cdf8ca7a82203323d9672a395eccc7b8b3e"
+        },
+        "skills/taste-skill/assets/layout/img/photo-m61660576.jpg": {
+          "bytes": 135132,
+          "sha256": "947c1c4c610184955fdbccc02ce7a08bbbd32f7becaf953bb39170acdb5dd5a0"
+        },
+        "skills/taste-skill/assets/layout/img/photo-m61757972.jpg": {
+          "bytes": 191833,
+          "sha256": "81512aa423181f437d9485067b1137b94bfb90003692fdb201a8910c119c2ad0"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-1049-tall.jpg": {
+          "bytes": 102277,
+          "sha256": "9f4e21b1aa92b69bac2966d0d9ede03293f1d84fdf99badbbe2e53ff8d7bfc80"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-1049.jpg": {
+          "bytes": 152098,
+          "sha256": "c648d381f9cf94ee6045ff4bfd75671d6765b6aaa3a342bc5073b3c8beea66da"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-1081.jpg": {
+          "bytes": 139715,
+          "sha256": "b534d67caef59cbe216b7ee0e80edd7782d6de3be0e6abb1e13de5fca2782ab9"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-640.jpg": {
+          "bytes": 492281,
+          "sha256": "9dcc04dde5eb78551b25ba61ffb048000d29d7545562efe42f10b1ee7cd05899"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-702-tall.jpg": {
+          "bytes": 305162,
+          "sha256": "d98eb78daa52af23c2c7ddbefbcfce0b3456229158dc491f783f0da3ff6a398c"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-702.jpg": {
+          "bytes": 441407,
+          "sha256": "bb9bd7408a1e563f617f7888794aea5c346e3959651203f8b3821235a9eed7a8"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-855.jpg": {
+          "bytes": 92222,
+          "sha256": "7170a9de65ec579fc39253ee5a8834aae3ceb5f484a0b9f21ce2174bc55acedd"
+        },
+        "skills/taste-skill/assets/moments/_demo/photo-887.jpg": {
+          "bytes": 279738,
+          "sha256": "8cd33fe74e5768a17fbe5affa26c8b0309c17a9c2bc263540f7fd66dc962f2c4"
+        },
+        "skills/taste-skill/assets/objects/photo-kit/photos/concrete.jpg": {
+          "bytes": 202086,
+          "sha256": "cf3c9d5095760798eb450585eefb6b0c3550210397b4011b9f2f2e9f2cdc49f3"
+        },
+        "skills/taste-skill/assets/objects/photo-kit/photos/lamp.jpg": {
+          "bytes": 257459,
+          "sha256": "057c58ccc1fddd695a845ba875ed5cdf8ca7a82203323d9672a395eccc7b8b3e"
+        },
+        "skills/taste-skill/assets/objects/photo-kit/photos/platform.jpg": {
+          "bytes": 114947,
+          "sha256": "f712ba1a13ce77ebd8c819111f8fe88d0a9b2d4aad36e1a1c2471c5d894e1a95"
+        },
+        "skills/taste-skill/assets/objects/photo-kit/photos/room.jpg": {
+          "bytes": 203455,
+          "sha256": "57d3134650cb383238bc5f48b8a1e9292cb0607a901bb0499df90317f97541f4"
+        },
+        "skills/taste-skill/assets/objects/print-cards/fallback-dark.png": {
+          "bytes": 36157,
+          "sha256": "12fd3a15d7f9fb255a90e5dd76edaeb271285e91afe80a07e300481c8015df96"
+        },
+        "skills/taste-skill/assets/objects/print-cards/fallback-render-dark.png": {
+          "bytes": 127037,
+          "sha256": "083b5f398c61d43313bfcc0003a10a532be3879c7a587b58cbf5d625ffe3ce1b"
+        },
+        "skills/taste-skill/assets/objects/print-cards/fallback-render.png": {
+          "bytes": 121604,
+          "sha256": "50ad30d41a7bb97e98a7c6c93d035b75cf3e3fa7487542716fa3a0cd07266ab0"
+        },
+        "skills/taste-skill/assets/objects/print-cards/fallback.png": {
+          "bytes": 43216,
+          "sha256": "f3b3925e0ede5972f26a4469f828a16fce192a11f44a260eaead4d86752f44a6"
+        },
+        "skills/taste-skill/assets/objects/print-cup/fallback-dark.png": {
+          "bytes": 98903,
+          "sha256": "5152c458f50b2535a0e875576f1bae6763f9f6798fe2ecd82b094980b915c738"
+        },
+        "skills/taste-skill/assets/objects/print-cup/fallback-render-dark.png": {
+          "bytes": 200477,
+          "sha256": "b9ce75a6b21d2d67fbb6e2cfbe02c1ac3f59e791240ad90b47700ee7c651a4cb"
+        },
+        "skills/taste-skill/assets/objects/print-cup/fallback-render.png": {
+          "bytes": 187508,
+          "sha256": "fb9b8560b664fd832aa0e10145e5e8579d506f711322fb4b73f064de67de3351"
+        },
+        "skills/taste-skill/assets/objects/print-cup/fallback.png": {
+          "bytes": 108553,
+          "sha256": "99cdd0c933f0c2840378012e72d96488e736280aca62ef3a0c4ed6439edfac4e"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-dark.png": {
+          "bytes": 101520,
+          "sha256": "6bb9ed72a7e0895feb6284ebd1c3dbeab6689da8b136b2aea29a90b349fd8be2"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-render-dark.png": {
+          "bytes": 212491,
+          "sha256": "52a64978b3c8a0c4591fea80c722f39d729ddf95046660ca01619a877351ceeb"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-render-sea-dark.png": {
+          "bytes": 212119,
+          "sha256": "99a2346bc6aaf607a5328e52b0a5cd73a0439c3d2d145e1d88905a375c11a16f"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-render-sea.png": {
+          "bytes": 217246,
+          "sha256": "7244b3501308cd3e3e0058c56ae6b9c2c0735a9071d3e164d7abd40f4990defe"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-render.png": {
+          "bytes": 216477,
+          "sha256": "8016808db4b668c47637eb7a94f97e13be13d282e8dcbabcd644d35f832524ec"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-sea-dark.png": {
+          "bytes": 100255,
+          "sha256": "a11a1aa23ef734da49e1ba17269e70dc9967f13c862f96b3fc655d4c2ca0cfc3"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback-sea.png": {
+          "bytes": 107585,
+          "sha256": "d34b6ef5b5dc88794d1d22724519f1e6736e9e957b4f71153cf9a8707ff4a7f1"
+        },
+        "skills/taste-skill/assets/objects/print-globe/fallback.png": {
+          "bytes": 109210,
+          "sha256": "f2ca31b80bc434e03c2f5c6c12c90395640479adc0f29814aa666a137e4f16bd"
+        },
+        "skills/taste-skill/assets/objects/print-lamp/fallback-dark.png": {
+          "bytes": 44123,
+          "sha256": "babc662fb30ced0248b17b359a185ad7248e1c76bbbcbcc622a7b14c4d2302b9"
+        },
+        "skills/taste-skill/assets/objects/print-lamp/fallback-render-dark.png": {
+          "bytes": 137425,
+          "sha256": "f8cbd17220e71dddf9b835c767d72a4457767d1e62088b664e33c63f0b235b81"
+        },
+        "skills/taste-skill/assets/objects/print-lamp/fallback-render.png": {
+          "bytes": 135318,
+          "sha256": "310e1d74c38176f0dd6ac462b9f320a515b2ace3bd0a95da0f73d71351f560c0"
+        },
+        "skills/taste-skill/assets/objects/print-lamp/fallback.png": {
+          "bytes": 55039,
+          "sha256": "ec1e3bc5bcb2011d7d5f2a83f81fc2d25a697e191a92305b8346e1529ebbb423"
+        },
+        "skills/taste-skill/assets/objects/print-wheel/fallback-dark.png": {
+          "bytes": 82016,
+          "sha256": "343faf63aee7a24c3d129f8fae6a50e5d8311eae858234758ad567cbd244f71d"
+        },
+        "skills/taste-skill/assets/objects/print-wheel/fallback-render-dark.png": {
+          "bytes": 292781,
+          "sha256": "67f516c8e34ffbcf44a90436811e922edc0ca860a90ecf887f7ed6b317733895"
+        },
+        "skills/taste-skill/assets/objects/print-wheel/fallback-render.png": {
+          "bytes": 295097,
+          "sha256": "96e7ed42394af4fb693ffe099f8144529ad72844748ea1f8317d48b82f2bdffa"
+        },
+        "skills/taste-skill/assets/objects/print-wheel/fallback.png": {
+          "bytes": 103486,
+          "sha256": "e24fd00d932b708119d4612119c1ee6f169a0961f6b9a508d250fab4917076c5"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/city-bike.fallback-dark.png": {
+          "bytes": 59576,
+          "sha256": "738624e3ae5e3b88ea2def6be848a45fb62f25cae8f4080229cd726f7b3e923a"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/city-bike.fallback-render-dark.png": {
+          "bytes": 265301,
+          "sha256": "dd12cb9aa3a21534771dcaba5862af391aac8444294a00e5e553682edfbaf8c7"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/city-bike.fallback-render.png": {
+          "bytes": 267032,
+          "sha256": "ac7b561f8fa2b228a9b6dbe347a8c3bfe60032bc84e8bef822960df8b29c403e"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/city-bike.fallback.png": {
+          "bytes": 82387,
+          "sha256": "91f0f92d9952e19532e64b1cee747523b3acf55eca51d865eec8a1852eccb8e7"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/desk-lamp.fallback-dark.png": {
+          "bytes": 56866,
+          "sha256": "e7a65f52b4e8f480e2fd48f90d2c2ce3e2b6340a24948d690af115ffd4cd73a1"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/desk-lamp.fallback-render-dark.png": {
+          "bytes": 116243,
+          "sha256": "30cd74e5cfe53456291887cbbc3e225530deccaa328ee425493dbe6d49e1afce"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/desk-lamp.fallback-render.png": {
+          "bytes": 115552,
+          "sha256": "531f61a2d89d28aaabd4fcbac44378f3b4b37c78220ab94624951ff42d815600"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/desk-lamp.fallback.png": {
+          "bytes": 54948,
+          "sha256": "feda63b34cc22fe159b63eff53e1aea812828dcee08070372fb6521001c078ba"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/robot-arm.fallback-dark.png": {
+          "bytes": 42015,
+          "sha256": "205d78db06bb7cc4e6b5eb7d636f8d45cbcdd2f9522ed6e978096cff0b3cb839"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/robot-arm.fallback-render-dark.png": {
+          "bytes": 116008,
+          "sha256": "3ab70bfaf32b3e878db325b8364b2140525f1b3b6003e838e18920a73546ac6b"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/robot-arm.fallback-render.png": {
+          "bytes": 109478,
+          "sha256": "33e0b28d4b22e6a8ccebb70b8d5cd6e88ce8d1dce2d4f0bd6e6b24220f6bfc13"
+        },
+        "skills/taste-skill/assets/objects/product-render/specs/robot-arm.fallback.png": {
+          "bytes": 62050,
+          "sha256": "1a3eb9f8ac827b4334e61c556e3d63a285642359aab134024b24cf825aba895e"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-camera-dark.png": {
+          "bytes": 9784,
+          "sha256": "b5dabc54fc94b38fad72764ed332dab62d86f7a4da386b2b1dea79add0f29f40"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-camera-light.png": {
+          "bytes": 9675,
+          "sha256": "55e7bd43afac4322d97f7ed7de7f2635d4bf710a3ea37efac2092a76133d69d1"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-chair-dark.png": {
+          "bytes": 6771,
+          "sha256": "24690ef0bf01bdb1c66d704700637034fd3b408de78b858aec1a3e926c97bcf5"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-chair-light.png": {
+          "bytes": 6855,
+          "sha256": "1a159a5f612523acf76729bc1f142342c9bd2a5dea2c07bb5c29bc194e3444fb"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-cup-dark.png": {
+          "bytes": 10167,
+          "sha256": "8dd414956e718bff22954a568688c8f8f34d44ab94a4b967966ac3b7dde29317"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-cup-light.png": {
+          "bytes": 9701,
+          "sha256": "254cc789c91ddc3232f92d22a5df2b59c641c66a0e9c369daf7ca591acafa89f"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-speaker-dark.png": {
+          "bytes": 7736,
+          "sha256": "7e29333d1207e7f71abb8a42adbcb914afef7a9c46a4cdc8c5ebe36c9a09f8c3"
+        },
+        "skills/taste-skill/assets/objects/product-turntable/fallback-speaker-light.png": {
+          "bytes": 7927,
+          "sha256": "6d620d9356e1df05957e5fb439d08cd06882e2839e545c01f7bdcb30219fc4bd"
+        },
+        "skills/taste-skill/assets/photos/img/m108358720-1200.webp": {
+          "bytes": 71456,
+          "sha256": "c59430de2539023213db1253c34e4f6e52b2fcb088f18d5e9caf1e35afd2d3af"
+        },
+        "skills/taste-skill/assets/photos/img/m108358720-2400.webp": {
+          "bytes": 248902,
+          "sha256": "b1056ae86a7f60a86b03bd27d96437c5997344f01df6c3fcd5a5ea0f020184f7"
+        },
+        "skills/taste-skill/assets/photos/img/m111881197-1200.webp": {
+          "bytes": 39382,
+          "sha256": "bbae9dbffaf506064cb56e4deca4ed2852ed6cb36854294271bd8b012c0e1719"
+        },
+        "skills/taste-skill/assets/photos/img/m111881197-2400.webp": {
+          "bytes": 120468,
+          "sha256": "dc0264a7e7fc3d81228ba93a5da58e69048d1d692506091ed5c8130b575e1508"
+        },
+        "skills/taste-skill/assets/photos/img/m11317510-1200.webp": {
+          "bytes": 120974,
+          "sha256": "770e5e8f895826c4ee7d23cc94be4c2ffd6fe1f879e4fdb7a03784d1ed4fa376"
+        },
+        "skills/taste-skill/assets/photos/img/m11317510-2400.webp": {
+          "bytes": 343782,
+          "sha256": "767d694051d6f4ab3d5711b3207659630342f3a182c3ebd7a46e4679b77c9268"
+        },
+        "skills/taste-skill/assets/photos/img/m113462760-1200.webp": {
+          "bytes": 93486,
+          "sha256": "5646ba4530af07677f2ed426556cc47c195ed0e0b319f6be59bbee710588d459"
+        },
+        "skills/taste-skill/assets/photos/img/m113462760-1800.webp": {
+          "bytes": 168502,
+          "sha256": "30e6431da9cd457c7cb132fa6aa2f695374cb412dc8a5ca174beb358a2529839"
+        },
+        "skills/taste-skill/assets/photos/img/m113462760-2400.webp": {
+          "bytes": 387914,
+          "sha256": "952febd10514948046083fffb4271f8a8b2d09c66e55b22d9d99f830cf4ca91b"
+        },
+        "skills/taste-skill/assets/photos/img/m117663639-1200.webp": {
+          "bytes": 53248,
+          "sha256": "ffee400b921f4abac2f410b753d88c4919911586c3b0ca4451b7ff086e709e94"
+        },
+        "skills/taste-skill/assets/photos/img/m117663639-2400.webp": {
+          "bytes": 147318,
+          "sha256": "173d0df011d2eab0dd02df7836a0f4fb2156b2417bc93ef1c2073239be8fce93"
+        },
+        "skills/taste-skill/assets/photos/img/m130857602-1200.webp": {
+          "bytes": 79288,
+          "sha256": "5d5fbfeb52d2985ccfbf680187dabb8c525d3f8baa8db3cb34b3b92d9ed5668f"
+        },
+        "skills/taste-skill/assets/photos/img/m130857602-1800.webp": {
+          "bytes": 104238,
+          "sha256": "614407524e9e33f78827586d4c2ff28640a3d12550bd09f8056456332beba6b0"
+        },
+        "skills/taste-skill/assets/photos/img/m130857602-2400.webp": {
+          "bytes": 202610,
+          "sha256": "0b7d1515c20ac48df818d02eb96c8b4963033d46690d9c6d1e4d6c729f9f66bf"
+        },
+        "skills/taste-skill/assets/photos/img/m138226685-1200.webp": {
+          "bytes": 65280,
+          "sha256": "54331d3f96541ab8d79f0378176f3d0b11b5b8b273d34377d8185163760c038b"
+        },
+        "skills/taste-skill/assets/photos/img/m138226685-1800.webp": {
+          "bytes": 87280,
+          "sha256": "2aab7bac7cdbf1b93afe8214d81a7fba3c917e794a560c3fd414b4bbb6f611f5"
+        },
+        "skills/taste-skill/assets/photos/img/m138226685-2400.webp": {
+          "bytes": 159154,
+          "sha256": "39a251c92e8426c2e165622aacddd11c0af21d3d2fe60e6d3da773130796401f"
+        },
+        "skills/taste-skill/assets/photos/img/m138226686-1200.webp": {
+          "bytes": 62236,
+          "sha256": "be985b73b1cb39fcaa04ad09d07cca883d04249570a091887ae42c9c70b8528f"
+        },
+        "skills/taste-skill/assets/photos/img/m138226686-1800.webp": {
+          "bytes": 86832,
+          "sha256": "7ef2d6bf2f3000b890ea874f31a49d89edd41bf7b5eadf4be043c23193118fa8"
+        },
+        "skills/taste-skill/assets/photos/img/m138226686-2400.webp": {
+          "bytes": 178248,
+          "sha256": "dcf1c6bdb559cd3a7b98f29adf9e241d11068e284c9146ac9b65b4a1ef616c17"
+        },
+        "skills/taste-skill/assets/photos/img/m138547195-1200.webp": {
+          "bytes": 56256,
+          "sha256": "276fc688bc4015a83110c32219ecd6ec9c2c897039519fd32090f09122f37732"
+        },
+        "skills/taste-skill/assets/photos/img/m138547195-2400.webp": {
+          "bytes": 161652,
+          "sha256": "748e01223c01ff149026e9e94b3b9732231dd9ab92c9d7a08533a969694d10fe"
+        },
+        "skills/taste-skill/assets/photos/img/m147143894-1200.webp": {
+          "bytes": 54522,
+          "sha256": "8c2c43e7cccb9e3580c716a0e551fac3165805f460dac441e74c8c0fdd5edde0"
+        },
+        "skills/taste-skill/assets/photos/img/m147143894-1800.webp": {
+          "bytes": 75470,
+          "sha256": "1e93ee38a508b64bbc2c0bf4b1964244cd277bdcc5482c008f082e650748c090"
+        },
+        "skills/taste-skill/assets/photos/img/m147143894-2400.webp": {
+          "bytes": 147598,
+          "sha256": "10e8f7a76408ec34ff991401870ecb603934f00653efc4f87d39a57285c72d90"
+        },
+        "skills/taste-skill/assets/photos/img/m147143898-1200.webp": {
+          "bytes": 25532,
+          "sha256": "5fc7222ede4c4253f2ee7fe54b79deac234ef5191d3e487cc59bec740dbd1de6"
+        },
+        "skills/taste-skill/assets/photos/img/m147143898-2400.webp": {
+          "bytes": 73388,
+          "sha256": "cc4b20181e54c53489e9950c06979c95d919f191fcdc391f748692c0d8bb7f21"
+        },
+        "skills/taste-skill/assets/photos/img/m155271467-1200.webp": {
+          "bytes": 191232,
+          "sha256": "679c176d97fe7a58d803825a3396899c96b6cda4f18f258d13f30c691c7bbc80"
+        },
+        "skills/taste-skill/assets/photos/img/m155271467-2400.webp": {
+          "bytes": 544292,
+          "sha256": "3fe6c312c25ca8702483776f80e0dad0aa6a73c254fac36dba95c8b83e6d578e"
+        },
+        "skills/taste-skill/assets/photos/img/m162973523-1200.webp": {
+          "bytes": 162498,
+          "sha256": "8d8c63c23c782c2101312b95c62564d4b5c6703fa8999b444f793a7edd0e59d9"
+        },
+        "skills/taste-skill/assets/photos/img/m162973523-2400.webp": {
+          "bytes": 467412,
+          "sha256": "6bd56d4abbea64ff8220f91ed489bdf864f74d5131670bd5c82500c8758e3db9"
+        },
+        "skills/taste-skill/assets/photos/img/m164989354-1200.webp": {
+          "bytes": 52168,
+          "sha256": "7cc9b766a1fda9034a86174e498d7424478d20d2e327f8b35b73c15b6ee5a9c9"
+        },
+        "skills/taste-skill/assets/photos/img/m164989354-2400.webp": {
+          "bytes": 159484,
+          "sha256": "7590b3ff12b986c69370a6c74fc1ac639c644e4a4458fdd9120b227d785db305"
+        },
+        "skills/taste-skill/assets/photos/img/m175976897-1200.webp": {
+          "bytes": 62950,
+          "sha256": "f13d7955d1d995c54d76caa11d2febf31053792b2d390182cd3bcb1da4513bbf"
+        },
+        "skills/taste-skill/assets/photos/img/m175976897-2400.webp": {
+          "bytes": 231144,
+          "sha256": "9d1c5238734ad00456ec174f46188aba9de3ea359a582229c2eb36634521fa03"
+        },
+        "skills/taste-skill/assets/photos/img/m179564041-1200.webp": {
+          "bytes": 93354,
+          "sha256": "52a4c07e98aed2c5f51488f99a01c10c6b6b2d1999eb30ecb54c0da8328ab4f5"
+        },
+        "skills/taste-skill/assets/photos/img/m179564041-1800.webp": {
+          "bytes": 128784,
+          "sha256": "cceaffed98b645f5b39ac6ac48c80cf69db87b4dbe0811627c0022007f46eed6"
+        },
+        "skills/taste-skill/assets/photos/img/m179564041-2400.webp": {
+          "bytes": 216358,
+          "sha256": "4cb2e602dc24a7697d0d4990cb7c835a4a6ac5fe64a84f8b5633ec3fcd0b302c"
+        },
+        "skills/taste-skill/assets/photos/img/m183016636-1200.webp": {
+          "bytes": 107188,
+          "sha256": "7cafdab78b6596ca1d6d8247270547f1c5d5799ca441572416d1a4b7747f936b"
+        },
+        "skills/taste-skill/assets/photos/img/m183016636-2400.webp": {
+          "bytes": 256332,
+          "sha256": "6da9bb49c06c15b999516abc22bc1a80825cc69897cbe3a9d982ee64fe90fcfc"
+        },
+        "skills/taste-skill/assets/photos/img/m187311853-1200.webp": {
+          "bytes": 47302,
+          "sha256": "c53dc54e345f2171f4dc7b87c04941d7cee48f3e9d45053e797e48daa45df0e2"
+        },
+        "skills/taste-skill/assets/photos/img/m187311853-2400.webp": {
+          "bytes": 131736,
+          "sha256": "fc08db0206e7a5c4ff95503ef88cca967a17b4d0c07b6a95502604b6ae44d56e"
+        },
+        "skills/taste-skill/assets/photos/img/m19113721-1200.webp": {
+          "bytes": 47752,
+          "sha256": "ad10b7c0184be595d9cd1eb9b062bba8aff27d58f35792d7203d3319c5012b43"
+        },
+        "skills/taste-skill/assets/photos/img/m19113721-1800.webp": {
+          "bytes": 66150,
+          "sha256": "1cb9f5b48b2969544c766aeaa6f6062131d82d63ffdcb221238694dbdaee2505"
+        },
+        "skills/taste-skill/assets/photos/img/m19113721-2400.webp": {
+          "bytes": 126194,
+          "sha256": "f34144471677ac8fa54c23c21f11913c4105dd8b455e3041ab9291a4c0ba2c12"
+        },
+        "skills/taste-skill/assets/photos/img/m19113729-1200.webp": {
+          "bytes": 79348,
+          "sha256": "c9d4449fa00c1a7e301cdde29b2ffcad0c05dd583ec3571af05022d38a8bcdba"
+        },
+        "skills/taste-skill/assets/photos/img/m19113729-2400.webp": {
+          "bytes": 201118,
+          "sha256": "265c6aa473a69b7bb62fcb637c8d8e202351ecbc8d359833874b0cdbec9af770"
+        },
+        "skills/taste-skill/assets/photos/img/m21913761-1200.webp": {
+          "bytes": 83626,
+          "sha256": "b00f24e01cf651c3f78c97b8adc3d8241a0604909755e3e939f9fae1daa45e2d"
+        },
+        "skills/taste-skill/assets/photos/img/m21913761-2400.webp": {
+          "bytes": 276024,
+          "sha256": "b1343f887ce212a310c6981f09f6d8f3675dfa677ed740710664b28169411f37"
+        },
+        "skills/taste-skill/assets/photos/img/m28989985-1200.webp": {
+          "bytes": 48514,
+          "sha256": "3d90f6844bf594bbe04969244e5cbe0f17ac736fa4e222c203d12dcabea0b7e5"
+        },
+        "skills/taste-skill/assets/photos/img/m28989985-2400.webp": {
+          "bytes": 125252,
+          "sha256": "8d9b8abbcee2c3ee9b03868861ac6c0066ec4e78e3065f86c3ed5c1fe1ed3aa5"
+        },
+        "skills/taste-skill/assets/photos/img/m33603558-1200.webp": {
+          "bytes": 152512,
+          "sha256": "4f7f6fd937d3b9ab8610248ebc6f6e12eb6db8ee4bb426105c1ae9428079dc1a"
+        },
+        "skills/taste-skill/assets/photos/img/m33603558-2400.webp": {
+          "bytes": 505560,
+          "sha256": "1ab4dd3b2d284ce2f9bbc6c9ef824f46f7de91070f48da132fcf999078801112"
+        },
+        "skills/taste-skill/assets/photos/img/m33603672-1200.webp": {
+          "bytes": 77978,
+          "sha256": "f294116db467b29f8859b26f84080986dad4d09dff7207853399de9d0cf2b9ac"
+        },
+        "skills/taste-skill/assets/photos/img/m33603672-1800.webp": {
+          "bytes": 106954,
+          "sha256": "0a9cb4d8959e709e5ea31593d1b05c3bd82f3ef5cc2c46027f59703f27d7f4f4"
+        },
+        "skills/taste-skill/assets/photos/img/m33603672-2400.webp": {
+          "bytes": 224788,
+          "sha256": "66bdd7dc231c49060c25a8b88d4488c77a2d7a5f2b02a07335c3425e365cf4f7"
+        },
+        "skills/taste-skill/assets/photos/img/m37164269-1200.webp": {
+          "bytes": 226946,
+          "sha256": "8a5d25aaddf584799e9a00d9e2744f403c90ca09415a02fe90b7612711b3244e"
+        },
+        "skills/taste-skill/assets/photos/img/m37164269-2400.webp": {
+          "bytes": 772450,
+          "sha256": "808eea3896b3d7ddfa470ca25b3b9b44c42013a71b94598046aff68f31bc4ec0"
+        },
+        "skills/taste-skill/assets/photos/img/m40088587-1200.webp": {
+          "bytes": 241182,
+          "sha256": "56545ef0b67316113fbc0195db45a69676f5dfa105dc04ae96b7821a2a8ce39c"
+        },
+        "skills/taste-skill/assets/photos/img/m40088587-1600.webp": {
+          "bytes": 382496,
+          "sha256": "91b1007a1f8d8c1bb776376e93a69f8d78c197572c6239eef194cd8b929e680f"
+        },
+        "skills/taste-skill/assets/photos/img/m41582884-1200.webp": {
+          "bytes": 147736,
+          "sha256": "cf03d64d0b1cc444ae12201eae91938b289f540c933efd9b551065e38a644e6a"
+        },
+        "skills/taste-skill/assets/photos/img/m41582884-2400.webp": {
+          "bytes": 469752,
+          "sha256": "a3db3f58b6e658fb46f631fb49310a1c6a285cfa9db097f7988fbd8aff4ffd7a"
+        },
+        "skills/taste-skill/assets/photos/img/m44931831-1200.webp": {
+          "bytes": 187982,
+          "sha256": "97abed201d66f7fdc8d732c4a1eeac50d73122d5ff27a3a1367b3ccc268ec3e7"
+        },
+        "skills/taste-skill/assets/photos/img/m44931831-2400.webp": {
+          "bytes": 671448,
+          "sha256": "a52a5ad4dd61aee01f0d311a6b60460cec26511d42633a4572ddd08575fe2573"
+        },
+        "skills/taste-skill/assets/photos/img/m94781083-1200.webp": {
+          "bytes": 69116,
+          "sha256": "c3cb836db5ea03317537f0d968ff3eb670668ea2e1ce101d69b7e88ba4b6c334"
+        },
+        "skills/taste-skill/assets/photos/img/m94781083-2400.webp": {
+          "bytes": 183638,
+          "sha256": "195a018a52c0ddae5efa540c87afcb185547422710ee076ec8be343e87abfac1"
+        },
+        "skills/taste-skill/assets/scenes/_demo/cards.png": {
+          "bytes": 315913,
+          "sha256": "a75b406e3cbe5b66fa0351dc7083365ea67563eeaec4cd068a2fe653f2b78a6a"
+        },
+        "skills/taste-skill/assets/scenes/_demo/concrete.jpg": {
+          "bytes": 202086,
+          "sha256": "cf3c9d5095760798eb450585eefb6b0c3550210397b4011b9f2f2e9f2cdc49f3"
+        },
+        "skills/taste-skill/assets/scenes/_demo/globe.png": {
+          "bytes": 383506,
+          "sha256": "c2a5c9845995a0e5c9799f49b95b707d6a58d01c81afea6c02813b0d32a76094"
+        },
+        "skills/taste-skill/assets/scenes/_demo/photo-507.jpg": {
+          "bytes": 202511,
+          "sha256": "a5e48e442dcee9fff114f1a1a503f003ee5b8294d320761df819c9e3ed1c6845"
+        },
+        "skills/taste-skill/assets/scenes/_demo/photo-809.jpg": {
+          "bytes": 115540,
+          "sha256": "590ed42324df24ae890bf5c00f0f6c2bd2d4bc90bce8dda070b4277489633880"
+        },
+        "skills/taste-skill/assets/scenes/_demo/photo-c391.jpg": {
+          "bytes": 870090,
+          "sha256": "8f399758f0dd3cf7368185abd4877042be7e5e9062f72cd9c652f3e8559c1c6b"
+        },
+        "skills/taste-skill/assets/scenes/_demo/photo-c393.jpg": {
+          "bytes": 682553,
+          "sha256": "243c7e17f237a99760971b4cf9483ecf7260ac26857233970df8fed1f27dd69f"
+        }
+      },
+      "sha256": "8f65e9cba8ce19592b72bb1d309f6ee602b6e7b67e2a8750db00f28ea186d65f"
+    }
+  },
+  "version": 1
+}

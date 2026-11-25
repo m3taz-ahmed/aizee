@@ -6,16 +6,16 @@
 
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI status"></a>
-    <img src="https://img.shields.io/badge/Version-6.14.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.14.0">
-    <img src="https://img.shields.io/badge/Tests-8160%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8160 passed">
+    <img src="https://img.shields.io/badge/Version-6.15.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.15.0">
+    <img src="https://img.shields.io/badge/Tests-8234%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8234 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-248-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="248 Skills">
+    <img src="https://img.shields.io/badge/Skills-354-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="354 Skills">
     <img src="https://img.shields.io/badge/Workflows-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 Workflows">
-    <img src="https://img.shields.io/badge/Tech--Stack-271-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="271 Tech-Stack refs">
+    <img src="https://img.shields.io/badge/Tech--Stack-281-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="281 Tech-Stack refs">
   </p>
   <p>
     <a href="https://www.producthunt.com/products/aizee?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-aizee" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1328676&theme=light" alt="aizee - The policy layer that governs what AI coding agents may do | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
@@ -422,7 +422,7 @@ one command that fixes it.
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 157 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 159 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -439,7 +439,7 @@ one command that fixes it.
 ├── deps.yaml                # External dependency manifest (check/install)
 ├── workflows/               # 70 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
-├── tech-stack/              # 271 version-locked stack references
+├── tech-stack/              # 281 version-locked stack references
 ├── dashboard/               # Web dashboard (Python stdlib HTTP)
 ├── scripts/                 # Installers, validators, MCP wrappers
 ├── install.ps1 / install.sh # Idempotent OS installer
