@@ -32,27 +32,65 @@ license: MIT
 
 
 
-## Cold Start
+## Cold Start (lean — load on demand, not at boot)
 
-1. Read `global-roles.md`, `global-workflow.md`, and `Memory.md`.
+1. Read `Memory.md` (hot file — newest ~5 milestones). `Memory-archive.md` holds older history — read it only when the task needs it.
 
-2. Detect personas with `aizee persona detect --multi` and load the returned `skills/` before acting.
+2. Pick the persona semantically from the **Persona Menu** below — no CLI call needed. Load ONLY the primary persona's `skills/<skill>.md` (or `skills/<skill>/SKILL.md`). Read a lord file ONLY when the active sub-task genuinely enters that lord's domain; the same for secondary personas — adopt the lens, load their skill file on demand.
 
-   **Persona switch directive (mandatory):** If the user message STARTS with a persona command — `#انتحل`, `/انتحل`, `#reset`, `/reset`, `#persona`, `/persona`, `#redetect`, `#switch` (or Arabic `#شخصيات`, `/شخصيات`, `#بدّل`, `/بدّل`, `#حالة`, `/حالة`, `#مين`, `/مين`, `#معلومات`, `/معلومات`) — strip the command token, then run `aizee persona detect --multi "<remaining text>"` and **ADOPT** the returned primary + secondary personas and load their `skills/` + `lords/` before acting. For status commands (`#حالة`, `/status`, `#مين`, `/معلومات`) print the currently active persona set instead of acting. This makes persona adoption explicit and verifiable; never silently ignore these commands.
+   **Persona switch directive (mandatory):** If the user message STARTS with a persona command — `#انتحل`, `/انتحل`, `#reset`, `/reset`, `#persona`, `/persona`, `#redetect`, `#switch` (or Arabic `#شخصيات`, `/شخصيات`, `#بدّل`, `/بدّل`, `#حالة`, `/حالة`, `#مين`, `/مين`, `#معلومات`, `/معلومات`) — strip the token, choose from the Persona Menu semantically, announce `persona → <CODE> — <one-line reason>`, load the primary skill file, and act. For status commands (`#حالة`, `/status`, `#مين`, `/معلومات`) print the currently active persona set instead of acting. The adopted set persists for the session until a switch command or a clearly different domain; never silently ignore these commands.
 
-   **Low-confidence escalation (mandatory):** If the detection result shows `"low_confidence": true` (all keyword scores were 0 — the returned persona is a silent default fallback, NOT a real match), do NOT adopt the default blindly. Run `aizee persona catalog` (JSON: code + name + skill + lords + keywords per persona — works from any install, no file paths needed), choose the best persona(s) yourself from the full prompt semantics, announce `detector fallback → semantic override: <PERSONA> — <one-line reason>`, and adopt that persona's `skills/` + `lords/` instead. The keyword detector is a pre-pass; the model's read of the prompt is the arbiter when it fails.
-
-   **Ordering arbitration (mandatory for multi-persona results):** Scores rank by keyword COUNT, not intent — a persona can outscore simply because its domain owns more keywords. When `personas` returns 2+ entries, check the primary against the user's actual first/main ask; if the intent order differs, re-rank and announce `order override: <old> → <new> — <one-line reason>` before adopting. Secondary personas are supporting lenses, not a lesser authority — all returned `skills`/`lords` load equally; only the lead framing changes.
+   **Ambiguity escalation:** when 2+ personas are genuinely tied, either pick the closest and note it, or ask the user once — do NOT run a detection pipeline. `aizee persona detect --multi` remains available for explicit verification (`#redetect --cli`) and audits only; its keyword ranking is a fallback, never the default path.
 
 3. If the current project has `spec.md`, read it before any action.
+
+4. `global-roles.md`, `global-workflow.md`, `manifest.json`, `rules/*.md`, `ACTIVE_CONTEXT.md` — load ONLY when the task calls for them (role governance, workflow routing, vocabulary, prior project state). They are NOT boot-time reads.
+
+## Persona Menu
+
+29 personas. Pick by domain hints; the skill file lists its own lords by name — load them on demand only. Regenerate this table from `aizee persona catalog` after persona registry changes.
+
+| Code | Primary skill | Domain hints | Lords |
+|------|---------------|--------------|-------|
+| ARCH | ai-agents-architect | architecture, scalability, system design, microservices, distributed | 17 |
+| QA | qa-debugger | test, testing, coverage, pytest, unit test | 8 |
+| UX | frontend-ui-expert | ui, ux, design, user journey, prototype | 9 |
+| DEV | backend-api-expert | backend, api, server, database, crud, feature | 12 |
+| SRE | sre | cloud, aws, gcp, azure, kubernetes, k8s | 9 |
+| SEC | security-auditor | security, vulnerability, zero trust, auth | 12 |
+| GAME | game-architect | game, game loop, gameplay, render, babylon | 6 |
+| PLAY | google-play-warlord | google play, play console, play store, aab | 0 |
+| MOBILE | mobile-game-producer | mobile game, mobile app, fastlane, anti cheat | 4 |
+| DATA | data-engineer | data, database, sql, etl, analytics, pipeline | 3 |
+| ML | ml-engineer | machine learning, model, training, inference | 9 |
+| DEVOPS | devops-engineer | devops, cicd, pipeline, jenkins, github actions | 9 |
+| API | api-architect | api, rest, graphql, integration, api gateway | 5 |
+| LEGAL | legal-compliance | gdpr, compliance, privacy, legal, regulatory | 1 |
+| PRODUCT | product-manager | requirements, user story, roadmap, backlog | 0 |
+| DOC | technical-writer | documentation, readme, api docs, changelog | 2 |
+| PERF | performance-engineer | performance, profiling, latency, benchmark | 4 |
+| CV | cv-writer | cv, resume, curriculum vitae, ats | 2 |
+| FREELANCE | freelance-platforms | freelance, upwork, fiverr, mostaql | 5 |
+| DEVX | context-compressor | developer experience, dx, cli, tooling, devtools | 5 |
+| MLOPS | ml-engineer | mlops, model deployment, model registry, serving | 8 |
+| FINOPS | finops | cloud cost, cost optimization, billing, budget | 3 |
+| MARKETING | marketing-strategy | marketing, digital marketing, campaign, growth | 3 |
+| GROWTH | growth-loops | growth hacking, viral, referral, plg | 2 |
+| BRAND | brand-kit | brand, identity, positioning, voice, logo | 2 |
+| EMAIL | email-marketing | email, newsletter, drip, mailchimp, brevo | 1 |
+| SOCIAL | social-media-marketing | social media, instagram, tiktok, facebook | 2 |
+| CRO | cro-optimization | cro, conversion, a/b test, landing page | 2 |
+| SALES | b2b-cold-outreach | lead gen, cold email, outreach, b2b | 2 |
 
 
 
 ## Runtime Gate
 
-- Route every action through `runtime/kernel.py`.
+- Route CONSEQUENTIAL actions through `runtime/kernel.py`: destructive ops, external side effects (push, publish, payments, messages), paid/budget actions, and multi-step orchestration plans.
 
-- Use `aizee check <action> --args '{"tokens":N}'` or `Kernel.act` to validate policy + budget.
+- Use `aizee check <action> --args '{"tokens":N}'` or `Kernel.act` to validate policy + budget — one check per ACTION BATCH (a group of related calls), not per individual call.
+
+- Routine local reads, searches, and in-session file edits run UNGATED — do not spawn a CLI call per operation.
 
 - No destructive action without explicit user approval.
 
@@ -83,7 +121,7 @@ Every built-in capability below is installed and verified. Prefer the matching c
 
 **Event-triggered rules (fire without being asked):**
 
-- When a task's domain matches none of the loaded persona skills → run `aizee find <task description>` before implementing; 248 skills + 70 workflows are indexed (name + triggers + description) even when not persona-mapped.
+- When a task's domain matches none of the loaded persona skills → run `aizee find <task description>` before implementing; 354 skills + 84 workflows are indexed (name + triggers + description) even when not persona-mapped.
 - When the user references a standing/recurring task ("تابع X", "check X again", "follow up", a named routine) → run `aizee routine match "<message>"` before asking for context; ambiguous → present candidates, never guess.
 - After adding/installing a skill → run `aizee skill lock-update`, then `aizee skill lock-check`.
 - After changing an MCP server config → run `aizee mcp freeze <server> --check`.
@@ -95,11 +133,11 @@ Every built-in capability below is installed and verified. Prefer the matching c
 
 - Detect stack from `package.json` / `composer.json` and load matching `tech-stack/<pkg>-<ver>.md` only after reading the lockfile for the exact version (`[VER-01]`).
 
-- If `graphify-out/graph.json` exists, use `graphify query` or `query_graph` (MCP); never raw grep.
+- If `graphify-out/graph.json` exists, prefer `graphify query` / `query_graph` (MCP) for architecture, dependency-path, and "where is X used" questions. Direct grep/read is fine for known targets and small lookups — graphify is not a gate on every search.
 
 - Query Context7 MCP for external libraries/frameworks before implementation; use `aizee_mcp/aizee_server.py` for global context.
 
-- Run `aizee memory ingest` when `rules/`, `tech-stack/`, or `workflows/` change; update `Memory.md` via `workflows/17-memory-sync.md` after every milestone.
+- Run `aizee memory ingest` when `rules/`, `tech-stack/`, or `workflows/` change; update `Memory.md` via `workflows/17-memory-sync.md` after every milestone (keep it hot — archive overflow to `Memory-archive.md`).
 
 
 
@@ -386,7 +424,7 @@ If behavior is unclear:
 
 1. Prefer aiZee spec (`spec.md`) and existing code behavior
 
-2. Then `Memory.md` for historical context
+2. Then `Memory.md` for recent context, `Memory-archive.md` for history
 
 3. Then `global-roles.md` / `global-workflow.md` for governance rules
 

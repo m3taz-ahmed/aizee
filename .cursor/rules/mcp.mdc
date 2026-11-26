@@ -1,14 +1,8 @@
----
-description: MCP usage. Context7 for docs, graphify for codebase.
-globs: []
-alwaysApply: true
----
-
 [FILE] mcp.mdc
 [OBJ] MCP and external tool protocol.
 [RULES]
 1. [REQ] Query Context7 MCP before writing external library/framework code.
 2. [REQ] Use `resolve-library-id` then `get-library-docs` with full user question.
-3. [REQ] Use graphify MCP for codebase exploration before raw grep/read.
+3. [REQ] Use graphify MCP for architecture/dependency questions when `graphify-out/graph.json` exists — not a gate on every grep/read.
 4. [REQ] If aiZee MCP server is running, route all tool calls through it.
 5. [PROHIBIT] Do not use Context7 for refactoring, debugging business logic, or code review.

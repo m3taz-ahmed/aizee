@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [Unreleased]
+
+- **Lean context boot** — collapsed the duplicated aiZee bootloader into a single canonical `AGENTS.md`; all adapter files (`.cursor/rules/aizee.mdc`, `.windsurfrules`, `.claude/CLAUDE.md`, `.clinerules/aizee.md`, `.github/copilot-instructions.md`, `.aider.conf.yml`) are now ~1 KB thin pointers, and `scripts/sync-agent-configs.py` emits pointers so adapters can never re-inflate. ~124 KB of injected duplication removed per session; global rules files no longer tax non-aiZee projects.
+- **Semantic persona adoption** — embedded 29-persona menu in `AGENTS.md`; agents pick the persona directly and load only the primary skill file with lords on demand, ending bulk lord loads (up to 17 files per adoption) and the 75 KB catalog fallback read. `aizee persona detect` remains for explicit verification (`#redetect --cli`).
+- **Memory split** — `Memory.md` capped to a ~15 KB hot file (newest ~5 milestones); older history moved to `Memory-archive.md` (on-demand). Cold-start memory read drops ~90%.
+- **Scoped gates** — kernel `check` now covers consequential actions batched per group instead of spawning a CLI call per operation; graphify applies to architecture/dependency questions rather than every search; `manifest.json`, `global-roles`, and `rules/*` load on demand instead of at boot. `.aider.conf.yml` repaired — it appended raw markdown after the YAML keys and was unparseable.
+
+
 ## [6.15.1] - 2026-11-25 (CI validation hotfix)
 
 - **CI validation hotfix** — `validate-globals` now treats gitignored maintainer-local prompt/routine/research ledgers as intentional external artifacts instead of broken clean-clone references, fixing the Linux CI false positive after v6.15.0. `aizee ci` failure diagnostics preserve leading `ERROR:` lines before the output tail so validator failures are visible instead of truncated away.

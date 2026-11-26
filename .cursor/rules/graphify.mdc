@@ -1,17 +1,10 @@
----
-description: Graphify knowledge graph first. Use before grep/read.
-globs: []
-alwaysApply: true
----
-
 [FILE] graphify.mdc
 [OBJ] Knowledge graph orientation rule.
 [RULES]
-1. [REQ] If `graphify-out/graph.json` exists, use graphify BEFORE raw grep/read.
+1. [REQ] If `graphify-out/graph.json` exists, prefer graphify for architecture, dependency-path, and "where is X used" questions — it is NOT a gate on every search; direct grep/read is fine for known targets and small lookups.
 2. [CMD] `graphify query "<question>"` for architecture/codebase questions.
 3. [CMD] `graphify path "<A>" "<B>"` for dependency paths.
 4. [CMD] `graphify explain "<concept>"` for related concepts.
-5. [REQ] Include this rule in every subagent prompt doing code exploration.
-6. [CMD] If `graphify-out/wiki/index.md` exists, navigate it.
-7. [CMD] Read `graphify-out/GRAPH_REPORT.md` only when query/path/explain fail.
-8. [CMD] Run `graphify update .` after any code edit.
+5. [CMD] If `graphify-out/wiki/index.md` exists, navigate it.
+6. [CMD] Read `graphify-out/GRAPH_REPORT.md` only when query/path/explain fail.
+7. [CMD] Run `graphify update .` after any code edit.
