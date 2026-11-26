@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [Unreleased]
+## [6.15.2] - 2026-11-26 (lean context boot)
 
 - **Lean context boot** — collapsed the duplicated aiZee bootloader into a single canonical `AGENTS.md`; all adapter files (`.cursor/rules/aizee.mdc`, `.windsurfrules`, `.claude/CLAUDE.md`, `.clinerules/aizee.md`, `.github/copilot-instructions.md`, `.aider.conf.yml`) are now ~1 KB thin pointers, and `scripts/sync-agent-configs.py` emits pointers so adapters can never re-inflate. ~124 KB of injected duplication removed per session; global rules files no longer tax non-aiZee projects.
 - **Semantic persona adoption** — embedded 29-persona menu in `AGENTS.md`; agents pick the persona directly and load only the primary skill file with lords on demand, ending bulk lord loads (up to 17 files per adoption) and the 75 KB catalog fallback read. `aizee persona detect` remains for explicit verification (`#redetect --cli`).
