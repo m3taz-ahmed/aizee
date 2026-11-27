@@ -482,10 +482,125 @@ def _try_decode_url(text: str) -> str | None:
     return None
 
 
+# -- Evasion-resistant normalization -----------------------------------------
+# Confusable lookalikes used in homoglyph attacks (Cyrillic/Greek letters that
+# render like Latin). NFKC does NOT fold these — a deliberate, targeted map is
+# required. Only the scan variant is transliterated; user text is never mutated.
+_HOMOGLYPH_MAP = str.maketrans({
+    # Keys are Cyrillic/Greek lookalikes (explicit escapes so review
+    # tooling sees exactly which codepoint folds to which Latin letter).
+    # Cyrillic lowercase, then uppercase; Greek lowercase, then uppercase.
+    "\u0430": "a", "\u0432": "b", "\u0435": "e", "\u0456": "i",
+    "\u0458": "j", "\u043a": "k", "\u043c": "m", "\u043d": "h",
+    "\u043e": "o", "\u0440": "p", "\u0441": "c", "\u0455": "s",
+    "\u0445": "x", "\u0443": "y", "\u0410": "A", "\u0412": "B",
+    "\u0415": "E", "\u041a": "K", "\u041c": "M", "\u041d": "H",
+    "\u041e": "O", "\u0420": "P", "\u0421": "C", "\u0422": "T",
+    "\u0425": "X", "\u0423": "Y", "\u03b1": "a", "\u03b5": "e",
+    "\u03b9": "i", "\u03ba": "k", "\u03bd": "v", "\u03bf": "o",
+    "\u03c1": "p", "\u03c4": "t", "\u03c5": "u", "\u03c7": "x",
+    "\u0391": "A", "\u0392": "B", "\u0395": "E", "\u0396": "Z",
+    "\u0397": "H", "\u0399": "I", "\u039a": "K", "\u039c": "M",
+    "\u039d": "N", "\u039f": "O", "\u03a1": "P", "\u03a4": "T",
+    "\u03a5": "Y", "\u03a7": "X",
+})
+
+
+
+# Invisible / control characters used to break regex matching: zero-width
+# spaces and joiners, bidi controls (trojan-source class), soft hyphens,
+# tag characters, fillers, variation selectors. Stripped for scanning only.
+_INVISIBLE_CHARS_RE = re.compile(
+    "["
+    "\u00ad"  # soft hyphen
+    "\u034f"  # combining grapheme joiner
+    "\u061c"  # arabic letter mark
+    "\u115f-\u1160"  # hangul fillers
+    "\u17b4-\u17b5"  # khmer vowel-inherent
+    "\u180e"  # mongolian vowel separator
+    "\u200b-\u200f"  # ZWSP/ZWNJ/ZWJ/LRM/RLM
+    "\u202a-\u202e"  # bidi embeddings/overrides
+    "\u2060-\u2064"  # word joiner + invisible operators
+    "\u2066-\u2069"  # bidi isolates
+    "\u2800"  # braille blank
+    "\ufe00-\ufe0f"  # variation selectors
+    "\ufeff"  # zero-width no-break space
+    "\u3164"  # hangul filler
+    "\U000e0000-\U000e007f"  # tag characters
+    "]"
+)
+
+_LEET_MAP = str.maketrans({
+    "0": "o", "1": "i", "3": "e", "4": "a", "5": "s",
+    "7": "t", "8": "b", "9": "g", "@": "a", "$": "s",
+    "!": "i", "+": "t",
+})
+
+
+def _try_decode_leet(text: str) -> str | None:
+    """Decode leetspeak when digit/symbol-in-letter density suggests evasion.
+
+    The decoder only fires when leet characters sit adjacent to letters at
+    least twice — pure version strings ("python 3.11") do not qualify, while
+    "1gn0r3 4ll pr3v10u5" does. The decoded variant is scan-only evidence;
+    a false decode of benign text cannot match injection phrases by accident
+    because the regexes demand full instruction-override phrasing.
+    """
+    adjacent = len(re.findall(r"[A-Za-z][01345789@$!+]|[01345789@$!+][A-Za-z]", text))
+    if adjacent < 2:
+        return None
+    decoded = text.translate(_LEET_MAP)
+    # adjacency >= 2 guarantees leet chars exist, so translate always
+    # rewrites something — only the length floor can reject here.
+    if len(decoded) < 10:
+        return None
+    return decoded
+
+
+# Tag characters (U+E0020..U+E007E) mirror printable ASCII — attackers write
+# whole invisible payloads in them. Decoding beats stripping: "ignore⟨E0020⟩all"
+# must become "ignore all" (space restored), not "ignoreall" (words joined).
+_TAG_DECODE_MAP = {cp: chr(cp - 0xE0000) for cp in range(0xE0020, 0xE007F)}
+
+
+def _decode_tags(text: str) -> str:
+    """Decode tag characters to their ASCII mirrors (scan variant only)."""
+    if not any(0xE0020 <= ord(c) <= 0xE007E for c in text):
+        return text
+    return text.translate(_TAG_DECODE_MAP)
+
+
 def _normalize_unicode(text: str) -> str:
-    """Normalize Unicode (NFKC) to catch homoglyph and invisible-char attacks."""
+    """NFKC + tag decode + homoglyph folding + invisible stripping.
+
+    Four evasion classes in one pass: fullwidth/compatibility forms (NFKC),
+    tag-char hidden ASCII, Cyrillic/Greek lookalikes (targeted map), and
+    zero-width/bidi characters that break naive regex matching. The original
+    text is never mutated — this only produces the additional scan variant.
+    """
     import unicodedata
-    return unicodedata.normalize("NFKC", text)
+
+    normalized = unicodedata.normalize("NFKC", text)
+    decoded = _decode_tags(normalized)
+    folded = decoded.translate(_HOMOGLYPH_MAP)
+    return _INVISIBLE_CHARS_RE.sub("", folded)
+
+
+def _normalize_unicode_spaced(text: str) -> str:
+    """Companion scan variant: invisible chars become spaces, not vanished.
+
+    Needed because the invisible-char strip is ambiguous by design — a
+    zero-width character inside a word should vanish ("igno​re" → "ignore"),
+    but the same character replacing a real space should become one
+    ("ignore​all" → "ignore all"). Both variants are scanned; detection is
+    additive evidence, so the duplication costs scan time, never precision.
+    """
+    import unicodedata
+
+    normalized = unicodedata.normalize("NFKC", text)
+    decoded = _decode_tags(normalized)
+    folded = decoded.translate(_HOMOGLYPH_MAP)
+    return _INVISIBLE_CHARS_RE.sub(" ", folded)
 
 
 # ---------------------------------------------------------------------------
@@ -680,32 +795,47 @@ class InjectionDetector:
 
         # Layer 2: normalize Unicode and re-scan (catches homoglyphs)
         normalized = _normalize_unicode(bounded)
+        normalized_tail = _normalize_unicode(tail) if tail else ""
         if normalized != bounded and not _expired():
             self._scan_text(normalized, signals, seen, source_label="unicode_normalized", dedup_space="orig", base_offset=0)
-        if tail and not _expired():
-            normalized_tail = _normalize_unicode(tail)
-            if normalized_tail != tail:
-                self._scan_text(normalized_tail, signals, seen, source_label="unicode_normalized_tail", dedup_space="orig", base_offset=tail_offset)
+        if tail and normalized_tail != tail and not _expired():
+            self._scan_text(normalized_tail, signals, seen, source_label="unicode_normalized_tail", dedup_space="orig", base_offset=tail_offset)
+        # Spaced companion variants: only computed when invisible chars were
+        # actually present (pure-ASCII input never pays for this).
+        if normalized != bounded and _INVISIBLE_CHARS_RE.search(bounded) and not _expired():
+            spaced = _normalize_unicode_spaced(bounded)
+            if spaced != normalized and spaced != bounded:
+                self._scan_text(spaced, signals, seen, source_label="unicode_normalized_spaced", dedup_space="orig", base_offset=0)
+        if tail and normalized_tail != tail and _INVISIBLE_CHARS_RE.search(tail) and not _expired():
+            spaced_tail = _normalize_unicode_spaced(tail)
+            if spaced_tail != normalized_tail and spaced_tail != tail:
+                self._scan_text(spaced_tail, signals, seen, source_label="unicode_normalized_spaced_tail", dedup_space="orig", base_offset=tail_offset)
 
         # Layer 3: decode encodings and scan decoded content.
-        # Apply to both head and tail so an obfuscated payload at the end of
-        # a long input is caught (parity with the tail-scan fix above).
+        # Decoders run on the NORMALIZED variant when it differs: stripping
+        # zero-width/bidi chars and folding homoglyphs first is what lets
+        # composed evasions (leet split by zero-width joiners, fullwidth hex)
+        # decode at all — normalization never breaks ASCII token alphabets,
+        # so this ordering is strictly more permissive to detection.
         if scan_encodings and not _expired():
+            head_input = normalized if normalized != bounded else bounded
+            tail_input = normalized_tail if tail and normalized_tail != tail else tail
             for decoder_name, decoder_fn in [
                 ("base64", _try_decode_base64),
                 ("hex", _try_decode_hex),
                 ("url", _try_decode_url),
+                ("leet", _try_decode_leet),
             ]:
                 if _expired():
                     break
-                decoded = decoder_fn(bounded)
-                if decoded and decoded != bounded:
+                decoded = decoder_fn(head_input)
+                if decoded and decoded != head_input:
                     self._scan_text(decoded, signals, seen, source_label=decoder_name, dedup_space=decoder_name, base_offset=0)
                     if _expired():
                         break
-                if tail and not _expired():
-                    decoded_tail = decoder_fn(tail)
-                    if decoded_tail and decoded_tail != tail:
+                if tail_input and not _expired():
+                    decoded_tail = decoder_fn(tail_input)
+                    if decoded_tail and decoded_tail != tail_input:
                         self._scan_text(decoded_tail, signals, seen, source_label=f"{decoder_name}_tail", dedup_space=f"{decoder_name}_tail", base_offset=tail_offset)
 
         # Aggregate L1 signals
