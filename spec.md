@@ -26,11 +26,11 @@ aiZee is a sovereign, version-controlled operating system that sits between you 
 aizee/                         # Sovereign root (discovered via AIZEE_ROOT)
 ├── aizee_cli.py               # CLI entry point (aizee command)
 ├── config.py                  # Root discovery + version
-├── runtime/                   # Kernel: policy, budget, audit, 159 governance modules
+├── runtime/                   # Kernel: policy, budget, audit, 162 governance modules
 │   ├── kernel.py              # Facade delegating to managers
 │   ├── managers/              # PolicyManager, WorkflowManager, AgentManager, ChatManager
 │   ├── uninstaller.py         # Interactive uninstaller with backup
-│   └── ...                    # 159 governance modules
+│   └── ...                    # 162 governance modules
 ├── aizee_mcp/                 # MCP server (53 tools enabled, 3 resources)
 │   ├── aizee_server.py        # FastMCP server
 │   └── tools/                 # Tool modules by responsibility
