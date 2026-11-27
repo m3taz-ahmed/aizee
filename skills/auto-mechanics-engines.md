@@ -16,6 +16,12 @@ triggers:
   - fuel system
   - injector
   - ecu tuning concept
+personas:
+  - AUTO
+tech_stack:
+  - automotive-core
+  - automotive-fault-codes
+
 ---
 
 [SKILL] auto-mechanics-engines

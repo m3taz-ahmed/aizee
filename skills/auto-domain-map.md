@@ -22,11 +22,22 @@ triggers:
   - tuning
   - engine
   - motor
+personas:
+  - AUTO
+tech_stack:
+  - automotive-core
+  - automotive-diagnostics
+  - automotive-opel
+  - automotive-vag
+  - automotive-wiring
+  - gmlan-gmw3110
+  - can-physical-layer
+
 ---
 
 [SKILL] auto-domain-map
 [OBJ] Orient any automotive task: pick the era/protocol first, then the right tool family, then the right open-source repo or trick source.
-[COMPAT] tech-stack/automotive-core.md, tech-stack/automotive-diagnostics.md, tech-stack/automotive-vag.md, tech-stack/automotive-opel.md, tech-stack/automotive-ecu-internals.md, tech-stack/automotive-security.md, tech-stack/automotive-tricks.md (wave-1 deep domain refs); skills/obd-diagnostics.md, skills/vag-diagnostics.md, skills/carplay-headunits.md, skills/ecu-tuning.md, skills/auto-mechanics-engines.md (wave-2 operational layer)
+[COMPAT] tech-stack/automotive-core.md, tech-stack/automotive-diagnostics.md, tech-stack/automotive-vag.md, tech-stack/automotive-opel.md, tech-stack/automotive-ecu-internals.md, tech-stack/automotive-security.md, tech-stack/automotive-tricks.md (wave-1 deep domain refs); tech-stack/esp32-twai.md, tech-stack/can-physical-layer.md, tech-stack/gmlan-gmw3110.md, tech-stack/automotive-power-protection.md (wave-3 verified embedded/diagnostics refs); skills/obd-diagnostics.md, skills/vag-diagnostics.md, skills/carplay-headunits.md, skills/ecu-tuning.md, skills/auto-mechanics-engines.md (wave-2 operational layer); skills/automotive-diagnostics-engineer.md (AUTO persona primary — the engineering mind)
 [RULES]
 1. [REQ] ALWAYS start with ERA identification before tool selection — automotive reality is era-segmented, not brand-monolithic.
 2. [VAG eras] K-line KWP1281 (pre-2004) → CAN KWP2000/VWTP1.6 (2004–2015) → UDS/VWTP2.0 MQB (2015+) → DoIP (newest). Tool must match era.
@@ -43,3 +54,5 @@ triggers:
 13. [Quarantine] UniCON-NECT, IE-Flash-Wizard, 034-SPI GitHub orgs = SEO-spam impersonating Unitronic/IE/034 tuning brands — never fetch binaries, treat as hostile.
 14. [Decision tree] ask: what car + year + module? → what bus (K-line/CAN/DoIP)? → what session (OBD/UDS/security-access)? → what goal (read DTC / live data / adaptation / long-code / flash / key)? Map each answer to the matching skill file.
 15. [Output] for any automotive answer cite: era → bus → protocol → tool/repo → trick-source. Never recommend a tool without era match.
+16. [AUTO persona] Deep diagnostics/embedded work (ESP32 CAN bridges, KWP/GMLAN/UDS services, transceiver hardware, vehicle power, output tests, write governance) belongs to the AUTO persona primary `automotive-diagnostics-engineer` — load its lords on demand: embedded-firmware-lord (ESP32/TWAI/firmware), can-bus-lord (physical layer/RE), diagnostic-protocols-lord (ISO-TP/KWP/UDS/GMLAN/NRC), gm-opel-lord (Opel/GM eras+buses+ECU families), automotive-hardware-safety-lord (measurement/power/grounding), diagnostic-safety-lord (write gatekeeper/output tests/audit).
+17. [Routing boundary] AUTO = diagnostics/repair/embedded. Tuning/flashing questions route to `ecu-tuning` boundary knowledge only as context — AUTO itself never tunes or flashes. Phone-projection stays in `carplay-headunits`; VAG deep dives in `vag-diagnostics`; generic OBD adapter questions in `obd-diagnostics`.

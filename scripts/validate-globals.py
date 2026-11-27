@@ -374,6 +374,8 @@ IGNORED_FILE_REFS = {
     'refs/routines/comprehensive-review.md',
     'temp/auto-research-2026-11-25/candidate-ledger.md',
     'temp/auto-research-2026-11-25/claims-ledger.md',
+    # AUTO persona research dossier — local evidence ledger, gitignored refs/
+    'refs/automotive-embedded-research-2026-11-27.md',
 }
 IGNORED_FILE_REFS.update({
 

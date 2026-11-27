@@ -24,6 +24,12 @@ triggers:
   - afR
   - wideband
   - engine management
+personas:
+  - AUTO
+tech_stack:
+  - automotive-ecu-internals
+  - automotive-security
+
 ---
 
 [SKILL] ecu-tuning

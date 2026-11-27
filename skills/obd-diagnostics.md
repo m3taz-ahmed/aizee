@@ -23,6 +23,12 @@ triggers:
   - cabana
   - scan tool
   - fault code
+personas:
+  - AUTO
+tech_stack:
+  - automotive-diagnostics
+  - gmlan-gmw3110
+
 ---
 
 [SKILL] obd-diagnostics

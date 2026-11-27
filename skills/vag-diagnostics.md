@@ -22,6 +22,12 @@ triggers:
   - mib3
   - mib unit
   - vcds coding
+personas:
+  - AUTO
+tech_stack:
+  - automotive-vag
+  - automotive-diagnostics
+
 ---
 
 [SKILL] vag-diagnostics

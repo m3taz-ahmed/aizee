@@ -22,6 +22,12 @@ triggers:
   - byd dilink
   - hmg
   - nbt
+personas:
+  - AUTO
+tech_stack:
+  - automotive-tricks
+  - automotive-core
+
 ---
 
 [SKILL] carplay-headunits

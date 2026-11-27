@@ -48,39 +48,41 @@ license: MIT
 
 ## Persona Menu
 
-29 personas. Pick by domain hints; the skill file lists its own lords by name — load them on demand only. Regenerate this table from `aizee persona catalog` after persona registry changes.
+30 personas. Pick by domain hints; the skill file lists its own lords by name — load them on demand only. Regenerate this table from `aizee persona catalog` after persona registry changes.
 
 | Code | Primary skill | Domain hints | Lords |
 |------|---------------|--------------|-------|
-| ARCH | ai-agents-architect | architecture, scalability, system design, microservices, distributed | 17 |
-| QA | qa-debugger | test, testing, coverage, pytest, unit test | 8 |
-| UX | frontend-ui-expert | ui, ux, design, user journey, prototype | 9 |
-| DEV | backend-api-expert | backend, api, server, database, crud, feature | 12 |
-| SRE | sre | cloud, aws, gcp, azure, kubernetes, k8s | 9 |
-| SEC | security-auditor | security, vulnerability, zero trust, auth | 12 |
-| GAME | game-architect | game, game loop, gameplay, render, babylon | 6 |
-| PLAY | google-play-warlord | google play, play console, play store, aab | 0 |
-| MOBILE | mobile-game-producer | mobile game, mobile app, fastlane, anti cheat | 4 |
-| DATA | data-engineer | data, database, sql, etl, analytics, pipeline | 3 |
-| ML | ml-engineer | machine learning, model, training, inference | 9 |
-| DEVOPS | devops-engineer | devops, cicd, pipeline, jenkins, github actions | 9 |
-| API | api-architect | api, rest, graphql, integration, api gateway | 5 |
-| LEGAL | legal-compliance | gdpr, compliance, privacy, legal, regulatory | 1 |
-| PRODUCT | product-manager | requirements, user story, roadmap, backlog | 0 |
-| DOC | technical-writer | documentation, readme, api docs, changelog | 2 |
-| PERF | performance-engineer | performance, profiling, latency, benchmark | 4 |
-| CV | cv-writer | cv, resume, curriculum vitae, ats | 2 |
-| FREELANCE | freelance-platforms | freelance, upwork, fiverr, mostaql | 5 |
+| ARCH | ai-agents-architect | architecture, scalability, scalable, system design, microservices | 17 |
+| QA | qa-debugger | test, tests, testing, coverage, pytest | 8 |
+| UX | frontend-ui-expert | ui, ux, design, user journey, user experience | 9 |
+| DEV | backend-api-expert | backend, api, server, database, crud | 12 |
+| SRE | sre | cloud, aws, gcp, azure, kubernetes | 9 |
+| SEC | security-auditor | security, secure, vulnerability, zero trust, zerotrust | 12 |
+| GAME | game-architect | game, game loop, gameplay, render, rendering | 6 |
+| PLAY | google-play-warlord | google play, play console, play store, android publish, publish app | 0 |
+| MOBILE | mobile-game-producer | mobile game, mobile app, fastlane, anti cheat, anticheat | 4 |
+| DATA | data-engineer | data, database, sql, etl, analytics | 3 |
+| ML | ml-engineer | machine learning, ml, model, training, inference | 9 |
+| DEVOPS | devops-engineer | devops, cicd, ci/cd, pipeline, jenkins | 9 |
+| API | api-architect | api, rest, graphql, microservices, integration | 5 |
+| LEGAL | legal-compliance | gdpr, compliance, privacy, legal, data protection | 1 |
+| PRODUCT | product-manager | requirements, user story, roadmap, product, user research | 0 |
+| DOC | technical-writer | documentation, readme, api docs, changelog, technical writing | 2 |
+| PERF | performance-engineer | performance, profiling, latency, benchmark, optimization | 4 |
+| CV | cv-writer | cv, resume, curriculum vitae, السيرة الذاتية, سيرة ذاتية | 2 |
+| FREELANCE | freelance-platforms | freelance, freelancer, upwork, fiverr, freelancer.com | 5 |
 | DEVX | context-compressor | developer experience, dx, cli, tooling, devtools | 5 |
-| MLOPS | ml-engineer | mlops, model deployment, model registry, serving | 8 |
-| FINOPS | finops | cloud cost, cost optimization, billing, budget | 3 |
-| MARKETING | marketing-strategy | marketing, digital marketing, campaign, growth | 3 |
-| GROWTH | growth-loops | growth hacking, viral, referral, plg | 2 |
-| BRAND | brand-kit | brand, identity, positioning, voice, logo | 2 |
-| EMAIL | email-marketing | email, newsletter, drip, mailchimp, brevo | 1 |
-| SOCIAL | social-media-marketing | social media, instagram, tiktok, facebook | 2 |
-| CRO | cro-optimization | cro, conversion, a/b test, landing page | 2 |
-| SALES | b2b-cold-outreach | lead gen, cold email, outreach, b2b | 2 |
+| MLOPS | ml-engineer | mlops, model deployment, model registry, feature store, model serving | 8 |
+| FINOPS | finops | finops, cloud cost, cost optimization, billing, budget | 3 |
+| MARKETING | marketing-strategy | marketing, digital marketing, التسويق, تسويق إلكتروني, تسويق رقمي | 3 |
+| GROWTH | growth-loops | growth hacking, viral, فيروسي, referral, إحالة | 2 |
+| BRAND | brand-kit | brand, براند, هوية, identity, positioning | 2 |
+| EMAIL | email-marketing | email, newsletter, نشرة بريدية, drip, رسائل تلقائية | 1 |
+| SOCIAL | social-media-marketing | social media, تواصل اجتماعي, تويتر, x platform, instagram | 2 |
+| CRO | cro-optimization | cro, conversion, تحويل, a/b test, تجربة أ ب | 2 |
+| SALES | b2b-cold-outreach | lead gen, cold email, رسالة باردة, outreach, اكتساب عملاء | 2 |
+| AUTO | automotive-diagnostics-engineer | obd, obd2, obd-ii, can bus, canbus | 7 |
+
 
 
 
@@ -277,10 +279,10 @@ aizee/                         # Sovereign root (AIZEE_ROOT)
 │   └── ...                    # 159 governance modules
 ├── aizee_mcp/                 # MCP server (53 tools enabled)
 ├── memory/                    # SQLite + FTS5 + vector
-├── skills/                    # 354 persona + lord skills
+├── skills/                    # 361 persona + lord skills
 ├── workflows/                 # 70 trigger-based execution protocols
 ├── rules/                     # Compressed behavioral rules
-├── tech-stack/                # 281 version-locked stack references
+├── tech-stack/                # 285 version-locked stack references
 │   └── spec-driven-templates/ # SDD templates (spec/plan/tasks/constitution/checklist)
 └── eval/                      # Agent benchmark harness
 

@@ -212,6 +212,7 @@ personas:
     - user interface
     - ui/ux
     - ui design
+    - flet
     - ux design
     - design system
     - web design
@@ -1799,6 +1800,92 @@ personas:
     - اقناع
     - تفاوض
     - عمولة
+  AUTO:
+    name: Automotive Diagnostics & Embedded Systems Engineer
+    weight: 1.4
+    tier: specialist
+    skill: automotive-diagnostics-engineer
+    lords:
+    - embedded-firmware-lord
+    - can-bus-lord
+    - diagnostic-protocols-lord
+    - gm-opel-lord
+    - automotive-hardware-safety-lord
+    - diagnostic-safety-lord
+    - reverse-engineering-lord
+    keywords:
+    - obd
+    - obd2
+    - obd-ii
+    - can bus
+    - canbus
+    - ecu
+    - dtc
+    - fault code
+    - fault codes
+    - kwp2000
+    - kwp
+    - gmlan
+    - gmw3110
+    - uds
+    - iso-tp
+    - isotp
+    - iso 15765
+    - iso 14230
+    - iso 14229
+    - elm327
+    - twai
+    - transceiver
+    - scan tool
+    - measuring blocks
+    - freeze frame
+    - output test
+    - actuator test
+    - seed key
+    - security access
+    - tester present
+    - negative response code
+    - automotive diagnostics
+    - vehicle diagnostics
+    - car diagnostics
+    - automotive embedded
+    - esp32 can
+    - can bridge
+    - sniff can
+    - termination resistor
+    - sw-can
+    - single wire can
+    - j2411
+    - devicecontrol
+    - opel
+    - vauxhall
+    - vectra
+    - astra
+    - zafira
+    - insignia
+    - gmpt
+    - simtec
+    - op-com
+    - opcom
+    - tech2
+    - كمبيوتر العربية
+    - أعطال العربية
+    - فحص كمبيوتر
+    - قراءة الأعطال
+    - سكانر عربية
+    - فيشة obd
+    - حساسات العربية
+    - كان باص
+    - برمجة esp32
+    - توصيل بالسيارة
+    - كهرباء العربية
+    - فحص اوبل
+    - كمبيوتر السيارة
+    - أعطال السيارة
+    - ترانسيفر
+    - اوبل
+    - فيكترا
+    - أسترا
 default: ARCH
 persona_lord_bonus: 0.5
 teams:
@@ -1855,6 +1942,86 @@ teams:
     - game feel
     - performance pass
 lord_skills:
+  embedded-firmware-lord:
+  - esp32
+  - esp-idf
+  - twai
+  - firmware
+  - embedded
+  - freertos
+  - embedded c
+  - فيرموير
+  - برمجة esp32
+  - ميكروكنترولر
+  can-bus-lord:
+  - can bus
+  - canbus
+  - termination resistor
+  - transceiver
+  - sn65hvd230
+  - mcp2551
+  - tja1050
+  - sw-can
+  - single wire can
+  - bus-off
+  - bitrate
+  - sample point
+  - كان باص
+  - ترانسيفر
+  diagnostic-protocols-lord:
+  - kwp2000
+  - kwp
+  - uds
+  - iso-tp
+  - isotp
+  - iso 14230
+  - iso 14229
+  - iso 15765
+  - negative response
+  - security access
+  - seed key
+  - tester present
+  - dtc
+  - measuring blocks
+  - freeze frame
+  - obd
+  - obd2
+  - قراءة الأعطال
+  gm-opel-lord:
+  - opel
+  - vauxhall
+  - vectra
+  - astra
+  - zafira
+  - insignia
+  - gmlan
+  - gmw3110
+  - gmpt
+  - simtec
+  - op-com
+  - opcom
+  - tech2
+  - z22se
+  - z22yh
+  - اوبل
+  - فيكترا
+  automotive-hardware-safety-lord:
+  - load dump
+  - reverse polarity
+  - ground offset
+  - voltage drop test
+  - cranking voltage
+  - iso 7637
+  - automotive power supply
+  - كهرباء العربية
+  diagnostic-safety-lord:
+  - output test
+  - actuator test
+  - write access
+  - return control
+  - diagnostic session
+  - security access level
+  - اختبار المشغلات
   game-design-lord:
   - game design
   - gdd

@@ -83,6 +83,30 @@
     {
       "trigger": "ui inspiration",
       "expect": "skills/design-research/SKILL.md"
+    },
+    {
+      "trigger": "automotive diagnostics",
+      "expect": "skills/automotive-diagnostics-engineer.md"
+    },
+    {
+      "trigger": "can bus",
+      "expect": "skills/can-bus-lord/SKILL.md"
+    },
+    {
+      "trigger": "esp32 firmware",
+      "expect": "skills/embedded-firmware-lord/SKILL.md"
+    },
+    {
+      "trigger": "gmlan",
+      "expect": "skills/diagnostic-protocols-lord/SKILL.md"
+    },
+    {
+      "trigger": "opel diagnostics",
+      "expect": "skills/gm-opel-lord/SKILL.md"
+    },
+    {
+      "trigger": "فحص كمبيوتر",
+      "expect": "skills/automotive-diagnostics-engineer.md"
     }
   ],
   "negative": [
@@ -113,6 +137,14 @@
     {
       "trigger": "linkedin",
       "must_not": "skills/design-research/SKILL.md"
+    },
+    {
+      "trigger": "car rental booking website",
+      "must_not": "skills/automotive-diagnostics-engineer.md"
+    },
+    {
+      "trigger": "canvas drawing app",
+      "must_not": "skills/can-bus-lord/SKILL.md"
     }
   ]
 }

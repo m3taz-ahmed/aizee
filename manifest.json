@@ -463,7 +463,18 @@
     "cli access": "skills/cli-first-access.md",
     "external cli": "skills/cli-first-access.md",
     "platform cli": "skills/cli-first-access.md",
-    "mcp alternative": "skills/cli-first-access.md"
+    "mcp alternative": "skills/cli-first-access.md",
+    "automotive diagnostics": "skills/automotive-diagnostics-engineer.md",
+    "car diagnostics": "skills/automotive-diagnostics-engineer.md",
+    "فحص كمبيوتر": "skills/automotive-diagnostics-engineer.md",
+    "كمبيوتر العربية": "skills/automotive-diagnostics-engineer.md",
+    "can bus": "skills/can-bus-lord/SKILL.md",
+    "esp32 firmware": "skills/embedded-firmware-lord/SKILL.md",
+    "gmlan": "skills/diagnostic-protocols-lord/SKILL.md",
+    "kwp2000": "skills/diagnostic-protocols-lord/SKILL.md",
+    "opel diagnostics": "skills/gm-opel-lord/SKILL.md",
+    "vehicle write safety": "skills/diagnostic-safety-lord/SKILL.md",
+    "car power protection": "skills/automotive-hardware-safety-lord/SKILL.md"
   },
   "features": {
     "audit_log": "runtime/audit.py",

@@ -1,6 +1,6 @@
 {
   "kind": "skill",
-  "count": 354,
+  "count": 361,
   "skills": {
     "ab-testing": {
       "file": "ab-testing/SKILL.md",
@@ -469,7 +469,7 @@
         "vehicle",
         "vw"
       ],
-      "sha256": "82f136ceecf17721d58767f51f0fa1a1d6ef9f8e67492eabdce8543269c866c5"
+      "sha256": "0a92be28e3eaa8e4887d6d16e58929658025728815b218c56723b499d334a24b"
     },
     "auto-mechanics-engines": {
       "file": "auto-mechanics-engines.md",
@@ -492,7 +492,71 @@
         "petrol",
         "turbo"
       ],
-      "sha256": "c641ee98258c4faa1668a0883c9503288bb6b33e7131e4547036d5142fceac8b"
+      "sha256": "bfbc16db33a913bf77227536c5173b7c53579ef2847d9dd28292779c6d7ef555"
+    },
+    "automotive-diagnostics-engineer": {
+      "file": "automotive-diagnostics-engineer.md",
+      "description": "Primary skill for the AUTO persona — automotive diagnostics and embedded systems engineering with verified knowledge. Decision order era→hardware→risk→minimal intervention; playbooks for no-communicat",
+      "invoke": "auto",
+      "triggers": [
+        "automotive diagnostics",
+        "automotive diagnostics engineer",
+        "can bridge",
+        "can bus automotive",
+        "car diagnostics",
+        "dtc",
+        "ecu diagnostics",
+        "elm327",
+        "esp32 can",
+        "fault codes",
+        "freeze frame",
+        "gmlan",
+        "iso-tp",
+        "kwp2000",
+        "measuring blocks",
+        "obd",
+        "obd2",
+        "opel diagnostics",
+        "output test",
+        "scan tool",
+        "uds diagnostics",
+        "أعطال العربية",
+        "حساسات العربية",
+        "سكانر عربية",
+        "فحص كمبيوتر",
+        "فيشة obd",
+        "قراءة الأعطال",
+        "كان باص",
+        "كمبيوتر العربية"
+      ],
+      "sha256": "3859b175e4a9a467b6c7b5ef3316a90736a91fa1421e2538f5a0e95c32398e0f"
+    },
+    "automotive-hardware-safety-lord": {
+      "file": "automotive-hardware-safety-lord/SKILL.md",
+      "description": "Lord skill for safe physical connection to vehicles — measurement before connection, 12V transient reality (ISO 7637-2/16750-2 load dump, cranking), TVS/reverse-polarity/fusing discipline, grounding a",
+      "invoke": "auto",
+      "triggers": [
+        "automotive hardware safety lord",
+        "bench test bus",
+        "car power supply",
+        "connect to car",
+        "fuse vehicle",
+        "ground loop",
+        "load dump",
+        "measure before connect",
+        "obd pigtail",
+        "obd wiring",
+        "pin 16 power",
+        "reverse polarity",
+        "tvs diode",
+        "usb isolator",
+        "توصيل بالسيارة",
+        "حماية الدائرة",
+        "فيشة obd توصيل",
+        "قياس قبل التوصيل",
+        "كهرباء العربية"
+      ],
+      "sha256": "1fe1456824e3ac3e9bb00d6ddf69743906e905c23c2accdc3cbf256d1816d950"
     },
     "avoid-ai-writing": {
       "file": "avoid-ai-writing/SKILL.md",
@@ -1254,6 +1318,39 @@
       ],
       "sha256": "49fa05fc1d580238a69c1e93c10bca1eb76fb2033a898780a1a2ad22b5034eed"
     },
+    "can-bus-lord": {
+      "file": "can-bus-lord/SKILL.md",
+      "description": "Lord skill for CAN bus electrical and signaling mastery — ISO 11898-2 high-speed vs 11898-3 fault-tolerant vs SAE J2411 single-wire, bit timing/sample point/SJW, termination measurement, transceiver s",
+      "invoke": "auto",
+      "triggers": [
+        "120 ohm",
+        "bit timing",
+        "bus-off",
+        "can bus",
+        "can bus lord",
+        "can transceiver",
+        "canbus",
+        "cantools",
+        "dbc file",
+        "error passive",
+        "gmlan bus",
+        "opendbc",
+        "reverse engineer can",
+        "sample point",
+        "single wire can",
+        "sn65hvd230",
+        "sniff can",
+        "sw-can",
+        "termination resistor",
+        "tja1050",
+        "ترانسيفر",
+        "توصيل كان",
+        "فيشة obd",
+        "كان باص",
+        "مقاومة الترمينيشن"
+      ],
+      "sha256": "c6281e8d0bd5a23774dddcdfc639c0516487185f5aa83fd37a616d13bfb64254"
+    },
     "canvas-design": {
       "file": "canvas-design/SKILL.md",
       "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create ori",
@@ -1293,7 +1390,7 @@
         "nbt",
         "wireless carplay"
       ],
-      "sha256": "344117eb1ea59ecc71c5b49bc0238297e54f2dd54271f22e6658b08f159fca52"
+      "sha256": "26d4e51aca50620b12117957ebae5403969cc4e030ed72067371c7f8a2a8855f"
     },
     "churn-prevention": {
       "file": "churn-prevention/SKILL.md",
@@ -1926,6 +2023,63 @@
       ],
       "sha256": "e29ca78c2da068f42ba71339d8b04038586d77d4e7dbcfdfeb4a7f97db3702b1"
     },
+    "diagnostic-protocols-lord": {
+      "file": "diagnostic-protocols-lord/SKILL.md",
+      "description": "Lord skill for vehicle diagnostic protocol stacks — ISO-TP (ISO 15765-2 SF/FF/CF/FC, BS/STmin, padding, N_As/N_Bs/N_Cr), OBD-II (SAE J1979/ISO 15765-4 modes 01–0A, PIDs, J2012 DTC format), KWP2000 (IS",
+      "invoke": "auto",
+      "triggers": [
+        "diagnostic protocols lord",
+        "doip",
+        "flow control frame",
+        "gmlan",
+        "gmw3110",
+        "iso 14229",
+        "iso 14230",
+        "iso 15765",
+        "iso-tp",
+        "isotp",
+        "kwp2000",
+        "negative response code",
+        "nrc 0x78",
+        "obd modes",
+        "security access",
+        "seed key",
+        "tester present",
+        "tp2.0",
+        "uds protocol",
+        "بروتوكول التشخيص",
+        "سكانر",
+        "عطل كمبيوتر",
+        "قراءة الأعطال"
+      ],
+      "sha256": "95d3d1d55cdb5ad4d84115eaaccc1141caee2eab6711483e0cd920540ea9c2a9"
+    },
+    "diagnostic-safety-lord": {
+      "file": "diagnostic-safety-lord/SKILL.md",
+      "description": "Lord skill for engineering tools that write to vehicles — single write-gatekeeper architecture, service allow/deny lists, payload-bound confirm tokens, fail-safe interlocks from live data, pre-write s",
+      "invoke": "auto",
+      "triggers": [
+        "actuator test",
+        "audit log vehicle",
+        "clear dtc safety",
+        "devicecontrol",
+        "diagnostic safety lord",
+        "diagnostic write",
+        "fail-safe",
+        "fault injection",
+        "interlock",
+        "iso 26262 concepts",
+        "output test safety",
+        "return control",
+        "write gatekeeper",
+        "write to ecu",
+        "اختبار المشغلات",
+        "حارس الكتابة",
+        "كتابة على السيارة",
+        "مسح الأعطال أمان"
+      ],
+      "sha256": "945ae20479888ee0e5ef0da00ec24cb0e0719ad408d6977a7dbab415b84af2b0"
+    },
     "directing-stickman-videos": {
       "file": "directing-stickman-videos/SKILL.md",
       "description": "Turn topics, requirements, articles or scripts into stickman videos. Model Engine (A) delivers storyboards and standalone prompts, or uses available authorized tools to generate and finish videos; Aut",
@@ -2072,7 +2226,7 @@
         "tuning",
         "wideband"
       ],
-      "sha256": "d5d9ef735ac8a08ce4fbb3df7d8755bda6cb55bf1f6c5553a88386459834b212"
+      "sha256": "0e85d4d97909f12fbab424b731b9beeceb182c07fa7814703a23ea801c4037eb"
     },
     "email-marketing": {
       "file": "email-marketing/SKILL.md",
@@ -2117,6 +2271,32 @@
         "بريد إلكتروني"
       ],
       "sha256": "efc8d3a7b69222d8b189c80240f8e2663b3566c3f40c7a86e824db77e7f61524"
+    },
+    "embedded-firmware-lord": {
+      "file": "embedded-firmware-lord/SKILL.md",
+      "description": "Lord skill for automotive-grade embedded firmware on ESP32 (ESP-IDF 5.x/6, Arduino-ESP32 3.x) — TWAI legacy/new drivers and listen-only errata, FreeRTOS discipline, strapping pins, brownout, watchdog,",
+      "invoke": "auto",
+      "triggers": [
+        "brownout watchdog",
+        "can bridge firmware",
+        "embedded firmware",
+        "embedded firmware lord",
+        "esp-idf",
+        "esp32 firmware",
+        "freertos automotive",
+        "ota update esp32",
+        "rp2040 can",
+        "serial protocol firmware",
+        "stm32 can",
+        "twai driver",
+        "vx_bridge",
+        "برمجة esp32",
+        "برمجة المتحكم",
+        "توصيل esp32 بالعربية",
+        "فريم وير",
+        "فيرموير العربية"
+      ],
+      "sha256": "6ee4b92c236ab47b8e011d5a54c297af43622a95120eadab265049c9131b3a06"
     },
     "eval-reliability-lord": {
       "file": "eval-reliability-lord/SKILL.md",
@@ -2477,6 +2657,36 @@
         "جيت اوبس"
       ],
       "sha256": "3edcaf78f58fe0707e29114a635107a0e45480989d132cef22d94309d5ab47dc"
+    },
+    "gm-opel-lord": {
+      "file": "gm-opel-lord/SKILL.md",
+      "description": "Lord skill for Opel/Vauxhall and GM vehicle specifics — generation eras (K-line → GMLAN → Global A/B → PSA), Vectra C/Astra H/Zafira B bus topology (HS/MS/SW-CAN on pins 6/14, 3/11, 1), ECM families (",
+      "invoke": "auto",
+      "triggers": [
+        "astra",
+        "car pass",
+        "corsa",
+        "gm opel lord",
+        "gmlan opel",
+        "gmpt",
+        "insignia",
+        "op-com",
+        "opcom",
+        "opel",
+        "simtec",
+        "tech2",
+        "vauxhall",
+        "vectra",
+        "z22se",
+        "z22yh",
+        "zafira",
+        "أسترا",
+        "اوبل",
+        "فحص اوبل",
+        "فيكترا",
+        "كمبيوتر العربية اوبل"
+      ],
+      "sha256": "c3ffee12fe8a87cd6b502d0ffc9db4191ec481d9ff2880058dd89c1e0a860428"
     },
     "google-play-warlord": {
       "file": "google-play-warlord/SKILL.md",
@@ -3352,7 +3562,7 @@
         "scan tool",
         "uds"
       ],
-      "sha256": "1bb025600b4e43e0d4cb4ca506029797d56d2af6e583820af9f8195af4474b2e"
+      "sha256": "9de8808c7f8b7d1cea8516d982856e119e9fb0e1f5e60455e5c3a5f3af4a0d93"
     },
     "offers": {
       "file": "offers/SKILL.md",
@@ -5393,7 +5603,7 @@
         "volkswagen",
         "vw"
       ],
-      "sha256": "ef7e1b30a269bc8414c685761ea0a0a91cdb16a7f1579a73fc584e97291620e9"
+      "sha256": "551294f9ef6c74227f130017e37ab6b0b5232d6456a9b722e0d26b08426c9095"
     },
     "vector-db-lord": {
       "file": "vector-db-lord/SKILL.md",
