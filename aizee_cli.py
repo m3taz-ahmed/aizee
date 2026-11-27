@@ -3058,6 +3058,44 @@ def cmd_gateway(args: argparse.Namespace) -> int:
             console.print(f"[red]No gateway config at {config_path} — run 'aizee gateway init'[/red]")
             return 1
         return serve(config_path, args.port, _kernel(args))
+    if args.gateway_action == "race":
+        # Evaluation-only benchmark: races the tier's providers in parallel
+        # and reports latency/error taxonomy. Never a serving path — racing
+        # multiplies cost per prompt by the number of providers engaged.
+        from runtime.gateway_proxy import GatewayConfig
+        from runtime.gateway_race import RaceConfig, race
+
+        config_path = Path(args.file) if args.file else _root(args) / "gateway.yaml"
+        if not config_path.exists():
+            console.print(f"[red]No gateway config at {config_path} — run 'aizee gateway init'[/red]")
+            return 1
+        if not args.prompt:
+            console.print("[red]race needs --prompt 'text'[/red]")
+            return 1
+        payload = json.dumps({
+            "model": args.model or "race-eval",
+            "messages": [{"role": "user", "content": args.prompt}],
+        }).encode("utf-8")
+        cfg = GatewayConfig.load(config_path)
+        rc = RaceConfig(min_results=max(1, args.min_results))
+        console.print(
+            f"[yellow]racing {len(cfg.providers_for(args.tier))} providers "
+            f"(evaluation only — cost multiplies per provider)[/yellow]"
+        )
+        report = race(cfg, "/v1/chat/completions", payload, tier=args.tier, race_config=rc)
+        for r in sorted(report.results, key=lambda x: x.latency_ms):
+            mark = "ok" if r.ok else (r.error_class.value if r.error_class else "?")
+            console.print(
+                f"  {r.provider:<24} {r.status!s:<5} {r.latency_ms:>8.0f} ms  "
+                f"{mark}  attempts={r.attempts}"
+            )
+        console.print(
+            f"[bold]winner:[/bold] {report.winner or '-'}  "
+            f"duration={report.duration_ms:.0f} ms  successes={len(report.successes)}"
+        )
+        if report.diagnosis:
+            console.print(f"[red]{report.diagnosis}[/red]")
+        return 0 if report.successes else 1
     return 1
 
 
@@ -3540,10 +3578,15 @@ def main(argv: list[str] | None = None) -> int:
 
     # --- gateway ---
     p_gateway = sub.add_parser("gateway", help="Governed LLM proxy (failover + enforcement on path)")
-    p_gateway.add_argument("gateway_action", choices=["init", "serve"])
+    p_gateway.add_argument("gateway_action", choices=["init", "serve", "race"])
     p_gateway.add_argument("--file", default="", help="Config path (default: <root>/gateway.yaml)")
     p_gateway.add_argument("--port", type=int, default=8787)
     p_gateway.add_argument("--force", action="store_true", help="init: overwrite existing config")
+    p_gateway.add_argument("--prompt", default="", help="race: prompt text for the eval request")
+    p_gateway.add_argument("--model", default="", help="race: model name in the eval payload")
+    p_gateway.add_argument("--tier", default="default", help="race: provider tier to race")
+    p_gateway.add_argument("--min-results", type=int, default=2,
+                           help="race: successes needed before early-exit grace")
 
     # --- work ---
     p_work = sub.add_parser("work", help="Poll GitHub for open work via gh CLI")
