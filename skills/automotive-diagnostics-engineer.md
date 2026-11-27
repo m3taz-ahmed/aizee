@@ -88,7 +88,7 @@ tech_stack:
 ## 6. مراجعة الكود — expert review checklist
 
 24. [USE] Firmware/diagnostic code review checklist: buffer bounds on every wire-derived length; timeouts on every blocking call; retry counts bounded (no retry storms); bus flooding rate limits; endianness explicit at every multi-byte decode; scaling factors traced to DBC/provenance; output escaping (CSV-injection neutralization in exports); gatekeeper bypass impossible; thread-safety between bus tasks and UI; replay captures never routed to live vehicle.
-25. [KNOW] The vectra-scanner reference architecture embodies the target standard: boot disarmed, strict serial parser, demo backend with fault injection, single write-gatekeeper, append-only audit — use it as the review benchmark.
+25. [KNOW] A private reference build (ESP32 safe bridge + desktop scanner) embodies the target standard: boot disarmed, strict serial parser, demo backend with fault injection, single write-gatekeeper, append-only audit — use it as the review benchmark.
 
 ## 7. Anti-patterns — ممنوعات صريحة
 

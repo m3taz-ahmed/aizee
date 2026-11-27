@@ -25,13 +25,13 @@
 12. [KNOW] Legacy `twai_transmit` in listen-only mode returns `ESP_ERR_NOT_SUPPORTED`; it cannot be called there. [documented — driver/twai.h API contract]
 13. [KNOW] Bus-off recovery is explicit, not automatic: `twai_initiate_recovery()`/`twai_initiate_recovery_v2()` valid only from `TWAI_STATE_BUS_OFF`; resets TX queue/counters, triggers hardware recovery, completion reported via `TWAI_ALERT_BUS_RECOVERED`. In the new driver, use state-change/error callbacks. [documented]
 14. [REQ] Bridge-firmware safety model: boot/reset into listen-only with TX disabled; explicit `ARM` command with timeout; CAN-ID allowlist + SID blocklist for TX; rate limiting; watchdog; on bus-off stop TX and report — no silent auto-retry storm.
-15. [REQ] Treat the serial/host link as hostile input: strict line parser, length bounds, reject malformed frames, no `eval`-like dispatch, versioned banner command. Reference architectures: `collin80/ESP32RET` (GVRET/SavvyCAN bridge, MIT), vectra-scanner `vx_bridge` safety model. [community]
+15. [REQ] Treat the serial/host link as hostile input: strict line parser, length bounds, reject malformed frames, no `eval`-like dispatch, versioned banner command. Reference architectures: `collin80/ESP32RET` (GVRET/SavvyCAN bridge, MIT), a private reference build safety model. [community]
 16. [KNOW] TWAI alerts worth handling: TX_SUCCESS/TX_FAILED/TX_IDLE, RX data/overrun, error passive, bus error, bus-off, recovery. In legacy mode TEC/REC read as 0 in listen-only (frozen) — do not use them for health there. [documented]
 
 ## 4. Hardware/wiring interface notes
 
 17. [KNOW] TWAI controller ≠ transceiver: the ESP32 TWAI peripheral is only the protocol controller; an external transceiver is mandatory (3.3V-native SN65HVD230 preferred; TJA1050 is 5V and needs RX level protection). Transceiver selection/measurement: `can-physical-layer.md`.
-18. [KNOW] Common devkit wiring (vectra-scanner verified build): CTX→GPIO5, CRX→GPIO4 on classic ESP32 — but strapping/boot pins vary by chip variant (S3/C3/C6 differ); verify pin choice against the exact devkit schematic, avoid strapping pins and flash/PSRAM pins.
+18. [KNOW] Common devkit wiring (private reference build): CTX→GPIO5, CRX→GPIO4 on classic ESP32 — but strapping/boot pins vary by chip variant (S3/C3/C6 differ); verify pin choice against the exact devkit schematic, avoid strapping pins and flash/PSRAM pins.
 19. [KNOW] Bitrate config in legacy driver uses timing presets (`twai_timing_config_t` — e.g. `TWAI_TIMING_CONFIG_500KBITS`) or custom bit timing; new driver uses a bitrate config struct. Compute sample point from the active driver's documented model — `(1 + TSEG1)/(1 + TSEG1 + TSEG2)` in the common Bosch/CiA bit-time model — never copy raw register values across driver generations. [documented model]
 20. [USE] Alternatives when TWAI limits bite: STM32 bxCAN/FDCAN (mature, no listen-only errata of this class, but 5V-transceiver pairing care), RP2040 + `can2040` (software CAN, careful timing validation), MCP2515/MCP2518FD SPI controllers (`sandeepmistry/arduino-CAN` as API baseline). Choose by validated evidence, not familiarity. [community]
 

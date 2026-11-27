@@ -31,7 +31,7 @@ lord: true
 [SKILL] automotive-hardware-safety-lord
 [OBJ] Keep people, laptops, adapters, and vehicles safe: every hardware instruction starts with measurement, every power path is protected by design, every first contact happens on a bench before a vehicle.
 [COMPAT] tech-stack/automotive-power-protection.md (protection design depth), tech-stack/can-physical-layer.md (pins/transceivers), skills/embedded-firmware-lord/SKILL.md (brownout/boot-safe firmware), skills/gm-opel-lord/SKILL.md (vehicle pinout specifics)
-[SRC] Researched 2026-11-27. Evidence: TI TIDUC42, Diodes automotive TVS note, ST TA0338, MCC AN5001, NI/onsemi CAN electrical docs, vectra-scanner MASTER-PROMPT hardware notes, dossier §4.8.
+[SRC] Researched 2026-11-27. Evidence: TI TIDUC42, Diodes automotive TVS note, ST TA0338, MCC AN5001, NI/onsemi CAN electrical docs, private reference-project hardware notes, dossier §4.8.
 
 [RULES]
 1. [REQ] The first rule of automotive hardware: **measure before you connect — every time, even on a car you know.** Pinout verification → voltage scan (key-off/key-on) → resistance scan (key-off) → documented → connect. A misplaced probe costs a board; a wrong assumption can cost a vehicle network.

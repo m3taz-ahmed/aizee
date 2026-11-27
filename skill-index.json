@@ -529,7 +529,7 @@
         "كان باص",
         "كمبيوتر العربية"
       ],
-      "sha256": "3859b175e4a9a467b6c7b5ef3316a90736a91fa1421e2538f5a0e95c32398e0f"
+      "sha256": "e1934fa111d7b6ff701abe822d69b5efc858358be176743f24f83a141a89eb43"
     },
     "automotive-hardware-safety-lord": {
       "file": "automotive-hardware-safety-lord/SKILL.md",
@@ -556,7 +556,7 @@
         "قياس قبل التوصيل",
         "كهرباء العربية"
       ],
-      "sha256": "1fe1456824e3ac3e9bb00d6ddf69743906e905c23c2accdc3cbf256d1816d950"
+      "sha256": "83306310da4ce5972376905647007aca35291e8c373c364fa5fdfa986f839db8"
     },
     "avoid-ai-writing": {
       "file": "avoid-ai-writing/SKILL.md",
@@ -2052,7 +2052,7 @@
         "عطل كمبيوتر",
         "قراءة الأعطال"
       ],
-      "sha256": "95d3d1d55cdb5ad4d84115eaaccc1141caee2eab6711483e0cd920540ea9c2a9"
+      "sha256": "1b673f428cbb66d9022716020891030a021a5fb737afa459bbc84e9ae77b32fa"
     },
     "diagnostic-safety-lord": {
       "file": "diagnostic-safety-lord/SKILL.md",
@@ -2078,7 +2078,7 @@
         "كتابة على السيارة",
         "مسح الأعطال أمان"
       ],
-      "sha256": "945ae20479888ee0e5ef0da00ec24cb0e0719ad408d6977a7dbab415b84af2b0"
+      "sha256": "17e9f5f31756874824834b74f19b26ef04bb4dabcc4e66f2571f828713d78188"
     },
     "directing-stickman-videos": {
       "file": "directing-stickman-videos/SKILL.md",
@@ -2289,14 +2289,13 @@
         "serial protocol firmware",
         "stm32 can",
         "twai driver",
-        "vx_bridge",
         "برمجة esp32",
         "برمجة المتحكم",
         "توصيل esp32 بالعربية",
         "فريم وير",
         "فيرموير العربية"
       ],
-      "sha256": "6ee4b92c236ab47b8e011d5a54c297af43622a95120eadab265049c9131b3a06"
+      "sha256": "861161c394fc1251e805d0309c7e1aa8b0fe72ec4eb179dba1e66f81a2325325"
     },
     "eval-reliability-lord": {
       "file": "eval-reliability-lord/SKILL.md",

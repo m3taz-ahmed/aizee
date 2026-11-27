@@ -29,7 +29,7 @@
 ## 4. Bench setup before vehicle
 
 15. [REQ] Bench-first doctrine: current-limited bench PSU (limit a few hundred mA for adapter tests) → two-node test bus (two 120Ω terminators, second node = known-good transceiver) → validate power draw, idle behavior, TX-inhibit default, and recovery behavior → only then vehicle listen-only.
-16. [KNOW] Battery voltage measurement belongs over the diagnostic interface (OBD PID 0x42 where supported, or a fused sense line through a proper divider) — NOT an ADC pin strapped to pin 16 raw. Any ADC sensing needs divider scaling, input protection, and tolerance analysis. [community project note — vectra-scanner]
+16. [KNOW] Battery voltage measurement belongs over the diagnostic interface (OBD PID 0x42 where supported, or a fused sense line through a proper divider) — NOT an ADC pin strapped to pin 16 raw. Any ADC sensing needs divider scaling, input protection, and tolerance analysis. [community — private reference project note]
 17. [REQ] In-car integration under the dash: strain relief on all wires, no solder-only splices in vibration zones, heat-rated insulation, secure module mounting (no rattling loose PCBs), fuse accessible, conformal/housed assembly if permanent. A loose adapter under the dash is a short-circuit and a driver-distraction hazard.
 
 ## 5. Verification measurements
