@@ -239,18 +239,27 @@ def test_manifest_cap() -> None:
 
 
 def test_manifest_stat_oserror() -> None:
+    # Deterministic cross-platform: patch rglob to a precomputed list (no
+    # internal stat calls — Linux pathlib stats during rglob iteration) and
+    # is_file to True, so the ONLY stat that runs is the one inside the
+    # manifest try-block — where the injected OSError must be swallowed.
     from unittest.mock import patch as _patch
 
     from aizee_mcp.skills_ext import _manifest
 
     real_stat = Path.stat
+    precomputed = sorted(SKILL.rglob("*"))
 
     def fake_stat(self, *a, **kw):
         if self.name == "deep.md":
             raise OSError("gone")
         return real_stat(self, *a, **kw)
 
-    with _patch.object(Path, "stat", fake_stat):
+    with (
+        _patch.object(Path, "rglob", lambda self, pat: iter(precomputed)),
+        _patch.object(Path, "is_file", lambda self: True),
+        _patch.object(Path, "stat", fake_stat),
+    ):
         entries = _manifest(SKILL)
     assert all(e["path"] != "references/deep.md" for e in entries)
     assert any(e["path"] == "SKILL.md" for e in entries)

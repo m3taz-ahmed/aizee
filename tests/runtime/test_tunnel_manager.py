@@ -189,6 +189,22 @@ def test_start_log_read_oserror(root: Path) -> None:
     tm._terminate_pid(res.get("pid", 0) or 0)
 
 
+def _mock_psutil_module(mock_proc):
+    """Patch the psutil reference inside tunnel_manager ONLY.
+
+    Patching ``psutil.Process`` on the global module corrupts psutil's
+    internal memoization for every other consumer (Linux CI failure) — the
+    module reference in ``runtime.tunnel_manager`` is the correct seam.
+    """
+    import psutil
+    from unittest.mock import MagicMock
+
+    fake = MagicMock(wraps=psutil)
+    fake.Process = MagicMock(return_value=mock_proc)
+    fake.Error = psutil.Error  # real exception classes for the except clauses
+    return patch.object(tm, "psutil", fake)
+
+
 def test_terminate_fallback_to_kill() -> None:
     from unittest.mock import MagicMock
 
@@ -196,7 +212,7 @@ def test_terminate_fallback_to_kill() -> None:
 
     mock_proc = MagicMock()
     mock_proc.terminate.side_effect = psutil.NoSuchProcess(12345)
-    with patch.object(tm.psutil, "Process", return_value=mock_proc):
+    with _mock_psutil_module(mock_proc):
         assert tm._terminate_pid(12345) is True
         mock_proc.kill.assert_called_once()
 
@@ -209,7 +225,7 @@ def test_terminate_kill_also_fails() -> None:
     mock_proc = MagicMock()
     mock_proc.terminate.side_effect = psutil.NoSuchProcess(12345)
     mock_proc.kill.side_effect = psutil.NoSuchProcess(12345)
-    with patch.object(tm.psutil, "Process", return_value=mock_proc):
+    with _mock_psutil_module(mock_proc):
         assert tm._terminate_pid(12345) is False
 
 
