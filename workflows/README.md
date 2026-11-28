@@ -4,7 +4,7 @@ Each file here activates when the AI detects a specific task type. Counts and th
 
 ## Numbered Workflows (Trigger-Based)
 
-This directory contains **84** `.md` files: **70** numbered trigger-based workflows (`00`-`69`) plus standards protocols and reference files.
+This directory contains **85** `.md` files: **71** numbered trigger-based workflows (`00`-`70`) plus standards protocols and reference files.
 
 | Trigger / Task Type | Workflow File | When to Use |
 |---|---|---|
@@ -78,6 +78,7 @@ This directory contains **84** `.md` files: **70** numbered trigger-based workfl
 | intake | `67-intake-glossary.md` | Alignment protocol before any non-trivial build. Adapted from `mattpocock/skills` (grill-... |
 | expensive work | `68-preview-gates.md` | Ordering protocol for work whose cost is concentrated at the end (batch generations, long... |
 | parallel agents | `69-parallel-fanout-review.md` | Dispatch protocol for splitting one build across isolated agents/workers. Adapted from `c... |
+| 70-mobile-visual-verify | `70-mobile-visual-verify.md` | Combines the three repo lessons: scrcpy's component reuse + ephemeral |
 
 ## Standards & Reference Files
 

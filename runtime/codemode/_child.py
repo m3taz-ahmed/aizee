@@ -80,11 +80,50 @@ def make_call_tool(inp: TextIO, out: TextIO) -> Callable[..., Any]:
     return call_tool
 
 
+def make_workspace_ops(inp: TextIO, out: TextIO) -> tuple[Callable[..., Any], Callable[..., Any], Callable[..., Any]]:
+    """Build the ``workspace_read/write/list`` bridges.
+
+    These are the *only* filesystem capabilities a snippet can reach: every
+    operation round-trips to the parent, which confines all paths to the
+    per-root ``state/codemode/workspace/`` directory and enforces size caps.
+    Snippets never get raw ``open`` — persistence is a governed capability,
+    not a builtin.
+    """
+    counter = itertools.count(1000)
+
+    def _request(op: str, path: str, data: str | None = None) -> Any:
+        msg: dict[str, Any] = {"type": "workspace", "id": next(counter), "op": op, "path": path}
+        if data is not None:
+            msg["data"] = data
+        _send(out, msg)
+        resp = json.loads(inp.readline())
+        if not resp.get("ok"):
+            raise PermissionError(resp.get("error", "denied"))
+        return resp.get("result")
+
+    def workspace_read(path: str) -> Any:
+        return _request("read", path)
+
+    def workspace_write(path: str, data: str) -> Any:
+        if not isinstance(data, str):
+            raise TypeError("workspace_write data must be str")
+        return _request("write", path, data)
+
+    def workspace_list(path: str = "") -> Any:
+        return _request("list", path)
+
+    return workspace_read, workspace_write, workspace_list
+
+
 def run_source(source: str, inp: TextIO, out: TextIO) -> dict[str, Any]:
     """Execute *source* in the restricted namespace; return the done message."""
+    ws_read, ws_write, ws_list = make_workspace_ops(inp, out)
     ns: dict[str, Any] = {
         "__builtins__": dict(_SAFE_BUILTINS),
         "call_tool": make_call_tool(inp, out),
+        "workspace_read": ws_read,
+        "workspace_write": ws_write,
+        "workspace_list": ws_list,
     }
     try:
         # cast: _PipeStdout is a TextIOBase but type checkers won't narrow it

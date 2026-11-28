@@ -22,6 +22,7 @@ from aizee_mcp.schema_profile import apply_schema_profile, compact_tool_schema
 from aizee_mcp.tools import (
     register_ads_tools,
     register_analytics_tools,
+    register_codemode_tools,
     register_context_tools,
     register_cro_tools,
     register_email_tools,
@@ -133,6 +134,7 @@ def _register_tools_fallback() -> None:
         register_freelance_tools,
         register_social_tools,
         register_intel_tools,
+        register_codemode_tools,
     ):
         if register_fn is None:
             continue
@@ -148,6 +150,16 @@ def _register_tools_fallback() -> None:
 # Auto-discover and register all tool modules; fall back to manual registration.
 if not _auto_discover_tools():
     _register_tools_fallback()
+
+# MCP Skills extension (SEP-2640 core): skills_list/skills_get tools +
+# skill:// resource templates. Fault-isolated like the tool modules — a
+# failure here must never take the server down.
+try:
+    from aizee_mcp.skills_ext import register_skills_extension
+
+    register_skills_extension(mcp)
+except Exception:  # pragma: no cover - fault-isolation backstop: fires only if skills_ext itself is broken, which its own test suite catches first
+    logger.warning("Skills extension registration failed", exc_info=True)
 
 _register_plugins()
 

@@ -28,7 +28,7 @@ def test_harnesses_resolve_home(monkeypatch: pytest.MonkeyPatch, tmp_path: Path)
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     hs = harnesses()
     assert hs["cursor"] == str(tmp_path / ".cursor" / "skills")
-    assert set(hs) == {"cursor", "claude", "codex", "opencode"}
+    assert set(hs) == {"agents", "cursor", "claude", "codex", "opencode"}
 
 
 def test_resolve_harness_dir_path_and_project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -204,3 +204,53 @@ def test_emit_openai_no_frontmatter_description(skills_root: Path) -> None:
     data = yaml.safe_load(target.read_text(encoding="utf-8"))
     assert data["interface"]["display_name"] == "Dirskill"
     assert data["interface"]["short_description"] == ""
+
+
+# ---------------------------------------------------------------------------
+# detect_installed / install_auto (agents-matrix expansion)
+# ---------------------------------------------------------------------------
+
+
+def test_detect_installed_partial(tmp_path):
+    from runtime.harness_exporter import detect_installed
+
+    (tmp_path / ".cursor").mkdir()
+    scan = detect_installed(home=tmp_path)
+    assert "cursor" in scan["detected"]
+    assert "agents" in scan["detected"]  # shared standard always present
+    assert "claude" in scan["skipped"] and "codex" in scan["skipped"]
+
+
+def test_detect_installed_empty_home(tmp_path):
+    from runtime.harness_exporter import detect_installed
+
+    scan = detect_installed(home=tmp_path)
+    assert list(scan["detected"]) == ["agents"]
+    assert set(scan["skipped"]) == {"cursor", "claude", "codex", "opencode"}
+
+
+def test_install_auto(tmp_path):
+    from runtime.harness_exporter import install_auto
+
+    home = tmp_path / "home"
+    (home / ".cursor").mkdir(parents=True)
+    skills = tmp_path / "skills"
+    (skills / "demo").mkdir(parents=True)
+    (skills / "demo" / "SKILL.md").write_text("# demo\n", encoding="utf-8")
+    result = install_auto(skills, "demo", home=home)
+    assert result["ok"] and result["installed"] == 2
+    harnesses_hit = {r["harness"] for r in result["results"]}
+    assert harnesses_hit == {"agents", "cursor"}
+    assert (home / ".agents" / "skills" / "demo" / "SKILL.md").exists()
+    assert (home / ".cursor" / "skills" / "demo" / "SKILL.md").exists()
+
+
+def test_install_auto_missing_skill(tmp_path):
+    from runtime.harness_exporter import install_auto
+
+    home = tmp_path / "home"
+    home.mkdir()
+    skills = tmp_path / "skills"
+    skills.mkdir()
+    result = install_auto(skills, "ghost", home=home)
+    assert not result["ok"] and result["installed"] == 0

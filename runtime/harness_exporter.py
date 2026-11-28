@@ -32,7 +32,12 @@ from typing import Any
 SKILL_FILENAME = "SKILL.md"
 
 # Harness name -> skills dir under the user's home.
+# ``agents`` is the cross-agent shared standard (~/.agents/skills) read
+# natively by many harnesses (Amp, Codex, Cursor, Cline, Zed, ...) per the
+# agentskills.io install matrix — installing there covers every harness
+# that honors the shared layout in one copy.
 _HARNESS_DIRS: dict[str, str] = {
+    "agents": ".agents/skills",
     "cursor": ".cursor/skills",
     "claude": ".claude/skills",
     "codex": ".codex/skills",
@@ -70,6 +75,50 @@ def harnesses() -> dict[str, str]:
     return {name: str(home / rel) for name, rel in _HARNESS_DIRS.items()}
 
 
+def detect_installed(home: Path | None = None) -> dict[str, Any]:
+    """Detect which harnesses are actually installed on this machine.
+
+    A harness counts as installed when its config home exists (e.g.
+    ``~/.cursor``), even if its ``skills/`` subdir has not been created yet
+    — installing the skills dir into an existing harness home is exactly
+    the desired behavior. The shared ``agents`` target is always reported:
+    it is a creatable standard location, not tied to one vendor.
+    """
+    base = home or Path.home()
+    detected: dict[str, str] = {}
+    skipped: list[str] = []
+    for name, rel in _HARNESS_DIRS.items():
+        harness_home = base / rel.split("/")[0]
+        if name == "agents" or harness_home.is_dir():
+            detected[name] = str(base / rel)
+        else:
+            skipped.append(name)
+    return {"detected": detected, "skipped": skipped}
+
+
+def install_auto(
+    skills_root: Path,
+    name: str,
+    force: bool = False,
+    home: Path | None = None,
+) -> dict[str, Any]:
+    """Install one skill into every detected harness. Returns per-harness results."""
+    scan = detect_installed(home)
+    results = [
+        install_skill(skills_root, name, harness, force=force, home=home).to_dict()
+        for harness in sorted(scan["detected"])
+    ]
+    # ``results`` is never empty: the shared ``agents`` target is always
+    # detected, so there is at least one install attempt to report on.
+    return {
+        "ok": all(r["ok"] for r in results),
+        "skill": name,
+        "installed": sum(1 for r in results if r["ok"]),
+        "skipped_harnesses": scan["skipped"],
+        "results": results,
+    }
+
+
 # Harness name -> project-relative skills dir (per-repo targets).
 _PROJECT_DIRS = {
     "project": ".agents/skills",
@@ -78,7 +127,7 @@ _PROJECT_DIRS = {
 }
 
 
-def resolve_harness_dir(harness: str, dest: str = "") -> Path:
+def resolve_harness_dir(harness: str, dest: str = "", home: Path | None = None) -> Path:
     """Resolve target directory for a harness name or explicit path."""
     harness = harness.strip().lower()
     if harness in _PROJECT_DIRS:
@@ -88,7 +137,7 @@ def resolve_harness_dir(harness: str, dest: str = "") -> Path:
             raise ValueError("harness 'path' requires --dest <dir>")
         return Path(dest).expanduser()
     if harness in _HARNESS_DIRS:
-        return Path.home() / _HARNESS_DIRS[harness]
+        return (home or Path.home()) / _HARNESS_DIRS[harness]
     raise ValueError(
         f"unknown harness '{harness}' — supported: "
         + ", ".join(sorted([*_HARNESS_DIRS, *_PROJECT_DIRS, "path"]))
@@ -112,6 +161,7 @@ def install_skill(
     harness: str,
     dest: str = "",
     force: bool = False,
+    home: Path | None = None,
 ) -> InstallResult:
     """Install one skill into a harness directory.
 
@@ -122,7 +172,7 @@ def install_skill(
     result = InstallResult(skill=name, harness=harness)
     try:
         src = _find_skill_dir(Path(skills_root), name)
-        target_base = resolve_harness_dir(harness, dest)
+        target_base = resolve_harness_dir(harness, dest, home=home)
         if src.is_dir():
             target = target_base / name
             if target.exists():

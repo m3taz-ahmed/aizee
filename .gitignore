@@ -103,7 +103,7 @@ scripts/gen_post_assets.py
 
 # Personal tooling + notes (per-machine, contains live OAuth tokens and
 # personal data — gmail-cleaner credentials/token/email index, games list)
-tools/
+/tools/
 /GAMES.md
 
 # Personal session index (per-machine; 400+ absolute local paths — privacy)

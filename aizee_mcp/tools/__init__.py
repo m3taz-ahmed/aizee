@@ -55,6 +55,7 @@ def _optional_register(module_name: str, attr_name: str) -> Any:
 
 register_ads_tools = _optional_register("ads_tools", "register_ads_tools")
 register_analytics_tools = _optional_register("analytics_tools", "register_analytics_tools")
+register_codemode_tools = _optional_register("codemode_tools", "register_codemode_tools")
 register_context_tools = _optional_register("context_tools", "register_context_tools")
 register_cro_tools = _optional_register("cro_tools", "register_cro_tools")
 register_email_tools = _optional_register("email_tools", "register_email_tools")
@@ -81,6 +82,7 @@ __all__ = [
     "WorkflowSchema",
     "register_ads_tools",
     "register_analytics_tools",
+    "register_codemode_tools",
     "register_context_tools",
     "register_cro_tools",
     "register_email_tools",

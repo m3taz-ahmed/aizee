@@ -1675,8 +1675,18 @@ def cmd_skill(args: argparse.Namespace) -> int:
             )
         return 0 if report.ok else 1
     elif args.skill_subcommand == "install":
-        from runtime.harness_exporter import install_skill
+        from runtime.harness_exporter import install_auto, install_skill
 
+        if args.harness == "auto":
+            result = install_auto(k.root / "skills", args.name, force=args.force)
+            if args.json:
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+            else:
+                console.print(
+                    f"[green]Auto-installed[/green] {result['skill']} -> "
+                    f"{result['installed']} harnesses (skipped: {', '.join(result['skipped_harnesses']) or 'none'})"
+                )
+            return 0 if result["ok"] else 1
         r = install_skill(
             k.root / "skills", args.name, args.harness, args.dest, args.force
         )
@@ -2501,6 +2511,13 @@ def cmd_codemode(args: argparse.Namespace) -> int:
     """Run a sandboxed Code Mode snippet that calls MCP tools."""
     from runtime.codemode import CodeModeExecutor
 
+    if getattr(args, "adapters", False):
+        from runtime.codemode.adapters import generate
+
+        gen = generate(_root(args), server=getattr(args, "server", "aizee") or "aizee")
+        print(json.dumps(gen, indent=2, default=str))
+        return 0 if gen.get("ok") or gen.get("written") else 1
+
     source = args.code
     if args.file:
         source = Path(args.file).read_text(encoding="utf-8")
@@ -2511,6 +2528,25 @@ def cmd_codemode(args: argparse.Namespace) -> int:
     result = executor.execute(source)
     print(json.dumps(result.to_dict(), indent=2, default=str))
     return 0 if result.ok else 1
+
+
+def cmd_tunnel(args: argparse.Namespace) -> int:
+    """Governed tunnel lifecycle: start/status/list/stop."""
+    from runtime import tunnel_manager
+
+    action = getattr(args, "tunnel_action", "list")
+    if action == "start":
+        result = tunnel_manager.start(
+            _root(args), args.provider, args.port, ttl_s=args.ttl,
+        )
+    elif action == "stop":
+        result = tunnel_manager.stop(_root(args), args.id)
+    elif action == "status":
+        result = tunnel_manager.status(_root(args), args.id)
+    else:
+        result = tunnel_manager.list_tunnels(_root(args))
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if result.get("ok") else 1
 
 
 def cmd_bootstrap(args: argparse.Namespace) -> int:
@@ -3471,6 +3507,15 @@ def main(argv: list[str] | None = None) -> int:
     p_codemode.add_argument("--code", default="", help="Inline Python snippet")
     p_codemode.add_argument("--file", default="", help="Path to a snippet file")
     p_codemode.add_argument("--timeout", type=float, default=15.0, help="Wall-clock timeout (seconds)")
+    p_codemode.add_argument("--adapters", action="store_true", help="Generate progressive tool adapters instead of running a snippet")
+    p_codemode.add_argument("--server", default="aizee", help="Server to generate adapters for (with --adapters)")
+
+    p_tunnel = sub.add_parser("tunnel", help="Governed localhost tunnel lifecycle (cloudflared/tunnelto/ngrok)")
+    p_tunnel.add_argument("tunnel_action", nargs="?", default="list", choices=["start", "stop", "status", "list"])
+    p_tunnel.add_argument("--provider", default="cloudflared", help="Tunnel provider for start")
+    p_tunnel.add_argument("--port", type=int, default=8080, help="Local port to expose")
+    p_tunnel.add_argument("--ttl", type=int, default=1800, help="Time-to-live in seconds (60..14400)")
+    p_tunnel.add_argument("--id", default="", help="Tunnel id for stop/status")
 
     # --- find / goal (natural-language discovery) ---
     p_find = sub.add_parser("find", help="Find skills/workflows/tech-stack by natural language")
@@ -3854,6 +3899,7 @@ def main(argv: list[str] | None = None) -> int:
         "task": cmd_task,
         "sync": cmd_sync,
         "graphify": cmd_graphify,
+        "tunnel": cmd_tunnel,
         "version": cmd_version,
         "doctor": cmd_doctor,
         "drivers": cmd_drivers,
