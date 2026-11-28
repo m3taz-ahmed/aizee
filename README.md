@@ -6,15 +6,15 @@
 
   <p>
     <a href="https://github.com/m3taz-ahmed/aizee/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/m3taz-ahmed/aizee/validate.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI status"></a>
-    <img src="https://img.shields.io/badge/Version-6.16.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.16.0">
-    <img src="https://img.shields.io/badge/Tests-8369%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8369 passed">
+    <img src="https://img.shields.io/badge/Version-6.17.0-6C63FF?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="Version 6.17.0">
+    <img src="https://img.shields.io/badge/Tests-8502%20passed-00C896?style=for-the-badge&logo=pytest&logoColor=white&labelColor=1a1a2e" alt="Tests: 8502 passed">
     <img src="https://img.shields.io/badge/Coverage-100%25-10B981?style=for-the-badge&logo=codecov&logoColor=white&labelColor=1a1a2e" alt="Coverage 100%">
     <img src="https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License: MIT">
   </p>
   <p>
     <img src="https://img.shields.io/badge/Personas-29-EC4899?style=for-the-badge&logo=buffer&logoColor=white&labelColor=1a1a2e" alt="29 Personas">
-    <img src="https://img.shields.io/badge/Skills-361-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="361 Skills">
-    <img src="https://img.shields.io/badge/Workflows-70-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="70 Workflows">
+    <img src="https://img.shields.io/badge/Skills-362-10B981?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="362 Skills">
+    <img src="https://img.shields.io/badge/Workflows-71-0EA5E9?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1a1a2e" alt="71 Workflows">
     <img src="https://img.shields.io/badge/Tech--Stack-285-F59E0B?style=for-the-badge&logo=sparkles&logoColor=white&labelColor=1a1a2e" alt="285 Tech-Stack refs">
   </p>
   <p>
@@ -422,7 +422,7 @@ one command that fixes it.
 ├── AGENTS.md                # Cross-tool canonical bootloader
 ├── global-roles.md          # 29 personas + operational rules
 ├── global-workflow.md       # Cognitive loading & execution protocol
-├── runtime/                 # Kernel: policy, budget, audit, 162 governance modules
+├── runtime/                 # Kernel: policy, budget, audit, 163 governance modules
 │   ├── kernel.py            # Facade — Probity → Guardian → Policy → Loop → Budget → Audit
 │   ├── enforcement.py       # Unified firewall+gateway enforcement helper
 │   ├── agent_gateway.py     # Request/response guardrails (ALLOW/REDACT/BLOCK)
@@ -431,13 +431,13 @@ one command that fixes it.
 │   ├── codemode/            # Sandboxed code-mode tool execution
 │   └── policies/            # default/guardian/probity/mcp_firewall YAMLs
 ├── memory/                  # SQLite + FTS5 + vector, bi-temporal queries
-├── aizee_mcp/               # MCP server (53 tools enabled, 3 resources)
+├── aizee_mcp/               # MCP server (57 tools enabled, 3 resources)
 ├── eval/                    # Benchmarks, chaos, reliability, release gate
 ├── skills/                  # 248 persona + lord + BMAD + marketing skills
 ├── _bmad/                   # BMAD runtime (config/scripts — gitignored)
 ├── .agents/skills           # Junction distribution for agent harnesses
 ├── deps.yaml                # External dependency manifest (check/install)
-├── workflows/               # 70 trigger-based execution protocols
+├── workflows/               # 71 trigger-based execution protocols
 ├── rules/                   # Compressed behavioral rules
 ├── tech-stack/              # 285 version-locked stack references
 ├── dashboard/               # Web dashboard (Python stdlib HTTP)
@@ -609,7 +609,7 @@ Settings persist to `state/settings.json` (gitignored, survives updates). Schema
 
 - **Core:** Pure Python 3.10+ (no Node.js required for core OS)
 - **Memory:** SQLite + FTS5 + optional SentenceTransformers vectors
-- **MCP:** FastMCP server, 53 tools enabled by default (7 marketing tool modules ship gated via `disabledToolModules`)
+- **MCP:** FastMCP server, 57 tools enabled by default (7 marketing tool modules ship gated via `disabledToolModules`)
 - **Dashboard:** Python stdlib HTTP server + SQLite
 - **Knowledge graph:** graphify (optional)
 - **Dependencies:** pyyaml, pydantic, rich, cryptography, numpy, turbovec
@@ -627,7 +627,7 @@ aiZee is not a skills collection or a process framework — it is the **policy l
 | **Skills** | 248 vendored, hash-locked | ~34 `bmad-*` | Templates | 410+ |
 | **Personas** | 29 auto-detected + lifecycle-aware | 6 named agents | — | — |
 | **Memory** | Hybrid SQLite + vectors, bi-temporal | `persistent_facts` files | — | — |
-| **MCP** | Server (53 tools) + client firewall | — | — | — |
+| **MCP** | Server (57 tools) + client firewall | — | — | — |
 | **Install** | `pip install aizee` | `npx skills add` | `uvx specify` | `npx skills add` |
 | **Best for** | Governing what agents *may do* | Running the agile-ai lifecycle | Spec-driven workflows | Plug-and-play skills |
 
