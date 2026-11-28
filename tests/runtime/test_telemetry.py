@@ -57,11 +57,18 @@ def test_system_metrics_success_path() -> None:
     mock_mem.used = 1024 * 1024 * 100  # 100 MB
     mock_mem.total = 1024 * 1024 * 200  # 200 MB
     mock_psutil.virtual_memory.return_value = mock_mem
+    original_psutil = sys.modules.get("psutil")
     sys.modules["psutil"] = mock_psutil
     try:
         metrics = system_metrics()
     finally:
-        sys.modules.pop("psutil", None)
+        # Restore, never pop: popping orphans modules that imported psutil
+        # earlier — psutil's Linux backend looks up sys.modules['psutil']
+        # at call time and dies with KeyError in unrelated tests.
+        if original_psutil is not None:
+            sys.modules["psutil"] = original_psutil
+        else:  # pragma: no cover - psutil is always already imported in practice
+            sys.modules.pop("psutil", None)
     assert metrics["cpu_percent"] == 42.5
     assert metrics["memory_percent"] == 75.0
     assert metrics["memory_used_mb"] == 100

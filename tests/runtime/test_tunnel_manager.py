@@ -196,8 +196,9 @@ def _mock_psutil_module(mock_proc):
     internal memoization for every other consumer (Linux CI failure) — the
     module reference in ``runtime.tunnel_manager`` is the correct seam.
     """
-    import psutil
     from unittest.mock import MagicMock
+
+    import psutil
 
     fake = MagicMock(wraps=psutil)
     fake.Process = MagicMock(return_value=mock_proc)
